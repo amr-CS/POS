@@ -1,0 +1,248 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    Layout = null;
+}
+<style>
+    /*body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }*/
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblBodyPrinter {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+
+
+<div class="divContainer bg-light">
+    <div class="w-100 bg-white border font-weight-bold p-4">المركبات</div>
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>@appResource._Code<input type="text" class="form-control txtCode" /></div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            الوصف عربي
+                            <input type="text" class="form-control txtPrinterDescL1" />
+                        </div>
+                        </div>
+            
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            الوصف لاتيني
+                            <input type="text" class="form-control txtPrinterDescL2" />
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearch btnSearchh">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblPrinterSearch">
+            <thead>
+                <tr>
+                    <th class="btnCheckAll" data-checked="false">
+                        تحديد الكل
+                        <input type="checkbox" class="btnCheckAll">
+
+                    </th>
+                    <th>الكود</th>
+                    <th>الوصف - عربي </th>
+                    <th>الوصف - لاتيني </th>
+
+
+                </tr>
+            </thead>
+
+            <tbody class="tblPrinterBodySearch"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Actione Load
+    $(document).ready(function () {
+        //// Get Row
+        //funGetPrinters();
+    });
+
+
+    //function Append
+    function funPrinterRowConfig(pPrinterRow) {
+        // Content
+        var RowContent = '<tr data-id="' + pPrinterRow.PrinterId + '">' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pPrinterRow.PrinterId + '" data-code="' + pPrinterRow.PrinterCode+'"/></td> ' +
+            '<td align="center">' + pPrinterRow.PrinterCode + '</td>' +
+            '<td align="center">' + pPrinterRow.PrinterDescL1 + '</td>' +
+            '<td align="center">' + pPrinterRow.PrinterDescL2 + '</td>' +
+            +'</tr > '
+        //var vRowContent = '<tr data-id="' + Printer.PrinterId + '" style="height:70px;">' +
+        //          '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pPrinterRow.PrinterId+ '"/></td> ' +
+        //        '<td align="center">' + pPrinterRow.PrinterCode + '</td>' +
+        //    '<td align="center">' + pPrinterRow.VecDescL1 + '</td>' +
+        //    '<td align="center">' + pPrinterRow.VecDescL2 + '</td>' +
+        //    +'</tr > '
+
+        return RowContent
+    }
+
+    function funGetPrinters() {
+        //$.get('/api/APIPrinter/PrinterGET',
+        $.post('/Printers/GetPrinter',
+            {
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, PrinterData) {
+                        // GET Cash Desk Row Content
+
+                        var vPrinterRowContent = funPrinterRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblPrinterBodySearch').append(vPrinterRowContent);
+                    });
+
+                }
+            })
+
+    }
+
+
+
+
+    $('.btnSearchh').on('click', function () {
+
+
+        var vPrinterCode = null
+        var vPrinterDescL1 = null
+        var vPrinterDescL2 = null
+
+
+        
+        if ($('.txtCode').val() != '') {
+            vPrinterCode = $('.txtCode').val();
+
+        }
+        if ($('.txtPrinterDescL1').val() != '') {
+            vPrinterDescL1 = $('.txtPrinterDescL1').val();
+
+        }
+        if ($('.txtPrinterDescL2').val() != '') {
+            vPrinterDescL2 = $('.txtPrinterDescL2').val();
+
+        }
+
+        funGetPrintersBySearch(vPrinterCode, vPrinterDescL1, vPrinterDescL2)
+
+    })
+    function funGetPrintersBySearch(pPrinterCode, pPrinterDescL1, pPrinterDescL2)
+    {
+    
+        $.post('/Printers/FilterPrinters',
+            {
+                pPrinterCode: pPrinterCode,
+                pPrinterDescL1: pPrinterDescL1,
+                pPrinterDescL2: pPrinterDescL2
+               
+
+            }
+            , function (data, status) {
+                $('.tblPrinterBodySearch').html('');
+                if (data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, PrinterData) {
+                        // GET Cash Desk Row Content
+
+                        var vPrinterRowContent = funPrinterRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblPrinterBodySearch').append(vPrinterRowContent);
+                    });
+
+
+
+                }
+            })
+
+    }
+
+
+
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+         
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+          
+        }
+    });
+
+
+</script>
+
+
+

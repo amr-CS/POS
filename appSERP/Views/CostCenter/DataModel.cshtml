@@ -1,0 +1,97 @@
+﻿@model appSERP.Models.ACC.CostCenterModel
+@using appSERP.Views.Shared.appResource
+
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._CostCenter, pId = Model.CostCenterId })
+        </div>
+       
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.HiddenFor(model => model.CostCenterId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CostCenterId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CostCenterCode, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CostCenterCode, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                @Html.ValidationMessageFor(model => model.CostCenterCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CostCenterNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CostCenterNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CostCenterNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CostCenterNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CostCenterNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CostCenterNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CostCenterParentId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CostCenterParentId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CostCenterParentId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CostCenterLevel, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CostCenterLevel, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CostCenterLevel, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CostCenterIsAccumulative, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck12" } })
+                @Html.LabelFor(model => model.CostCenterIsAccumulative, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck12" })
+            </div>
+        </div>
+
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CostCenterIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.CostCenterIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+}
+
+

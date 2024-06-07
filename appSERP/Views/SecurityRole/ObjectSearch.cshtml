@@ -1,0 +1,161 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "ObjectSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divObject {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divObjectSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divObjectSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divObjectNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">الشاشات</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divObject">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyObject"></tbody>
+    </table>
+
+</div>
+
+
+<!-- Object GET -->
+<script>
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Object GET
+        funObjectGET();
+    })
+
+    // Object GET
+    function funObjectGET() {
+
+        $.get("/api/APIObject/ObjectGET",
+            {
+       
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyObject');
+
+                console.log(vDataResult)
+                // Objects
+                $.each(vDataResult, function (i, ObjectData) {
+
+                    var vRowObject = '<tr data-id="' + vDataResult[i].ObjectId + '">';
+
+                    var vObjectName = vDataResult[i].ObjectNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vObjectName = vDataResult[i].ObjectNameL2;
+                    }
+                    console.log(vDataResult[i].AccountIsCostCenter)
+                    vRowObject += '<td data-id="' + vDataResult[i].ObjectId + '">';
+                    vRowObject += '<div class="divObjectSelect d-flex p-2" data-id="' + vDataResult[i].ObjectId + '">';
+                    vRowObject += '<div class="divObjectId  px-4">' + vDataResult[i].ObjectId + '</div>';
+                    vRowObject += '<div class="divObjectCode px-4 d-none">' + vDataResult[i].ObjectId+ '</div>';
+                    vRowObject += '<div class="divObjectName px-4">' + vDataResult[i].ObjectNameL1 + '</div>';
+
+
+                            vRowObject += '</div>';
+                        vRowObject += '</td>';
+
+                    vRowObject += '</tr>';
+
+                    // Append Row Object
+                    vTableBody.append(vRowObject);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search Object -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divObjectSelect').each(function () {
+
+                // Get Object Code
+                var vObjectCode = $(this).find('.divObjectId').text();
+                var vObjectName = $(this).find('.divObjectName').text();
+
+                // Check Result
+                if (vObjectCode.search(vSearchInput) != -1 || vObjectName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+        }
+    })
+</script>

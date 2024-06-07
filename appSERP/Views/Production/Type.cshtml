@@ -1,0 +1,158 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "InvTypeSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divInvType {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divInvTypeSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divInvTypeSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divInvTypeNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource.InvType</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divInvType">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyInvType"></tbody>
+    </table>
+</div>
+
+
+<!-- InvType GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // InvType GET
+        funInvTypeGET();
+    })
+
+    // InvType GET
+    function funInvTypeGET() {
+
+        //$.get('/api/APIInvType/InvTypeGET',
+            $.get('/api/APIINVInvoice/INVInvoiceGET',
+            {
+                pQueryTypeId: '700'
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyInvType');
+
+                // InvTypes
+                $.each(vDataResult, function (i, InvTypeData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].InvTypeId + '">';
+                    vRowContent += '<td data-id="' + vDataResult[i].InvTypeId + '">';
+                    vRowContent += '<div class="divInvTypeSelect d-flex p-2" data-id="' + vDataResult[i].InvTypeId + '">';
+                    vRowContent += '<div class="divInvTypeName px-4">' + vDataResult[i].InvTypeNameL1 + '</div>';
+              
+
+                    //vRowContent += '<div visibil class="divInvTypeIsActive d-none px-4" ><input type="checkbox" class="chkInvTypeIsActive"  id=chkInvTypeIsActive' + i + '"  checked="' + vDataResult[i].InvTypeIsActive + '" /></div>';
+                    vRowContent += '<div visibil class="divInvTypeIsActive d-none px-4" ><input type="checkbox" class="chkInvTypeIsActive checked"  id=chkInvTypeIsActive' + i + '"   /></div>';
+                                //vRowContent += '<div class="divInvTypeInvTypeFactor d-none px-4">' + vDataResult[i].InvTypeExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search InvType -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divInvTypeSelect').each(function () {
+
+                // Get InvType Code
+                var vInvTypeCode = $(this).find('.divInvTypeNo').text();
+                var vInvTypeName = $(this).find('.divInvTypeName').text();
+
+                if (vInvTypeCode.search(vSearchInput) != -1 || vInvTypeName.search(vSearchInput) != -1) {
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                    console.log('found')
+                }
+                else {
+                    //$(this).removeClass('table-success');
+                    //$(this).show();
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            //$('.divInvTypeSelect').removeClass('table-success');
+            //$(this).show();
+            $('.divInvTypeSelect').each(function () {
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+            })
+
+        }
+    })
+</script>
+
+

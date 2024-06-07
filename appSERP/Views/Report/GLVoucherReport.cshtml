@@ -1,0 +1,130 @@
+﻿@using appSERP.Views.Shared.appResource;
+@using appSERP.appCode.Setting.TimeSetting;
+@using appSERP.appCode.Setting.User;
+@using System.Data
+@{
+    ViewBag.Title = "GLVoucher";
+}
+<!-- Master -->
+@{ DataTable vDtReportData = ViewBag.vbData; }
+<!-- Detail -->
+@{ DataTable vDtReportDataDetail = ViewBag.vbDataDetail; }
+
+<!-- Header -->
+<div class="divRptViewTitle">
+    @Html.Action("Index", "ViewHeader", new { pHeaderTitle = appResource.lblGLVoucher, pIsNew = false })
+</div>
+
+@Html.Action("ReportTemplate", "ReportSetting")
+
+
+<!-- Report Options -->
+<div class="container-fluid divReportOptions">
+
+    <div class="d-flex w-100">
+        <div class="d-flex w-75">
+
+        </div>
+        <div class="d-flex w-25">
+            @*<div class=" w-100 4">*@
+            @appResource.GLVoucherNo
+            @vDtReportData.Rows[0]["GLVoucherNo"]
+
+        </div>
+    </div>
+    <div class="d-flex w-100">
+        <div class="d-flex w-75">
+
+        </div>
+        <div class="d-flex w-25">
+            @appResource.GLVoucherRef
+            @vDtReportData.Rows[0]["GLVoucherRef"]
+
+        </div>
+    </div>
+    <div class="d-flex w-100">
+        <div class="d-flex w-75">
+
+        </div>
+        <div class="d-flex w-25">
+            @appResource.GLVoucherDate
+           @Convert.ToDateTime(@vDtReportData.Rows[0]["GLVoucherRefDate"]).ToShortDateString().ToString()
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid table-responsive rptData">
+    <table class="table table-bordered table-hover tblData">
+        <thead>
+            <tr>
+                <th>@appResource.AccountNo</th>
+                <th>@appResource._Account</th>
+                <th>@appResource.GLVoucherDtlDebit</th>
+                <th>@appResource.GLVoucherDtlCredit</th>
+                <th>@appResource._Currency</th>
+                <th>@appResource._CostCenter</th>
+                <th>@appResource._Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (vDtReportDataDetail != null )
+            {
+                foreach (DataRow vDrwData in vDtReportDataDetail.Rows)
+                {
+                    <tr>
+                        <td width="10%" align="center">@vDrwData["AccNo"]</td>
+                        @if (clsUser.vUserLanguageId == 1)
+                        {
+                            <td width="20%" align="center">@vDrwData["AccountNameL1"]</td>
+                        }
+                        else
+                        {
+                            <td width="20%" align="center">@vDrwData["AccountNameL2"]</td>
+                        }
+
+                        <td width="10%" align="center">@vDrwData["GLVoucherDtlDebit"]</td>
+                        <td width="10%" align="center">@vDrwData["GLVoucherDtlCredit"]</td>
+                        @if (clsUser.vUserLanguageId == 1)
+                        {
+                            <td width="10%" align="center">@vDrwData["CurrencyNameL1"]</td>
+                        }
+                        else
+                        {
+                            <td width="10%" align="center">@vDrwData["CurrencyNameL2"]</td>
+                        }
+                        @if (clsUser.vUserLanguageId == 1)
+                        {
+                            <td width="15%" align="center">@vDrwData["CostCenterNameL1"]</td>
+                        }
+                        else
+                        {
+                            <td width="15%" align="center">@vDrwData["CostCenterNameL2"]</td>
+                        }
+
+                        <td width="25%" align="center">@vDrwData["GLVoucherDtlNote"]</td>
+
+                    </tr>
+
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+      // Report Title
+        $('.divRptTitle').append('@appResource.lblGLVoucher');
+        $('.divRptTitle').append('<br>');
+    // Report Options
+    var vRptOptions = $('.divReportOptions').html();
+    $('.divRptOptions').html(vRptOptions);
+    $('.divReportOptions').remove();
+
+    // Table Data Body
+    var vRptData = $('.rptData').html();
+    $('.tblReportData').html(vRptData);
+    $('.rptData').remove();
+</script>

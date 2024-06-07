@@ -1,0 +1,163 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "SimplePOSHtmlReport";
+    Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
+    DataTable Data = ViewBag.MealData;
+    var CashData = Data.AsEnumerable().Select(x => new { col1 = x["CashName"].ToString() }).ToList().Distinct();
+
+    double TotalAll = 0;
+    double TotalQtyAll = 0;
+    double TotalCostAll = 0;
+
+}
+<style>
+    @@font-face {
+        font-family: 'Dubai';
+        src: url('../../fonts/appFont/Dubai.ttf') format('truetype');
+    }
+
+    body {
+        font-size: 14px;
+    }
+</style>
+
+
+
+@if (Data != null)
+{
+    foreach (var c in CashData)
+    {
+        double Total = 0;
+        double TotalPrice = 0;
+        double TotalCost = 0;
+        <table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+            <thead style="">
+                <tr>
+                    <th width="25%">اسم الصنف</th>
+                    <th width="10%">السعر</th>
+                    <th width="15%">الكمية</th>
+                    <th width="15%">اجمالي الاسعار</th>
+                    <th width="10%"> التكلفة</th>
+                    <th width="15%">اجمالي التكلفة</th>
+                    <th width="15%">النسبة</th>
+                </tr>
+            </thead>
+            @if (!ViewBag.IsGrouping)
+            {
+                <div style="float: right; font-weight: bold; font-size: 25px; line-height: 30px">
+                    @c.col1.ToString()
+                </div>
+
+            }
+            @foreach (DataRow item in Data.Rows)
+            {
+
+                if (item["CashName"].ToString() == c.col1.ToString())
+                {
+                    double TotalRow = Convert.ToDouble(item["Qty"].ToString());
+                    double Price = Convert.ToDouble(item["Price"].ToString());
+                    double Cost = Convert.ToDouble(item["Cost"].ToString());
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                            @item["ItemName"]
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @item["OnePrice"]
+
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @item["Qty"]
+
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @item["Price"]
+
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @Math.Round(Convert.ToDouble(item["OneCost"]), 2, MidpointRounding.ToEven)
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+
+                            @Math.Round(Convert.ToDouble(item["Cost"]), 2, MidpointRounding.ToEven)
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @Math.Round(Convert.ToDouble(item["PERC"]), 2, MidpointRounding.ToEven) %
+
+                        </td>
+                    </tr>
+
+
+                    Total = Total + TotalRow;
+                    TotalPrice = TotalPrice + Price;
+                    TotalCost = TotalCost + Cost;
+                }
+            }
+
+            <tr class="total">
+
+                <td style="text-align: center;font:bold; vertical-align: middle;">
+                    الاجمالي :
+                    <br />
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    @Math.Round(Total, 2, MidpointRounding.ToEven)
+
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                </td>
+                <td style="text-align: center;font:bold; vertical-align: middle;">
+                    @Math.Round(TotalPrice, 2, MidpointRounding.ToEven)
+
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                </td>
+                <td style="text-align: center;font:bold; vertical-align: middle;">
+                    @Math.Round(TotalCost, 2, MidpointRounding.ToEven)
+
+                </td>
+                <td style="text-align: center;font:bold; vertical-align: middle;">
+                </td>
+            </tr>
+            @{ TotalAll = TotalAll + TotalPrice;
+                TotalQtyAll = TotalQtyAll + Total;
+                TotalCostAll = TotalCostAll + TotalCost;
+            }
+
+        </table>
+    }
+}
+<table class="tblitem" dir="rtl" style="margin-right:15px;margin-top:10px;width:100%">
+    <thead></thead>
+    <tbody>
+        <tr class="total">
+
+            <td width="25%" style="text-align: center; font: bold; vertical-align: middle; vertical-align: middle; padding-right: 20px">
+                الاجمالي الكلي :
+                <br />
+            </td>
+            <td width="15%" style="text-align: center; vertical-align: middle;">
+                @Math.Round(TotalQtyAll, 2, MidpointRounding.ToEven)
+
+            </td>
+            <td width="10%" style="text-align: center; vertical-align: middle;">
+            </td>
+            <td width="15%" style="text-align: center;font:bold; vertical-align: middle;">
+                @Math.Round(TotalAll, 2, MidpointRounding.ToEven)
+
+            </td>
+            <td width="10%" style="text-align: center;font:bold; vertical-align: middle;">
+            </td>
+            <td width="15%" style="text-align: center;font:bold; vertical-align: middle;">
+                @Math.Round(TotalCostAll, 2, MidpointRounding.ToEven)
+
+            </td>
+            <td width="15%" style="text-align: center;font:bold; vertical-align: middle;">
+            </td>
+
+        </tr>
+    </tbody>
+
+
+</table>
+
+

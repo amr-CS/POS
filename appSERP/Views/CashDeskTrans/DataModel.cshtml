@@ -1,0 +1,562 @@
+﻿@model appSERP.Models.ACC.CashDeskTransModel
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.ACC
+<style>
+    .btnDocNov {
+        color: #ededed;
+        border: 1px solid #eeeeee;
+        margin-right: 0.5rem;
+        padding-top: 0.6rem;
+    }
+
+    .iDocNavIcon {
+        font-size: 1.25rem;
+    }
+
+    .btnDocNov, #vDocNo, #vDocTotal, .divSeparator {
+        margin-right: 0.5rem;
+        text-align: center;
+    }
+
+    #btnFirst {
+        margin-left: 0.5rem;
+    }
+</style>
+@Html.AntiForgeryToken()
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+@Html.HiddenFor(model => model.CashDeskTransId)
+<form id="formId">
+    <div class="bg-light container-fluid">
+
+        <!-- Header -->
+        @if (dbCashDeskTrans.vIsCashDeskTransIn)
+        {
+            <div class="container-fluid">
+                @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "سند قبض" })
+            </div>
+        }
+        else
+        {
+            <div class="container-fluid">
+                @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "سند صرف" })
+            </div>
+        }
+        <div class="row">
+
+
+            <div class="col-md-4">
+                <div class="row">
+
+                    <div class="1">
+                        الفرع
+                        <div class="d-flex 2">
+                            <div class=" flex-shrink-0 3" style="width:40%">
+                                <input type="text" class="form-control curr" name="CurrencyId" id="CurrencyId">
+
+                            </div><div class="w-100 4"><input type="text" readonly="readonly" class="form-control" id="AccountNameL1"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="form-group ">
+                    @Html.LabelFor(model => model.CashDeskTransNote, htmlAttributes: new { @class = "control-label " })
+                    <div class="">
+                        @Html.TextAreaFor(model => model.CashDeskTransNote, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.CashDeskTransNote, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row  bg-secondary">
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.IsIssued, htmlAttributes: new { @class = "control-label " })
+                        <div class="">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.IsIssued)
+                                @Html.ValidationMessageFor(model => model.IsIssued, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.DocIsCancelled, htmlAttributes: new { @class = "control-label " })
+                        <div class="">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.DocIsCancelled)
+                                @Html.ValidationMessageFor(model => model.DocIsCancelled, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.DocIsWait, htmlAttributes: new { @class = "control-label " })
+                        <div class="">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.DocIsWait)
+                                @Html.ValidationMessageFor(model => model.DocIsWait, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.CashDeskTransIsRepeated, htmlAttributes: new { @class = "control-label " })
+                        <div class="">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.CashDeskTransIsRepeated)
+                                @Html.ValidationMessageFor(model => model.CashDeskTransIsRepeated, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PaymentTypeId, htmlAttributes: new { @class = "control-label" })
+                            <div class="">
+                                <select id="selectPaymentType" class="selectpicker form-control" name="PaymentTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                                @Html.ValidationMessageFor(model => model.PaymentTypeId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(model => model.CashDeskId, htmlAttributes: new { @class = "control-label " })
+                            <div class="">
+                                <div class="checkbox">
+                                    <select id="selectCashDesk" class="selectpicker form-control" name="CashDeskId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                                    @Html.ValidationMessageFor(model => model.CashDeskId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CashDeskTransNo, htmlAttributes: new { @class = "control-label" })
+                            <div class="">
+                                @Html.EditorFor(model => model.CashDeskTransNo, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CashDeskTransNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(model => model.CashDeskTransDate, htmlAttributes: new { @class = "control-label" })
+                            <div class="">
+                                @Html.EditorFor(model => model.CashDeskTransDate, new { htmlAttributes = new { @class = "form-control", @type = "Date" } })
+                                @Html.ValidationMessageFor(model => model.CashDeskTransDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(model => model.CashDeskTransRef, htmlAttributes: new { @class = "control-label" })
+                            <div class="">
+                                @Html.EditorFor(model => model.CashDeskTransRef, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CashDeskTransRef, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            @Html.LabelFor(model => model.CashDeskTransRefDate, htmlAttributes: new { @class = "control-label" })
+                            <div class="">
+                                @Html.EditorFor(model => model.CashDeskTransRefDate, new { htmlAttributes = new { @class = "form-control", @type = "Date" } })
+                                @Html.ValidationMessageFor(model => model.CashDeskTransRefDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@* Details Voucher*@
+<div class="container-fluid">
+    <table class="table table-bordered table-hover tblData" id="tblData">
+        <thead>
+            <tr>
+                <th>@appResource._Account</th>
+                <th>@appResource._Currency</th>
+                <th>@appResource._Debit</th>
+                <th>@appResource.BaseCurrencyValue</th>
+                <th>@appResource._Note</th>
+                <th>@appResource._CostCenter</th>
+
+            </tr>
+        </thead>
+
+        <tbody class="tblContent">
+            @if (Model.CashDeskTransId == null)
+            {
+                <tr>
+                    <td class="AccountId" style="width:17%">
+                        <div class="1">
+                            <div class="d-flex 2">
+                                <div class=" flex-shrink-0 3" style="width:40%">
+                                    <input type="text" class="form-control Account" name="AccountId" id="AccountId">
+                                </div><div class="w-100 4"><input type="text" readonly="readonly" class="form-control AccountName"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="CurrencyId" style="width:17%">
+                        <div class="1">
+                            <div class="d-flex 2">
+                                <div class=" flex-shrink-0 3" style="width:40%">
+                                    <input type="text" class="form-control curr" name="CurrencyId" id="CurrencyId">
+                                </div><div class="w-100 4"><input type="text" readonly="readonly" class="form-control currName"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="CashDeskDtlDebit" style="width:16%"><input type="text" class="form-control" name="CashDeskDtlDebit" id="CashDeskDtlDebit">
+                    <td class="BaseCurrencyValue" style="width:16%"><input type="text" class="form-control" name="BaseCurrencyValue" id="BaseCurrencyValue">
+                    <td class="CashDeskDtlNote" style="width:16%">
+                        <input type="text" class="form-control" name="GLVoucherDtlNote" id="GLVoucherDtlNote">
+                    <td class="CostCenterId" style="width:17%">
+                        <div class="1">
+                            <div class="d-flex 2">
+                                <div class=" flex-shrink-0 3" style="width:40%">
+                                    <input type="text" class="form-control CostCenterId" name="CostCenterId" id="CostCenterId">
+                                </div><div class="w-100 4"><input type="text" readonly="readonly" class="form-control CostCenterName"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in ViewBag.vbCashDeskDtl)
+                {
+                <tr>
+                    <td class="AccountId" style="width:17%">
+                        <div class="1">
+                            <div class="d-flex 2">
+                                <div class=" flex-shrink-0 3" style="width:40%">
+                                    <input type="text" class="form-control Account" value=" @item["AccountId"]" name="AccountId" id="AccountId">
+                                </div><div class="w-100 4"><input type="text" value=" @item["AccountNameL1"]" readonly="readonly" class="form-control AccountName"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="CurrencyId" style="width:17%">
+                        <div class="1">
+                            <div class="d-flex 2">
+                                <div class=" flex-shrink-0 3" style="width:40%">
+                                    <input type="text" value=" @item["CurrencyId"]" class="form-control curr" name="CurrencyId" id="CurrencyId">
+                                </div><div class="w-100 4"><input type="text" value=" @item["CurrencyNameL1"]" readonly="readonly" class="form-control currName"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="CashDeskDtlDebit"><input type="text" value=" @item["CashDeskDtlDebit"]" class="form-control" name="CashDeskDtlDebit" id="CashDeskDtlDebit">
+                    <td class="BaseCurrencyValue"><input type="text" value=" @item["BaseCurrencyValue"]" class="form-control" name="BaseCurrencyValue" id="BaseCurrencyValue">
+
+
+                    <td class="CashDeskDtlNote"><input type="text" value=" @item["CashDeskDtlNote"]" class="form-control" name="CashDeskDtlNote" id="CashDeskDtlNote">
+                    <td class="CostCenterId" style="width:17%">
+                        <div class="1">
+                            <div class="d-flex 2">
+                                <div class=" flex-shrink-0 3" style="width:40%">
+                                    <input type="text" value=" @item["CostCenterId"]" class="form-control CostCenterId" name="CostCenterId" id="CostCenterId">
+                                </div><div class="w-100 4"><input type="text" value=" @item["CostCenterNameL1"]" readonly="readonly" class="form-control CostCenterName"></div>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+@* Buttons For  Operation *@
+<div class="d-flex">
+    <div class="bg-light border rounded p-3 w-50">
+        <button type="button" id="btnNew" data-name="@ViewBag.vbNew" class="btn btn-success btnOperation v1">جديد</button>
+        <input type="submit" value="حفظ" disabled class="btn btn-default btnSave btnOperation" />
+        <button type="button" id="btnIssue" data-name="@ViewBag.vbIssue" disabled class="btn btn-primary btnOperation v2">إصدار</button>
+        <button type="button" id="btnHold" data-name="@ViewBag.vbHold" disabled class="btn btn-warning btnOperation v3">تعليق</button>
+        <button type="button" id="btnPost" data-name="@ViewBag.vbPost" disabled class="btn btn-primary btnOperation v4">ترحيل</button>
+        <button type="button" id="btnDelete" data-name="@ViewBag.vbDelete" disabled class="btn btn-danger btnOperation v5">حذف</button>
+    </div>
+    <div class="bg-light border rounded p-3" style="width: 35%">
+        <div class="form-inline" style="    align-items: center;justify-content: center;">
+            <button type="button" id="btnNext" class="btn btn-info btnDocNov"> <i class="fa fa-angle-right iDocNavIcon"></i></button>
+            <button type="button" id="btnLast" class="btn btn-info btnDocNov"> <i class="fa fa-angle-double-right iDocNavIcon"></i></button>
+            <input type="text" value="f9"   class="form-control col-md-2" >
+            <label class="divSeparator">/</label>
+            <input type="text" disabled id="vDocTotal" class="form-control col-md-2" value="45">
+            <button type="button" id="btnFirst" class="btn btn-info btnDocNov"> <i class="fa fa-angle-double-left iDocNavIcon"></i></button>
+            <button type="button" id="btnPrev" class="btn btn-info btnDocNov"> <i class="fa fa-angle-left iDocNavIcon"></i></button>
+        </div>
+    </div>
+</div>
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<!-- Script Create / Edit / Delete -->
+<script>
+    // Data Model URL
+    var vDataURL = '/CashDeskTrans/SearchCashDesk/';
+    // Data Model Elements [Create / Edit]
+    var vDataModelElements = $(window);
+    // Click Event
+    vDataModelElements.on('click', function (e) {
+        if (e.which == 120) {
+        // Id
+        var vDataId = $(this).attr('data-id');
+        // Modal
+        $('#dataModalContent').load(vDataURL + vDataId);
+        // Modal Show
+        $('#dataModal').modal('show');
+        }
+    });
+</script>
+<script>
+    // Function Save Head Voucher
+    $('.btnSave').on('click', function () {
+        var form = $('form#formId');
+        $.ajax({
+            url: "/CashDeskTrans/DataModel",
+            type: 'POST',
+            data: form.serialize(),
+            success: function (response) {
+                if (!response.ErrorMessage) {
+                    return;
+                }
+            },
+            error: function (error, textstatus) {
+            }
+        });
+
+        funCashDeskDtlContent();
+    });
+
+
+
+    //  Calling Function Save VoucherDTL
+    function funSaveCashDeskDtl(data) {
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: "/CashDeskTrans/funSaveCashDeskDtl",
+            data: data,
+            success: function (result) {
+                location.reload();
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function funCashDeskDtlContent() {
+        var vCashDeskDtl = [];
+        $.each($(".tblData tbody tr:last"), function () {
+            vCashDeskDtl.push({
+                CashDeskDtlNameL1: $(this).find('.CashDeskDtlNameL1 > input[type=text]').last().val(),
+                AccountId: $(this).find('.AccountId > .1> .2> .3 > input[type=text]').val(),
+                CurrencyId: $(this).find('.CurrencyId > .1> .2> .3 > input[type=text]').val(),
+                CashDeskDtlDebit: $(this).find('.CashDeskDtlDebit > input[type=text]').last().val(),
+                BaseCurrencyValue: $(this).find('.BaseCurrencyValue > input[type=text]').last().val(),
+                CashDeskDtlNote: $(this).find('.CashDeskDtlNote > input[type=text]').last().val(),
+                CostCenterId: $(this).find('.CostCenterId > .1> .2> .3 > input[type=text]').val(),
+            });
+        });
+        var data = JSON.stringify({
+            vCashDeskDtl: vCashDeskDtl
+        });
+        $.when(funSaveCashDeskDtl(data)).then(function (response) {
+
+        }).fail(function (err) {
+        });
+
+    }
+
+    // Add New Row By Press Enter And Save Row
+    $(document).ready(function () {
+        $(window).keydown(function (event) {
+
+            if (event.keyCode == 13) {
+                var vNew = $(".tblContent").find("tr").last().prop('outerHTML');
+                $('.tblContent').append(vNew);
+                funCashDeskDtlContent()
+            }
+        });
+    });
+
+</script>
+<script>
+
+
+    function clearForms() {
+        $(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio, :disabled').val('');
+        $(':checkbox, :radio').prop('checked', false);
+    }
+    // WORKIN ON BUTTONS
+    $('#btnNew').on('click', function () {
+        clearForms();
+        $(".btnOperation").prop("disabled", false);
+    });
+
+</script>
+
+
+<script>
+   // List
+    var vPaymentTypeId = 0;
+        $.post('/Home/GetPaymentType',
+            null,
+            function(data, status) {
+        var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function(i, PaymentType) {
+                    $('#selectPaymentType').append('<option data-id="' + PaymentType.PaymentTypeId + '" value="' + PaymentType.PaymentTypeId + '" sort-id="' + i + '">' + PaymentType.PaymentTypeNameL1 + '</option>')
+                    if (i == 0) {
+
+                        vPaymentTypeId = PaymentType.PaymentTypeId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcPaymentTypeId') >0 ) {
+                    vPaymentTypeId = parseInt('@ViewBag.vbcPaymentTypeId')
+                }
+                $('#selectPaymentType').val(vPaymentTypeId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+    }
+    )
+
+       // List
+    var vCashDeskId = 0;
+        $.post('/Home/GetCashDesk',
+            null,
+            function(data, status) {
+        var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function(i, CashDesk) {
+                    $('#selectCashDesk').append('<option data-id="' + CashDesk.CashDeskId + '" value="' + CashDesk.CashDeskId + '" sort-id="' + i + '">' + CashDesk.CashDeskNameL1 + '</option>')
+                    if (i == 0) {
+
+                        vCashDeskId = CashDesk.CashDeskId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcCashDeskId') >0 ) {
+                    vCashDeskId = parseInt('@ViewBag.vbcCashDeskId')
+                }
+                $('#selectCashDesk').val(vCashDeskId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+    }
+        )
+
+</script>
+
+<script>
+    funChangeValue();
+
+    function funChangeValue() {
+
+
+        // When Change Value Of Id
+        $('td').on('change', function () {
+            var col = $(this).parent().children().index($(this));
+            var row = $(this).parent().parent().children().index($(this).parent()) + 1;
+            var t = document.getElementById('tblData');
+
+            var vId = $(t).find('tr:eq(' + row + ') td:eq(' + col + ') > .1> .2> .3 > input[type=text]').val();
+
+            var vClassName = $(this).attr('class');
+
+            if (vClassName == 'CurrencyId') {
+                // List GetCurrency
+                $.post('/Home/GetCurrency',
+                    { id: vId },
+                    function (data, status) {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Currency) {
+                            $(t).find('tr:eq(' + row + ') td:eq(' + col + ') > .1> .2> .4 > input[type=text]').val(Currency.CurrencyNameL1);
+                        })
+                    });
+            }; /*END IF*/
+            if (vClassName == 'AccountId') {
+                // List GetCurrency
+                $.post('/Home/GetAccount',
+                    { id: vId },
+                    function (data, status) {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Account) {
+                            $(t).find('tr:eq(' + row + ') td:eq(' + col + ') > .1> .2> .4 > input[type=text]').val(Account.AccountNameL1);
+                        })
+                    });
+            }; /*END IF*/
+            if (vClassName == 'CostCenterId') {
+                // List GetCurrency
+                $.post('/Home/GetCostCenter',
+                    { id: vId },
+                    function (data, status) {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, CostCenter) {
+                            $(t).find('tr:eq(' + row + ') td:eq(' + col + ') > .1> .2> .4 > input[type=text]').val(CostCenter.CostCenterNameL1);
+                        })
+                    });
+            }; /*END IF*/
+
+
+        });
+    }
+
+</script>
+<script>
+    // Get The First Voucher
+    $('#btnFirst').on('click', function () {
+
+        $.get('/Home/FirstCashDeskTrans'
+            ,
+            null
+            ,
+            function (data) {
+                var vId = data
+                window.location.href = '/CashDeskTrans/DataModel?id=' + vId;
+            })
+    })
+
+    // Get The Last Voucher
+    $('#btnLast').on('click', function () {
+        $.get('/Home/LastCashDeskTrans'
+            ,
+            null
+            ,
+            function (data) {
+                var vId = data
+                window.location.href = '/CashDeskTrans/DataModel?id=' + vId;
+            })
+    })
+    // Get The First Voucher
+    $('#btnNext').on('click', function () {
+
+        $.get('/Home/NextCashDeskTrans', null, function (data) {
+            var vId = data;
+            window.location.href = '/CashDeskTrans/DataModel?id=' + vId;
+        })
+    })
+
+    // Get The Last Voucher
+    $('#btnPrev').on('click', function () {
+        $.get('/Home/PrevCashDeskTrans'
+            ,
+            null
+            ,
+            function (data) {
+                var vId = data
+                window.location.href = '/CashDeskTrans/DataModel?id=' + vId;
+            })
+    })
+</script>

@@ -1,0 +1,1007 @@
+﻿@using System.Data
+@{
+
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    string name = ticket.Name;
+    var Period = ViewBag.open;
+    string UserId = string.Empty;
+    if (Request.Cookies["UserId"] != null)
+    { UserId = Request.Cookies["UserId"].Value; };
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+    string CashierId = string.Empty;
+    if (Request.Cookies["CashierId"] != null)
+    {
+        CashierId = Request.Cookies["CashierId"].Value;
+    };
+
+    DataTable Orders = ViewBag.MovementOrder;
+    DateTime ORderTime = DateTime.Now;
+}
+@{
+    ViewBag.Title = "حركة الطلبات";
+}
+
+<style>
+    .selected {
+        background-color: #2980b9 !important;
+    }
+
+    body {
+        font-family: Cairo;
+        background-color: #FFF;
+    }
+
+    .fullHeightInput {
+        height: 50px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table {
+        padding: 0rem;
+    }
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:Readonly, .form-control[Readonly] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .txtDiscount {
+        height: 27px !important;
+        padding: 1px;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+
+    .cardHeader {
+        background-color: #D3EDFF;
+    }
+
+    .clsItem {
+        height: 500px;
+        border: 1px #dee2e6 solid;
+        overflow-y: scroll !important;
+    }
+
+    .btn-Trans {
+        color: #000000;
+        background-color: #D3EDFF;
+        border-color: #D3EDFF;
+    }
+
+    .selected {
+        background-color: #2980b9 !important;
+    }
+</style>
+
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+</style>
+@if (Period == false)
+{<label class="alert alert-success"> الفترة مغلقةيجب ابلاغ المدير </label>}
+
+else if (Period != false)
+{
+    <div id="loading">
+        <img src="~/Image/PreloaderImage/load-from-cloud.gif" class="loader" />
+    </div>
+    <!-- Header -->
+    <div class="">
+        @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "حركة الطلبات" })
+    </div>
+    <!-- Utlity -->
+    <div class="divUtilityBar d-flex ">
+        @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+    </div>
+    <!-- Head -->
+    <div class="row ">
+        <div class="col-md-3 border-right" style="height:140vh">
+            <div class=" ">
+                <div class="clsItem">
+                    <table class=" table table-hover border tblCustomerOrder">
+                        <thead>
+                            <tr class="cardHeader">
+                                <th>رقم الطلب</th>
+                                <th>العميل</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tblCustomerOrderBody">
+                            @Html.Action("OrderData", "ResOrder")
+                            @*ADDRESS="@order["LocationAddress"]"*@
+                            @*foreach (DataRow order in Orders.Rows)
+                                    {
+                                        <tr class="tblCustomerOrderRow">
+                                            <td width="20%"><div><input type="text" class="form-control form-control-sm OrderId" data-id="0" value="@order["OrderId"]" Readonly></div></td>
+                                            <td><div><input type="text" class="form-control form-control-sm CustomerName" data-id="0" value="@order["CustomerNameL1"]" Readonly></div></td>
+                                            <td class="d-none"><div><textarea class="clsData"> @order["tblResOrderDtl"]  </textarea></div></td>
+                                            <td class="d-none">
+                                                <div>
+                                                    <input class="clsHeader"
+                                                           Order-Date="@order["ORDER_DATE"]"
+                                                           DELIVERY_DATE="@order["DELIVERY_DATE"]"
+                                                           DELIVERY_Time="@order["DELIVERY_Time"]"
+                                                           ORDER_STATUS="@order["ORDER_STATUS"]"
+                                                           PERIOD_TYPE="@order["PERIOD_TYPE"]"
+                                                           NOTES="@order["NOTES"]"
+                                                           DELIVERY="@order["DELIVERY"].ToString()"
+                                                           PAY_CASH="@order["PAY_CASH"]"
+                                                           PAY_NET="@order["PAY_NET"]"
+                                                           CREDIT="@order["CREDIT"]"
+                                                           ORDER_No_NUMBER="@order["ORDER_PHONE_NO"]"
+                                                           ORDER_PHONE_NUMBER="@order["ORDER_PHONE_NO"]"
+                                                           CustomerId="@order["CustomerId"]"
+                                                           PERIOD_TYPEName="@order["PERIOD_TYPEName"]"
+                                        PRICE_CAT="@order["PRICE_CAT"]"
+                                        />
+                                </div>
+                                </td>
+                                </tr>
+
+                                }*@
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class=" pt-3">
+                <div class="">
+                    <div class="row">
+
+                        <!-- Main Inputs -->
+                        <div class="col-sm-8">
+
+                            <!-- Doc No -->
+                            <div class="row controlRow">
+                                <div class="col-sm-2">
+                                    <label class="small float-right pt-2">رقم الطلب</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control  txtOrderId" disabled />
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="custom-control custom-checkbox">
+
+                                        <input type="checkbox" class="custom-control-input disabled txtDelivery" id="chkDelivery">
+                                        <label class="custom-control-label small" for="chkDelivery">توصيل الطلب</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="small float-right pt-2">حالة الطلب</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control  txtOrderStatues" disabled />
+                                </div>
+                            </div>
+
+                            <!-- Doc Date -->
+                            <div class="row controlRow">
+
+                                <div class="col-sm-2">
+                                    <label class="small float-right pt-2">تاريخ الطلب</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control  txtOrderDate" value="@DateTime.Now" disabled />
+                                </div>
+                                <!-- Doc Date -->
+                                <div class="col-sm-2">
+                                    <label class="small float-right pt-2">تاريخ التوصيل</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control  txtDeliverDate" />
+                                </div>
+                            </div>
+
+                            <!-- Ref Doc No -->
+                            <div class="row controlRow">
+
+                                <!-- Ref Doc No -->
+                                <div class="col-sm-2">
+                                    <label class="small float-right pt-2">وقت التوصيل</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="time" class="form-control  txtDeliverTime" value="" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="small float-right pt-2"> الفترة</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control  txtperiod" disabled value="12:00" />
+                                </div>
+                            </div>
+
+                            <div class="row controlRow">
+
+
+                            </div>
+                            <!-- Ref Doc Date -->
+                            <div class="row controlRow">
+                                <div class="col-sm-2">
+                                    <label class="small float-right pt-2">العميل</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="d-flex">
+                                        <input type="text" class="form-control  txtCustomerCode w-50 d-none" />
+                                        <input type="text" class="form-control  txtCustomerName" disabled />
+                                        <input type="text" class="form-control  phonenumber" disabled />
+                                    </div>
+                                </div>
+                                <!-- Ref Doc Date -->
+
+                                <div class="col-sm-2">
+                                    <label class="float-right small">البيان</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control  txtNote" />
+                                </div>
+                            </div>
+                            <div class="row controlRow">
+                                <div class="col-sm-2">
+                                    <label class="small float-right pt-2">العنوان </label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <div class="d-flex">
+                                        <input type="text" class="form-control  txtAddress " />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row controlRow Driver">
+                                <div class="col-sm-2">
+                                    <label class="small float-right pt-2">السائق</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <select id="DriverId" class="DriverId form-control " name="DriverId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required></select>
+                                </div>
+
+                            </div>
+
+                        </div> <!-- End of Main Inputs -->
+                        <!-- Left Controls [Doc No, Ref, ..] -->
+                        <div class="col-sm-4 mt-3">
+
+                            <!-- Ref Doc Date -->
+                            <div class="row controlRow">
+                                <div class="col-sm-4">
+                                    <label class="small float-right pt-2">اجمالي الطلب</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control  txtTotalOrder" value="0.00" disabled />
+                                </div>
+                            </div>
+                            <!-- Ref Doc Date -->
+                            <div class="row controlRow">
+                                <div class="col-sm-4">
+                                    <label class="small float-right pt-2">الضريبة</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control  txtVat" value="0.00" disabled />
+                                </div>
+                            </div>
+                            <!-- Source -->
+                            <div class="row controlRow">
+                                <div class="col-sm-4">
+                                    <label class="small float-right pt-2">اجمالي التأمين</label>
+                                </div>
+                                <div class="col-sm-8 d-flex">
+                                    <input type="number" class="form-control   txtInsurance" value="0.00" disabled />
+                                </div>
+                            </div>
+                            <!-- Source -->
+                            <div class="row controlRow">
+                                <div class="col-sm-4">
+                                    <label class="small float-right pt-2">اجمالي الايجار</label>
+                                </div>
+                                <div class="col-sm-8 d-flex">
+                                    <input type="number" class="form-control   txtTotalRent" value="0.00" disabled />
+                                </div>
+                            </div>
+                            <div class="row controlRow">
+                                <div class="col-sm-4">
+                                    <label class="small float-right pt-2">اجمالي الخصم</label>
+                                </div>
+                                <div class="col-sm-8 d-flex">
+                                    <input type="number" class="form-control   txtTotalDiscount" value="0.00" disabled />
+                                </div>
+                            </div>
+                            <!-- Source -->
+                            <div class="row controlRow">
+                                <div class="col-sm-4">
+                                    <label class="small float-right pt-2">اجمالي المطلوب</label>
+                                </div>
+                                <div class="col-sm-8 d-flex">
+                                    <input type="number" class="form-control   txtTotalReq" value="0.00" disabled />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="">
+
+
+                    <ul class="nav nav-tabs  cardHeader" id="myTab" role="tablist">
+                        <li class="nav-item divCash " id="divCash">
+                            <a class="nav-link    show active" id="Item-tab" data-toggle="tab" href="#Item" role="tab" aria-controls="home" aria-selected="true">وجبات الطلب</a>
+                        </li>
+                        <li class="nav-item divMaster" id="divMaster">
+                            <a class="nav-link" id="Plate-tab" data-toggle="tab" href="#Plate" role="tab" aria-controls="contact" aria-selected="false">صحون الطلب</a>
+                        </li>
+                        <li class="nav-item divMaster" id="divMaster">
+                            <a class="nav-link" id="Time-tab" data-toggle="tab" href="#Time" role="tab" aria-controls="product" aria-selected="false">اوقات التسليم</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content table-wrapper" id="myTabContent">
+                        <div class="tab-pane fade  divCash active show table-scroll" id="Item" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="bg-white border rounded p-3 mt-3 ">
+                                <!-- Details -->
+                                <table class="table table-sm table-responsive-sm">
+                                    <thead>
+                                        <tr class="tblHead">
+                                            <th class=""></th>
+                                            <th class="" width="15%">
+                                                <div>الوجبة</div>
+                                            </th>
+                                            <th class="" width="7%">
+                                                <div>الوسم</div>
+                                            </th>
+                                            <th class="" width="5%">
+                                                <div>الكمية</div>
+                                            </th>
+                                            <th class="" width="5%">
+                                                <div>السعر</div>
+
+                                            </th>
+
+                                            <th class="" width="5%">
+                                                <div>الضريبة</div>
+                                            </th>
+                                            <th class="" width="5%">
+                                                <div>الاجمالي</div>
+                                            </th>
+
+                                            <th class="">
+                                                <div>البيان</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody class="tblOrderBody">
+                                        <tr class="tblOrderRow" data-id="0">
+                                            <td class="">
+                                                <button class="btn btn-light btn-sm border btnAddRow" type="submit">
+                                                    <i class="fa fa-plus-circle"></i>
+                                                </button>
+                                            </td>
+
+                                            <td width="25%">
+                                                <input class="form-control  text-center   txtMealName" type="text" required disabled />
+                                            </td>
+
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtTagName" type="text" required disabled id="txtTagNamedtl" />
+                                            </td>
+
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtQty index" type="text" required />
+                                            </td>
+
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtPrice" type="text" required disabled />
+                                            </td>
+
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtVat" type="text" required disabled />
+                                            </td>
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtTotal" type="text" required disabled />
+                                            </td>
+
+
+                                            <td width="25%">
+                                                <input class="form-control  text-center  txtOrderNotes index" type="text" required />
+                                            </td>
+                                            <td><button class="btn btn-light btn-sm btnContentDelete"><i class="fa fa-trash"></i></button></td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                                <div class="row" style="align-content:center">
+                                    <div class="">
+                                        <label class="small  mx-1 pt-2">الاجمالي</label>
+                                    </div>
+                                    <div class="">
+                                        <input class="form-control  text-center  font-weight-bold txtPayCash " type="text" min=0 required disabled />
+                                    </div>
+                                    <div class="">
+                                        <label class="small  mx-1 pt-2">الضريبة</label>
+                                    </div>
+                                    <div class="">
+                                        <input class="form-control  text-center disabled font-weight-bold   txtTotalTax" type="text" min=0 required disabled />
+                                    </div>
+                                    <div class="">
+                                        <label class="small  mx-1 pt-2">عدد الصحون</label>
+                                    </div>
+                                    <div class="">
+                                        <input class="form-control  text-center disabled font-weight-bold   txtTotalIns" type="text" min=0 required disabled />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade    table-scroll" id="Plate">
+                            <div class="bg-white border rounded p-3 mt-3 ">
+                                <!-- Details -->
+                                <table class="table table-sm table-responsive-sm">
+                                    <thead>
+                                        <tr class="tblHead">
+                                            <th class=""></th>
+                                            <th class="" width="15%">
+                                                <div>الصحن</div>
+                                            </th>
+                                            <th class="" width="7%">
+                                                <div>الوسم</div>
+                                            </th>
+                                            <th class="" width="5%">
+                                                <div>الكمية</div>
+                                            </th>
+                                            <th class="" width="5%">
+                                                <div>السعر</div>
+                                            </th>
+                                            <th class="" width="5%">
+                                                <div>سعر الايجار</div>
+                                            </th>
+                                            <th class="" width="5%">
+                                                <div>الاجمالي</div>
+                                            </th>
+                                            <th class="">
+                                                <div>البيان</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="tblplateBody">
+                                        <tr class="tblPlateRow" data-id="0">
+                                            <td class="">
+                                                <button class="btn btn-light btn-sm border btnAddRow" type="submit">
+                                                    <i class="fa fa-plus-circle"></i>
+                                                </button>
+                                            </td>
+
+                                            <td width="25%">
+                                                <input class="form-control  text-center   txtMealName" type="text" required disabled />
+                                            </td>
+
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtTagName" type="text" required disabled id="txtTagNamedtl" />
+                                            </td>
+
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtQty index" type="text" required />
+                                            </td>
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtPrice" type="text" required disabled />
+                                            </td>
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtVat" type="text" required disabled />
+                                            </td>
+                                            <td width="10%">
+                                                <input class="form-control  text-center  txtTotal" type="text" required disabled />
+                                            </td>
+                                            <td width="25%">
+                                                <input class="form-control  text-center  txtOrderNotes index" type="text" required />
+                                            </td>
+                                            <td><button class="btn btn-light btn-sm btnContentDelete"><i class="fa fa-trash"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row" style="align-content:center">
+                                    <div class="">
+                                        <label class="small  mx-1 pt-2">الاجمالي</label>
+                                    </div>
+                                    <div class="">
+                                        <input class="form-control  text-center disabled font-weight-bold txtPayCash " type="text" min=0 required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade    table-scroll" id="Time">
+                            <div class="bg-white border rounded p-3 mt-3 ">
+                                <!-- Details -->
+                                <table class="table table-sm table-responsive-sm">
+                                    <thead>
+                                        <tr class="tblHead">
+                                            <th class=""></th>
+                                            <th class="" width="15%">
+                                                <div>تاريخ التسليم</div>
+                                            </th>
+                                            <th class="" width="7%">
+                                                <div>وقت التسليم</div>
+                                            </th>
+                                            <th class="" width="7%">
+                                                <div>البيان</div>
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody class="tblTimeBody">
+                                        <tr class="tblTimeRow" data-id="0">
+                                            <td class="">
+                                                <button class="btn btn-light btn-sm border btnAddRow" type="submit">
+                                                    <i class="fa fa-plus-circle"></i>
+                                                </button>
+                                            </td>
+                                            <td width="25%"><input class="form-control  text-center   txtMealName" type="text" required disabled /></td>
+                                            <td width="25%">
+                                                <input class="form-control  text-center  txtTagName" type="text" required disabled id="txtTagNamedtl" />
+                                            </td>
+
+
+                                            <td width="50%">
+                                                <input class="form-control  text-center  txtOrderNotes index" type="text" required />
+                                            </td>
+                                            <td><button class="btn btn-light btn-sm btnContentDelete"><i class="fa fa-trash"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-2">
+                <button type="button" class="btn btn-primary btn-lg  btnPost">تسليم</button>
+                <button type="button" class="btn btn-primary btn-lg btnDeliver">توصيل</button>
+                <button type="button" class="btn btn-danger btn-lg btnClose" disabled>اقفال الطلب</button>
+            </div>
+        </div>
+
+
+    </div>
+}
+<script>
+      var Driver = $.parseJSON($.ajax({
+            url: '/api/APIResEmployee/ResEmployeeGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: { pValueTypeId: 1030,
+                    pQueryTypeId: '400', },
+            async: false
+           }).responseText);
+
+        var OrderId
+        $('.tblCustomerOrderBody').on('keyup keydown click focus', '.tblCustomerOrderRow', function (e) {
+        // Add Selected Class
+        $('.tblOrderRow').removeClass('selected')
+        $(this).addClass('selected')
+        var OrderDate = $(this).find('.clsHeader').attr('Order-Date');
+            OrderId = $(this).find('.OrderId').val();
+            var delivry = $(this).find('.clsHeader').attr('DELIVERY')
+        var CustomerName = $(this).find('.CustomerName').val();
+        $('.txtOrderDate').val(OrderDate);
+        $('.txtOrderId').val(OrderId);
+        $('.txtCustomerName').val(CustomerName);
+            $('.txtCustomerName').attr('Id', $(this).find('.clsHeader').attr('CustomerId'));
+            $('.phonenumber').val( $(this).find('.clsHeader').attr('ORDER_PHONE_NUMBER'));
+            //  alert(delivry)
+            if (delivry === 'True') { $('#chkDelivery').prop('checked', true) } else { $('#chkDelivery').prop('checked', false) }
+
+        $('.txtNote').val($(this).find('.clsHeader').attr('notes'));
+        $('.clsUser').val($(this).find('.clsHeader').attr('CashierName'))
+        $('.txtDeliverTime').val($(this).find('.clsHeader').attr('DELIVERY_Time'));
+        $('.txtDeliverDate').val($(this).find('.clsHeader').attr('DELIVERY_DATE'));
+         $('.txtAddress').val($(this).find('.clsHeader').attr('ADDRESS'));
+        $('.txtperiod').val($(this).find('.clsHeader').attr('PERIOD_TYPEName'));
+        $('.txtTotalOrder').val($(this).find('.clsHeader').attr('PRICE_CAT'));
+        $('.txtTotalReq').val($(this).find('.clsHeader').attr('PRICE_CAT'));
+        $('.txtTotalVat').val($(this).find('.clsHeader').attr('PRICE_CAT') * 0.05);
+            $('.txtTotalDiscount').val($(this).find('.clsHeader').attr('Discount'));
+
+
+            var Data = $(this).find('.clsData').text();
+            var DataResult = JSON.parse(Data);
+            displayData(DataResult)
+
+            var CheckDeliver = $('#chkDelivery').prop('checked')
+           // alert(CheckDeliver)
+            if (CheckDeliver === false) {
+                $('.btnDeliver').prop('disabled', true);
+                $('.btnPost').prop('disabled', false);
+            } else {
+                $('.btnDeliver').prop('disabled', false);
+                $('.btnPost').prop('disabled', true);
+
+            }
+            funPriceTotal()
+            checkDelivery();
+    })
+        function displayData(pData) {
+        var vGlVoucherDataResult = pData
+                $('.tblOrderBody').html('')
+
+                for (var i = 0; i <= pData.length - 1; i++) {
+
+                    vCurrentRowIndex = i;
+                    // GET Cash Desk Row Content
+                    var vContent = funConfigTable(vGlVoucherDataResult[i]);
+                    // Append Row Content
+                    $('.tblOrderBody').append(vContent);
+                }
+    }
+    function funConfigTable(pData) {
+        var DataRow =
+            '<tr class="tblOrderRow" style="font-size:10px ;background-color:#98E576" data-id="' + pData.OrderDTLID +'" value="'+pData.OrderDTLID+'" >' +
+            '<td class="">' +
+            '<button class="btn btn-light btn-sm border btnAddRow" type="submit">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            ' </button>' +
+            '</td>' +
+
+            '<td width="10%">' +
+            ' <input class="form-control  text-center   txtMealId d-none" type="text" Item-Type="' + pData.ItemType + '" value="' + pData.InvItemId + '" unitid="' + pData.UnitId + '" required disabled />' +
+            '<input class="form-control text-center d-none txtUnitId" type="text" value="' + pData.UnitId + '" required />' +
+            ' <input class="form-control  text-center   txtMealName" type="text" value="' + pData.InvItemNameL1 +'" required disabled />' +
+            '</td>' +
+            '<td width="10%">' +
+            '<input class="form-control  text-center  txtTagName" type="text" value="' + pData.TagName +'" required disabled id="txtTagNamedtl" />' +
+            ' </td>' +
+            '<td width="10%">' +
+            '<input class="form-control  text-center  txtQty index" value="' + pData.QTY +'" type="text" required />' +
+            ' </td>' +
+            '<td width="10%">' +
+            '<input class="form-control  text-center  txtPrice" value="' + pData.PRICE +'" type="text" required disabled />' +
+            '</td>' +
+            '<td width="25%">' +
+            '<input class="form-control  text-center  txtVat" value="'+ pData.VAT_PRICE +'" type="text" required disabled />' +
+            '</td>' +
+            '<td width="10%">' +
+            '<input class="form-control  text-center  txtTotal" value="'+pData.QTY*pData.PRICE +'" type="text" required disabled />' +
+            '</td>' +
+             '<td width="25%">' +
+            '<input class="form-control  text-center  txtOrderNotes index" value="' + pData.NOTES +'" type="text" required />' +
+            '</td>' +
+            '<td><button class="btn btn-light btn-sm btnContentDelete"><i class="fa fa-trash"></i></button></td>'
+            '</tr >';
+        return DataRow;
+    }
+
+    checkDelivery()
+    $('#chkDelivery').on('change', function () {
+        checkDelivery()
+    })
+    function checkDelivery() {
+        var btnValue = $('#chkDelivery').prop("checked");;
+      //
+        if (btnValue === true) {
+            $('.Driver').css('visibility', 'visible');
+            $("#DriverId").val($("#DriverId option:first").val());
+        }
+        else {
+            $('#DriverId').val(0)
+            $('.Driver').css('visibility', 'hidden');
+
+        }
+
+    }
+
+
+
+    $('.btnPost,.btnDeliver').on('click', function () {
+         var ADDRESS = $('.txtAddress').val();
+        var OrderId = $('.txtOrderId').val();
+        var NOTES = $('.txtNote').val();
+        var TotalReq = $('.txtTotalReq').val();
+        var vat = TotalReq * 0.05
+        var CUST_SEQ = $('.txtCustomerName').attr('Id');
+        var CUST_Name = $('.txtCustomerName').val();
+        var PhoneNumber = $('.phonenumber').val();
+        var DELIVERY = $('#chkDelivery').prop("checked");
+        var Delivery = $('#DriverId').val();
+        var DeliveryDate = '@ORderTime';
+            //$('.txtDeliverDate').val();
+
+             //Invoice
+        @*$.post('/Invoice/SaveMovementOrder',
+            {
+                phINVId: 0,
+                phInvtype: 33,
+                ppType: 1,
+                phInvIsWait: false,
+                phInvDate: DeliveryDate,
+                phNotes: NOTES,
+                pCashDeskId: '@CashierId',
+                pInvPhoneNo: PhoneNumber,
+                pCustomerName: CUST_Name,
+                pInvStatus: 1,
+                //pInsurance: vInsurance,
+                phStoreId: 3,
+                phOrderType: 33,
+                phInvCurValue: TotalReq,
+                pDelivery: Delivery,
+                pTax:vat,
+                phInvIsCancel:false,
+                pInvMachine: '@Environment.MachineName',
+                pDeliveryInvoice: DELIVERY,
+                phIsDeleted:false,
+                pLocAddressInvoice: ADDRESS,
+                phCustomerId: CUST_SEQ,
+                phOrderId: OrderId,
+                pQueryTypeId: 100
+
+
+            }, function (data) {
+                var DataResult = JSON.parse(data)
+                var InvId = DataResult[0].InvId
+                console.log(InvId)
+                funSaveInvoiceDtl(InvId)
+            });*@
+
+        funSaveInvoiceDtl();
+    })
+       // Bulk Save
+    function funSaveInvoiceDtl() {
+        var OrderId = $('.txtOrderId').val();
+
+            var InvId = $('.InvId').val();
+            var UserId = $('.divUserId').text();
+
+            var ADDRESS = $('.txtAddress').val();
+        var NOTES = $('.txtNote').val();
+            var TotalReq = $('.txtTotalReq').val();
+            var vat = TotalReq * 0.05
+            var CUST_SEQ = $('.txtCustomerName').attr('Id');
+            var CUST_Name = $('.txtCustomerName').val();
+            var PhoneNumber = $('.phonenumber').val();
+
+        var DELIVERY = $('#chkDelivery').prop("checked");
+
+            var Delivery = $('#DriverId').val();
+            var DeliveryDate = $('.txtDeliverDate').val();
+            let InvoiceDtls = [];
+            $(".tblOrderRow").each(function () {
+                // Row Data
+                var vRowData = $(this);
+                if (vRowData.find('.txtMealId').val() != '')
+                    InvoiceDtls.push({
+
+                        ItemId: vRowData.find('.txtMealId').val(),
+                        UnitId: vRowData.find('.txtMealId').attr('unitid'),
+                        //UnitId: vRowData.find('.txtUnitId').val(),
+                        Price: vRowData.find('.txtPrice').val(),
+                        ItemQty: vRowData.find('.txtQty').val(),
+                        ItemType: vRowData.find('.txtMealId').attr('Item-Type'),
+                        /// ItemType: ItemType,
+                        VatTotal: vRowData.find('.txtVat').val(),
+                    });
+            });
+        console.log(InvoiceDtls)
+            $.ajax({
+                url: '/Invoice/InsertMovementBulk',
+                method: 'POST', contentType: 'application/json',
+                data: JSON.stringify({
+                    InvoiceDtls,
+                    UserId: '@UserId',
+                    BranchId: '@BranchId',
+                    InvId: InvId,
+                    InvDate: '@ORderTime',
+                    DeliveryDate: DeliveryDate,
+                    Notes: NOTES,
+                    InvStatus: 2,
+                    CashDeskId: '@CashierId',
+                    InvPhoneNo: PhoneNumber,
+                    CustomerName: CUST_Name,
+                    InvCurValue: TotalReq,
+                    Delivery: Delivery,
+                    Tax: vat,
+                    InvIsCancel: false,
+                    InvMachine: '@Environment.MachineName',
+                    DeliveryInvoice: DELIVERY,
+                    LocAddressInvoice: ADDRESS,
+                    CustomerId: CUST_SEQ,
+                    OrderId: OrderId,
+                    BranchId:@BranchId,
+                    Discount: $('.txtTotalDiscount').val(),
+                }),
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                complete: function () {
+                    $('#loading').hide();
+                },
+                success: function (r) {
+                    var m = JSON.parse(r);
+                    if (m[0].SuccessStatus == 'undefined' || m[0].SuccessStatus == false) {
+                        funNotification(m[0].SystemMessageText, 3);
+                        return;
+                    }
+                    console.log(r)
+                    $.each(m, function (i, a) {
+                        funNotification(a.SystemMessageText, a.c)
+                        if (a.c === 1) {
+                            window.open('/ResOrder/Report/' + OrderId);
+                        }
+                    })
+                    // $('.selected').remove();
+                    $('.tblCustomerOrderBody').load('/ResOrder/OrderData');
+                }
+            });
+        }
+          funDriver(Driver)
+        function funDriver(Data) {
+            var vDataJSON = JSON.parse(Data);
+           /*$('#DriverId').append('<option data-id="0" value="0" sort-id="0">-- </option>')*/
+            $.each(vDataJSON, function (i, Driver) {
+                $('#DriverId').append('<option data-id="' + Driver.ResEmployeeId + '" value="' + Driver.ResEmployeeId + '" sort-id="' + i + '">' + Driver.ResEmployeeNameL1 + '</option>')
+         })
+           // $('#DriverId').val(vDriverId);
+           // Refresh Select Picker
+           //  $('.DriverId').selectpicker('refresh');
+    }
+
+
+    function funPriceTotal() {
+      //  var TotalDiscount = '20';
+
+            // Total Debit
+            var Total = 0;
+            var vatTotal = 0;
+            var InsTotal = 0;
+            var PlateTotal = 0;
+            $('.txtTotal').each(function () {
+
+                // Get Value
+                var Price = $(this).val();
+
+                // Check Value
+                if (Price == '' || Price == null || Price == undefined) {
+                    Price = 0;
+                }
+                // Add Value
+                Total += parseFloat(Price);
+
+                //return Total
+            })
+
+
+         $('.txtVat').each(function () {
+
+                // Get Value
+                var vat = $(this).val();
+
+                // Check Value
+                if (vat == '' || vat == null || vat == undefined) {
+                    vat = 0;
+                }
+                // Add Value
+                vatTotal += parseFloat(vat);
+
+                //return vatTotal
+         })
+
+         $('.txtQty').each(function () {
+
+                // Get Value txtMealId
+             var Type = $(this).closest('tr').find('.txtMealId').attr('Item-Type')
+             var Total = $(this).closest('tr').find('.txtTotal').val();
+             var Qty = $(this).val();
+             console.log(Qty)
+
+
+             // Check Value
+                if (Qty == '' || Qty == null || Qty == undefined) {
+                    Qty = 0;
+             }
+             if (parseInt(Type) == 3) {
+                 PlateTotal += parseFloat(Qty);
+                 InsTotal += parseFloat(Total);
+
+             }
+              //  return InsTotal
+         })
+
+            // SET Values
+            $('.txtPayCash').val(Total.toFixed(2));
+            $('.txtTotalTax').val(vatTotal.toFixed(2));
+        $('.txtTotalIns').val(PlateTotal);
+        $('.txtInsurance').val(InsTotal);
+    }
+
+     $('.btnClose').on('click', function () {
+         var OrderId = $('.txtOrderId').val()
+        if (OrderId) {
+            // Update Is Posted
+             $.get('/api/APIResOrder/ResOrderGET',
+                {
+                    // Head Parameters
+                    pOrderId: OrderId,
+                    pORDER_STATUS: 5,
+                    pQueryTypeId: '202'
+                },
+                function (data, status) {
+                    var DataResult = JSON.parse(data)
+               // $('.selected').remove();
+                       $('.tblCustomerOrderBody').load('/ResOrder/OrderData');
+                   // $('.txtOrderId').val(Id)
+                    funNotification('تم اقفال الطلب', 1)
+                })
+
+        }
+    });
+</script>

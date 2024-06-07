@@ -1,0 +1,203 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    Layout = null;
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>@appResource._Code<input type="text" class="form-control txtCustomerCode" /></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div>الاسم<input type="text" class="form-control txtCustomerName" /></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div>@appResource._Phone<input type="number" class="form-control txtPhone" /></div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <div>@appResource._Type<input type="text" class="form-control txtType" /></div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearch">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+    <div class="divFormDtl">
+        <table class="table table-bordered table-hover tblGLCustomer">
+            <thead>
+                <tr>
+                    <th class="btnCheckAll" data-checked="false">تحديد الكل</th>
+                    <th>الكود</th>
+                    <th>الاسم</th>
+                    <th>الفئة</th>
+                    <th>التليفون</th>
+
+                </tr>
+            </thead>
+
+            <tbody class="tblGLCustomerBody"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+<script>
+    // Actione Load
+    $(document).ready(function () {
+
+        // Get Row
+       // funGetCustomers(null,null,null,null);
+    });
+
+
+    //function Append
+    function funCustomerRowConfig(pGLCustomerRow) {
+        // Content
+        var RowContent = '<tr data-id="' + pGLCustomerRow.CustomerId + '">' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pGLCustomerRow.CustomerId + '"/></td> ' +
+            '<td align="center">' + pGLCustomerRow.CustomerCode + '</td>' +
+            '<td align="center">' + pGLCustomerRow.CustomerNameL1 + '</td>' +
+            '<td align="center">' + pGLCustomerRow.CustomerCategoryNameL1 + '</td>' +
+            '<td align="center">' + pGLCustomerRow.CustomerPhoneNumber + '</td>' +
+            +'</tr > '
+        return RowContent
+    }
+    function funGetCustomers(pType, pPhone, pCustomerCode, pCustomerNameL1) {
+        
+        $.get('/api/APIGLCustomer/GLCustomerGET',
+            {
+                pIsCustomer: true,
+                pCustomerCode: pCustomerCode, 
+                pCustomerNameL1: pCustomerNameL1,
+                pCategoryId: pType, 
+                pCustomerPhoneNumber: pPhone,
+                pCustomerAmountLimit: 0,
+               
+                // Query Type Id
+                pQueryTypeId: '413',
+
+            }, function (data, status) {
+                console.log(data)
+                if (data != undefined && data != '') {
+                    $('.tblGLCustomerBody').html('')
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, CustomerData) {
+                        // GET Cash Desk Row Content
+
+                        var vCustomerRowContent = funCustomerRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblGLCustomerBody').append(vCustomerRowContent);
+                    });
+
+                }
+            })
+
+    }
+    $('.btnSearch').on('click', function () {
+        var vPhone = $('.txtPhone').val();
+        var vType = $('.txtType').val();
+        var vCustomerCode = $('.txtCustomerCode').val();
+        var vCustomerName = $('.txtCustomerName').val();
+     
+
+        // Get Row
+        funGetCustomers(vType, vPhone, vCustomerCode, vCustomerName);
+        console.log('vPhone' + vPhone)
+    })
+    // Ac
+    $('.txtCustomerName').on('blur', function () {
+        if ($('.txtCustomerName').val().trim() == '') {
+
+            // Get Row
+          //  funGetCustomers(null, null, null, null);
+        }
+    })
+        $('.txtCustomerCode').on('blur', function () {
+            if ($('.txtCustomerCode').val().trim() == '') {
+
+                // Get Row
+              //  funGetCustomers(null, null, null, null);
+            }
+
+        })
+        $('.txtPhone').on('blur', function () {
+            if ($('.txtPhone').val().trim() == '') {
+
+                // Get Row
+              //  funGetCustomers(null, null, null, null);
+            }
+
+        })
+        $('.txtType').on('blur', function () {
+            if ($('.txtType').val().trim() == '') {
+
+                // Get Row
+               // funGetCustomers(null, null, null, null);
+            }
+
+        })
+
+
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+</script>
+

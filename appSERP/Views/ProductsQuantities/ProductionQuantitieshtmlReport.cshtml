@@ -1,0 +1,94 @@
+﻿@using System.Data;
+@{
+
+    Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
+    DataTable Data = ViewBag.vDT;
+    string InvId = "";
+    string Store = "";
+    string Customer = "";
+    if (Data != null)
+    {
+        DataRow DRow = Data.Rows[0];
+        ViewBag.Title = "تقرير الكميات في المخازن";
+    }
+    double Total = 0;
+
+}
+
+
+<table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+    <thead style="">
+        <tr>
+            <th>المخزن </th>
+            <th>رقم الصنف </th>
+            <th width="30%">اسم الصنف</th>
+            <th>الكمية</th>
+            <th>الوحدة </th>
+            <th>التكلفة </th>
+            <th>اجمالي التكلفة</th>
+        </tr>
+    </thead>
+    @if (Data != null)
+    {
+        foreach (DataRow item in Data.Rows)
+        {
+
+            double TotalRow = (Convert.ToDouble(item["ItemOpenCost"].ToString())* Convert.ToDouble(item["ItemQty"].ToString()));
+<tr>
+    <td style="text-align: center; vertical-align: middle;">
+        @item["StoreNameL1"]
+        
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+        @item["InvItemCode"]
+        <br />
+    </td>
+    <td style="text-align: center; vertical-align: middle;padding-right:20px">
+        @item["InvItemNameL1"]
+    </td>
+    <td style="text-align:center; vertical-align: middle; ">
+        @item["ItemQty"]
+
+    </td>
+
+    <td style="text-align:center; vertical-align: middle; ">
+        @item["UnitName"]
+
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+        @item["ItemOpenCost"]
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+        @Math.Round(TotalRow, 2, MidpointRounding.ToEven)
+        
+    </td>
+</tr>
+
+            Total = Total + TotalRow;
+        }
+    }
+<tr class="total">
+    <td style="text-align: center;font:bold; vertical-align: middle;">
+        الاجمالي الكلي:
+        <br />
+    </td>
+    <td style="text-align: center; vertical-align: middle;padding-right:20px">
+    </td>
+    <td style="text-align: center; vertical-align: middle;padding-right:20px">
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+    </td>
+
+    <td style="text-align:center;vertical-align: middle;">
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+        @Math.Round(Total, 2, MidpointRounding.ToEven)
+
+    </td>
+
+
+</tr>
+</table>
+

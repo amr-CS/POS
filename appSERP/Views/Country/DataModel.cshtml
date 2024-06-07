@@ -1,0 +1,144 @@
+﻿@model appSERP.Models.SYSSETT.CountryModel
+@using appSERP.Views.Shared.appResource
+
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<!-- Header -->
+<div class="container-fluid">
+    @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._Country, pId = Model.CountryId })
+</div>
+
+@using (Html.BeginForm("DataModel", "Country", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.CountryId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountryCode, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.CountryCode, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @Html.ValidationMessageFor(model => model.CountryCode, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountryNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.CountryNameL1, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CountryNameL1, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountryNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.CountryNameL2, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CountryNameL2, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountryPhoneCode, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.CountryPhoneCode, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CountryPhoneCode, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountryNationalityNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.CountryNationalityNameL1, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CountryNationalityNameL1, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountryNationalityNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.CountryNationalityNameL2, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CountryNationalityNameL2, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountryImage, htmlAttributes: new { @class = "", @for = "customFile" })
+        <div class="col-md-12">
+            <input type="file" class="form-control" id="customFile" name="pFile" accept="image/*" onchange="funShowImage(this)">
+            <img id="imgData" width="100" src="@Model.CountryImage" />
+            @Html.HiddenFor(model => model.CountryImage)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountryTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectCountryType" class="selectpicker form-control" name="CountryTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.CountryTypeId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="custom-control custom-checkbox col-md-12">
+            @Html.EditorFor(model => model.CountryIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+            @Html.LabelFor(model => model.CountryIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+        </div>
+    </div>
+
+</div>
+
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+}
+
+
+
+<script>
+   // List selectLanguage
+    var vCountryTypeId = 0;
+        $.post('/Home/GetCountryType',
+            null,
+            function(data, status) {
+        var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function(i, CountryType) {
+                    $('#selectCountryType').append('<option data-id="' + CountryType.CountryTypeId + '" value="' + CountryType.CountryTypeId + '" sort-id="' + i + '">' + CountryType.CountryTypeNameL1 + '</option>')
+                    if (i == 0) {
+
+                        vCountryTypeId = CountryType.CountryTypeId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcCountryTypeId') >0 ) {
+                    vCountryTypeId = parseInt('@ViewBag.vbcCountryTypeId')
+                }
+                $('#selectCountryType').val(vCountryTypeId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+    }
+        )
+
+</script>
+<script>
+
+    // Show Image [on Change]
+    function funShowImage(pElement) {
+        if (pElement.files && pElement.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#imgData').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(pElement.files[0]);
+        }
+    }
+
+</script>

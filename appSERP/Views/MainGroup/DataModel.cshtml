@@ -1,0 +1,201 @@
+﻿@model appSERP.Models.FA.MainGroupModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <!-- Header -->
+    <div class="container-fluid">
+        @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.MainGroupId, pId = Model.MainGroupId })
+    </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.HiddenFor(model => model.MainGroupId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.HiddenFor(model => model.MainGroupId, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.MainGroupId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MainGroupNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MainGroupNameL1, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.MainGroupNameL1, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MainGroupNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MainGroupNameL2, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.MainGroupNameL2, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group m-3">
+        <div class="custom-control custom-checkbox col-md-12">
+            @Html.EditorFor(model => model.MainGroupIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+            @Html.LabelFor(model => model.MainGroupIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.FixedAssetMethodId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectFixedAssetMethod" class="selectpicker form-control form-control" name="FixedAssetMethodId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.FixedAssetMethodId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MainGroupPercent, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.MainGroupPercent, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+            @Html.ValidationMessageFor(model => model.MainGroupPercent, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MainGroupDebitAccount, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectMainGroupDebitAccount" class="selectpicker form-control form-control" name="MainGroupDebitAccount" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.MainGroupDebitAccount, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MainGroupCreditAccount, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectMainGroupCreditAccount" class="selectpicker form-control form-control" name="MainGroupCreditAccount" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.MainGroupCreditAccount, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MainGroupPurchaseAccount, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectMainGroupPurchaseAccount" class="selectpicker form-control form-control" name="MainGroupPurchaseAccount" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.MainGroupPurchaseAccount, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MainGroupSalesAccount, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectMainGroupSalesAccount" class="selectpicker form-control form-control" name="MainGroupSalesAccount" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.MainGroupSalesAccount, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+</div>
+}
+<script>
+           // List GetFixedAssetMethod
+   $.post('/Home/GetFixedAssetMethod',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, FixedAssetMethod) {
+               $('#selectFixedAssetMethod').append('<option data-id="' + FixedAssetMethod.FixedAssetMethodId + '" value="' + FixedAssetMethod.FixedAssetMethodId + '" sort-id="' + i + '">' + FixedAssetMethod.FixedAssetMethodNameL1 + '</option>')
+
+           })
+           var vData = '@Model.FixedAssetMethodId'
+
+           if (vData != "0") {
+               $('#selectFixedAssetMethod').val(@Model.FixedAssetMethodId);
+           }
+           // Refresh Select Picker
+           $('.selectpicker').selectpicker('refresh');
+       }
+    )
+
+               // List GetMainGroupPurchaseAccount
+   $.post('/Home/GetAccount',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, MainGroupDebitAccount) {
+               //$('#selectMainGroupDebitAccount').append('<option data-id="' + MainGroupDebitAccount.ParentId + '" value="' + MainGroupDebitAccount.ParentId + '" sort-id="' + i + '">' + MainGroupDebitAccount.AccountNameL1 + '</option>')
+               $('#selectMainGroupDebitAccount').append('<option data-id="' + MainGroupDebitAccount.AccountParentId + '" value="' + MainGroupDebitAccount.AccountParentId + '" sort-id="' + i + '">' + MainGroupDebitAccount.AccountNameL1 + '</option>')
+           })
+           var vData = '@Model.MainGroupDebitAccount'
+
+           if (vData != "0") {
+               $('#selectMainGroupDebitAccount').val(@Model.MainGroupDebitAccount);
+           }
+           // Refresh Select Picker
+           $('.selectpicker').selectpicker('refresh');
+       }
+    )
+
+    
+               // List GetMainGroupPurchaseAccount
+   $.post('/Home/GetAccount',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, MainGroupCreditAccount) {
+               //$('#selectMainGroupCreditAccount').append('<option data-id="' + MainGroupCreditAccount.ParentId + '" value="' + MainGroupCreditAccount.ParentId + '" sort-id="' + i + '">' + MainGroupCreditAccount.AccountNameL1 + '</option>')
+               $('#selectMainGroupCreditAccount').append('<option data-id="' + MainGroupCreditAccount.AccountParentId + '" value="' + MainGroupCreditAccount.AccountParentId + '" sort-id="' + i + '">' + MainGroupCreditAccount.AccountNameL1 + '</option>')
+           })
+           var vData = '@Model.MainGroupCreditAccount'
+
+           if (vData != "0") {
+               $('#selectMainGroupCreditAccount').val(@Model.MainGroupCreditAccount);
+           }
+           // Refresh Select Picker
+           $('.selectpicker').selectpicker('refresh');
+       }
+    )
+    
+                   // List GetMainGroupPurchaseAccount
+   $.post('/Home/GetAccount',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, MainGroupPurchaseAccount) {
+               $('#selectMainGroupPurchaseAccount').append('<option data-id="' + MainGroupPurchaseAccount.AccountParentId + '" value="' + MainGroupPurchaseAccount.AccountParentId + '" sort-id="' + i + '">' + MainGroupPurchaseAccount.AccountNameL1 + '</option>')
+           })
+           var vData = '@Model.MainGroupPurchaseAccount'
+
+           if (vData != "0") {
+               $('#selectMainGroupPurchaseAccount').val(@Model.MainGroupPurchaseAccount);
+           }
+           // Refresh Select Picker
+           $('.selectpicker').selectpicker('refresh');
+       }
+    )
+   // List GetMainGroupSalesAccount
+   $.post('/Home/GetAccount',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, MainGroupPurchaseAccount) {
+               $('#selectMainGroupSalesAccount').append('<option data-id="' + MainGroupPurchaseAccount.AccountParentId + '" value="' + MainGroupPurchaseAccount.AccountParentId + '" sort-id="' + i + '">' + MainGroupPurchaseAccount.AccountNameL1 + '</option>')
+           })
+           var vData = '@Model.MainGroupSalesAccount'
+
+           if (vData != "0") {
+               $('#selectMainGroupSalesAccount').val(@Model.MainGroupSalesAccount);
+           }
+           // Refresh Select Picker
+           $('.selectpicker').selectpicker('refresh');
+       }
+    )
+
+
+ 
+</script>

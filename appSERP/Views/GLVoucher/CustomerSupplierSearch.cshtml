@@ -1,0 +1,184 @@
+﻿
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "CSSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divCS {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divCSSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divCSSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divCSNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Customer</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+<div class="divCS">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyCS"></tbody>
+    </table>
+
+</div>
+
+
+<!-- CS GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // CS GET
+        funCSGET();
+    })
+
+    // CS GET
+    function funCSGET() {
+
+        $.get('/api/APIGLCustomer/GLCustomerGET',
+            {
+               pIsCustomer: false,
+                    // Query Type Id
+                    pQueryTypeId: '405',
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyCS');
+
+                console.log(vDataResult)
+                // CSs
+                $.each(vDataResult, function (i, CSData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].CustomerId + '">';
+
+                    var vCSName = vDataResult[i].CustomerNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCSName = vDataResult[i].CustomerNameL2;
+                        }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].CustomerId + '">';
+                    vRowContent += '<div class="divCSSelect   d-flex p-2" data-id="' + vDataResult[i].CustomerId + '">';
+                    vRowContent += '<div class="divCSId  d-none px-4">' + vDataResult[i].CustomerId + '</div>';
+                    vRowContent += '<div class="divCSCode  px-4">' + vDataResult[i].CustomerCode + '</div>';
+                    vRowContent += '<div class="divCSName px-4">' + vCSName + '</div>';
+                    vRowContent += '<div class="divAccountId  d-none px-4">' + vDataResult[i].AccountId + '</div>';
+                    vRowContent += '<div class="divAccountNo  d-none px-4">' + vDataResult[i].AccountNo + '</div>';
+                    vRowContent += '<div class="divAccountName  d-none px-4">' + vDataResult[i].AccountNameL1 + '</div>';
+                    vRowContent += '<div class="divCurrencyId  d-none px-4">' + vDataResult[i].CurrencyId + '</div>';
+                    vRowContent += '<div class="divCurrencyExchange  d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                    vRowContent += '<div class="divCurrencyName  d-none px-4">' + vDataResult[i].CurrencyNameL1 + '</div>';
+                    vRowContent += '<div class="divCSNameL2  d-none px-4">' + vDataResult[i].CSNameL2 + '</div>';
+                  vRowContent += '<div class="divCustomerVATCode  d-none px-4">' + vDataResult[i].CustomerVATCode + '</div>';
+                  
+                    vRowContent += '</div>';
+                    vRowContent += '</td>';
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search CS -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divCSSelect').each(function () {
+
+                // Get CS Code
+                var vCSCode = $(this).find('.divCSCode').text();
+                var vCSName = $(this).find('.divCSName').text();
+
+                // Check Result
+                if (vCSCode.search(vSearchInput) != -1 || vCSName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+
+
+
+            // Check All
+            $('.divCSSelect').each(function () {
+
+
+          
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+           
+              
+
+            })
+        }
+    })
+</script>

@@ -1,0 +1,120 @@
+﻿@using System.Data
+@using appSERP.appCode.Setting.GD
+@using appSERP.appCode.Setting.Company
+@{ DataTable vDtObject = ViewBag.vbObject; }
+@{ DataTable vDtObjectType = ViewBag.vbObjectType; }
+@{ DataTable vDtSystem = ViewBag.vbSystem; }
+@{
+    Layout = null;
+}
+
+<!-- Sidebar  -->
+<div id="sidebar-wrapper" >
+    @*@Html.Action("UserFavorite", "UserFavorite")*@
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">
+            <div class="row">
+                <div class="divAppImage mx-auto my-2">
+                    <img src="data:image/gif;base64, @ViewBag.DevCompanySetting.DevAppImage" width="150" />
+                </div>
+            </div>
+        </li>
+
+        <li class="active">
+            @if (vDtSystem.Rows.Count > 0) { 
+            foreach (DataRow vDrwSystem in vDtSystem.Rows)
+            {
+                <!-- TYPE -->
+                string vSystemName = vDrwSystem["SystemName"].ToString();
+
+                <a href="#System_@vDrwSystem["SystemId"]"
+                   data-toggle="collapse" aria-expanded="false"
+                   class="dropdown-toggle clsObjectType divSidebarItemGroup clsSystem_@vDrwSystem["SystemId"]" data-type-id="@vDrwSystem["SystemId"]">@vSystemName</a>
+
+
+
+                <ul class="collapse show list-unstyled CollapseSystem_@vDrwSystem["SystemId"]" id="System_@vDrwSystem["SystemId"]">
+
+                    @foreach (DataRow vDrwUserObjectActionType in vDtObjectType.Rows)
+                    {
+
+                        <!-- GET DATA -->
+                        int vObjectTypeId = Convert.ToInt32(vDrwUserObjectActionType["SystemId"]);
+                        int vSystemId = Convert.ToInt32(vDrwSystem["SystemId"]);
+
+                        if (vObjectTypeId == vSystemId)
+                        {
+                            string vObjectTypeName = vDrwUserObjectActionType["ObjectTypeName"].ToString();
+                            <li>
+                                <div>
+                                    <!-- TYPE -->
+                                    <a href="#ObjectType_@vDrwUserObjectActionType["ObjectTypeId"]"
+                                       data-toggle="collapse" aria-expanded="false"
+                                       class="dropdown-toggle divSidebarItemGroup clsObjectType_@vDrwUserObjectActionType["ObjectTypeId"]"
+                                       data-type-id="@vDrwUserObjectActionType["ObjectTypeId"]">@vObjectTypeName</a>
+
+                                    <ul class="collapse show list-unstyled CollapseObjectType_@vDrwUserObjectActionType["ObjectTypeId"]" id="ObjectType_@vDrwUserObjectActionType["ObjectTypeId"]">
+
+                                        @foreach (DataRow vDrwUserObjectAction in vDtObject.Rows)
+                                            {
+                                            <!-- GET DATA -->
+                                            int vUserObjectActionTypeId = Convert.ToInt32(vDrwUserObjectActionType["ObjectTypeId"]);
+                                            int vUserObjectActionTypeId_Action = Convert.ToInt32(vDrwUserObjectAction["ObjectTypeId"]);
+
+                                            <!-- CHECK TYPE [OBJECT] -->
+                                            if (vUserObjectActionTypeId == vUserObjectActionTypeId_Action)
+                                            {
+                                                <li>
+                                                    <div>
+                                                        <!-- Object -->
+                                                        <a href="@vDrwUserObjectAction["ObjectURL"]"
+                                                           class="divSidebarItem  main_@vDrwUserObjectAction["ObjectId"]"
+                                                           data-Object-id="@vDrwUserObjectAction["ObjectId"]" data-Object-Name="@vDrwUserObjectAction["ObjectName"]"
+                                                           IsNew="@vDrwUserObjectAction["IsNew"]"
+                                                           IsSave="@vDrwUserObjectAction["IsSave"]"
+                                                           IsEdit="@vDrwUserObjectAction["IsEdit"]"
+                                                           IsDelete="@vDrwUserObjectAction["IsDelete"]"
+                                                           IsPrint="@vDrwUserObjectAction["IsPrint"]" >
+                                                            <!-- IMAGE -->
+                                                            <div>
+                                                                <img src="@vDrwUserObjectAction["ObjectIconW"]" style="float:right;margin-left:20px" class="divSidebarItemIcon" width="20" />
+                                                                @*<img src="~/Image/DataImage/GD/ACC copy_0a0b1414-8087-4df8-b5d1-276768cde0f4.png" />*@
+                                                            </div>
+                                                  
+                                                            @{
+                                                                <!-- OBJECT -->
+                                                                string vObjectName = vDrwUserObjectAction["ObjectName"].ToString();
+                                                                <!-- TITLE -->
+                                                                <div class="divSidebarItemTitle">@vObjectName</div>
+                                                            }
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            } // END Of Last If
+                                        }    @*Last For Each*@
+
+                                    </ul>
+                                </div>
+                            </li>
+                        } // Second If
+                    } @*Second ForEach*@
+                </ul>
+            } @*First ForEach*@
+}
+        </li>
+    </ul>
+</div> <!-- End of Side Bar -->
+<script>
+
+   $(document).ready(function () {
+        $('.btnSidebarCollapse').click(function (e) {
+            e.preventDefault();
+            $('.appSideBar').toggleClass('d-none');
+
+        });
+    });
+
+</script>
+
+
+

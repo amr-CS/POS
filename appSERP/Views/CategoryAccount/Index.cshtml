@@ -1,0 +1,971 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblCategoryAccount, pIsNew = false })
+</div>
+
+<style>
+    .divTableContainer {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .divCategoryAccount, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }
+
+    .divSectionTitle {
+        background-color: rgba(41, 128, 185, 0.04);
+        font-weight: bold;
+        color: #2980b9;
+    }
+
+    select.selectpicker {
+        display: inline !important;
+    }
+</style>
+<div class="container-fluid">
+    <div class="d-flex bg-white p-3 border">
+        <label style="visibility:hidden;display:none" class="control-label" id="lblid" data_id="0">0</label>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="control-label">@appResource.ProductTypeId</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control w-25" id="txtProductTypeId" />
+                        <input type="text" class="form-control w-75" disabled id="txtProductTypeName" />
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Size Type -->
+<div class="divTableContainer">
+
+    <!-- Cash Desk Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">
+        @*@appResource.lblProductType*@
+    </div>
+
+    <!-- Cash Desks Data -->
+    <div class="divProductType bg-white border p-2">
+        <table class="table tblProductType">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th width="20px"></th>
+                    <th>@appResource._Code</th>
+                    <th>@appResource._Currency</th>
+                    <th>@appResource._SalesAccount</th>
+                    <th> @appResource.ReturnSalesAccountId</th>
+                    <th> @appResource.DiscountReceivedId</th>
+                    <th> @appResource.DiscountAllowedId</th>
+                    <th> @appResource.TaxAccountId</th>
+                    <th>@appResource._IsActive</th>
+                    <th class="thActions">@appResource._Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblCategoryAccountBody"></tbody>
+        </table>
+
+    </div>
+    @*<div class=" bg-white border p-2 d-flex">
+        <div class="w-100 row">
+            <div class="w-25">
+
+                <div class="form-group " style="margin-right:70px">
+                    <label class="control-label">@appResource.GroupAccountId</label>
+                    <input type="text" class="form-control w-25" />
+                </div>
+            </div>
+            <div class="w-25">
+                <input type="text" class="form-control w-25"  />
+            </div>
+            <div class="w-25">
+                <input type="text" class="form-control w-25" />
+            </div>
+        </div>
+          </div>*@
+    <div class=" bg-white border pt-3">
+        <div class="row">
+
+            <div class="row col-md-4">
+                <div class=" col-sm-3">
+                    <label class="control-label">@appResource.GroupAccountId</label>
+                </div>
+                <div class=" col-sm-7">
+                    <input type="text" class="form-control" readonly id="txtGroupAccountId" data-id="0" />
+                </div>
+            </div>
+            <div class="row col-md-4">
+                <div class=" col-sm-3">
+                    <label class="control-label">@appResource.ReturnPurchasesAccountId</label>
+                </div>
+                <div class=" col-sm-7">
+                    <input type="text" class="form-control" readonly id="txtReturnPurchasesAccountId" data-id="0" />
+                </div>
+            </div>
+            <div class="row col-md-4">
+                <div class=" col-sm-3">
+                    <label class="control-label">@appResource.SalesCostAccountId</label>
+                </div>
+                <div class=" col-sm-7">
+                    <input type="text" class="form-control" readonly id="txtSalesCostAccountId" data-id="0" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--Size Type Save -->
+    <div class=" bg-white border p-2 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1"><button class="btn btn-success btnCategoryAccountSave">@appResource.btnSave</button></div>
+    </div>
+</div>
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+
+<!-- Cash Desk Scripts -->
+<!-- Cash Desk -->
+<script>
+
+            // On Load
+            $(document).ready(function () {
+
+                // Drop Down  Font Size
+
+
+                // Wait 2 Seconds
+                setTimeout( function () {
+                    // GET Font Size By Selected List
+                    funGetCategoryAccountsByParentId();
+                },1000);
+            })
+
+
+
+
+                // Save - Click
+
+            $('.btnCategoryAccountSave').on('click', function () {
+
+                // Is Valid
+                var vIsValid = true;
+
+                // Check All Rows
+                $(".tblCategoryAccountBody > tr").each(function () {
+
+                    // Row Data
+                    var vRowData = $(this);
+                    // Get CategoryAccount Id
+                    var vCategoryAccountId = vRowData.attr('data-id');
+                    // Code
+                    var vCategoryAccountCode = vRowData.find('.CategoryAccountCode').val();
+                    // Currency
+                    var vCurrencyId = vRowData.find('.Currency').attr('data-id');
+                    // SalesAccount
+                    var vSalesAccountId = vRowData.find('.SalesAccount').attr('data-id');
+
+                    // ReturnSalesAccount
+                    var vReturnSalesAccountId = vRowData.find('.ReturnSalesAccount').attr('data-id');
+                    // DiscountReceived
+                    var vDiscountReceivedId = vRowData.find('.DiscountReceivedAccount').attr('data-id');
+                    // DiscountAllowed
+                    var vDiscountAllowedId = vRowData.find('.DiscountAllowedAccount').attr('data-id');
+                    // TaxAccount
+                    var vTaxAccountId = vRowData.find('.TaxAccount').attr('data-id');
+                    // GroupAccount
+                    var vGroupAccountId = $('#txtGroupAccountId').attr('data-id');
+                    // GroupAccount
+                    var vReturnPurchasesAccountId = $('#txtReturnPurchasesAccountId').attr('data-id');
+                    // SalesCostAccount
+                    var vSalesCostAccountId = $('#txtSalesCostAccountId').attr('data-id');
+
+
+                    // Is Active
+                    var vCategoryAccountIsActive = vRowData.find('.CategoryAccountIsActive').prop('checked');
+
+
+                    // Check Cash Desk If Empty
+                    //if (vCategoryAccountName != '') {
+                    if (vCurrencyId != '' && vSalesAccountId != '' && vReturnSalesAccountId != '' && vDiscountReceivedId != '' && vDiscountAllowedId != '' && vTaxAccountId != '' && vGroupAccountId != '' && vReturnPurchasesAccountId != '' && vSalesCostAccountId != '' ) {
+                        // Save
+                        $.post('/CategoryAccount/CategoryAccountGET',
+                            {
+                                pCategoryAccountId: vCategoryAccountId,
+                                pCategoryAccountCode: vCategoryAccountCode,
+                                pCurrencyId: vCurrencyId,
+                                pSalesAccountId: vSalesAccountId,
+                                pReturnSalesAccountId: vReturnSalesAccountId,
+                                pDiscountReceivedId: vDiscountReceivedId,
+                                pDiscountAllowedId: vDiscountAllowedId,
+                                pTaxAccountId: vTaxAccountId,
+                                pGroupAccountId: vGroupAccountId,
+                                pReturnPurchasesAccountId: vReturnPurchasesAccountId,
+                                pSalesCostAccountId: vSalesCostAccountId,
+                                pProductTypeId: $('#lblid').attr('data-id'),
+                                pCategoryAccountIsActive: vCategoryAccountIsActive,
+                                pIsDeleted: false,
+                                pQueryTypeId: 100
+                            },
+                            function (data, status) {
+
+
+
+
+                                // GET Cash Desk By Selected List
+                                funGetCategoryAccountsByParentId();
+                            });
+                    }
+                    else {
+
+                        // Not Valid
+                        vIsValid = false;
+
+                    } // End Check Cash Desk Data
+
+                })
+
+                if (!vIsValid) {
+
+                    // Notification - Field Required
+                    funNotification('@appResource.msgRequired', 2);
+                }
+                else {
+
+                    // Notification
+                     funNotification('تم الحفظ بنجاح', '1');
+                }
+
+            }); // End of Save Click
+
+
+
+
+
+            $('body').on('click', '.btnCategoryAccountDelete', function () {
+                // Get CategoryAccount Id
+                var vCategoryAccountIdDelete = $(this).attr('data-id');
+                // Save
+                $.post('/CategoryAccount/CategoryAccountGET',
+                    {
+                        pCategoryAccountId: vCategoryAccountIdDelete,
+                        pCategoryAccountCode: null,
+                        pCurrencyId: null,
+                        pSalesAccountId: null,
+                        pReturnSalesAccountId: null,
+                        pDiscountReceivedId: null,
+                        pDiscountAllowedId: null,
+                        pTaxAccountId: null,
+                        pGroupAccountId: null,
+                        pReturnPurchasesAccountId: null,
+                        pSalesCostAccountId: null,
+                        pProductTypeId: $('#lblid').attr('data-id'),
+                        pCategoryAccountIsActive: null,
+                        pIsDeleted: true,
+                        pQueryTypeId: 300
+                    },
+                    function (data, status) {
+
+                        //// Drop Down Main Cash Desk
+                        //funFillCategoryAccount(null, 0, null, null, null, null, 1, null, null, false);
+
+                        // GET Cash Desk By Selected List
+                        funGetCategoryAccountsByParentId();
+                        //funGETCategoryAccountDTl(0);
+
+                    });
+
+                // Notification
+                funNotification('تم الحذف بنجاح', 1);
+
+            })
+
+            // Add New Row
+            $('body').on('click', '.btnCategoryAccountAddRow', function () {
+
+                var vCurrentRow = $(this).closest('tr');
+                // Cash Desk Add Row
+                funCategoryAccountAddRow(vCurrentRow);
+            })
+
+            // GET Cash Desk By Selected List
+            function funGETCategoryAccountBySelectedList() {
+
+                // Get Value [Id]
+                var vSelectedCategoryAccount = $('#selectCategoryAccountMain').val();
+
+                // GET Data
+                $.get('/CategoryAccount/CategoryAccountGET',
+                    {
+                        pCategoryAccountId: null,
+                        pCategoryAccountCode: '',
+                        pCurrencyId: '',
+                        pSalesAccountId: '',
+                        pReturnSalesAccountId: '',
+                        pDiscountReceivedId: '',
+                        pDiscountAllowedId: '',
+                        pTaxAccountId: '',
+                        pGroupAccountId: '',
+                        pReturnPurchasesAccountId: '',
+                        pSalesCostAccountId: '',
+                        pProductTypeId: $('#lblid').attr('data-id'),
+                        pCategoryAccountIsActive: null,
+                        pIsDeleted: false,
+                        pQueryTypeId: 400
+                    },
+                    function (CategoryAccountData, status) {
+
+                        // Table Body
+                        var vCategoryAccountTableBody = $('.tblCategoryAccountBody');
+                        // HTML CLEAR
+                        vCategoryAccountTableBody.html('');
+
+                        // JSON
+                        var vCategoryAccountDataResult = JSON.parse(CategoryAccountData);
+
+                        // For Each Cash Desk - Main
+                        $.each(vCategoryAccountDataResult, function (m, CategoryAccountSubData) {
+
+                            // GET Cash Desk Row Content
+                            var vCategoryAccountRowContent = funCategoryAccountRowConfig(vCategoryAccountDataResult[m]);
+                            // Append Row Content
+                            vCategoryAccountTableBody.append(vCategoryAccountRowContent);
+
+                        })
+                        //funCategoryAccountRow();
+                    }) }
+            // Cash Desk Add Row
+            function funCategoryAccountAddRow(pCurrentRow) {
+                // Row Content Data
+                var vRowContentData =
+                    {
+                        "CategoryAccountIsActive": true,
+                        "CategoryAccountId": 0,
+                        "CategoryAccountCode": '',
+                        "CurrencyId": 0,
+                        "CurrencyNameL1": '',
+                        "SalesAccountId": 0,
+                        "SalesAccountNo": '',
+                        "ReturnSalesAccountId": 0,
+                        "ReturnSalesAccountNo": '',
+                        "DiscountReceivedId": 0,
+                        "DiscountReceivedAccountNo": '',
+                        "DiscountAllowedId": 0,
+                        "DiscountAllowedAccountNo": '',
+                        "TaxAccountId": 0,
+                        "TaxAccountNo": '',
+                        "GroupAccountId": 0,
+                        "GroupAccountNo": '',
+                        "ReturnPurchasesAccountId": 0,
+                        "ReturnPurchasesAccountNo": '',
+                        "SalesCostAccountId": 0,
+                        "SalesCostAccountNo": '',
+                        "ProductTypeId": 0,
+
+
+                }
+
+                var vRowContent = funCategoryAccountRowConfig(vRowContentData);
+                // Add Row After Current Row
+                $(pCurrentRow).closest("tr").after(vRowContent);
+            }
+
+
+            // Cash Desk Row Config
+            function funCategoryAccountRowConfig(pCategoryAccountDataResult) {
+
+                // Checked
+                var vChecked = null;
+                if (pCategoryAccountDataResult.CategoryAccountIsActive) {
+                    vChecked = 'checked';
+                }
+
+                // Type
+                var vSelectedText1 = '';
+                var vSelectedText2 = '';
+
+
+                // Row Content
+                //var vRowContent = '<tr class="tblRow" data-id="' + pCategoryAccountDataResult.CategoryAccountId + '">' +
+                //    '<td width="20px"><button class="btn btn-sm btn-light btnCategoryAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                //    '<td width="7%"><input type="text" class="form-control CategoryAccountCode" disabled value="' + pCategoryAccountDataResult.CategoryAccountCode + '" /></td>' +
+                //    '<td><input type="text" class="form-control CategoryAccountName" value="' + pCategoryAccountDataResult.CategoryAccountName + '" /></td>' +
+                //    '<td><input type="text" class="form-control GeneralNumber" value="' + pCategoryAccountDataResult.GeneralNumber + '" /></td>' +
+                //    '<td><input type="text" class="form-control Job" value="' + pCategoryAccountDataResult.Job + '" /></td>' +
+                //    '<td><input type="text" class="form-control Profit" value="' + pCategoryAccountDataResult.Profit + '" /></td>' +
+                //    '<td><input type="date" class="form-control EmployeeStartDate" value="' + pCategoryAccountDataResult.EmployeeStartDate + '" /></td>' +
+                //    '<td><input type="date" class="form-control EmployeeEndDate" value="' + pCategoryAccountDataResult.EmployeeEndDate + '" /></td>' +
+                //    '<td><input type="text" class="form-control Notes" value="' + pCategoryAccountDataResult.Notes + '" /></td>' +
+                //    '<td><input type="checkbox" class="form-control  CategoryAccountIsActive" ' + vChecked + ' /></td>' +
+                //    '<td><button class="btn btn-light btn-sm btnCategoryAccountDelete" data-id="' + pCategoryAccountDataResult.CategoryAccountId + '"><i class="fa fa-trash"></i></button></td>' +
+                //    '</tr>';
+                var vRPAccountNo = pCategoryAccountDataResult.ReturnPurchaesAccountNo;
+              
+                if (vRPAccountNo == undefined || vRPAccountNo == '') {
+                    vRPAccountNo = '';
+                }
+                var vSalesCostAccountNo = pCategoryAccountDataResult.SalesCostAccountNo;
+                if (true) {
+
+                }
+                var vRowContent = '<tr class="tblRow tblRowCat" data-id="' + pCategoryAccountDataResult.CategoryAccountId + '" data-GroupAccountId="' + pCategoryAccountDataResult.GroupAccountId + '" data-GroupAccountNo="' + pCategoryAccountDataResult.GroupAccountNo + '" data-ReturnPurchasesAccountId="' + pCategoryAccountDataResult.ReturnPurchasesAccountId + '"  data-ReturnPurchaesAccountNo="' + vRPAccountNo +'"  data-SalesCostAccountId="' + pCategoryAccountDataResult.SalesCostAccountId + '" data-SalesCostAccountNo="' + pCategoryAccountDataResult.SalesCostAccountNo +'" >' +
+
+                    '<td width="20px"><button class="btn btn-sm btn-light btnCategoryAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>';
+
+
+                vRowContent += '<td width="7%"><input type="text" class="form-control CategoryAccountCode" disabled value="' + pCategoryAccountDataResult.CategoryAccountCode + '" /></td>' +
+                    '<td ><input type="text" class="form-control Currency" readonly data-id="' + pCategoryAccountDataResult.CurrencyId + '" value="' + pCategoryAccountDataResult.CurrencyNameL1 + '" /></td>' +
+                    '<td ><input type="text" class="form-control SalesAccount" readonly data-id="' + pCategoryAccountDataResult.SalesAccountId + '" value="' + pCategoryAccountDataResult.SalesAccountNo + '" /></td>' +
+                    '<td ><input type="text" class="form-control ReturnSalesAccount" readonly data-id="' + pCategoryAccountDataResult.ReturnSalesAccountId + '" value="' + pCategoryAccountDataResult.ReturnSalesAccountNo + '" /></td>' +
+                    '<td ><input type="text" class="form-control DiscountReceivedAccount" readonly data-id="' + pCategoryAccountDataResult.DiscountReceivedId + '" value="' + pCategoryAccountDataResult.DiscountReceivedAccountNo + '" /></td>' +
+                    '<td ><input type="text" class="form-control DiscountAllowedAccount" readonly data-id="' + pCategoryAccountDataResult.DiscountAllowedId + '" value="' + pCategoryAccountDataResult.DiscountAllowedAccountNo + '" /></td>' +
+                    '<td ><input type="text" class="form-control TaxAccount" readonly data-id="' + pCategoryAccountDataResult.TaxAccountId + '" value="' + pCategoryAccountDataResult.TaxAccountNo + '" /></td>';
+
+                vRowContent += '<td><input type="checkbox" class="form-control  CategoryAccountIsActive" ' + vChecked + ' /></td>' +
+                    '<td><button class="btn btn-light btn-sm btnCategoryAccountDelete" data-id="' + pCategoryAccountDataResult.CategoryAccountId + '"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>';
+
+                // Return Row Content
+                return vRowContent;
+            }
+
+
+
+            // Row Select
+            $('.tblCategoryAccountBody').on('click', '.tblRow', function () {
+
+                $('.tblRow').removeClass('table-primary');
+                $(this).addClass('table-primary');
+
+            })
+
+            // Get Id Of Main Group
+            $('.divCategoryAccount').on('click', 'table tr', function () {
+                var vCategoryAccountId = $(this).attr('data-id')
+                localStorage.setItem('vCategoryAccountId', vCategoryAccountId);
+                //funGETCategoryAccountDTl(vCategoryAccountId)
+            });
+
+
+</script>
+<!-- Account Scripts -->
+<!-- Account Scripts -->
+<!-- Add Row -->
+<script>
+
+
+    // Add Row
+    $('.btnSizeAddRow').on('click', function () {
+        // Cash Desk Add Row
+        funAccountAddRow();
+        // Cash Desk Scroll
+        funAccountScroll();
+    })
+
+    // Account Scroll
+    function funAccountScroll() {
+        // Scroll To Bottom
+        $('.divSize').animate({ scrollTop: $('.divSize').prop("scrollHeight") }, 1000);
+    }
+</script>
+<script>
+
+
+
+
+
+
+    // Add Row On Load Page
+    function funBankRow() {
+
+        // Table Body
+        var vProductTypeTableBody = $('.tblProductTypeBody');
+        // Append
+        vProductTypeTableBody.append('<tr class="tblRow" data-id="0" data-GroupAccountId="0" data-GroupAccountNo="" data-SalesCostAccountId="0" data-SalesCostAccountNo="" >' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnCategoryAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control CategoryAccountCode" disabled /></td>' +
+            '<td ><input type="text" class="form-control Currency"  /></td>' +
+            '<td ><input type="text" class="form-control SalesAccount" /></td>' +
+            '<td ><input type="text" class="form-control ReturnSalesAccount" /></td>' +
+            '<td ><input type="text" class="form-control DiscountReceivedAccount"/></td>' +
+            '<td ><input type="text" class="form-control DiscountAllowedAccount"/></td>' +
+            '<td ><input type="text" class="form-control TaxAccount"/></td>' +
+            '<td><input type="checkbox" class="form-control  CategoryAccountIsActive"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCategoryAccountDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>');
+    }
+
+
+</script>
+<!-- StoreTypeData Modal -->
+<div id="ProductTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="ProductTypeDataModalContent"></div>
+    </div>
+</div>
+<div id="CurrencyDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CurrencyDataModalContent"></div>
+    </div>
+</div>
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+@*<div id="Account2DataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="Account2DataModalContent"></div>
+    </div>
+</div>*@
+<script>
+    $(document).ready(function () {
+        $('#lblid').attr('data-id', 0);
+    });
+    $('#txtProductTypeId').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            var vURL = '/ProductType/SearchProductType';
+            $('#ProductTypeDataModalContent').load(vURL);
+            // Modal Show
+            $('#ProductTypeDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divProductTypeSelect', function () {
+
+                // Account Id
+                var vCategoryAccountId = $(this).attr('data-id');
+
+                // Get Values
+                var vCategoryAccountCodeValue = $(this).find('.divProductTypeNo').text();
+                var vCategoryAccountNameValue = $(this).find('.divProductTypeName').text();
+
+                // Set Value
+                // $('.txtCountryId').val(vCountryId);
+                $('#txtProductTypeId').val(vCategoryAccountId);
+                $('#txtProductTypeName').val(vCategoryAccountNameValue);
+                $('#lblid').attr('data-id', vCategoryAccountId);
+
+
+                // Modal Show
+                $('#ProductTypeDataModal').modal('hide');
+                funGetCategoryAccountsByParentId();
+               
+                $('#txtGroupAccountId').val('');
+                $('#txtGroupAccountId').attr('data-id', 0);
+                $('#txtReturnPurchasesAccountId').val('');
+                $('#txtReturnPurchasesAccountId').attr('data-id', 0);
+                $('#txtSalesCostAccountId').attr('data-id', 0);
+                $('#txtSalesCostAccountId').val('');
+
+            })
+
+        }
+
+
+    })
+</script>
+<script>
+    // Function Select Store Keepers Depend On Store Id
+    function funGetCategoryAccountsByParentId() {
+        // GET Data
+        $.get('/CategoryAccount/CategoryAccountGET',
+            {
+                pCategoryAccountId: null,
+                pCategoryAccountCode: '',
+                pCurrencyId: null,
+                pSalesAccountId: null,
+                pReturnSalesAccountId: null,
+                pDiscountReceivedId: null,
+                pDiscountAllowedId: null,
+                pTaxAccountId: null,
+                pGroupAccountId: null,
+                pReturnPurchasesAccountId: null,
+                pSalesCostAccountId: null,
+                pProductTypeId: $('#lblid').attr('data-id'),
+                pCategoryAccountIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (CategoryAccountData, status) {
+
+                // Table Body
+                var vCategoryAccountTableBody = $('.tblCategoryAccountBody');
+                // HTML CLEAR
+                vCategoryAccountTableBody.html('');
+
+                // JSON
+                var vCategoryAccountDataResult = JSON.parse(CategoryAccountData);
+
+                // For Each Store Keeper - Main
+                $.each(vCategoryAccountDataResult, function (m, CategoryAccountSubData) {
+
+                    // GET Store Keeper Row Content
+                    var vCategoryAccountRowContent = funCategoryAccountRowConfig(vCategoryAccountDataResult[m]);
+                    // Append Row Content
+                    vCategoryAccountTableBody.append(vCategoryAccountRowContent);
+
+
+                })
+                if (vCategoryAccountDataResult == undefined || vCategoryAccountDataResult == '') {
+                    funCategoryAccountAddEmptyRow(vCategoryAccountTableBody);
+                }
+
+                //funCategoryAccountRow();
+            })
+    }
+    function funCategoryAccountAddEmptyRow(pTableBody) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "CategoryAccountIsActive": true,
+                "CategoryAccountId": 0,
+                "CategoryAccountCode": '',
+                "CurrencyId": 0,
+                "CurrencyNameL1": '',
+                "SalesAccountId": 0,
+                "SalesAccountNo": '',
+                "ReturnSalesAccountId": 0,
+                "ReturnSalesAccountNo": '',
+                "DiscountReceivedId": 0,
+                "DiscountReceivedAccountNo": '',
+                "DiscountAllowedId": 0,
+                "DiscountAllowedAccountNo": '',
+                "TaxAccountId": 0,
+                "TaxAccountNo": '',
+                "GroupAccountId": 0,
+                "GroupAccountNo": '',
+                "ReturnPurchasesAccountId": 0,
+                "ReturnPurchasesAccountNo": '',
+                "SalesCostAccountId": 0,
+                "SalesCostAccountNo": '',
+                "ProductTypeId": 0,
+            }
+
+        var vRowContent = funCategoryAccountRowConfig(vRowContentData);
+
+        pTableBody.append(vRowContent);
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+      
+        var vCurrentRow = '';
+        // Add New Row
+        $('table').on('keyup dblclick', '.Currency', function (e) {
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                //var vCurrentRow = $(this).closest('tr');
+                vCurrentRow = $(this).closest('.tblRow');
+                var vURL = '/Currency/SearchCurrency';
+                $('#CurrencyDataModalContent').load(vURL);
+                // Modal Show
+                $('#CurrencyDataModal').modal('show');
+                $('#CurrencyDataModal').on('shown.bs.modal', function () {
+                    // Focuse
+                    $('.txtSearch').focus();
+                    // Select Account
+                    $('body').on('click', '.divCurrencySelect', function () {
+                        var vElementCurrency = vCurrentRow.find('.Currency')
+                        // Account Id
+                        var vCategoryAccountId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vCurrencyCodeValue = $(this).find('.divCurrencyNo').text();
+                        var vCurrencyNameValue = $(this).find('.divCurrencyName').text();
+
+
+                        // Set Value
+                        // $('.txtCountryId').val(vCountryId);
+                        localStorage.setItem('vgridclicked', 1);
+                        vElementCurrency.val(vCurrencyNameValue);
+                        vElementCurrency.attr('Value', vCategoryAccountId);
+                        vElementCurrency.attr('data-id', vCategoryAccountId);
+                        
+                        // Modal Show
+                        $('#CurrencyDataModal').modal('hide');
+                        localStorage.setItem('vgridclicked', 0);
+                        vCurrentRow = '';
+                    })
+                });
+            }
+        })
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+        var vCurrentRow2 = '';
+        var vCurrentElementClass = '';
+        // Add New Row
+        $('table').on('keyup dblclick', '.SalesAccount,.ReturnSalesAccount,.DiscountReceivedAccount,.DiscountAllowedAccount,.TaxAccount', function (e) {
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                // Set Local Storage To Get The Control Who Fires DataModal
+                localStorage.setItem('vparent','table')
+                vCurrentRow2 = $(this).closest('.tblRow');
+
+                //vCurrentRow = $(this).closest('tr');
+                if ($(e.target).attr('class').indexOf("SalesAccount") >= 0 && $(e.target).attr('class').indexOf("Return") < 0) {
+
+                    vCurrentElementClass = '.SalesAccount';
+                    //console.log(vCurrentElementClass);
+                }
+                if ($(e.target).attr('class').indexOf("ReturnSalesAccount") >= 0) {
+                    vCurrentElementClass = '.ReturnSalesAccount';
+                }
+                if ($(e.target).attr('class').indexOf("DiscountReceivedAccount") >= 0) {
+                    vCurrentElementClass = '.DiscountReceivedAccount';
+                }
+                if ($(e.target).attr('class').indexOf("DiscountAllowedAccount") >= 0) {
+                    vCurrentElementClass = '.DiscountAllowedAccount';
+                }
+                if ($(e.target).attr('class').indexOf("TaxAccount") >= 0) {
+                    vCurrentElementClass = '.TaxAccount';
+                }
+                var vURL = '/Account/SearchAccount';
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    // Focuse
+                    $('.txtSearch').focus();
+                    // Select Account
+                    $('body').on('click', '.divAccountSelect', function () {
+                        // Account Id
+                        var vCategoryAccountId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                        var vAccountNameValue = $(this).find('.divAccountName').text();
+                        // Check If The Control Who Fires DataModal Is DataTable
+                        if (localStorage.getItem('vparent') == 'table') {
+
+                            var vElementAccount = vCurrentRow2.find(vCurrentElementClass);
+
+                            // Set Value
+                            vElementAccount.val(vAccountCodeValue);
+                            vElementAccount.attr('Value', vCategoryAccountId);
+                            vElementAccount.attr('data-id', vCategoryAccountId);
+                        
+
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                        vCurrentRow2 = '';
+                         vCurrentElementClass = '';
+                        }
+
+                    })
+                })
+         
+            }
+
+        })
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        localStorage.setItem('vclicked', 0);
+        var vElementGroupAccount = '';
+        var vIsGroup = 0;
+        $('#txtGroupAccountId').on('keydown dblclick', function (e) {
+            if ($(e.target).attr('id').indexOf("txtGroupAccountId") >= 0) {
+                if (e.keyCode == 120 || e.type == 'dblclick') {
+                    console.log('lastclicked2' + $(this).attr("class"));
+                    localStorage.setItem('vparent', 'txtGroupAccountId');
+                    vIsGroup = 1;
+                     // Check If The Control Who Fires DataModal Is Group Text
+                    if (vIsGroup == 1) {
+                        var vURL = '/Account/SearchAccount';
+                        $('#AccountDataModalContent').load(vURL);
+                        // Modal Show
+                        $('#AccountDataModal').modal('show');
+                        // Select Account
+                        $('body').on('click', '.divAccountSelect', function () {
+                            vElementGroupAccount = $('body').find('#txtGroupAccountId');
+                            // Account Id
+                            var vAccountId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                            var vAccountNameValue = $(this).find('.divAccountName').text();
+                                // Check If The Control Who Fires DataModal Is Group Text
+                            if (vIsGroup == 1) {
+                                localStorage.setItem('vclicked', 1);
+                                vIsGroup = 0;
+                                // Set Value
+                                vElementGroupAccount.val(vAccountCodeValue);
+                                vElementGroupAccount.attr('data-id', vAccountId)
+                            }
+
+
+
+                            // Modal Show
+                            $('#AccountDataModal').modal('hide');
+                            vElementGroupAccount = '';
+                            vIsGroup = 0;
+
+                        })
+                    }
+
+                }
+            }
+
+
+        })
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        var vElementReturnPurchases = '';
+        var vIsReturnPurchases = 0
+        $('#txtReturnPurchasesAccountId').on('keydown dblclick', function (e) {
+            if ($(e.target).attr('id').indexOf("txtReturnPurchasesAccountId") >= 0) {
+                if (e.keyCode == 120 || e.type == 'dblclick') {
+                    localStorage.setItem('vparent', 'txtReturnPurchasesAccountId');
+                    vIsReturnPurchases = 1;
+                      // Check If The Control Who Fires DataModal Is ReturnPurchases Text
+                    if (vIsReturnPurchases == 1) {
+
+
+                        var vURL = '/Account/SearchAccount';
+                        $('#AccountDataModalContent').load(vURL);
+                        // Modal Show
+                        $('#AccountDataModal').modal('show');
+                        // Select Account
+                        $('body').on('click', '.divAccountSelect', function () {
+                            vElementReturnPurchases = $('body').find('#txtReturnPurchasesAccountId');
+                            // Account Id
+                            var vAccountId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                            var vAccountNameValue = $(this).find('.divAccountName').text();
+                              // Check If The Control Who Fires DataModal Is ReturnPurchases Text
+                            if (vIsReturnPurchases == 1) {
+                                vIsReturnPurchases = 0;
+                                // Set Value
+                                vElementReturnPurchases.val(vAccountCodeValue);
+                                vElementReturnPurchases.attr('data-id', vAccountId)
+                            }
+
+
+
+                            // Modal Show
+                            $('#AccountDataModal').modal('hide');
+                            vElementReturnPurchases = '';
+                            vIsReturnPurchases = 0;
+
+                        })
+                    }
+                }
+            }
+
+
+        })
+    })
+
+</script>
+<script>
+    $(document).ready(function () {
+        var vElementSalesCost = '';
+        var vIsSalesCost = 0;
+        $('#txtSalesCostAccountId').on('keydown dblclick', function (e) {
+            if ($(e.target).attr('id').indexOf("txtSalesCostAccountId") >= 0) {
+
+                if (e.keyCode == 120 || e.type == 'dblclick') {
+                    localStorage.setItem('vparent', 'txtSalesCostAccountId');
+                    vIsSalesCost = 1;
+                       // Check If The Control Who Fires DataModal Is SalesCost Text
+                    if (vIsSalesCost == 1) {
+                        var vURL = '/Account/SearchAccount';
+                        $('#AccountDataModalContent').load(vURL);
+                        // Modal Show
+                        $('#AccountDataModal').modal('show');
+                        // Select Account
+                        $('body').on('click', '.divAccountSelect', function () {
+                            vElementSalesCost = $('body').find('#txtSalesCostAccountId');
+                            // Account Id
+                            var vAccountId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                            var vAccountNameValue = $(this).find('.divAccountName').text();
+                            // Check If The Control Who Fires DataModal Is SalesCost Text
+                            if (vIsSalesCost == 1) {
+                                vIsSalesCost = 0;
+                                // Set Value
+                                vElementSalesCost.val(vAccountCodeValue);
+                                vElementSalesCost.attr('data-id', vAccountId)
+                            }
+
+
+
+                            // Modal Show
+                            $('#AccountDataModal').modal('hide');
+                            vElementSalesCost = '';
+                            vIsSalesCost = 0;
+
+                        })
+                    }
+                }
+            }
+
+        })
+    })
+
+</script>
+<script>
+    $('.divProductType').on('click', 'table tr', function () {
+        //'<tr class="tblRow tblRowCat" data-id="' + pCategoryAccountDataResult.CategoryAccountId + '" data-GroupAccountId="' + pCategoryAccountDataResult.GroupAccountId + '" data-GroupAccountNo="' + pCategoryAccountDataResult.GroupAccountNo + '" data-SalesCostAccountId="' + pCategoryAccountDataResult.SalesCostAccountId + '" data-SalesCostAccountNo="' + pCategoryAccountDataResult.SalesCostAccountNo + '" >
+       // var vRowContent = '<tr class="tblRow tblRowCat" data-id="' + pCategoryAccountDataResult.CategoryAccountId + '" data-GroupAccountId="' + pCategoryAccountDataResult.GroupAccountId + '" data-GroupAccountNo="' + pCategoryAccountDataResult.GroupAccountNo + '" data-ReturnPurchasesAccountId="' + pCategoryAccountDataResult.ReturnPurchasesAccountId + '"  data-ReturnPurchaesAccountNo="' + pCategoryAccountDataResult.ReturnPurchaesAccountNo + '"  data-SalesCostAccountId="' + pCategoryAccountDataResult.SalesCostAccountId + '" data-SalesCostAccountNo="' + pCategoryAccountDataResult.SalesCostAccountNo + '" >' +
+        var vId = $(this).attr('data-id');
+        var vGroupAccountId = $(this).attr('data-GroupAccountId');
+        var vGroupAccountNo = $(this).attr('data-GroupAccountNo');
+        var vReturnPurchaesAccountId = $(this).attr('data-ReturnPurchasesAccountId');
+        var vReturnPurchaesAccountNo = $(this).attr('data-ReturnPurchaesAccountNo');
+        var vSalesCostAccountId = $(this).attr('data-SalesCostAccountId');
+        var vSalesCostAccountNo = $(this).attr('data-SalesCostAccountNo');
+
+        if (vGroupAccountId == undefined || vGroupAccountId == '') {
+            vGroupAccountId = 0;
+        }
+        if (vGroupAccountNo == undefined || vGroupAccountNo == '') {
+            vGroupAccountNo = '';
+        }
+        if (vReturnPurchaesAccountId == undefined || vReturnPurchaesAccountId == '' ) {
+            vReturnPurchaesAccountId = 0;
+        }
+        if (vReturnPurchaesAccountNo == undefined || vReturnPurchaesAccountNo == '') {
+            vReturnPurchaesAccountNo = '';
+        }
+        if (vSalesCostAccountId == undefined || vSalesCostAccountId == '') {
+            vSalesCostAccountId = 0;
+        }
+        if (vSalesCostAccountNo == undefined || vSalesCostAccountNo == '') {
+            vSalesCostAccountNo = '';
+        }
+        $('#txtGroupAccountId').val(vGroupAccountNo);
+        $('#txtGroupAccountId').attr('data-id', vGroupAccountId);
+        $('#txtReturnPurchasesAccountId').val(vReturnPurchaesAccountNo);
+        $('#txtReturnPurchasesAccountId').attr('data-id', vReturnPurchaesAccountId);
+        $('#txtSalesCostAccountId').attr('data-id', vSalesCostAccountId);
+        $('#txtSalesCostAccountId').val(vSalesCostAccountNo);
+    
+      
+    });
+</script>

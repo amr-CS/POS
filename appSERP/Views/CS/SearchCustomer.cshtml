@@ -1,0 +1,151 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "CustomerSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divCustomer {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divCustomerSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divCustomerSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divCustomerNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Customer</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divCustomer">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyCustomer"></tbody>
+    </table>
+</div>
+
+
+<!-- Customer GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Customer GET
+        funCustomerGET();
+    })
+
+    // Customer GET
+    function funCustomerGET() {
+        $.get('/api/APICustomerSupplier/CustomerSupplierGET',
+            {
+                pCSIsCustomer: true
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyCustomer');
+
+
+                // Customers
+                $.each(vDataResult, function (i, CustomerData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].CSId + '">';
+
+                    var vCustomerName = vDataResult[i].CSNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCustomerName = vDataResult[i].CSNameL2;
+                        }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divCustomerSelect d-flex p-2" data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divCustomerNo px-4">' + vDataResult[i].CSCode + '</div>';
+                                vRowContent += '<div class="divCustomerName px-4">' + vCustomerName + '</div>';
+                                //vRowContent += '<div class="divCustomerCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search Customer -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divCustomerSelect').each(function () {
+
+                // Get Customer Code
+                var vCustomerCode = $(this).find('.divCustomerNo').text();
+                var vCustomerName = $(this).find('.divCustomerName').text();
+
+                if (vCustomerCode.search(vSearchInput) != -1 || vCustomerName.search(vSearchInput) != -1) {
+
+                    $(this).addClass('table-success');
+                    $(this).hide();
+
+                    console.log('found')
+                }
+                else {
+                    $(this).removeClass('table-success');
+                    $(this).show();
+                }
+
+            })
+
+        }
+        else {
+            $('.divCustomerSelect').removeClass('table-success');
+            $(this).show();
+        }
+    })
+</script>
+

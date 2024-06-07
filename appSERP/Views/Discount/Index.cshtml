@@ -1,0 +1,673 @@
+﻿@using appSERP.appCode.Setting.User
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType
+<!--Test-->
+<style>
+    body {
+        font-family: Cairo;
+    }
+
+    .fullHeightInput {
+        height: 50px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table {
+        padding: 0rem;
+    }
+    /*.table td {
+        margin-top: 0.5rem;
+        padding: 0rem !important;
+    }*/
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[disabled] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .txtDiscount {
+        height: 27px !important;
+        padding: 1px;
+    }
+
+    .error {
+        border: 1px solid red;
+    }
+</style>
+<!-- Utility Bar -->
+@*@Html.Action("Index", "DocUtilityBar")*@
+
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+</style>
+<!-- Head -->
+<div class="divUtilityBar d-flex ">
+    @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+</div>
+<div class="">
+    <!-- Title -->
+    <div class="divUtilityBar d-flex">خصومات الاصناف </div>
+    <!-- Head -->
+    <div class="bg-white border rounded p-3">
+        <!-- Main Inputs -->
+        <div class="row">
+
+            <!-- 1st Row Input -->
+            <div class="col-md-4">
+
+                <!-- Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class=" float-right pt-2">الصنف</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="d-flex txtStore">
+                            
+                            <input type="text" class="form-control  w-25 d-none txtItemGroupId" />
+                            <input type="text" class="form-control  w-25 txtItemGroupCode" />
+                            <input type="text" id="start" class="form-control  txtItemGroupName" disabled />
+                        </div>
+                    </div>
+                </div>
+                <!-- Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class=" float-right pt-2">فئة الصنف</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="d-flex txtCustomer">
+                            <input type="text" class="form-control  w-25 d-none  txtGroupId" />
+                            <input type="text" class="form-control  w-25 txtGroupCode" />
+
+                            <input type="text" id="start" class="form-control  txtGroupName" disabled />
+                        </div>
+                    </div>
+                </div>
+
+
+            </div> <!-- End of 1st Row of Main Inputs -->
+            <!-- 1st Row Input -->
+            <div class="col-md-8">
+
+                <!-- Doc No -->
+                <div class="row ">
+                    <div class="pl-5">
+                        <label class=" float-right pt-2">نوع الخصم</label>
+                    </div>
+                    <div class="pl-2">
+                        <select class="SelectDisc">
+                            <option value="1">قيمة</option>
+                            <option value="2">نسبة</option>
+                        </select>
+                    </div>
+                    <div class="pl-5">
+                        <label class=" float-right pt-2">قيمة الخصم</label>
+                    </div>
+                    <div class="pl-2">
+                        <input type="text" class="form-control DiscValue" />
+                    </div>
+
+                </div>
+                <div class="row ">
+                  
+                   
+                    <div class="pt-2" style="padding-right:200px ">
+                        <input type="button" class="btn btn-secondary btn-md btnSubmit" style="width:300px" width="200" value="تنفيذ الخصم" />
+
+                    </div>
+
+                </div>
+             
+
+            </div> <!-- End of 1st Row of Main Inputs -->
+
+        </div> <!-- End of Main Inputs -->
+    </div>
+    <!-- Details Main -->
+    <div class="bg-white border rounded p-3 mt-3 divGlVoucher">
+        <!-- Details -->
+        <table class="table table-sm table-responsive-sm">
+            <thead>
+                <tr class="tblHead">
+                    <th class=""></th>
+
+                    <th class="" width="25%">
+                        <div>@appResource.ProductName</div>
+                    </th>
+                    <th class="" width="15%">
+                        <div>@appResource.UnitId</div>
+                    </th>
+                    <th class="" width="15%">
+                        <div>فئة البيع</div>
+                    </th>
+                    <th class="" width="15%">
+                        <div>سعر الصنف</div>
+                    </th>
+                    <th class="" width="13%">
+                        <div>قيمة الخصم </div>
+                    </th>
+                    <th class="" width="13%">
+                        <div>نوع الخصم</div>
+                    </th>
+                    <th class="" width="7%">
+                        <div>الصنف فعال</div>
+                    </th>
+                    <th class="" width="7%">
+                        <div> قابل  للبيع</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="tblDtlBody">
+                <tr class="trBaseRow tblDTLRow" data-id="0">
+                    <td class="">
+                        <button class="btn btn-light btn-sm border btnAddDtlRow" type="submit">
+                            <i class="fa fa-plus-circle"></i>
+                        </button>
+                    </td>
+                    <td class="">
+                        <input class="form-control  text-center  txtItemName" type="text" required disabled />
+                    </td>
+                    <td class="">
+                        <input type="text" class=" form-control  text-center txtUnitId d-none ">
+                        <input class="form-control  text-center font-weight-bold txtUnitName"  disabled />
+                    </td>
+                    <td class="" >
+                        <input class="form-control  text-center font-weight-bold txtSellGroup"  disabled />
+
+                    </td>
+                    <td class="">
+                        <input class="form-control  text-center font-weight-bold txtItemPrice"  disabled/>
+                    </td>
+                    <td class="">
+
+                        <input class="form-control  text-center font-weight-bold txtDiscountValue" type="text" required />
+                    </td>
+                    <td class="">
+                        <select class="txtDiscount form-control">
+                            <option data-id="2">@appResource._Value</option>
+                            <option data-id="1">@appResource._Percent</option>
+                        </select>
+                    </td>
+                    <td class="" style=" padding-right:3rem !important;">
+                        <div class="custom-control custom-checkbox " disabled>
+                            <input type="checkbox" class="custom-control-input  chkReProduction" id="chkReProduction">
+                            <label class="custom-control-label small" for="chkReProduction"></label>
+                        </div>
+                    </td>
+
+                    <td class="" style=" padding-right:3rem !important;" disabled>
+                        <div class="custom-control custom-checkbox ">
+                            <input type="checkbox" class="custom-control-input  chkReProduction" id="chkReProduction">
+                            <label class="custom-control-label small" for="chkReProduction"></label>
+                        </div>
+                    </td>
+
+                    <td><button class="btn btn-light btn-sm btnInvDtlDelete" data-id="0"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- AccountData Modal -->
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+<!-- CostCenterData Modal -->
+<div id="ItemGroupDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="ItemGroupDataModalContent"></div>
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+<script src="/signalr/hubs"></script>
+<script>
+    var Item = $.parseJSON($.ajax({
+        url: '/api/APIInvItem/InvItemGET',
+        dataType: "json",
+        method: 'GET', contentType: 'application/json',
+        data: { phNumbers: '3', pQueryTypeId: '409', },
+        async: false
+    }).responseText);
+
+    localStorage.setItem("Item", Item)
+     // Open Voucher PriceCat Modal
+    //$('body').on('keyup dblclick', '.txtItemGroupCode', function (e) {
+    //    // F9 - Double Click
+    //    if (e.keyCode == 120 || e.type == 'dblclick') {
+    //        // Table Row - Closest Row
+    //        var vURL = '/ResItem/PriceCatSearch/';
+    //        // Load Content of ItemGroup Search
+    //        $('#ItemGroupDataModalContent').load(vURL);
+    //        // Modal Show
+    //        $('#ItemGroupDataModal').modal('show');
+    //        // Focus
+    //        $('#ItemGroupDataModal').on('shown.bs.modal', function () {
+    //            $('.txtSearch').focus();
+    //            // Select ItemGroup
+    //            $('body').on('click', '.divPriceCatSelect', function () {
+    //                // Get Values
+    //                var vPriceCatId = $(this).attr('data-id');
+    //                var vPriceCatNameValue = $(this).find('.divPriceCatName').text();
+    //                var vPriceCatCodeValue = $(this).find('.divPriceCatCode').text();
+    //                var vPriceCatIdValue = $(this).find('.divPriceCatId').text();
+    //                // Get GLVoucherPriceCat Data
+    //                var vPriceCatIdElement = $('.txtItemGroupId');
+    //                var vPriceCatNameElement = $('.txtItemGroupName');
+    //                var vPriceCatCodeElement = $('.txtItemGroupCode');
+    //                // Set Value
+    //                vPriceCatIdElement.val(vPriceCatIdValue);
+    //                vPriceCatNameElement.val(vPriceCatNameValue);
+    //                vPriceCatCodeElement.val(vPriceCatCodeValue);
+
+    //                // Modal Show
+    //                $('#ItemGroupDataModal').modal('hide');
+                   
+    //            })
+    //        })
+    //    }
+    //})
+   
+
+    //$('body').on('keyup dblclick', '.txtItemGroupCode', function (e) {
+    //    // F9 - Double Click
+    //    if (e.keyCode == 120 || e.type == 'dblclick') {
+
+    //        // Table Row - Closest Row
+    //        vTableRow = $(this).closest('tr');
+    //        localStorage.setItem('lsType', 'Content')
+
+    //        // Search Account
+    //        var vURL = '/ResItem/ContentSearch';
+    //        // Load Content of Account Search
+    //        $('#AccountDataModalContent').load(vURL);
+    //        // Modal Show
+    //        $('#AccountDataModal').modal('show');
+    //        // Focus
+    //        $('#AccountDataModal').on('shown.bs.modal', function () {
+    //            $('.txtSearch').focus();
+
+    //            // Select Account
+    //            $('body').on('click', '.divContentSelect', function () {
+    //                if (localStorage.getItem('lsType') == 'Content') {
+    //                    // Get Values
+    //                    var vContentId = $(this).attr('data-id');
+    //                    var vContentNameValue = $(this).find('.divContentName').text();
+    //                    var vContentCodeValue = $(this).find('.divContentCode').text();
+
+
+    //                    // Get GLVoucherContent Data
+    //                    // Get GLVoucherPriceCat Data
+    //                    var vPriceCatIdElement = $('.txtItemGroupId');
+    //                    var vPriceCatNameElement = $('.txtItemGroupName');
+    //                    var vPriceCatCodeElement = $('.txtItemGroupCode');
+    //                    // Set Value
+    //                    vPriceCatIdElement.val(vContentId);
+    //                    vPriceCatNameElement.val(vContentNameValue);
+    //                    vPriceCatCodeElement.val(vContentCodeValue);
+    //                    funLoadItem(vContentId)
+    //                    // Modal Show
+    //                    $('#AccountDataModal').modal('hide');
+    //                    vTableRow.removeClass('table-info');
+
+    //                    vTableRow = '';
+    //                }
+    //            })
+    //        })
+    //    }
+    //})
+
+
+
+    $('body').on('keyup dblclick', '.txtItemGroupCode', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            vcurrentindex = vTableRow.index();
+
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/UnitSearch';
+
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divItemSelect', function () {
+                    // $('body').on('click', '.divInvItemSelect', function () {
+
+
+
+                    var vItemIdValue = $(this).find('.divItemId').text();
+                    var vItemNameValue = $(this).find('.divItemName').text();
+                    var vItemCodeValue = $(this).find('.divItemCode').text();
+                    
+
+
+                        // Get GLVoucherContent Data
+                        // Get GLVoucherPriceCat Data
+                        var vPriceCatIdElement = $('.txtItemGroupId');
+                        var vPriceCatNameElement = $('.txtItemGroupName');
+                        var vPriceCatCodeElement = $('.txtItemGroupCode');
+                        // Set Value
+                    vPriceCatIdElement.val(vItemIdValue);
+                    vPriceCatNameElement.val(vItemNameValue);
+                    vPriceCatCodeElement.val(vItemCodeValue);
+                    funLoadItem(vItemIdValue)
+                     
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    // Add New Row
+                    vTableRow = ''
+
+                });
+
+
+            })
+        }
+    })
+      // Open Voucher Group Modal
+    $('body').on('keyup dblclick', '.txtGroupCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Search Account
+            var vURL = '/ResItem/CatProductSearch/';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divGroupSelect', function () {
+                    // Get Values
+                    var vGroupId = $(this).attr('data-id');
+                    var vGroupNameValue = $(this).find('.divGroupName').text();
+                    var vGroupCodeValue = $(this).find('.divGroupCode').text();
+                    var vGroupIdValue = $(this).find('.divGroupId').text();
+                    // Get GLVoucherGroup Data
+                    var vGroupIdElement = $('.txtGroupId');
+                    var vGroupNameElement = $('.txtGroupName');
+                    var vGroupCodeElement =$('.txtGroupCode');
+                    // Set Value
+                    vGroupIdElement.val(vGroupIdValue);
+                    vGroupNameElement.val(vGroupNameValue);
+                    vGroupCodeElement.val(vGroupCodeValue);
+
+           funLoad(vGroupIdElement.val());
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                })
+            })
+        }
+    })
+  
+ /* $('body').on('keyup focus ', '.txtGroupCode', function (e) {
+        funLoad(GrpId)
+    });*/
+        // Save Using button
+        $('.btnSave').on('click', function () {
+            // Save  ALL
+            funSaveALL()
+        }) // End BtnSave
+    
+    // Save Using F10
+    $('body').on('keyup', function (e) {
+        e.preventDefault();
+
+        // Check F10
+        if (e.keyCode == 121) {
+            // Save  ALL
+            funSaveALL()
+        }
+    })
+
+    $('.btnSubmit').on('click', function () {
+       funSaveALL();
+
+                
+
+    })
+    // Save All
+    function funSaveALL() {
+        
+        // Get Id
+        var GrpId = $('.txtGroupId').val()
+        var DiscValue = $('.DiscValue').val()
+        var SelectDisc = $('.SelectDisc').val()
+        var Item = '';
+            // Item Add
+            $('.tblRow').each(function () {
+                var Element = $(this)
+
+                Item += Element.find('.txtItemName').attr('data-id') + ',';
+                
+            })
+        
+        // Get StorId
+        if (DiscValue != '' || DiscValue != undefined) {
+            $.ajax({
+                url: '/api/APIInvItem/InvItemGet',
+                method: 'GET', contentType: 'application/json',
+                data: {
+
+                    //pGrpId: GrpId,
+                    pInvItemCodeSearch: Item,
+                    pDiscPerc: DiscValue,
+                    pDiscLimit: SelectDisc,
+                    pQueryTypeId: 200
+                },
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                complete: function () {
+                    $('#loading').hide();
+                },
+                success: function (r) {
+                    funNotification('@appResource.msgSave', 1)
+
+                }
+                , error: function (xhr) {
+                    alert('Request Status: ' + xhr.status + ' Status Text: ' + xhr.statusText + ' ' + xhr.responseText);
+                }
+
+            });
+        }                                          
+        
+
+    }
+
+
+</script>
+<!--Config-->
+<script>
+
+
+    function funINVDtlConfig(pData) {
+        var SellUnit
+         if (pData.InvItemIsActive) {
+                IsActive = 'checked';
+        }
+         if (pData.SellUnit) {
+                SellUnit = 'checked';
+            }
+        var RowContent = '<tr class="trBaseRow tblRow" data-id="0">' +
+        '<td class="">' +
+        ' <button class="btn btn-light btn-sm border btnAddDtlRow" type="submit">' +
+        '    <i class="fa fa-plus-circle"></i>' +
+        '</button>' +
+        '</td>' +
+        ' <td class="">' +
+        '<input class="form-control  text-center  txtItemName" data-id="' + pData.InvItemId + '" value="' + pData.InvItemNameL1 + '"  type="text" required disabled />' +
+      '</td>' +
+      '<td class="">' +
+            ' <input class="form-control  text-center font-weight-bold txtUnitName" data-id="' + pData.UnitId + '" value="' + pData.UnitNameL1+ '" disabled/>' +
+        '</td>'+
+      '<td class="">' +
+      ' <input class="form-control  text-center font-weight-bold txtSellGroup" value="' + pData.PriceUnit + '"  disabled />' +
+       '</td>' +
+       '<td class="">' +
+     ' <input class="form-control  text-center font-weight-bold txtItemPrice" value="' + pData.Price + '"  disabled/>' +
+         '</td>'+
+         '<td class="">' +
+         '<input class="form-control  text-center font-weight-bold txtDiscountValue" value="'+ pData.DiscPerc +'" type="text" required />' +
+            '</td>'+
+            '<td class="">' +
+            ' <select class="txtDiscount form-control" >' +
+            ' <option data-id="1">@appResource._Value</option>' +
+            '<option data-id="2">@appResource._Percent</option' +
+            '</select>' +
+            '</td>' +
+            '<td class="" style=" padding-right:3rem !important;">' +
+            '<div class="custom-control custom-checkbox " disabled>' +
+            '<input type="checkbox" ' + IsActive + ' class="custom-control-input  chkIsActive" id="chkIsActive">' +
+            '<label class="custom-control-label small" for="chkIsActive"></label>' +
+            ' </div>' +
+            '</td>' +
+            '<td class="" style=" padding-right:3rem !important;" disabled>' +
+            '<div class="custom-control custom-checkbox ">' +
+            '<input type="checkbox" ' + SellUnit+ ' class="custom-control-input  chkUnitProduction" id="chkUnitProduction">' +
+            '<label class="custom-control-label small" for="chkUnitProduction"></label>' +
+            '</div>' +
+            '</td>' +
+            '<td><button class="btn btn-light btn-sm btnDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+        return RowContent;
+    }
+        $('body').on('click', '.btnDelete', function () {
+            // Id - NameAr - NameEn
+            var vElement = $(this)
+            // Only Delete The Row
+            vElement.closest('tr').remove();
+
+        });
+  function  funLoad(GrpId){
+         $.get('/api/APIInvItem/InvItemGET',
+            {
+                pGrpId:GrpId,
+                pQueryTypeId: '440'
+
+            }, function (data, status) {
+                var pData = JSON.parse(data)
+                
+                    $('.tblDtlBody').html('')
+              $.each(pData, function (i, pData) {
+                    if (pData.UnitParentId == '0') {
+                        // GET Cash Desk Row Content
+                        var vContent = funINVDtlConfig(pData);
+                        // Append Row Content
+                        $('.tblDtlBody').append(vContent);
+                    }
+                })  
+
+        })
+    }
+    function funLoadItem(ItemId) {
+        $.get('/api/APIInvItem/InvItemGET',
+            {
+                pInvItemId: ItemId,
+                pQueryTypeId: '440'
+            }, function (data, status) {
+                var pData = JSON.parse(data)
+                console.log(pData)
+                $('.tblDtlBody').html('')
+                $.each(pData, function (i, pData) {
+                    if (pData.UnitParentId == '0') {
+                        // GET Cash Desk Row Content
+                        var vContent = funINVDtlConfig(pData);
+                        // Append Row Content
+                        $('.tblDtlBody').append(vContent);
+                    }
+                })
+            })
+    }
+
+
+    
+</script>

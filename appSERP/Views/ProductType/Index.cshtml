@@ -1,0 +1,565 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.INV;
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblProductType, pIsNew = false })
+</div>
+
+<style>
+    .divTableContainer {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .divProductType, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }
+
+    .divSectionTitle {
+        background-color: rgba(41, 128, 185, 0.04);
+        font-weight: bold;
+        color: #2980b9;
+    }
+    select.selectpicker {
+        display:inline !important;
+    }
+</style>
+<div class="container-fluid">
+    <div class="d-flex bg-white p-3 border">
+        <label style="visibility:hidden;display:none" class="control-label" id="lblid" data_id="0">0</label>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="control-label">@appResource.MainType</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control w-25" id="txtParent" />
+                        <input type="text" class="form-control w-75" disabled id="txtParentName" />
+                      
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Size Type -->
+<div class="divTableContainer">
+
+    <!-- Cash Desk Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">
+        @*@appResource.lblProductType*@
+    </div>
+
+    <!-- Cash Desks Data -->
+    <div class="divProductType bg-white border p-2">
+        <table class="table tblProductType">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th width="20px"></th>
+                    <th>@appResource._Level</th>
+                    <th>@appResource._Code</th>
+                    <th> @appResource.ProductTypeId</th>
+                    <th> @appResource.ProductTypeId</th>
+                    <th> @appResource.ShortName</th>
+                    <th>@appResource._IsActive</th>
+                    <th class="thActions">@appResource._Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblProductTypeBody"></tbody>
+        </table>
+
+    </div>
+
+    <!--Size Type Save -->
+    <div class=" bg-white border p-2 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1"><button class="btn btn-success btnProductTypeSave">@appResource.btnSave</button></div>
+    </div>
+</div>
+
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+
+
+<!-- Cash Desk Scripts -->
+<!-- Cash Desk -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Drop Down  Font Size
+
+
+        // Wait 2 Seconds
+        setTimeout( function () {
+            // GET Font Size By Selected List
+            funGetProductTypesByParentId();
+        },1000);
+    })
+
+
+
+
+        // Save - Click
+
+    $('.btnProductTypeSave').on('click', function () {
+
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblProductTypeBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get ProductType Id
+            var vProductTypeId = vRowData.attr('data-id');
+            // Code
+            var vProductTypeCode = vRowData.find('.ProductTypeCode').val();
+            // Name L1
+            var vProductTypeName = vRowData.find('.ProductTypeNameL1').val();
+            // Name L2
+            var vProductTypeNameL2 = vRowData.find('.ProductTypeNameL2').val();
+            // ShortName
+            var vShortName = vRowData.find('.ShortName').val();
+            // ProductTypeLevel
+            var vProductTypeLevel = vRowData.find('.selectProductTypeLevel').val();
+          
+            // Is Active
+            var vProductTypeIsActive = vRowData.find('.ProductTypeIsActive').prop('checked');
+            // ProductTypeParentId
+            console.log('tr' + vProductTypeLevel);
+
+            // Check Cash Desk If Empty
+            if (vProductTypeName != '') {
+                // Save
+                $.post('/ProductType/ProductTypeGET',
+                    {
+                        pProductTypeId: vProductTypeId,
+                        pProductTypeCode: vProductTypeCode,
+                        pProductTypeNameL1: vProductTypeName,
+                        pProductTypeNameL2: vProductTypeNameL2,
+                        pShortName: vShortName,
+                        pProductTypeLevel: vProductTypeLevel,
+                        pProductTypeParentId: $('#lblid').attr('data-id'),
+                        pProductTypeIsActive: vProductTypeIsActive,
+                        pIsDeleted: false,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+
+
+
+
+                        // GET Cash Desk By Selected List
+                        funGetProductTypesByParentId();
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+             funNotification('تم الحفظ بنجاح', '1');
+        }
+
+    }); // End of Save Click
+
+
+
+
+
+    $('body').on('click', '.btnProductTypeDelete', function () {
+        // Get ProductType Id
+        var vProductTypeIdDelete = $(this).attr('data-id');
+        // Save
+        $.post('/ProductType/ProductTypeGET',
+            {
+                pProductTypeId: vProductTypeIdDelete,
+                pProductTypeCode: null,
+                pProductTypeNameL1: null,
+                pProductTypeNameL2: null,
+                pShortName: null,
+                pProductTypeLevel: null,
+                pProductTypeParentId: $('#lblid').attr('data-id'),
+                pProductTypeIsActive: null,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+
+                //// Drop Down Main Cash Desk
+                //funFillProductType(null, 0, null, null, null, null, 1, null, null, false);
+
+                // GET Cash Desk By Selected List
+                funGetProductTypesByParentId();
+                //funGETProductTypeDTl(0);
+
+            });
+
+        // Notification
+        funNotification('تم الحذف بنجاح', 1);
+
+    })
+
+    // Add New Row
+    $('body').on('click', '.btnProductTypeAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funProductTypeAddRow(vCurrentRow);
+    })
+
+    // GET Cash Desk By Selected List
+    function funGETProductTypeBySelectedList() {
+
+        // Get Value [Id]
+        var vSelectedProductType = $('#selectProductTypeMain').val();
+
+        // GET Data
+        $.get('/ProductType/ProductTypeGET',
+            {
+                pProductTypeId: null,
+                pProductTypeCode: '',
+                pProductTypeNameL1: '',
+                pProductTypeNameL2: '',
+                pShortName: '',
+                pProductTypeLevel: '',
+                pProductTypeParentId: $('#lblid').attr('data-id'),
+                pProductTypeIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (ProductTypeData, status) {
+
+                // Table Body
+                var vProductTypeTableBody = $('.tblProductTypeBody');
+                // HTML CLEAR
+                vProductTypeTableBody.html('');
+
+                // JSON
+                var vProductTypeDataResult = JSON.parse(ProductTypeData);
+
+                // For Each Cash Desk - Main
+                $.each(vProductTypeDataResult, function (m, ProductTypeSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vProductTypeRowContent = funProductTypeRowConfig(vProductTypeDataResult[m]);
+                    // Append Row Content
+                    vProductTypeTableBody.append(vProductTypeRowContent);
+
+                })
+                //funProductTypeRow();
+            }) }
+    // Cash Desk Add Row
+    function funProductTypeAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+            {
+            "ProductTypeIsActive": true,
+            "ProductTypeId": 0,
+            "ProductTypeCode": '',
+            "ProductTypeNameL1": '',
+            "ProductTypeNameL2": '',
+            "ShortName": '',
+            "ProductTypeLevel": '',
+            "ProductTypeParentId": 0,
+
+        }
+
+        var vRowContent = funProductTypeRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+
+    // Cash Desk Row Config
+    function funProductTypeRowConfig(pProductTypeDataResult) {
+
+        // Checked
+        var vChecked = null;
+        if (pProductTypeDataResult.ProductTypeIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vProductTypeId = pProductTypeDataResult.ProductTypeId;
+        if (vProductTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        //var vRowContent = '<tr class="tblRow" data-id="' + pProductTypeDataResult.ProductTypeId + '">' +
+        //    '<td width="20px"><button class="btn btn-sm btn-light btnProductTypeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        //    '<td width="7%"><input type="text" class="form-control ProductTypeCode" disabled value="' + pProductTypeDataResult.ProductTypeCode + '" /></td>' +
+        //    '<td><input type="text" class="form-control ProductTypeName" value="' + pProductTypeDataResult.ProductTypeName + '" /></td>' +
+        //    '<td><input type="text" class="form-control GeneralNumber" value="' + pProductTypeDataResult.GeneralNumber + '" /></td>' +
+        //    '<td><input type="text" class="form-control Job" value="' + pProductTypeDataResult.Job + '" /></td>' +
+        //    '<td><input type="text" class="form-control Profit" value="' + pProductTypeDataResult.Profit + '" /></td>' +
+        //    '<td><input type="date" class="form-control EmployeeStartDate" value="' + pProductTypeDataResult.EmployeeStartDate + '" /></td>' +
+        //    '<td><input type="date" class="form-control EmployeeEndDate" value="' + pProductTypeDataResult.EmployeeEndDate + '" /></td>' +
+        //    '<td><input type="text" class="form-control Notes" value="' + pProductTypeDataResult.Notes + '" /></td>' +
+        //    '<td><input type="checkbox" class="form-control  ProductTypeIsActive" ' + vChecked + ' /></td>' +
+        //    '<td><button class="btn btn-light btn-sm btnProductTypeDelete" data-id="' + pProductTypeDataResult.ProductTypeId + '"><i class="fa fa-trash"></i></button></td>' +
+        //    '</tr>';
+        
+        var vRowContent = '<tr class="tblRow" data-id="' + pProductTypeDataResult.ProductTypeId + '">' +
+
+            '<td width="20px"><button class="btn btn-sm btn-light btnProductTypeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>';
+              if (pProductTypeDataResult.ProductTypeId == undefined || pProductTypeDataResult.ProductTypeId == '' ) {
+                  vRowContent += '<td><select id="selectProductTypeLevel" class="selectpicker form-control selectProductTypeLevel" name="ProductTypeLevel" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"><option data-id="1" value = "1" sort-id="1"  >فرعية</option ><option data-id="2" value = "2" sort-id="2"  >تجميعية</option ></select></td>' ;
+        }
+              else {
+                  console.log('parentttt ' + pProductTypeDataResult.ProductTypeParentId );
+                  if (pProductTypeDataResult.ProductTypeLevel == 1) {
+                   
+                      vRowContent += '<td><select id="selectProductTypeLevel" class="selectpicker form-control selectProductTypeLevel" name="ProductTypeLevel" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" disabled><option data-id="1" value = "1" sort-id="1"  >فرعية</option ><option data-id="2" value = "2" sort-id="2" disabled >تجميعية</option ></select></td>';
+                  }
+                  else if (pProductTypeDataResult.ProductTypeLevel == 2) {
+                     
+                      vRowContent += '<td><select id="selectProductTypeLevel" class="selectpicker form-control selectProductTypeLevel" name="ProductTypeLevel" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" disabled><option data-id="1" value = "1" sort-id="1"  >فرعية</option ><option  data-id="2" value = "2"  sort-id="2"  selected >تجميعية</option ></select></td>';
+                  }
+                 
+              }
+            
+        vRowContent += '<td width="7%"><input type="text" class="form-control ProductTypeCode" disabled value="' + pProductTypeDataResult.ProductTypeCode + '" /></td>' +
+            '<td><input type="text" class="form-control ProductTypeNameL1" value="' + pProductTypeDataResult.ProductTypeNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control ProductTypeNameL2" value="' + pProductTypeDataResult.ProductTypeNameL2 + '" /></td>' +
+            '<td><input type="text" class="form-control ShortName" value="' + pProductTypeDataResult.ShortName + '" /></td>';
+
+        vRowContent += '<td><input type="checkbox" class="form-control  ProductTypeIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnProductTypeDelete" data-id="' + pProductTypeDataResult.ProductTypeId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+       
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+
+    // Row Select
+    $('.tblProductTypeBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divProductType').on('click', 'table tr', function () {
+        var vProductTypeId = $(this).attr('data-id')
+        localStorage.setItem('vProductTypeId', vProductTypeId);
+        //funGETProductTypeDTl(vProductTypeId)
+    });
+
+
+</script>
+<!-- Account Scripts -->
+<!-- Add Row -->
+<script>
+
+
+    // Add Row
+    $('.btnSizeAddRow').on('click', function () {
+        // Cash Desk Add Row
+        funAccountAddRow();
+        // Cash Desk Scroll
+        funAccountScroll();
+    })
+
+    // Account Scroll
+    function funAccountScroll() {
+        // Scroll To Bottom
+        $('.divSize').animate({ scrollTop: $('.divSize').prop("scrollHeight") }, 1000);
+    }
+</script>
+
+<script>
+
+
+
+
+
+
+    // Add Row On Load Page
+    function funBankRow() {
+
+        // Table Body
+        var vProductTypeTableBody = $('.tblProductTypeBody');
+        // Append
+        vProductTypeTableBody.append('<tr class="tblRow" data-id="0">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnProductTypeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td><select id="selectProductTypeLevel" class="selectpicker form-control selectProductTypeLevel" name="ProductTypeLevel" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"><option data-id="1" value = "1" sort-id="1" >فرعية</option ><option data-id="2" value = "2" sort-id="2"  >تجميعية</option ></select></td>' +
+            '<td width="7%"><input type="text" class="form-control ProductTypeCode" disabled  /></td>' +
+            '<td><input type="text" class="form-control ProductTypeNameL1"  /></td>' +
+            '<td><input type="text" class="form-control ProductTypeNameL2"  /></td>' +
+            '<td><input type="text" class="form-control ShortName" /></td>' +
+            '<td><input type="checkbox" class="form-control  ProductTypeIsActive"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnProductTypeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>');
+    }
+
+
+</script>
+
+<!-- StoreTypeData Modal -->
+<div id="ProductTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="ProductTypeDataModalContent"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#lblid').attr('data-id', 0);
+        //$('.selectpicker').show();
+        $('.selectpicker').css("display", "");
+    });
+    $('#txtParent').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            var vURL = '/ProductType/SearchProductType';
+            $('#ProductTypeDataModalContent').load(vURL);
+            // Modal Show
+            $('#ProductTypeDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divProductTypeSelect', function () {
+
+                // Account Id
+                var vProductTypeId = $(this).attr('data-id');
+
+                // Get Values
+                var vProductTypeCodeValue = $(this).find('.divProductTypeNo').text();
+                var vProductTypeNameValue = $(this).find('.divProductTypeName').text();
+
+                // Set Value
+                // $('.txtCountryId').val(vCountryId);
+                $('#txtParent').val(vProductTypeId);
+                $('#txtParentName').val(vProductTypeNameValue);
+                $('#lblid').attr('data-id', vProductTypeId);
+
+
+                // Modal Show
+                $('#ProductTypeDataModal').modal('hide');
+                funGetProductTypesByParentId();
+
+            })
+
+        }
+
+
+    })
+</script>
+<script>
+    // Function Select Store Keepers Depend On Store Id
+    function funGetProductTypesByParentId() {
+        // GET Data
+        $.get('/ProductType/ProductTypeGET',
+            {
+                pProductTypeId: null,
+                pProductTypeCode: '',
+                pProductTypeNameL1: '',
+                pProductTypeNameL2: '',
+                pShortName: '',
+                pProductTypeLevel: null,
+                pProductTypeParentId: $('#lblid').attr('data-id'),
+                pProductTypeIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (ProductTypeData, status) {
+
+                // Table Body
+                var vProductTypeTableBody = $('.tblProductTypeBody');
+                // HTML CLEAR
+                vProductTypeTableBody.html('');
+
+                // JSON
+                var vProductTypeDataResult = JSON.parse(ProductTypeData);
+
+                // For Each Store Keeper - Main
+                $.each(vProductTypeDataResult, function (m, ProductTypeSubData) {
+
+                    // GET Store Keeper Row Content
+                    var vProductTypeRowContent = funProductTypeRowConfig(vProductTypeDataResult[m]);
+                    // Append Row Content
+                    vProductTypeTableBody.append(vProductTypeRowContent);
+
+
+                })
+                if (vProductTypeDataResult == undefined || vProductTypeDataResult == '') {
+                    funProductTypeAddEmptyRow(vProductTypeTableBody);
+                }
+
+                //funProductTypeRow();
+            })
+    }
+    function funProductTypeAddEmptyRow(pTableBody) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "ProductTypeIsActive": true,
+                "ProductTypeId": 0,
+                "ProductTypeCode": '',
+                "ProductTypeNameL1": '',
+                "ProductTypeNameL2": '',
+                "ShortName": '',
+                "ProductTypeLevel": '',
+                "ProductTypeParentId": 0,
+            }
+
+        var vRowContent = funProductTypeRowConfig(vRowContentData);
+
+        pTableBody.append(vRowContent);
+    }
+</script>
+<!--Above Checked-->
+<script>
+    // Event blur
+    $('.tblProductTypeBody').on('blur', '.ProductTypeNameL1', function () {
+        // Get The Value Of StoreKeeperNameL1
+        var vProductTypeNameL1Value = $(this).val();
+        // Get the Current Row
+        var vCurrentRow = $(this).closest('tr');
+        // Get The Element Of Name L2
+        var vElementProductTypeNameL2 = vCurrentRow.find('.ProductTypeNameL2');
+        // check If Empty
+        if (vElementProductTypeNameL2.val() == undefined || vElementProductTypeNameL2.val() == '') {
+            vElementProductTypeNameL2.val(vProductTypeNameL1Value);
+        }
+
+    })
+</script>

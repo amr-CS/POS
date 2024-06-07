@@ -1,0 +1,112 @@
+﻿@using System.Data 
+@model IEnumerable<appSERP.Models.RES.Floor>
+@{
+    ViewBag.Title = "TableManagement";
+    Layout = "~/Views/Shared/appLayout/_POSLayout.cshtml";
+    DataTable Data = ViewBag.data;
+   // object[] s=ViewBag.floor;
+}
+<style>
+    
+        .btnTable {
+        /*border-radius: 5px;*/
+        border-radius: 50%;
+        font-size: 30px;
+        color: #dee2e6;
+        width: 250px !important;
+        border-left: 5px solid;
+        border-right: 5px solid;
+        border-top: 0px ;
+        border-bottom: 0px ;
+        border-color:black;
+        padding: 2px 5px;
+        /*height: 120px !important;*/
+        height: 250px !important;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+</style>
+<div class="border">
+    <div class="btn-group btn-group-lg btn-block " role="group" aria-label="...">
+        <button type="button" class="btn fa fa-check btn-light info btnWay btnGroup dSelected" value="31" style="width:33.3%">سفري</button>
+        <button type="button" class="btn fa fa-check btn-light btnLocal btnGroup" value="30" style="width:33.3%">محلي </button>
+        <button type="button" class="btn fa fa-check btn-light btnFam btnGroup" value="32" style="width:33.3%">عوائل</button>
+    </div>
+</div>
+<h2>
+    اختيار الطاولات
+    :
+</h2>
+<div class="row">
+    <div class="divCategory pt-2 col-md-6" dir="rtl" style="border-bottom:2px solid #0081c6">
+       
+        @foreach (var item in Model)
+        {
+
+            <div>
+                <button type="button" class="btn btn-light btnFloor overflow-visible border m-1" value="@item.FloorId">
+                    @item.FloorName
+                </button>
+
+            </div>
+        }
+    </div>
+    <!-- <div class="col-md-6">
+          <select class="form-control">
+              <option>الطابق الاول</option>
+              <option>الطابق الثاني</option>
+          </select>
+      </div>-->
+    <div class="col-md-6 row" style="float:right">
+        <div class="col-md-2">
+            <span>متاح</span>
+            <button class="btn-success">10</button>
+        </div>
+        <div class="col-md-2">
+            <span>مستخدم</span>
+            <button class="btn-danger">0</button>
+        </div>
+        <div class="col-md-2">
+            <span>محجوز</span>
+            <button class="btn-warning">0</button>
+        </div>
+
+    </div>
+</div>
+<hr />
+
+<div class="pt-3 divTableManagementPartial">
+    @Html.Action("TableManagementPartial", "POS",new { floorId=1})
+   
+
+
+</div>
+
+<script>
+    $('.btnFloor').on('click', function () {
+        var floorId = $(this).val()
+        @*$('.divTableManagementPartial').load('@Url.Action("UserDetails","User", new { floorId = floorId })');*@
+        //$('.divTableManagementPartial').html('')
+        $('.divTableManagementPartial').load('@Url.Action("TableManagementPartial")', { floorId: floorId });
+    })
+    $('.divCategory').slick({
+        dots: false,
+        accessibility: true,
+        infinite: false,
+        rtl: true,
+        speed: 300,
+        slidesToShow: 9,
+        slidesToScroll: 3,
+        adaptiveHeight: true,
+        arrows:true
+    });
+    $('.btnWay').on('click', function () {
+        window.location="Index"
+    })
+    $('.btnTable').on('click', function () {
+        var tableValue = $(this).attr('value');
+        var tableVName = $(this).attr('name');
+
+        window.location = "Index?tableId=" + tableValue + '&&tableName=' + tableVName
+    })
+</script>

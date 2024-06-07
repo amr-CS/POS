@@ -1,0 +1,151 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+@if (Model.Rows.Count > 0)
+{
+    foreach (DataRow pData in Model.Rows)
+    {
+        <tr class="tblUnitRow " data-changed="0" data-id="@pData["InvItemUnitId"]">
+            <td class="">
+                <button class="btn btn-light btn-sm border btnAddUnitRow" type="submit">
+                    <i class="fa fa-plus-circle"></i>
+                </button>
+            </td>
+            <td class="" width="15%">
+                <div class="d-flex txtUnit">
+                    <div class="col-sm-4 p-0">
+                        <input class="form-control form-control-sm text-center  d-none txtUnitId" value="@pData["UnitId"]" type="text" required />
+                        <input class="form-control form-control-sm text-center  txtUnitCode" value="@pData["UnitCode"]" type="text" required />
+
+                    </div>
+                    <div class="col-sm-8 p-0">
+                        <input class="form-control form-control-sm text-center  txtUnitName" value="@pData["UnitNameL1"]" type="text" required readonly />
+                    </div>
+                </div>
+            </td>
+            <td class="" width="15%">
+                <input class="form-control form-control-sm text-center txtPartsInParent" value="@pData["PartsInParents"]" required />
+            </td>
+            <td class="" width="25%">
+                <div class="d-flex">
+                    <div class="col-sm-4 p-0">
+                        <input class="form-control form-control-sm text-center  d-none txtUnitParentId" value="@pData["UnitParentId"]" type="text" required />
+                        <input class="form-control form-control-sm text-center  txtUnitParentCode" value="@pData["UnitParentCode"]" disabled type="text" required />
+                    </div>
+                    <div class="col-sm-8 p-0">
+                        <input class="form-control form-control-sm text-center  txtUnitParentName" value="@pData["UnitParentName"]" type="text" required disabled />
+                    </div>
+                </div>
+            </td>
+
+            <td class="" width="">
+                <input class="form-control form-control-sm text-center txtBarcode" value="@pData["Barcode"]" required />
+            </td>
+            <td class="" style=" padding-right:3rem !important;">
+                <div class="custom-control custom-checkbox ">
+                    <input type="checkbox" class="custom-control-input  txtIsDecreasable" id="txtIsDecreasable  @pData["InvItemUnitId"]  ">
+                    <label class="custom-control-label small" for="txtIsDecreasable  @pData["InvItemUnitId"]"></label>
+                </div>
+            </td>
+            <td class="" style=" padding-right:1rem !important;">
+                <div class="custom-control custom-checkbox ">
+                    <input type="checkbox" class="custom-control-input  chkUnitProduction" vUnitProduction id="chkUnitProduction  @pData["InvItemUnitId"]  ">
+                    <label class="custom-control-label small" for="chkUnitProduction  @pData["InvItemUnitId"]  "></label>
+                </div>
+            </td>
+            <td class="" style=" padding-right:4rem !important;">
+                <div class="custom-control custom-checkbox ">
+                    <input type="checkbox" class="custom-control-input  chkSellUnit" vSellUnit id="chkSellUnit  @pData["InvItemUnitId"]  ">
+                    <label class="custom-control-label small" for="chkSellUnit  @pData["InvItemUnitId"]  "></label>
+                </div>
+            </td>
+            <td class="" style=" padding-right:2rem !important;">
+                <div class="custom-control custom-checkbox ">
+                    <input type="checkbox" class="custom-control-input  chkIsDefault" id="chkIsDefault  @pData["InvItemUnitId"]  ">
+                    <label class="custom-control-label small" for="chkIsDefault  @pData["InvItemUnitId"]  "></label>
+                </div>
+            </td>
+            <td class="" style=" padding-right:2rem !important;">
+                <div class="custom-control custom-checkbox ">
+                    <input type="checkbox" class="custom-control-input  chkIsActive" vIsActive id="chkIsActive  @pData["InvItemUnitId"]  ">
+                    <label class="custom-control-label small" for="chkIsActive  @pData["InvItemUnitId"]  "></label>
+                </div>
+            </td>
+            <td><button class="btn btn-light btn-sm btnUnitDelete" data-id="@pData["InvItemUnitId"]"><i class="fa fa-trash"></i></button></td>
+        </tr>;
+    }
+}
+else
+{
+    <tr class="tblUnitRow " data-changed="0" data-id="0">
+        <td class="">
+            <button class="btn btn-light btn-sm border btnAddUnitRow" type="submit">
+                <i class="fa fa-plus-circle"></i>
+            </button>
+        </td>
+        <td class="" width="15%">
+            <div class="d-flex txtUnit">
+                <div class="col-sm-4 p-0">
+                    <input class="form-control form-control-sm text-center  d-none txtUnitId" value="0" type="text" required />
+                    <input class="form-control form-control-sm text-center  txtUnitCode" value="0" type="text" required />
+
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control form-control-sm text-center  txtUnitName" value="0" type="text" required readonly />
+                </div>
+            </div>
+        </td>
+        <td class="" width="15%">
+            <input class="form-control form-control-sm text-center txtPartsInParent" value="1" required />
+        </td>
+        <td class="" width="25%">
+            <div class="d-flex">
+                <div class="col-sm-4 p-0">
+                    <input class="form-control form-control-sm text-center  d-none txtUnitParentId" value="0" type="text" required />
+                    <input class="form-control form-control-sm text-center  txtUnitParentCode" value="0" disabled type="text" required />
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control form-control-sm text-center  txtUnitParentName" value="0" type="text" required disabled />
+                </div>
+            </div>
+        </td>
+
+        <td class="" width="">
+            <input class="form-control form-control-sm text-center txtBarcode" value="0" required />
+        </td>
+        <td class="" style=" padding-right:3rem !important;">
+            <div class="custom-control custom-checkbox ">
+                <input type="checkbox" class="custom-control-input  txtIsDecreasable" id="txtIsDecreasable   ">
+                <label class="custom-control-label small" for="txtIsDecreasable  0"></label>
+            </div>
+        </td>
+        <td class="" style=" padding-right:1rem !important;">
+            <div class="custom-control custom-checkbox ">
+                <input type="checkbox" class="custom-control-input  chkUnitProduction" vUnitProduction id="chkUnitProduction   ">
+                <label class="custom-control-label small" for="chkUnitProduction   "></label>
+            </div>
+        </td>
+        <td class="" style=" padding-right:4rem !important;">
+            <div class="custom-control custom-checkbox ">
+                <input type="checkbox" class="custom-control-input  chkSellUnit" vSellUnit id="chkSellUnit  ">
+                <label class="custom-control-label small" for="chkSellUnit   "></label>
+            </div>
+        </td>
+        <td class="" style=" padding-right:2rem !important;">
+            <div class="custom-control custom-checkbox ">
+                <input type="checkbox" class="custom-control-input  chkIsDefault" id="chkIsDefault ">
+                <label class="custom-control-label small" for="chkIsDefault  "></label>
+            </div>
+        </td>
+        <td class="" style=" padding-right:2rem !important;">
+            <div class="custom-control custom-checkbox ">
+                <input type="checkbox" class="custom-control-input  chkIsActive" vIsActive id="chkIsActive  ">
+                <label class="custom-control-label small" for="chkIsActive   "></label>
+            </div>
+        </td>
+        <td><button class="btn btn-light btn-sm btnUnitDelete" data-id=""><i class="fa fa-trash"></i></button></td>
+    </tr>;
+}
+<script>
+    var countUnitRow = @Model.Rows.Count;
+    $(".tblUnitBody tr:first").addClass('selectedUnit');
+</script>

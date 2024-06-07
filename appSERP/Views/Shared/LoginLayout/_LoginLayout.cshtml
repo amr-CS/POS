@@ -1,0 +1,40 @@
+﻿@using appSERP.appCode.Setting.User
+@using appSERP.appCode.dbCode.SEC
+@using appSERP.Views.Shared.appResource
+
+<!doctype html>
+<html dir="@(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft? "rtl" : "ltr")">
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    @if (clsUser.vUserLanguageId == 1)
+    {
+        <title> - WhiteCloud</title>
+
+        <!-- Include Ar - RTL -->
+        @Styles.Render("~/Content/css_rtl")
+    }
+    else
+    {
+        <title>  - WhiteCloud</title>
+
+        <!-- Include En - LTR -->
+        @Styles.Render("~/Content/css_ltr")
+    }
+
+</head>
+<body style="padding-top:0px !important">
+    <div class="">
+        @RenderBody()
+    </div>
+
+
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script>
+
+    </script>
+</body>
+</html>
+
+

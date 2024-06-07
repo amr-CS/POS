@@ -1,0 +1,2468 @@
+﻿@using appSERP.appCode.Setting.User
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.Utils
+<!--Test-->
+
+@{
+    ViewBag.Title = "امر صرف مخزني صنف";
+    int UserId = 0;
+    if (Request.Cookies["UserId"] != null)
+    { UserId = Convert.ToInt32(Request.Cookies["UserId"].Value); };
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+
+}
+<style>
+    body {
+        font-family: Cairo;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+
+    .fullHeightInput {
+        height: 50px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table {
+        padding: 0rem;
+    }
+    /*.table td {
+        margin-top: 0.5rem;
+        padding: 0rem !important;
+    }*/
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[disabled] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .txtDiscount {
+        height: 27px !important;
+        padding: 1px;
+    }
+
+    .error {
+        border: 1px solid red;
+    }
+</style>
+<!-- Utility Bar -->
+@*@Html.Action("Index", "DocUtilityBar")*@
+
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+</style>
+<!-- Head -->
+<div class="container-fluid">
+    <div class="bg-white border rounded p-3">
+        <div class="w-100">
+            <div class="d-flex justify-content-end">
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Save -->
+                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Copy -->
+                    <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                    <!-- Paste -->
+                    <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Print -->
+                    <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnUtility btnAdd" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                    <!-- Edit -->
+                    <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- PDF -->
+                    <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <!-- Excel -->
+                    <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                    <!-- Word -->
+                    <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Close -->
+                    <button class="btn btnUtility btnClose" title="@appResource.ttClose"><i class="fa fa-close"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Full Screen -->
+                    <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <div class="dropdown">
+                        <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-table"></i>
+                        </button>
+                        <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Details Main -->
+
+<div class="container-fluid">
+
+    <!-- Title -->
+    <div class="bg-light border rounded p-3 mb-3">امر صرف مخزني-للاصناف </div>
+
+    <!-- Head -->
+    <div class="bg-white border rounded p-3">
+
+        <!-- Main Inputs -->
+        <div class="row">
+
+            <!-- 1st Row Input -->
+            <div class="col-md-8">
+
+                <!-- Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-1">
+                        <label class="small float-right pt-2">@appResource.StoreNo</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="d-flex txtStore">
+                            <input type="text" class="form-control form-control-sm w-25 txtInvType d-none" value="6" />
+                            <input type="text" class="form-control form-control-sm w-25 txtInvId d-none" value="0" />
+                            <input type="text" class="form-control form-control-sm w-25 txtCheckDate d-none" value="0" />
+                            <input type="text" class="form-control form-control-sm w-25 d-none txtStoreId" />
+                            <input type="text" class="form-control form-control-sm w-25 txtStoreCode" />
+                            <input type="text" id="start" class="form-control form-control-sm txtStoreName" disabled />
+
+                        </div>
+                    </div>
+                    <div class="co-sm-4 row ">
+
+                        <!-- Is Posted -->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input chkIsPosted" disabled id="chkIsPosted">
+                                    <label class="custom-control-label small" for="chkIsPosted">@appResource.Posted</label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Is Canceld -->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input chkIsCancel" id="chkIsCancel">
+                                    <label class="custom-control-label small" for="chkIsCancel">@appResource.Canceled</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-1">
+                        <label class="small float-right pt-2">@appResource._Customer</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="d-flex txtCustomer">
+                            <input type="text" class="form-control form-control-sm w-25 d-none txtCustomerId" />
+                            <input type="text" class="form-control form-control-sm w-25 txtCustomerCode" />
+                            <input type="text" id="start" class="form-control form-control-sm txtCustomerName" disabled />
+                        </div>
+                    </div>
+                </div>
+                <!-- Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-1">
+                        <label class="small float-right pt-2">@appResource._Note</label>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="d-flex">
+
+                            <input type="text" id="start" class="form-control form-control-sm txthNote" />
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- End of 1st Row of Main Inputs -->
+            <!-- Left Controls [Doc No, Ref, ..] -->
+            <div class="col-md-4 mt-3">
+
+                <!-- Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">@appResource.BillNo</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm txtDocNo" disabled />
+                    </div>
+                </div>
+
+                <!-- Doc Date -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">@appResource.BillDate</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control form-control-sm dtpInvDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+
+                <!-- Ref Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">@appResource.RefrenceNo</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm txtDocRefNo" />
+                    </div>
+                </div>
+                <!-- Ref Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">@appResource.RefrenceDate</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control form-control-sm txtDocRefDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+
+            </div>
+        </div> <!-- End of Main Inputs -->
+    </div>
+    <!-- Details Main -->
+    <div class="bg-white border rounded p-3 mt-3 divGlVoucher">
+        <!-- Details -->
+        <table class="table table-sm table-responsive-sm">
+            <thead>
+                <tr class="tblHead">
+                    <th class=""></th>
+                    <th class="" width="7%">
+                        <div>@appResource.AccountNo</div>
+                    </th>
+                    <th class="" width="15%">
+                        <div>@appResource._Account</div>
+                    </th>
+                    <th class="" width="20%">
+                        <div class="d-flex">
+
+                            <div class="col-sm-3">
+                                <div>@appResource._CostCenter</div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div>@appResource.CostCenterName</div>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="" width="10%">
+                        <div>@appResource._Amount</div>
+
+                    </th>
+                    <th class="" width="10%">
+                        <div>@appResource.ExchangeRate1</div>
+
+                    </th>
+                    <th class="" width="10%">
+                        <div>@appResource.AmountbyAccountCurrency</div>
+                    </th>
+
+                    <th class="">
+                        <div>@appResource._Note</div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody class="tblLaterBody">
+                <tr class="trBaseRow tblLaterRow" data-id="0">
+                    <td class="">
+                        <button class="btn btn-light btn-sm border btnAddLaterRow" type="submit">
+                            <i class="fa fa-plus-circle"></i>
+                        </button>
+                    </td>
+                    <td class="txtAccount">
+                        <input class="form-control form-control-sm text-center  d-none txtAccountId" type="text" required />
+                        <input class="form-control form-control-sm text-center  d-none  txtAccountIsCostCenter" type="text" required />
+                        <input class="form-control form-control-sm text-center  txtAccountCode" type="text" title="@appResource.ChoseAccountTitle" required />
+                    </td>
+                    <td class="">
+                        <input class="form-control form-control-sm text-center    txtAccountName" type="text" required disabled />
+                    </td>
+                    <td class="">
+                        <div class="d-flex">
+                            <div class="col-sm-4 p-0">
+                                <input class="form-control form-control-sm text-center  d-none txtCostCenterId" type="text" required />
+                                <input class="form-control form-control-sm text-center  txtCostCenterCode" type="text" required />
+                            </div>
+                            <div class="col-sm-8 p-0">
+                                <input class="form-control form-control-sm text-center  txtCostCenterName" type="text" required disabled />
+                            </div>
+                        </div>
+                    </td>
+                    <td class="">
+                        <input class="form-control form-control-sm text-center font-weight-bold txtCredit" value="0" type="text" min=0 required />
+                    </td>
+                    <td class="">
+                        <input class="form-control form-control-sm text-center font-weight-bold txtCurValue" value="0" type="text" min=0 required disabled />
+
+                    </td>
+                    <td class="">
+                        <input class="form-control form-control-sm text-center font-weight-bold txtBaseCredit" value="0" type="text" min=0 required />
+                    </td>
+                    <td class="">
+                        <input class="form-control form-control-sm text-center font-weight-bold txtLaterNote" type="text" min=0 required />
+                    </td>
+                    <td><button class="btn btn-light btn-sm btnInvLaterDelete" data-id="0"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- Details Footer -->
+        <table class="table table-sm tblFooter border-0">
+            <tbody class="">
+                <tr class="d-flex">
+
+                    <td class="col-sm-3">
+                        <div class="d-flex">
+
+                        </div>
+                    </td>
+                    <td class="col-sm-5">
+                        <label class="small float-right mx-1 pt-2">@appResource._Total</label>
+                    </td>
+                    <td class="col-sm-2">
+                        <input class="form-control form-control-sm text-center disabled font-weight-bold   txtTotalCredit" disabled type="number" min=0 required />
+                    </td>
+                    <td class="col-sm-2 d-none">
+                        <input class="form-control form-control-sm text-center disabled font-weight-bold  " disabled type="number" min=0 required />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Details Main -->
+    <div class="bg-white border rounded p-3 mt-3 divGlVoucher">
+        <!-- Details -->
+        <table class="table table-sm table-responsive-sm">
+            <thead>
+                <tr class="tblHead">
+                    <th class=""></th>
+                    <th class="" width="7%">
+                        <div>@appResource.ProductNo</div>
+                    </th>
+                    <th class="" width="15%">
+                        <div>@appResource.ProductName</div>
+                    </th>
+                    <th class="">
+                        <div>@appResource.UnitId</div>
+                    </th>
+                    <th class="">
+                        <div>@appResource.EndDate</div>
+                    </th>
+                    <th class="">
+                        <div>@appResource._Quantity</div>
+                    </th>
+                    <th class="" width="7%">
+                        <div>@appResource._Price</div>
+
+                    </th>
+                    <th class="" width="7%">
+                        <div>@appResource.ExchangeRate1 </div>
+
+                    </th>
+                    <th class="" width="7%">
+                        <div>@appResource.DiscFree</div>
+
+                    </th>
+                    <th class="" width="7%">
+                        <div> @appResource._Value</div>
+                    </th>
+
+                    <th class="" width="10%">
+                        <div>@appResource._TotalBase</div>
+                    </th>
+                    <th class="">
+                        <div>@appResource._Note</div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody class="tblDtlBody">
+                <tr class="trBaseRow tblDTLRow" data-id="0">
+                    <td class="">
+                        <button class="btn btn-light btn-sm border btnAddDtlRow" type="submit">
+                            <i class="fa fa-plus-circle"></i>
+                        </button>
+                    </td>
+                    <td class="">
+                        <input class="form-control form-control-sm text-center d-none  txtItemId" type="text" required />
+                        <input class="form-control form-control-sm text-center txtItemCode" type="text" required readonly />
+                    </td>
+                    <td class="">
+                        <input class="form-control form-control-sm text-center  txtItemName" type="text" required disabled />
+                    </td>
+                    <td class="" width="7%">
+                        <div class="d-flex">
+                            <div class="d-none">
+                                <input type="text" class=" form-control form-control-sm text-center txtUnitId " />
+                            </div>
+                            <div class="">
+                                <input class="form-control form-control-sm text-center font-weight-bold txtUnitName" readonly type="text" min=0 required />
+                            </div>
+                        </div>
+                    </td>
+                    <td class="" width="10%">
+                        <input class="form-control form-control-sm text-center font-weight-bold txtFinishDate" type="Date" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                    </td>
+                    <td class="" width="7%">
+                        <input class="form-control form-control-sm text-center font-weight-bold txtItemQty " value="0" type="text" min=0 required />
+                    </td>
+
+                    <td class="" width="7%">
+                        <input class="form-control form-control-sm text-center font-weight-bold txtItemPrice" type="number" step="0.01" min=0 required readonly />
+
+                    </td>
+                    <td class="" width="7%">
+                        <input class="form-control form-control-sm text-center font-weight-bold txtItemCurValue" disabled value="0" type="number" step="0.01" min=0 required />
+                    </td>
+                    <td class="">
+                        <select class="txtDiscount form-control">
+                            <option data-id="4"></option>
+                            <option data-id="1"> @appResource._Free</option>
+                            <option data-id="2">@appResource._Percent</option>
+                            <option data-id="3">@appResource._Value</option>
+                        </select>
+                    </td>
+                    <td class="">
+
+                        <input class="form-control form-control-sm text-center font-weight-bold txtDiscountValue" type="text" required />
+                    </td>
+                    <td class="d-none">
+
+                        <input class="form-control form-control-sm text-center  txtTotal" type="text" required />
+                    </td>
+
+                    <td class="">
+                        <input class="form-control form-control-sm text-center  txtTotalBase" type="text" required disabled />
+                    </td>
+
+                    <td class="">
+                        <input class="form-control form-control-sm text-center txtNote" required />
+                    </td>
+
+                    <td><button class="btn btn-light btn-sm btnInvDtlDelete" data-id="0"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Details Footer -->
+        <table class="table table-sm tblFooter border-0">
+            <tbody class="">
+                <tr class="d-flex">
+
+                    <td class="col-sm-3">
+                        <div class="d-flex">
+
+                        </div>
+                    </td>
+                    <td class="col-sm-5">
+                        <label class="small float-right mx-1 pt-2">@appResource._Total</label>
+                    </td>
+                    <td class="col-sm-2">
+                        <input class="form-control form-control-sm text-center disabled font-weight-bold   txtTotalDtlCredit" disabled type="number" min=0 required />
+                    </td>
+                    <td class="col-sm-2 d-none">
+                        <input class="form-control form-control-sm text-center disabled font-weight-bold txtTotalDebit " disabled type="number" min=0 required />
+                    </td>
+
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+<!-- AccountData Modal -->
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+<!-- CostCenterData Modal -->
+<div id="CostCenterDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CostCenterDataModalContent"></div>
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+<script src="/signalr/hubs"></script>
+
+
+
+
+
+
+<script>
+var Item = $.parseJSON($.ajax({
+            url: '/api/APIInvItem/InvItemGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            //data: { pItemType: @ItemType.Items, pQueryTypeId: '700', pItemSales: null },
+           data: { phNumbers: '@ItemType.Items.ToString()', pQueryTypeId: '409', },
+            async: false
+        }).responseText);
+
+
+
+    // Add New StudentName
+    var chat = $.connection.chatHub;
+    // Start Connection
+    $.connection.hub.start().done(function () {
+
+            //var   Item = $.parseJSON($.ajax({
+            //url: '/api/APIInvItem/InvItemGET',
+            //dataType: "json",
+            //method: 'GET', contentType: 'application/json',
+            //data: { phNumbers: '2', pQueryTypeId: '409', },
+            //async: false
+            //  }).responseText);
+
+
+        // Save Using button
+        $('.btnSave').on('click', function () {
+            $('.btnSave').attr('disabled', 'disabled');
+            $('#loading').show();
+              $('.tblDTLRow input').removeClass('errorClass');
+            var valid = true;
+            $('.tblDTLRow').each(function (i) {
+                var vElement = $(this);
+                var vdItemId = $(this).find('.txtItemId').val()
+                var vdUnitId = $(this).find('.txtUnitId').val()
+                var vdItemQty = $(this).find('.txtItemQty').val()
+                var vdItemPrice = $(this).find('.txtItemPrice').val()
+                if (vdUnitId == '' || vdItemId == '' || vdItemPrice=='' || vdItemQty=='' || vdItemQty=='0') {
+                                  // Error Class Validation
+                                if (vdItemId == '' || vdItemId == '0') {
+                                    vElement.find('.txtItemName').addClass('errorClass')
+                                }
+                                if (vdUnitId == '' || vdUnitId == '0') {
+                                    vElement.find('.txtUnitName').addClass('errorClass')
+                                }
+                                if (vdItemQty == '' || vdItemQty == '0') {
+                                    vElement.find('.txtItemQty').addClass('errorClass')
+                                    }
+                                      if (vdItemPrice == '' || vdItemPrice == '0') {
+                                    vElement.find('.txtItemPrice').addClass('errorClass')}
+                                 valid = false;
+                }
+            });
+
+            if (valid == true) {
+                // Save  ALL
+                funSaveALL()
+            } else {
+                funNotification('يجب استكمال البيانات', 3)
+                $('#loading').hide();
+                $('.btnSave').removeAttr('disabled');
+            }
+
+            chat.server.send('1')
+
+        }) // End BtnSave
+    })
+       $('body').on('click', '.btnAdd', function () {
+        Clear()
+    })
+
+    // Save Using F10
+    $('body').on('keyup', function (e) {
+        e.preventDefault();
+
+        // Check F10
+        if (e.keyCode == 121) {
+            // Save  ALL
+            funSaveALL()
+        }
+    })
+
+    // Add Validation
+    function funValidation()
+    {
+
+        // Get StorId
+        var vStore = $('.txtStoreCode').val()
+        // Supllier
+        var vCustomer = $('.txtCustomerCode').val();
+        if (vStore) {
+            $('.txtStore').removeClass('error')
+        }
+        else {
+            $('.txtStore').addClass('error')
+        }
+        if (vCustomer == '') {
+            $('.txtCustomer').addClass('error')
+        }
+        else {
+            $('.txtCustomer').removeClass('error')
+        }
+
+    }
+
+    $('.txtStoreCode').on('change keyup', function () {
+        $('.txtStore').removeClass('error')
+    })
+    $('.txtCustomerCode').on('change keyup', function () {
+        $('.txtCustomer').removeClass('error')
+    })
+
+    // Save All
+    function funSaveALL() {
+        var UserId = $('.divUserId').text();
+        var Valid = false;
+        // Done
+        var Done = false;
+        // Get Id
+        var InvId = $('.txtInvId').val()
+        // Get StorId
+        var vStoreId = $('.txtStoreId').val()
+        // Supllier
+        var vCustomerId = $('.txtCustomerId').val();
+        // Get StorId
+        var vNote = $('.txthNote').val()
+        // Supllier
+        var vInvDate = $('.dtpInvDate').val();
+        // Get StorId
+        var vDocRefNo = $('.txtDocRefNo').val()
+        // InType
+        var vInvtype = $('.txtInvtype').val();
+        // Ref Date
+        var vhInvRefDate = $('.txtDocRefDate').val();
+
+        // Supllier
+        var vchkIsCancel = $('.chkIsCancel').prop('checked');
+        // Valid Date
+        var vDateCheck = $('.txtCheckDate').val();
+        if (InvId == '0' || InvId == '') {
+
+        if (vDateCheck == 'true') {
+
+            if (vStoreId && vCustomerId) {
+                        $('#loading').show();
+                        Valid = true;
+                        let InvoiceDtls = [];
+                        // Check Rows
+                        $('.tblDTLRow').each(function (i) {
+                            var vTableRow = $(this);
+                            var vDtlRowId = $(this).attr('data-id');
+                            var vdItemId = $(this).find('.txtItemId').val()
+                            var vdUnitId = $(this).find('.txtUnitId').val()
+                            var vdItemQty = $(this).find('.txtItemQty').val()
+                            var LastQty = $(this).find('.txtItemQty').attr('last-qty')
+                            var vdItemPrice = $(this).find('.txtItemPrice').val()
+                            var vdItemCurVALUE = $(this).find('.txtItemCurValue').val()
+                            //var vdDiscType = $(this).find('.txtDiscount').val()
+                            var vdDiscType = $(this).find('.txtDiscount').children("option:selected").attr('data-id');
+                            var vdDiscValue = $(this).find('.txtDiscountValue').val()
+                            var vdExpireDate = $(this).find('.txtFinishDate').val()
+                            // TotalDtlBase
+                            var vdTotalItemSbaseCredit = $(this).find('.txtTotalBase').val()
+
+                            var vdNotes = $(this).find('.txtNote').val()
+
+                            if (vdUnitId) {
+                          let Item = {
+
+                         InvDTLId: vDtlRowId,
+                         InvId: InvId,
+                         ItemId: vdItemId,
+                         UnitId: vdUnitId,
+                         ItemQty: vdItemQty,
+                         Qty: LastQty,
+                         ItemPrice: vdItemPrice,
+                         Price: vdItemPrice,
+                         ExpireDate: vdExpireDate,
+                         ItemCurVALUE: vdItemCurVALUE,
+                         TotalItemSbaseCredit: vdTotalItemSbaseCredit,
+                         DiscType: vdDiscType,
+                         DiscValue: vdDiscValue,
+                         Notes: vdNotes,
+                         StoreId: vStoreId,
+                         IsDeleted: false,
+                    }
+                                InvoiceDtls.push(Item);
+                            }
+                            else {
+                                Valid = false;
+                            }
+
+                        })// DTL Rows
+                console.log(InvoiceDtls)
+
+                                 $.ajax({
+                                    url: '/Invoice/InsertReciverOrderDtlBulk',
+                                    method: 'POST', contentType: 'application/json',
+                                    data: JSON.stringify({
+                                        InvoiceDtls,
+                                        UserId: '@UserId',
+                                        BranchId: '@BranchId',
+                                        InvId: InvId,
+                                        InvType: 6,
+                                        CustomerId: vCustomerId,
+                                        StoreId: vStoreId,
+                                        InvDate: vInvDate,
+                                        Notes: vNote,
+                                        InvRef: vDocRefNo,
+                                        InvRefDate: vhInvRefDate,
+                                        InvIsCancel: vchkIsCancel,
+                                        IsDeleted: false,
+                                    }),
+
+                                              beforeSend: function(){
+                                    },
+                                     complete: function () {
+                                         $('.btnSave').removeAttr('disabled');
+                                        $('#loading').hide();
+                                    },
+                                    success: function (r) {
+
+                                        console.table(r);
+                                        var m = JSON.parse(r);
+                                        $.each(m, function (i, a) {
+                                     funNotification(a.msg, a.c)
+                                        })
+                                        if (m[0].c == 1) {
+                                             var data = JSON.parse(r);
+                                    console.log(data[0].InvId)
+    saveLater(data[0].InvId)
+                                    $('.txtInvId').val(data[0].InvId);
+                                    $('.txtDocNo').val(data[0].InvId);
+                                        //    Clear()
+                                        }
+
+                                    }
+                                });
+
+
+               //     })
+
+               // if (Valid) {
+                   // funNotification('@appResource.msgSave', 1)
+                   // Clear()
+               // }
+               // else {
+              //      funNotification('@appResource.msgCompleteData',2)
+              //  }
+            }
+            else {
+                funValidation();
+                funNotification('@appResource.msgCompleteData', '2');
+            }
+
+        }
+        else {
+            funNotification('@appResource.msgCheckFinancialYear', '2');
+        }
+    }
+          else {
+            funNotification('لا يوجد تعديل', 2)
+            $('#loading').hide();
+            $('.btnSave').removeAttr('disabled');
+                }
+
+    } // Save All
+
+
+
+
+
+</script>
+<script>
+    var vDataSearch;
+    var vCount = 0;
+    $('.btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/InvoicePaymentOrder/InvoiceSearch';
+        // Load Content of CostCenter Search
+        $('#CostCenterDataModalContent').load(vURL);
+        // Modal Full
+        $('#CostCenterDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#CostCenterDataModal').modal('show');
+    })
+    // PRINT
+    $('body').on('click', '.btnSelect', function () {
+        var count = $("input[name='chkIsValid']:checked").length;
+        if (count == 0) {
+            // alert("No rows selected to Print");
+            return false;
+        }
+        else {
+            // Selected Permissions
+            var vSelected = '';
+
+            // Check If All True Or False
+            $('table > tbody > tr ').each(function () {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Check
+                if (vSelectedChk) {
+                    // Get Id
+                    var vGlVoucherId = vElement.attr('data-id');
+                    // Add Selected Action
+                    vSelected += vGlVoucherId + ',';
+                    vCount += $(this).length
+
+                }
+            });
+            $('.txtTotalCount').text(vCount)
+            // close The Modal
+            $('#CostCenterDataModal').modal('hide');
+
+            // Get Data From Gl Voucher After Select
+            $.get('/api/APIINVInvoice/INVInvoiceGET',
+                {
+                    // Head Parameters
+                    phNumbers: vSelected,
+                    //pdInvId:1,
+                    //phIsDeleted: false,
+                    // Query Type Id
+                    pQueryTypeId: '400'
+                },
+                function (data, status) {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    vDataSearch = vDataResult
+                    displayData(vDataSearch[0])
+                })
+        }
+    });
+    //Next-Previous-First-Last
+    var index = 0;
+    $('#btnNext').click(function () {
+        if (index <= vDataSearch.length) {
+            // Call Function Display Data
+            displayData(vDataSearch[++index]);
+
+            $('.txtCount').text(index)
+        }
+    });
+    $('#btnPrev').click(function () {
+        if (index > 0) {
+            // Call Function Display Data
+            displayData(vDataSearch[--index])
+            $('.txtCount').text(index)
+        }
+    });
+    $('#btnFirst').click(function () {
+        $('.txtCount').text(1)
+        displayData(vDataSearch[0])
+    });
+    $('#btnLast').click(function () {
+        $('.txtCount').text(vDataSearch.length)
+        displayData(vDataSearch[vDataSearch.length - 1])
+    });
+    // Get Data
+    function displayData(pData) {
+
+        var vGlVoucherDataResult = pData
+
+
+
+        var vData = pData;
+
+        // For Each DocDetail  - Main
+        if (vData) {
+            if (pData.InvoiceDTL) {
+                $('.tblDtlBody').html('')
+                for (var i = 0; i <= pData.InvoiceDTL.length - 1; i++) {
+
+                    // GET Cash Desk Row Content
+                    var vContent = funINVDtlConfig(vGlVoucherDataResult.InvoiceDTL[i]);
+                    // Append Row Content
+                    $('.tblDtlBody').append(vContent);
+
+                }
+            }
+            if (pData.InvLater) {
+                $('.tblLaterBody').html('');
+                for (var i = 0; i <= pData.InvLater.length - 1; i++) {
+
+                    // GET Cash Desk Row Content
+                    var vContent = funINVLaterConfig(vGlVoucherDataResult.InvLater[i]);
+                    // Append Row Content
+                    $('.tblLaterBody').append(vContent);
+
+                }
+            }
+            // Fill Head
+            funInvHead(pData)
+        }
+        // Check Date
+        funCheckDate()
+
+        // Dtl Total Base
+        funCalculatTotalBase()
+
+        // Total
+        funTotalDebitCreditDiff()
+
+        // tabs
+        funTabs()
+    }
+</script>
+<!--Config-->
+<script>
+    function funInvHead(pInvHead) {
+
+        // Get Doc Id
+        $('.txtInvId').val(pInvHead.InvId);
+        $('.txtStoreId').val(pInvHead.StoreId);
+        $('.txtStoreCode').val(pInvHead.StoreCode);
+        $('.txtStoreName').val(pInvHead.StoreNameL1);
+        $('.txtCustomerId').val(pInvHead.CustomerId);
+        $('.txtCustomerCode').val(pInvHead.CSCode);
+        $('.txtCustomerName').val(pInvHead.CSNameL1);
+        $('.txthNote').val(pInvHead.Notes);
+        $('.txtDocNo').val(pInvHead.InvId);
+        $('.dtpInvDate').val(pInvHead.InvDate);
+        $('.txtDocRefNo').val(pInvHead.InvRef);
+        $('.txtDocRefDate').val(pInvHead.InvRefDate);
+        $('.chkIsCancel').prop('checked', pInvHead.InvIsCancel);
+        $('.chkIsPosted').prop('checked', pInvHead.IsPosted);
+    }
+
+    //function Append
+    function funINVLaterConfig(pINVLaterRow) {
+
+        // Content
+        var RowContent = '<tr class="trBaseRow tblLaterRow" data-id="' + pINVLaterRow.InvLaterId + '">' +
+            ' <td class="">' +
+            '<button class="btn btn-light btn-sm border btnAddLaterRow" type="submit">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            '</button>' +
+            ' </td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center  d-none txtAccountId"  value="' + pINVLaterRow.AccountId + '" type="text" required />' +
+            '<input class="form-control form-control-sm text-center  d-none  txtAccountIsCostCenter"  value="' + pINVLaterRow.IsCostCenter + '" type="text" required />' +
+            ' <input class="form-control form-control-sm text-center  txtAccountCode" type="text" value="' + pINVLaterRow.AccountCode + '" title="إضغط F9 لإختيار الحساب" required />' +
+            '</td>' +
+            ' <td class="">' +
+            '<input class="form-control form-control-sm text-center    txtAccountName" type="text"  value="' + pINVLaterRow.AccountNameL1 + '" required disabled />' +
+            '</td>' +
+            '<td class="">' +
+            '<div class="d-flex">' +
+            ' <div class="col-sm-4 p-0">' +
+            '<input class="form-control form-control-sm text-center  d-none txtCostCenterId" type="text"  value="' + pINVLaterRow.CostCenterId + '" required />' +
+            ' <input class="form-control form-control-sm text-center  txtCostCenterCode" value="' + pINVLaterRow.CostCenterCode + '" type="text" required />' +
+            '</div>' +
+            ' <div class="col-sm-8 p-0">' +
+            '<input class="form-control form-control-sm text-center  txtCostCenterName" type="text"  value="' + pINVLaterRow.CostCenterNameL1 + '" required disabled />' +
+            '</div>' +
+            '</div>' +
+            ' </td>' +
+            ' <td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtCredit"  value="' + pINVLaterRow.LaterAmtCredit + '" type="text" min=0 required />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtCurValue"  value="' + pINVLaterRow.LaterCurValue + '" type="text" min=0 required disabled/>' +
+            '</td>' +
+            ' <td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtBaseCredit"  value="' + pINVLaterRow.LaterBaseAmtCredit + '" type="text" min=0 required />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtLaterNote"  value="' + pINVLaterRow.Notes + '" type="text" min=0 required />' +
+            ' </td>' +
+            '<td><button class="btn btn-light btn-sm btnInvLaterDelete" data-id="' + pINVLaterRow.InvLaterId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        return RowContent;
+
+    }
+    function funINVDtlConfig(pINVDtlRow) {
+        // Selected Value
+        var vSelectedText1 = 'selected';
+        var vSelectedText2;
+        var vSelectedText3;
+        var vSelectedText4;
+
+        var DiscType = pINVDtlRow.DiscType;
+        if (DiscType == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else if (DiscType == 2) {
+            vSelectedText2 = 'selected';
+        }
+        else if (DiscType == 3) {
+            vSelectedText3 = 'selected';
+        }
+        else if (DiscType == 4) {
+            vSelectedText4 = 'selected';
+        }
+
+        // Content
+        var RowContent =
+            '<tr class="trBaseRow tblDTLRow" data-id="' + pINVDtlRow.InvDTLId + '">' +
+            ' <td class="">' +
+            '<button class="btn btn-light btn-sm border btnAddDtlRow" type="submit">' +
+            ' <i class="fa fa-plus-circle"></i>' +
+            '</button>' +
+            ' </td>' +
+            '<td class="" width="15%">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtItemId d-none"  value="' + pINVDtlRow.ItemId + '" type="text" min=0 required />' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtItemCode"  value="' + pINVDtlRow.ItemCode + '" type="text" min=0 required readonly />' +
+            '<div class="d-flex">' +
+            '<div class="col-sm-4 p-0">' +
+            '<input type="text"  value="' + pINVDtlRow.UnitId + '" class=" form-control form-control-sm text-center txtUnitId " />' +
+            '</div>' +
+            '<div class="col-sm-8 p-0">' +
+            '<input  value="' + pINVDtlRow.UnitNameL1 + '" class="form-control form-control-sm text-center font-weight-bold txtUnitName " readonly type="text" min=0 required />' +
+            '</div>' +
+            ' </div>' +
+
+            '</td>' +
+            '<td class="">' +
+            ' <input class="form-control form-control-sm text-center fullHeightInput txtItemName" value="' + pINVDtlRow.InvItemNameL1 + '" type="text" required disabled />' +
+            '</td>' +
+            ' <td class="">' +
+            ' <input  value="' + pINVDtlRow.ExpireDate + '" class="form-control form-control-sm text-center font-weight-bold txtFinishDate" type="date" required />' +
+            ' <input   value="' + pINVDtlRow.ItemQty + '"   class="form-control form-control-sm text-center font-weight-bold txtItemQty" type="text" required />' +
+            '</td>' +
+            ' <td class="" width="10%">' +
+            '<input value="' + pINVDtlRow.ItemPrice + '" class="form-control form-control-sm text-center font-weight-bold txtItemPrice" type="number" step="0.01"  min=0 required readonly />' +
+            ' <div class="d-flex">' +
+            '<div class="col-sm-6 p-0">' +
+            '<input value="' + pINVDtlRow.ItemCurValue + '" type="text" class=" form-control form-control-sm text-center  txtItemCurValue" disabled>' +
+            '</div>' +
+            ' <div class="col-sm-6 p-0">' +
+            ' <input  value="' + pINVDtlRow.CurrencyNameL1 + '" class="form-control form-control-sm text-center font-weight-bold txtCurrencyName txtDTLAccountCurrencyName" disabled type="text" min=0 required />' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '<td class="">' +
+            //'<input  value="' + pINVDtlRow.DiscType + '" class="form-control form-control-sm text-center font-weight-bold txtDiscount" type="text" required />' +
+            '<select class="txtDiscount form-control">' +
+            '<option ' + vSelectedText4 + ' data-id=""></option>' +
+            '<option  ' + vSelectedText1 + ' data-id="1"> مجاني</option>' +
+            '<option ' + vSelectedText2 + ' data-id="2">نسبه</option>' +
+            '<option ' + vSelectedText3 + ' data-id="3">قيمة</option>' +
+
+            '</select>' +
+            '<input  value="' + pINVDtlRow.DiscValue + '" class="form-control form-control-sm text-center font-weight-bold txtDiscountValue" type="text" required />' +
+            '</td>' +
+            ' <td class="d-none">' +
+
+            '<input  value="0" class="form-control form-control-sm text-center fullHeightInput  " type="text" required />' +
+            ' </td>' +
+
+            ' <td class="">' +
+            '<input   class="form-control form-control-sm text-center fullHeightInput txtTotalBase" value="' + pINVDtlRow.TotalItemSbaseCredit + '" type="text" required disabled/>' +
+            ' </td>' +
+
+
+
+            '<td class="">' +
+            '<textarea class="form-control form-control-sm text-center txtNote" style="height:50px" required> ' + pINVDtlRow.Notes + '</textarea>' +
+            '</td>' +
+            '<td><button class="btn btn-light btn-sm btnInvDtlDelete" data-id="' + pINVDtlRow.InvDTLId + '" data-name="' + pINVDtlRow.InvDTLId+'"><i class="fa fa-trash"></i></button></td>' +
+            ' </tr>';
+
+
+        var vFree = '@appResource._Free'
+         var vPercent = '@appResource._Percent'
+        var vValue = '@appResource._Value '
+        // Content
+        var RowContent2 =
+            '<tr class="trBaseRow tblDTLRow" data-id="' + pINVDtlRow.InvDTLId + '">' +
+            ' <td class="">' +
+            ' <button class="btn btn-light btn-sm border btnAddDtlRow" type="submit">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            '</button>' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center  d-none  txtItemId" value="' + pINVDtlRow.ItemId + '" type="text" required />' +
+            '<input class="form-control form-control-sm text-center  txtItemCode" value="' + pINVDtlRow.ItemCode + '" type="text" required readonly />' +
+            ' </td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center  txtItemName" value="' + pINVDtlRow.InvItemNameL1 + '" type="text" required disabled />' +
+            '</td>' +
+            '<td class="" width="7%">' +
+            ' <div class="d-flex">' +
+            '<div class="d-none">' +
+            ' <input type="text" class=" form-control form-control-sm text-center txtUnitId " value="' + pINVDtlRow.UnitId + '" />' +
+            ' </div>' +
+            '<div class="">' +
+            ' <input class="form-control form-control-sm text-center font-weight-bold txtUnitName" value="' + pINVDtlRow.UnitNameL1 + '" readonly type="text" min=0 required />' +
+            '</div>' +
+            ' </div>' +
+            ' </td>' +
+
+            '<td class="" width="10%">' +
+            ' <input class="form-control form-control-sm text-center font-weight-bold txtFinishDate"  type="Date" value="' + pINVDtlRow.ExpireDate + '" required />' +
+            ' </td>' +
+            '<td class="" width="7%">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtItemQty " last-qty="'+ pINVDtlRow.ItemQty +'" value="' + pINVDtlRow.ItemQty + '" type="text" min=0 required />' +
+            ' </td>' +
+            '<td class="" width="7%">' +
+            '  <input class="form-control form-control-sm text-center font-weight-bold txtItemPrice" value="' + pINVDtlRow.ItemPrice + '" type="number" step="0.01" min=0 required readonly />' +
+            '  </td>' +
+            '<td class="" width="7%">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtItemCurValue" value="' + pINVDtlRow.ItemCurValue + '" type="number" step="0.01" min=0 disabled required />' +
+            '</td>' +
+            ' <td class="">' +
+            '<select class="txtDiscount form-control">' +
+            '<option ' + vSelectedText4 + ' data-id=""></option>' +
+            '<option  ' + vSelectedText1 + ' data-id="1">' + vFree+'</option>' +
+            '<option ' + vSelectedText2 + ' data-id="2">' + vPercent +'</option>' +
+            '<option ' + vSelectedText3 + ' data-id="3">' + vValue +'</option>' +
+
+            '</select>' +
+            ' </td>' +
+            ' <td class="">' +
+
+            '<input class="form-control form-control-sm text-center font-weight-bold txtDiscountValue" value="' + pINVDtlRow.DiscValue + '" type="text" required />' +
+            ' </td>' +
+            ' <td class="d-none">' +
+
+            ' <input class="form-control form-control-sm text-center  txtTotal" type="text" required />' +
+            ' </td>' +
+
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center  txtTotalBase" type="text" value="' + pINVDtlRow.TotalItemSbaseCredit + '" required disabled />' +
+            '</td>' +
+
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center txtNote" value="' + pINVDtlRow.Notes + '"  required/>' +
+            '</td>' +
+
+            ' <td><button class="btn btn-light btn-sm btnInvDtlDelete" data-id="' + pINVDtlRow.InvDTLId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        return RowContent2;
+    }
+
+    // ADD New Row ////////
+    $('body').on('click', '.btnAddDtlRow', function () {
+        vBody = $('.tblDtlBody')
+        var vTableRow = $(this).closest('tr');
+        // Add Row
+        funAddDTLEmptyRowAfter(vTableRow)
+    })
+
+    $('body').on('click', '.btnAddLaterRow', function () {
+
+        // Add Row
+        funAddLaterEmptyRow()
+    })
+
+    // Add New Empty For  Dtl
+    function funAddDTLEmptyRow(pTableBody) {
+        var vRowContent = {
+            'InvDTLId': 0,
+             'InvItemId': '',
+             'ItemCode': '',
+            'ItemId': '',
+            'UnitId': '',
+            'UnitNameL1': '',
+            'ItemQty': '',
+            'ItemPrice': '',
+            'ItemCurValue': '',
+            'CurrencyNameL1': '',
+            'DiscType': '',
+            'DiscValue': '',
+            'DiscValue': '',
+            'Notes': '',
+            'TotalItemSbaseCredit': '',
+            'InvItemNameL1': ''
+
+        }
+        //alert(1)
+        var vData = funINVDtlConfig(vRowContent)
+        pTableBody.append(vData)
+    }
+
+    // Add New Empty For  Dtl
+    function funAddDTLEmptyRowAfter(pCurrentRow) {
+        var vRowContent = {
+            'InvDTLId': 0,
+             'InvItemId': '',
+             'ItemCode': '',
+            'ItemId': '',
+            'UnitId': '',
+            'UnitNameL1': '',
+            'ItemQty': '',
+            'ItemPrice': '',
+            'ItemCurValue': '',
+            'CurrencyNameL1': '',
+            'DiscType': '',
+            'DiscValue': '',
+            'DiscValue': '',
+            'Notes': '',
+            'TotalItemSbaseCredit': '',
+            'InvItemNameL1': ''
+
+        }
+        //alert(1)
+
+        $(pCurrentRow).closest("tr").after(funINVDtlConfig(vRowContent));
+    }
+
+    // Add New Empty For  InvLater
+    function funAddLaterEmptyRow() {
+        var vRowContent = {
+            'InvLaterId': 0,
+            'AccountId': '',
+            'IsCostCenter': '',
+            'AccountCode': '',
+            'AccountNameL1': '',
+            'CostCenterId': '',
+            'CostCenterCode': '',
+            'CostCenterNameL1': '',
+            'LaterAmtCredit': '',
+            'LaterCurValue': '',
+            'LaterBaseAmtCredit': '',
+            'Notes': '',
+
+        }
+        var vData = funINVLaterConfig(vRowContent)
+        $('.tblLaterBody').append(vData)
+    }
+</script>
+<!--Modals-->
+<script>
+    // Open Voucher Store Modal
+    $('body').on('keyup dblclick', '.txtStoreCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/StoreSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divStoreSelect', function () {
+                    // Get Values
+                    var vStoreId = $(this).attr('data-id');
+                    var vStoreNameValue = $(this).find('.divStoreName').text();
+                    var vStoreCodeValue = $(this).find('.divStoreCode').text();
+                    // Get GLVoucherStore Data
+                    var vStoreIdElement = $('.txtStoreId');
+                    var vStoreNameElement = $('.txtStoreName');
+                    var vStoreCodeElement = $('.txtStoreCode');
+                    // Set Value
+                    vStoreIdElement.val(vStoreId);
+                    vStoreNameElement.val(vStoreNameValue);
+                    vStoreCodeElement.val(vStoreCodeValue);
+                    $('.txtStore').removeClass('error')
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                })
+            })
+        }
+    })
+
+    // Open Customer Supplier Modal
+    $('body').on('keyup dblclick', '.txtCustomerCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Search Account
+            var vURL = '/GLVoucher/CustomerSupplierSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divCSSelect', function () {
+                    // Get Values
+                    var vCSId = $(this).attr('data-id');
+                    var vCSNameValue = $(this).find('.divCSName').text();
+                    var vCSCodeValue = $(this).find('.divCSCode').text();
+                    var vAccountId = $(this).find('.divAccountId').text();
+                    var vAccountNo = $(this).find('.divAccountNo').text();
+                    var vAccountName = $(this).find('.divAccountName').text();
+                    var vCurrencyName = $(this).find('.divCurrencyName').text();
+                    var vCurrencyId = $(this).find('.divCurrencyId').text();
+                    var vCurrencyExchange = $(this).find('.divCurrencyExchange').text();
+
+
+                    // Get CS Data
+                    var vCSIdElement = $('.txtCustomerId');
+                    var vCSCodeElement = $('.txtCustomerCode');
+                    var vCSNameElement = $('.txtCustomerName');
+                    var vAccountIdElement = $('.txtAccountId')
+                    var vAccountCodeElement = $('.txtAccountCode')
+                    var vAccountNameElement = $('.txtAccountName')
+                    var vCurrencyNameElement = $('.txtDTLAccountCurrencyName');
+                    var vCurrencyIdElement = $('.txtDTLAccountCurrencyId');
+                    var vCurrencyExchangeElement = $('.txtDTLPayCurrencyValue');
+                    var vCurrencyBaseExchangeElement = $('.txtCurValue');
+
+                    // Set Value
+                    vCSIdElement.val(vCSId);
+                    vCSCodeElement.val(vCSCodeValue);
+                    vCSNameElement.val(vCSNameValue);
+                    vAccountIdElement.val(vAccountId)
+                    vAccountCodeElement.val(vAccountNo)
+                    vAccountNameElement.val(vAccountName)
+                    vCurrencyNameElement.val(vCurrencyName)
+                    vCurrencyIdElement.val(vCurrencyId)
+                   // vCurrencyExchangeElement.val(vCurrencyExchange)
+                    vCurrencyBaseExchangeElement.val(vCurrencyExchange)
+                    $('.txtCustomer').removeClass('error')
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+    // Account Code, Name - F9 - Double Click
+    //$('.tblDtlBody').on('keyup dblclick', '.txtUnitName', function (e) {
+
+    //    // F9 - Double Click
+    //    if (e.keyCode == 120 || e.type == 'dblclick') {
+
+    //        // Table Row - Closest Row
+    //        vTableRow = $(this).closest('tr');
+    //        var vItemId = vTableRow.find('.txtItemId').val()
+    //        // Search Account
+    //        var vURL = '/ResItem/UnitSearch?pItemId=' + vItemId;
+    //        // Load Content of Account Search
+    //        $('#AccountDataModalContent').html('')
+    //        $('#AccountDataModalContent').load(vURL);
+    //        // Modal Show
+    //        $('#AccountDataModal').modal('show');
+    //        // Focus
+    //        $('#AccountDataModal').on('shown.bs.modal', function () {
+    //            $('.txtSearch').focus();
+
+    //            // Select Account
+    //            $('body').on('click', '.divUnitSelect', function () {
+
+    //                // Get Values
+    //                var vUnitId = $(this).attr('data-id');
+    //                var vUnitNameValue = $(this).find('.divUnitName').text();
+    //                var vUnitCodeValue = $(this).find('.divUnitCode').text();
+    //                var vUnitPriceValue = $(this).find('.divUnitPrice').text();
+
+
+    //                // Get Unit Data
+    //                var vUnitIdElement = vTableRow.find('.txtUnitId');
+    //                var vUnitNameElement = vTableRow.find('.txtUnitName');
+    //                var vUnitCodeElement = vTableRow.find('.txtUnitCode');
+    //                var vUnitPriceElement = vTableRow.find('.txtUnitPrice');
+
+
+
+    //                // Set Value
+    //                vUnitIdElement.val(vUnitId);
+    //                vUnitNameElement.val(vUnitNameValue);
+    //                vUnitCodeElement.val(vUnitCodeValue);
+    //                vUnitPriceElement.val(vUnitPriceValue);
+    //                // Modal Show
+    //                $('#AccountDataModal').modal('hide');
+    //                vTableRow.removeClass('table-info');
+
+    //                vTableRow = '';
+    //            })
+    //        })
+    //    }
+    //})
+
+     /*
+    $('.tblDtlBody').on('keyup dblclick', '.txtUnitName', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            var vItemId = vTableRow.find('.txtItemId').val()
+            // Search Account
+            var vURL = '/ResItem/UnitSearch?pItemId=' + vItemId;
+            // Load Content of Account Search
+            $('#AccountDataModalContent').html('')
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divUnitSelect', function () {
+
+                    // Get Values
+                    var vUnitId = $(this).attr('data-id');
+                    var vUnitNameValue = $(this).find('.divUnitName').text();
+                    var vUnitCodeValue = $(this).find('.divUnitCode').text();
+                    var vUnitPriceValue = $(this).find('.divUnitPrice').text();
+
+
+                    // Get Unit Data
+                    var vUnitIdElement = vTableRow.find('.txtUnitId');
+                    var vUnitNameElement = vTableRow.find('.txtUnitName');
+                    var vUnitCodeElement = vTableRow.find('.txtUnitCode');
+                    var vUnitPriceElement = vTableRow.find('.txtUnitPrice');
+
+
+                    // Set Value
+                    vUnitIdElement.val(vUnitId);
+                    vUnitNameElement.val(vUnitNameValue);
+                    vUnitCodeElement.val(vUnitCodeValue);
+                    vUnitPriceElement.val(vUnitPriceValue);
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+    */
+    // Account Code, Name - F9 - Double Click
+    $('table').on('keyup dblclick', '.txtAccountCode', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+
+
+
+            // Search Account
+            var vURL = '/GLVoucher/AccountSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divAccountSelect', function () {
+
+                    // Get Values
+                    var vAccountId = $(this).attr('data-id');
+                    var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                    var vAccountNameValue = $(this).find('.divAccountName').text();
+                    var vAccountCurrencyFactor = $(this).find('.divAccountCurrencyFactor').text();
+                    var vAccountIsCostCenter = $(this).find('.divAccountIsCostCenter').text();
+                    var vAccountCurrency = $(this).find('.divAccountCurrency').text();
+                    var vAccountCurrencyName = $(this).find('.divAccountCurrencyName').text();
+
+                    // Get Account Data
+                    var vAccountIdElement = vTableRow.find('.txtAccountId');
+                    var vAccountCodeElement = vTableRow.find('.txtAccountCode');
+                    var vAccountNameElement = vTableRow.find('.txtAccountName');
+                    var vAccountCurrencyFactorElement = vTableRow.find('.txtCurValue');
+                    var vAccountBaseCurrencyFactorElement = vTableRow.find('.txtBaseCurrencyValue');
+                    var vAccountIsCostCenterElement = vTableRow.find('.txtAccountIsCostCenter');
+                    var vAccountCurrencyElement = vTableRow.find('.txtAccountCurrencyId');
+                    var vAccountCurrencyNameElement = vTableRow.find('.txtAccountCurrencyName');
+
+
+
+                    // Set Value
+                    vAccountIdElement.val(vAccountId);
+                    vAccountCodeElement.val(vAccountCodeValue);
+                    vAccountNameElement.val(vAccountNameValue);
+                    vAccountCurrencyFactorElement.val(vAccountCurrencyFactor);
+                    vAccountBaseCurrencyFactorElement.val(vAccountCurrencyFactor);
+                    vAccountIsCostCenterElement.val(vAccountIsCostCenter);
+                    vAccountCurrencyElement.val(vAccountCurrency);
+                    vAccountCurrencyNameElement.val(vAccountCurrencyName);
+
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+                    //funAddLaterEmptyRow()
+                    vTableRow = '';
+
+
+                })
+            })
+
+        }
+    })
+
+
+    // Get Closest Row
+    var vTableRow = '';
+    // CostCenter Code, Name - F9
+    $('.tblLaterBody').on('keydown dblclick', '.txtCostCenterCode', function (e) {
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Get Closest Row
+            vTableRow = $(this).closest('.tblLaterRow');
+            // Get CostCenter Data
+            var vCostCenterIdElement = vTableRow.find('.txtCostCenterId');
+            var vCostCenterCodeElement = vTableRow.find('.txtCostCenterCode');
+            var vCostCenterNameElement = vTableRow.find('.txtCostCenterName');
+
+            // GET AccountId
+            var vAccountId = vTableRow.find('.txtAccountId').val();
+            var vAccountIsCostCenter = '1';
+
+            if (vAccountId) {
+                // Check If Account Is Cost Center
+                if (vAccountIsCostCenter == '1') {
+
+                    // Search CostCenter
+                    var vURL = '/GLVoucher/AccountCostCenter/?pAccountId=' + vAccountId;
+                    // Load Content of CostCenter Search
+                    $('#CostCenterDataModalContent').load(vURL);
+                    // Modal Show
+                    $('#CostCenterDataModal').modal('show');
+
+
+                    // Focus
+                    $('#CostCenterDataModal').on('shown.bs.modal', function () {
+
+                        // Focuse
+                        $('.txtSearch').focus();
+
+
+                        // Select CostCenter
+                        $('body').on('click', '.divAccountCostCenterSelect', function () {
+
+                            // CostCenter Id
+                            var vCostCenterId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vCostCenterCodeValue = $(this).find('.divAccountCostCenterCode').text();
+                            var vCostCenterNameValue = $(this).find('.divAccountCostCenterName').text();
+
+
+                            // Set Value
+                            vCostCenterIdElement.val(vCostCenterId);
+                            vCostCenterCodeElement.val(vCostCenterCodeValue);
+                            vCostCenterNameElement.val(vCostCenterNameValue);
+
+                            // Modal Show
+                            $('#CostCenterDataModal').modal('hide');
+
+                            // Table Row Clear
+                            vTableRow = '';
+
+                        })
+
+                    })// End of Modal Shown event
+                }
+                else {
+
+                    funNotification('@appResource.msgNoCostCenters', 2);
+                }
+            }
+            else {
+                funNotification('@appResource.msgChooseAccountFirst', 2);
+            }
+        }
+    })
+
+    // Account Code, Name - F9 - Double Click
+    $('table').on('keyup dblclick', '.txtItemCode', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            vCurrentIndex = vTableRow.index();
+
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/UnitSearch';
+
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divItemSelect', function () {
+               // $('body').on('click', '.divInvItemSelect', function () {
+                    // Get Values
+                    var vUnitId = $(this).attr('data-id');
+                    var vUnitCodeValue = $(this).find('.divUnitCode').text();
+                    var vUnitNameValue = $(this).find('.divUnitName').text();
+                    var vItemIdValue = $(this).find('.divItemId').text();
+                    var vItemNameValue = $(this).find('.divItemName').text();
+                    var vCurrencyNameValue = $(this).find('.divCurrencyName').text();
+                    var vCurrencyFactorValue = $(this).find('.divCurrencyFactorValue').text();
+                    var LastCost = $(this).find('.divLastCost').text();
+              var vItemCodeValue = $(this).find('.divItemCode').text();
+
+                    var store1 = $(this).find('.Store1').text();
+                    var store2 = $(this).find('.Store2').text();
+                    var store3 = $(this).find('.Store3').text();
+                        vTableRow.attr('store1',store1);
+                        vTableRow.attr('store2',store2);
+                        vTableRow.attr('store3',store3);
+
+                    // Get Account Data
+                    var vAccountUnitIdElement = vTableRow.find('.txtUnitId');
+                    var vAccountUnitCodeElement = vTableRow.find('.txtUnitCode');
+                    var vAccountUnitElement = vTableRow.find('.txtUnitName');
+                    var vItemIdElement = vTableRow.find('.txtItemId');
+                    var vItemCodeElement = vTableRow.find('.txtItemCode');
+                    var vItemNameElement = vTableRow.find('.txtItemName');
+                    var vCurrencyFactorElement = vTableRow.find('.txtItemCurValue');
+                    var vCurrencyNameElement = vTableRow.find('.txtCurrencyName');
+
+
+
+
+
+
+
+                    // Set Value
+                    vAccountUnitIdElement.val(vUnitId);
+                    vAccountUnitCodeElement.val(vUnitCodeValue)
+                    vAccountUnitElement.val(vUnitNameValue);
+                    vItemIdElement.val(vItemIdValue);
+                    vCurrencyFactorElement.val(vCurrencyFactorValue);
+                    vCurrencyNameElement.val(vCurrencyNameValue)
+                    vItemNameElement.val(vItemNameValue);
+                    vItemCodeElement.val(vItemCodeValue);
+
+                      var ItemPrice = vTableRow.find('.txtItemPrice');
+                    ItemPrice.val(LastCost);
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    // Add New Row
+                    var rowCount = $('.tblDTLRow').length;
+                    if (rowCount == vCurrentIndex + 1) {
+                        funAddDTLEmptyRowAfter(vTableRow)
+                        vTableRow = ''
+                    }
+
+                });
+
+
+            })
+        }
+    })
+
+
+</script>
+<!--On Change-->
+<script>
+    // When Change Value Of Id
+    $('body').on('change', '.txtAccountCode', function () {
+        var vAccountNo = $(this).val();
+        var vAccountName = $(this).closest('tr').find('.txtAccountName');
+        var vAccountId = $(this).closest('tr').find('.txtAccountId');
+        var vTableRow = $(this).closest('tr');
+        // Get Account Data
+        var vAccountIdElement = vTableRow.find('.txtAccountId');
+        var vAccountCodeElement = vTableRow.find('.txtAccountCode');
+        var vAccountNameElement = vTableRow.find('.txtAccountName');
+        var vAccountCurrencyFactorElement = vTableRow.find('.txtPayCurrencyValue');
+        var vAccountBaseCurrencyFactorElement = vTableRow.find('.txtBaseCurrencyValue');
+        var vAccountIsCostCenterElement = vTableRow.find('.txtAccountIsCostCenter');
+        var vAccountCurrencyElement = vTableRow.find('.txtAccountCurrencyId');
+        var vAccountCurrencyNameElement = vTableRow.find('.txtAccountCurrencyName');
+        var vCostCenterNameElement = vTableRow.find('.txtCostCenterName');
+        var vCostCenterIdElement = vTableRow.find('.txtCostCenterId');
+        var vCostCenterCodeElement = vTableRow.find('.txtCostCenterCode');
+        // List GetAccount
+        $.get('/api/APIGLVoucher/AccountLastChildGET',
+            {
+                pAccountNo: vAccountNo,
+                pQueryTypeId: 400
+            },
+            function (data, status) {
+                if (data == '') {
+                    funNotification('@appResource.msgChooseCorrectAccount', '2')
+                    // Set Value
+                    vAccountIdElement.val('');
+                    vAccountCodeElement.val('');
+                    vAccountNameElement.val('');
+                    vAccountCurrencyFactorElement.val('');
+                    vAccountIsCostCenterElement.val('');
+                    vAccountCurrencyElement.val('');
+                    vAccountCurrencyNameElement.val('');
+                    vCostCenterNameElement.val('')
+                    vCostCenterIdElement.val('');
+                    vCostCenterCodeElement.val('');
+                }
+                else {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Account) {
+                        // Set Value
+                        vAccountName.val(Account.AccountNameL1)
+                        vAccountId.val(Account.AccountId)
+                        vAccountIdElement.val(Account.AccountId);
+                        vAccountCodeElement.val(Account.AccountNo);
+                        vAccountNameElement.val(Account.AccountNameL1);
+                        vAccountCurrencyFactorElement.val(Account.CurrencyExchange);
+                        vAccountBaseCurrencyFactorElement.val(Account.CurrencyExchange);
+                        vAccountIsCostCenterElement.val(Account.AccountIsCostCenter);
+                        vAccountCurrencyElement.val(Account.CurrencyId);
+                        vAccountCurrencyNameElement.val(Account.CurrencyNameL1);
+
+                        // Add New Row
+                      //  funAddLaterEmptyRow()
+                    });
+                }
+            });
+    });
+
+    // When Change Value Of Id
+    $('body').on('change', '.txtCostCenterCode', function () {
+        var vTableRow = $(this).closest('tr');
+        // Get AccountID
+        var vAccountId = vTableRow.find('.txtAccountId').val();
+        var vElement = $(this)
+        var vCostCenterNo = $(this).val();
+        var vCostCenterName = vTableRow.find('.txtCostCenterName');
+        var vCostCenterId = vTableRow.find('.txtCostCenterId');
+        if (vAccountId == '') {
+            // Empty Fileds
+            $(this).val('');
+            vCostCenterName.val('')
+            vCostCenterId.val('')
+               funNotification('@appResource.msgChooseAccountFirst', 2);
+        } else {
+            // List GetCostCenter
+            $.get('/api/APIGLVoucher/AccountCostCenterGET',
+                {
+                    pAccountId: vAccountId,
+                    pCostCenterCode: vCostCenterNo,
+                    pQueryTypeId: 400
+
+                },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vElement.val('');
+                        vCostCenterName.val('')
+                        vCostCenterId.val('')
+                        funNotification('@appResource.msgWrongCostCenter', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+
+                        $.each(vDataJSON, function (i, CostCenter) {
+                            vCostCenterName.val(CostCenter.CostCenterNameL1)
+                            vCostCenterId.val(CostCenter.CostCenterId)
+                        });
+                    }
+                });
+        }
+    });
+
+
+       // Open Voucher CSID Modal
+    $('body').on('change', '.txtCustomerCode', function (e) {
+        // Get CS Data
+        var vCSIdElement = $('.txtCustomerId');
+        var vCSCodeElement = $('.txtCustomerCode');
+        var vCSNameElement = $('.txtCustomerName');
+        var vAccountIdElement = $('.txtAccountId')
+        var vAccountCodeElement = $('.txtAccountCode')
+        var vAccountNameElement = $('.txtAccountName')
+        var vCurrencyNameElement = $('.txtDTLAccountCurrencyName');
+        var vCurrencyExchangeElement = $('.txtCurValue');
+
+        var vId = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APICustomerSupplier/CustomerSupplierGET',
+            {
+                pCSCode: vId,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vCSIdElement.val('');
+                        vCSNameElement.val('');
+                        funNotification('@appResource.msgChooseCorrectCustomer', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, CS) {
+                            // Set Value
+                            vCSIdElement.val(CS.CSId);
+                            vCSCodeElement.val(CS.CSCode);
+                            vCSNameElement.val(CS.CSNameL1);
+                            vAccountIdElement.val(CS.AccountId)
+                            vAccountCodeElement.val(CS.AccountNo)
+                            vAccountNameElement.val(CS.AccountNameL1)
+                            vCurrencyNameElement.val(CS.CurrencyNameL1)
+                            vCurrencyExchangeElement.val(CS.CurrencyExchange)
+                        });
+                    }
+                });
+    })
+
+   // Open Voucher txtStoreCode Modal
+    $('body').on('change', '.txtStoreCode', function (e) {
+
+        // Get CS Data
+        var vStoreIdElement = $('.txtStoreId');
+        var vStoreCodeElement = $('.txtStoreCode');
+        var vStoreNameElement = $('.txtStoreName');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APIStore/StoreGET',
+            {
+                pStoreCode: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+            function (data, status) {
+
+                    if (data == '') {
+                        // Empty Fileds
+                        vStoreIdElement.val('');
+                        vStoreCodeElement.val('');
+                        vStoreNameElement.val('');
+                         funNotification('@appResource.msgChooseCorrectCustomer', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Store) {
+                            // Set Value
+                            vStoreIdElement.val(Store.StoreId);
+                            vStoreCodeElement.val(Store.StoreCode);
+                            vStoreNameElement.val(Store.StoreNameL1);
+
+                        });
+                    }
+                });
+    })
+      // Account Code, Name - F9 - Double Click
+    @*$('table').on('change', '.txtUnitCode,.txtItemId', function (e) {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+
+            // Get Account Data
+            var vAccountUnitIdElement = vTableRow.find('.txtUnitId');
+            var vAccountUnitCodeElement = vTableRow.find('.txtUnitCode');
+            var vAccountUnitElement = vTableRow.find('.txtUnitName');
+            var vItemIdElement = vTableRow.find('.txtItemId');
+            var vItemNameElement = vTableRow.find('.txtItemName');
+            var vCurrencyFactorElement = vTableRow.find('.txtItemCurValue');
+            var vCurrencyNameElement = vTableRow.find('.txtCurrencyName');
+            var LasCost = vTableRow.find('.txtItemPrice');
+
+            var vCode = $(this).val();
+              // List GetCostCenter
+     $.post('/ProductsQuantities/SearchProductByCode', {
+            //pInvItemCode: vProductCode
+            pInvItemId: vItemIdElement.val(),
+        },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vAccountUnitIdElement.val('');
+                        vAccountUnitCodeElement.val('')
+                        vAccountUnitElement.val('');
+                        vItemIdElement.val('');
+                        vItemNameElement.val('');
+                        vCurrencyFactorElement.val('');
+                        vCurrencyNameElement.val('')
+                   funNotification('@appResource.msgChooseCorrectCustomer', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Unit) {
+
+                            // Set Value
+                            vAccountUnitIdElement.val(Unit.UnitId);
+                            vAccountUnitCodeElement.val(Unit.UnitCode)
+                            vAccountUnitElement.val(Unit.UnitNameL1);
+                            vItemIdElement.val(Unit.InvItemId);
+                            vItemNameElement.val(Unit.InvItemNameL1);
+                            vCurrencyFactorElement.val(Unit.CurrencyExchange);
+                            vCurrencyNameElement.val(Unit.CurrencyNameL1)
+                            LasCost.val((Unit.ItemLastCost).toFixed(4))
+                        });
+                    }
+                });
+
+    })*@
+</script>
+<script>
+    // Dtl Total Base
+    funCalculatTotalBase()
+    function funCalculatTotalBase() {
+        // Debit Change
+        $('body').on('blur', '.txtItemQty,.txtItemPrice,.txtItemQty,.txtDiscount,.txtDiscountValue,.txtItemCode,.txtUnitCode', function () {
+
+            // Table Row
+            var vTableRow = $(this).closest('.tblDTLRow')
+            // GET Qty
+            var vQty = vTableRow.find('.txtItemQty').val();
+            // Get Price
+            var vPrice = vTableRow.find('.txtItemPrice').val();
+            // Factor
+            var vCurrencyFactor = vTableRow.find('.txtItemCurValue').val();
+            // Discount
+            var vDiscountValue = vTableRow.find('.txtDiscountValue').val();
+
+            // Get Selected
+            var vSelectedValue = vTableRow.find('.txtDiscount').children("option:selected").attr('data-id');
+            // Base Value
+            var vBaseValue;
+            // Free Case
+            if (vSelectedValue == '1') {
+                // Base Value
+                vBaseValue = ((vQty * vPrice).toFixed(2));
+
+            }
+            // Precentage
+            else if (vSelectedValue == '2') {
+                // Base Value
+                var vValue = ((vQty * vPrice).toFixed(2)) * (vDiscountValue / 100);
+                vBaseValue = (((vQty * vPrice).toFixed(2)) - vValue).toFixed(2)
+
+            }
+            // Value
+            else if (vSelectedValue == '3') {
+                // Base Value
+                vBaseValue = ((vQty * vPrice).toFixed(2) - vDiscountValue).toFixed(2);
+            }
+            // NON
+            else {
+                // Base Value
+                vBaseValue = (vQty * vPrice).toFixed(2);
+            }
+
+            // SET Value to Base
+            //$(this).siblings('.txtBaseCredit').val(vBaseValue);
+            vTableRow.find('.txtTotalBase').val(vBaseValue);
+
+            // Total Debit, Credit and Diff
+            funTotalDebitCreditDiff();
+        })
+    }
+    // Total Debit, Credit and Diff
+    function funTotalDebitCreditDiff() {
+
+        // Total Debit
+        var vTotalDtlCredit = 0;
+        $('.txtTotalBase').each(function () {
+            // Get Value
+            var vDebitValue = $(this).val();
+            // Check Value
+            if (vDebitValue == '' || vDebitValue == null || vDebitValue == undefined) {
+                vDebitValue = 0;
+            }
+            // Add Value
+            vTotalDtlCredit += parseFloat(vDebitValue);
+        })
+
+        // Total Credit
+        var vTotalCredit = 0;
+        $('.txtBaseCredit').each(function () {
+            // Get Value
+            var vCreditValue = $(this).val();
+            // Check Value
+            if (vCreditValue == '' || vCreditValue == null || vCreditValue == undefined) {
+                vCreditValue = 0;
+            }
+            // Add Value
+            vTotalCredit += parseFloat(vCreditValue);
+        })
+
+        // Diff
+        //  var vDiff = vTotalDebit - vTotalCredit;
+        // SET Values
+        //$('.txtTotalCredit').val(vTotalCredit);
+        $('.txtTotalDtlCredit').val(vTotalDtlCredit);
+        $('.txtTotalCredit').val(vTotalDtlCredit);
+        $('.txtCredit').val(vTotalDtlCredit);
+        $('.txtBaseCredit').val(vTotalDtlCredit);
+        $('.txtCurValue').val(1);
+        // $('.txtDiff').val(vDiff);
+
+        // Check Diff
+        $('.txtDiff').addClass('text-white');
+        //if (vDiff != 0) {
+        //    $('.txtDiff').addClass('bg-danger');
+        //    $('.txtDiff').removeClass('bg-success');
+        //}
+        //else {
+        //    $('.txtDiff').addClass('bg-success');
+        //    $('.txtDiff').removeClass('bg-danger');
+        //}
+    }
+
+    // Credit Change Box
+    $('.tblLaterBody').on('change', '.txtCredit', function () {
+        // Table Row
+        var vTableRow = $(this).closest('.tblLaterRow')
+        // GET Value
+        var vValue = $(this).val();
+        // Factor
+        var vCurrencyFactor = vTableRow.find('.txtCurValue').val();
+        // Base Value
+        var vBaseValue = (vValue * vCurrencyFactor).toFixed(2);
+        // SET Value to Base
+        //$(this).siblings('.txtBaseCredit').val(vBaseValue);
+        vTableRow.find('.txtBaseCredit').val(vBaseValue);
+
+    })
+
+
+    function saveLater(vInvId) {
+        // Later Rows
+        var vStoreId = $('.txtStoreId').val()
+        // Supllier
+        var vCustomerId = $('.txtCustomerId').val();
+        // Get StorId
+        var vNote = $('.txthNote').val()
+        // Supllier
+        var vInvDate = $('.dtpInvDate').val();
+        // Get StorId
+        var vDocRefNo = $('.txtDocRefNo').val()
+        // InType
+        var vInvtype = $('.txtInvtype').val();
+        // Ref Date
+        var vhInvRefDate = $('.txtDocRefDate').val();
+
+        // Supllier
+        var vchkIsCancel = $('.chkIsCancel').prop('checked');
+        // Valid Date
+        var vDateCheck = $('.txtCheckDate').val();
+        $('.tblLaterRow').each(function () {
+            var vLaterRowId = $(this).attr('data-id');
+            var vTableLaterRow = $(this);
+            var vAccountId = $(this).find('.txtAccountId').val()
+            var vCostCenterId = $(this).find('.txtCostCenterId').val()
+            var vLaterAmtCredit = $(this).find('.txtLaterAmtCredit').val()
+            var vLaterBaseAmtCredit = $(this).find('.txtLaterBaseAmtCredit').val()
+            var vLaterCurValue = $(this).find('.txtLaterCurValue').val()
+            var vNotes = $(this).find('.txtLaterAmtNotes').val()
+            // INV LATER
+            $.post('/InvoicePaymentOrder/funINVInvoice/',
+                {
+                    pInvLaterId: vLaterRowId,
+                    pLInvId: vInvId,
+                    pAccountId: vAccountId,
+                    pCostCenterId: vCostCenterId,
+                    pLaterAmtCredit: vLaterAmtCredit,
+                    pLaterBaseAmtCredit: vLaterBaseAmtCredit,
+                    pLaterCurValue: vLaterCurValue,
+                    phInvRef: vDocRefNo,
+
+                    pNotes: vNotes,
+                    pStoreId: vStoreId,
+
+                    pIsDeleted: false,
+                    ppType: 3,
+                    pQueryTypeId: 100
+                }, function (data) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data)
+                        vTableLaterRow.attr('data-id', vDataResult[0].InvLaterId)
+                        vTableLaterRow.find('.btnLaterDelete').attr('data-id', vDataResult[0].InvLaterId)
+                    }
+
+
+                })
+
+
+        })
+
+
+    }
+
+</script>
+<script>
+
+    $('body').on('click', '.btnInvLaterDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIINVInvoice/INVInvoiceGET';
+                        // Delete
+                        $.get(vDeleteActionURL,
+                            {
+                                // Detail Parameters
+                                pInvLaterId: vDataId,
+                                pIsDeleted: true,
+                                ppType: 3,
+                                // Query Type Id
+                                pQueryTypeId: '300'
+                            }, function () {
+                            vElement.closest('tr').remove();
+                            // Check If IT The Last Row
+                            var vLastRow = $('.tblLaterBody').find('tr').attr('data-id')
+
+                            // Add Row If Empty
+                            if (vLastRow == undefined) {
+                                funAddLaterEmptyRow($('.tblLaterBody'))
+                                }
+                                funNotification('@appResource.msgDelete', 1);
+
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblLaterBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddLaterEmptyRow($('.tblLaterBody'))
+                    }
+                }
+            });
+    }); // End of Click Event [Delete Button]
+
+    ////////////////NEw Delete
+    $('body').on('click', '.btnInvDtlDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIINVInvoice/INVInvoiceGET';
+                        // Delete
+                        $.get(vDeleteActionURL, { pdInvDTLId: vDataId, pdIsDeleted: true, ppType: 2, pQueryTypeId: '300' }, function () {
+                            vElement.closest('tr').remove();
+                            // Check If IT The Last Row
+                            var vLastRow = $('.tblDtlBody').find('tr').attr('data-id')
+
+                            // Add Row If Empty
+                            if (vLastRow == undefined) {
+                                funAddDTLEmptyRow($('.tblDtlBody'))
+                            }
+                            funNotification('@appResource.msgDelete', 1);
+
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblDtlBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddDTLEmptyRow($('.tblDtlBody'))
+                    }
+                }
+                funTotalDebitCreditDiff();
+            });
+    }); // End of Click Event [Delete Button]
+
+    $('body').on('click', '.btnClose', function () {
+        if ($('.txtInvId').val()) {
+            var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+            $.get(vDataURL,  {id: $('.txtInvId').val(),}).done(function (data) {
+                $('#confirmDeleteModalContent').html(data);
+                $('#confirmDeleteModal').modal('show');
+                $("body").on("click", "#btnDeleteConfirm", function () {
+                    var vDeleteActionURL = '/api/APIINVInvoice/INVInvoiceGET';
+                    // Delete
+                    $.get(vDeleteActionURL, { phInvId: $('.txtInvId').val(), phIsDeleted: true, ppType: 1, pQueryTypeId: '300' }, function () {
+                        funNotification('@appResource.msgDelete', 1);
+                        Clear();
+                    });
+                });
+            })
+        }
+    });
+</script>
+<!-- Change Date - Check -->
+<script>
+    // Change Date - Check
+    funCheckDate();
+    $('.dtpInvDate').on('blur', function (e) {
+
+    // Call Function Check Date
+        var vCheck = funCheckDate()
+
+    })
+    // Fun Check Finanical Year
+    function funCheckDate() {
+
+        // Get Current Date
+        var vDate = $('.dtpInvDate').val();
+        var vDatePicker = $('.dtpInvDate');
+        var vDateValid;
+        // Check Date
+        var fun = $.get('/GLVoucher/funFinancialDateCheckGET', { pDate: vDate }, function (data, status) {
+
+            // JSON parse
+            var vDataResult = JSON.parse(data);
+
+            // Is Date Valid
+            var vIsDateValid = vDataResult[0].vIsFullValid;
+            localStorage.setItem('vIsDateValid', vIsDateValid)
+            // Check Date
+            if (!vIsDateValid) {
+
+                // Doc Date InValid
+                funDocDateValid(vDatePicker, false);
+                // Notification
+                //funNotification('لا يمكن إختيار التاريخ الحالى', 2);
+                $('.txtCheckDate').val('false')
+            }
+            else {
+                // Doc Date InValid
+                funDocDateValid(vDatePicker, true);
+                $('.txtCheckDate').val('true')
+           }
+           return data
+        })
+
+        //return vDateValid
+
+
+    }
+
+    // Doc Date Valid
+    function funDocDateValid(pDatePickerElement, pIsValid) {
+
+        // White Text - For Valid and InValid
+        pDatePickerElement.addClass('text-white');
+
+        // Check If Invalid
+        if (pIsValid) {
+
+            pDatePickerElement.removeClass('bg-danger');
+            pDatePickerElement.addClass('bg-success');
+        }
+        else {
+
+            pDatePickerElement.addClass('bg-danger');
+            pDatePickerElement.removeClass('bg-success');
+
+            // Set Date Today
+            //funDateTodaySET(pDatePickerElement);
+        }
+    }
+
+    // Date Today SET
+    function funDateTodaySET(pDateElement) {
+        pDateElement.val('@DateTime.Now.Date.ToString("yyyy-MM-dd")')
+    }
+
+    // SET Date Today
+    funDateTodaySET($('.dtpDocDate'));
+    funDateTodaySET($('.dtpDocRefDate'));
+
+</script>
+<script>
+    funTabs();
+    function funTabs() {
+        $('.txtStoreCode').on('blur', function () {
+            funFoucus('txtCustomerCode')
+        })
+        $('.txtDocRefNo').on('blur', function () {
+            funFoucus('txtAccountCode')
+        })
+        $('.txtLaterNote').on('blur', function () {
+            funFoucus('txtItemId')
+        })
+        $('.txtNote').on('blur', function () {
+            funFoucus('txtItemId')
+        })
+    }
+    // To Move Between Inputs Using Tabs
+    function funFoucus(pElement) {
+        $('.' + pElement).focus();
+    }
+
+    // Fill Notes In DTLS
+    $('.txthNote').on('blur', function () {
+        var vValue = $(this).val();
+        $('.txtNote').val(vValue)
+    })
+    $('.btnPrint').on('click', function () {
+        var url = '/InvoicePaymentOrder/InvoicePaymentOrderhtmlReport?pInvId=' + $('.txtInvId').val() + '&&InvType=' + $('.txtInvType').val()
+        var popupWindow = window.open(url);
+    });
+    function Clear() {
+        $(':input')
+            .not(':button, :submit, :reset, :hidden ,.dtpInvDate,.txtDocRefDate')
+            .val('')
+            .removeAttr('checked')
+            .removeAttr('selected');
+        $('.tblLaterBody').html('');
+        $('.tblDTLRow').html('');
+        $('.selected').remove();
+        $('.txtInvId').val('0')
+
+
+
+        DtlBody = $('.tblDtlBody')
+        // Add Row
+        funAddDTLEmptyRow(DtlBody)
+        LaterBody = $('.tblLaterBody')
+        // Add Row
+        funAddLaterEmptyRow(LaterBody)
+    }
+    //$('.btnUtility').on('click', function () {
+    //    Clear()
+    //})
+</script>

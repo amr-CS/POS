@@ -1,0 +1,154 @@
+﻿@model appSERP.Models.FA.FixedAssetSiteModel
+@using appSERP.Views.Shared.appResource
+@{
+    //Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.FixedAssetSite, pId = Model.FixedAssetSiteId })
+        </div>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.HiddenFor(model => model.FixedAssetSiteId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.HiddenFor(model => model.FixedAssetSiteId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FixedAssetSiteId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FixedAssetSiteQty, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FixedAssetSiteQty, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                @Html.ValidationMessageFor(model => model.FixedAssetSiteQty, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FixedAssetSiteTransDate, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @*, @type = "date"*@
+                @Html.EditorFor(model => model.FixedAssetSiteTransDate, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                @Html.ValidationMessageFor(model => model.FixedAssetSiteTransDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectAsset" class="selectpicker form-control form-control" name="AssetId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.AssetId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.SiteDetailId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectSiteDetail" class="selectpicker form-control form-control" name="SiteDetailId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.SiteDetailId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TransactionTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectTransactionType" class="selectpicker form-control form-control" name="TransactionTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.TransactionTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.FixedAssetSiteIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.FixedAssetSiteIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+
+        <div class="form-group divModalFooter">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+    </div>
+    }
+
+
+</body>
+</html>
+<script>
+           // List GetAsset
+    $.post('/Home/GetAsset',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, Asset) {
+               $('#selectAsset').append('<option data-id="' + Asset.AssetId + '" value="' + Asset.AssetId + '" sort-id="' + i + '">' + Asset.AssetNameL1 + '</option>')
+
+           })
+           var vData = '@Model.AssetId'
+
+           if (vData != "0") {
+               $('#selectAsset').val(@Model.AssetId);
+           }
+           // Refresh Select Picker
+           $('.selectpicker').selectpicker('refresh');
+       }
+    )
+
+</script>
+<script>
+                // List GetSiteDetail
+   $.post('/Home/GetSiteDetail',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, SiteDetail) {
+               $('#selectSiteDetail').append('<option data-id="' + SiteDetail.SiteDetailId + '" value="' + SiteDetail.SiteDetailId + '" sort-id="' + i + '">' + SiteDetail.SiteDetailNameL1 + '</option>')
+
+           })
+           var vData = '@Model.SiteDetailId'
+
+           if (vData != "0") {
+               $('#selectSiteDetail').val(@Model.SiteDetailId);
+           }
+           // Refresh Select Picker
+           $('.selectpicker').selectpicker('refresh');
+       }
+   )
+
+</script>
+<script>
+                // List GetTransactionType
+   $.post('/Home/GetTransactionType',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, TransactionType) {
+               $('#selectTransactionType').append('<option data-id="' + TransactionType.TransactionTypeId + '" value="' + TransactionType.TransactionTypeId + '" sort-id="' + i + '">' + TransactionType.TransactionTypeNameL1 + '</option>')
+
+           })
+           var vData = '@Model.TransactionTypeId'
+
+           if (vData != "0") {
+               $('#selectTransactionType').val(@Model.TransactionTypeId);
+           }
+           // Refresh Select Picker
+           $('.selectpicker').selectpicker('refresh');
+       }
+   )
+
+</script>
+

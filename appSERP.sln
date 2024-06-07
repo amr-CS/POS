@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{9BF2E0D1-CFF2-4EEA-8657-921116DBD206}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "appSERP", "appSERP\appSERP.csproj", "{FEBA1819-ED06-4607-A51D-27DFB40EA5FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9BF2E0D1-CFF2-4EEA-8657-921116DBD206}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BF2E0D1-CFF2-4EEA-8657-921116DBD206}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BF2E0D1-CFF2-4EEA-8657-921116DBD206}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BF2E0D1-CFF2-4EEA-8657-921116DBD206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEBA1819-ED06-4607-A51D-27DFB40EA5FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEBA1819-ED06-4607-A51D-27DFB40EA5FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEBA1819-ED06-4607-A51D-27DFB40EA5FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEBA1819-ED06-4607-A51D-27DFB40EA5FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3DCB5BC-9D94-4374-8BA2-A8404FF25FE3}
+	EndGlobalSection
+EndGlobal

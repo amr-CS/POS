@@ -1,0 +1,95 @@
+﻿@model appSERP.Models.ACC.AccountCostCenterModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = "حسابات مركز التكلفة", pId = Model.AccountCostCenterId })
+        </div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+        @Html.HiddenFor(model => model.AccountCostCenterId);
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectAccount" class="selectpicker form-control " name="AccountId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.AccountId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CostCenterId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectCostCenter" class="selectpicker form-control " name="CostCenterId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.CostCenterId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group divModalFooter">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+
+    </div>
+}
+<script>
+    var vAccountId = 0;
+    var vCostCenterId = 0;
+    // List GetAccount
+    $.post('/Home/GetAccount',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Account) {
+                $('#selectAccount').append('<option data-id="' + Account.AccountId + '" value="' + Account.AccountId + '" sort-id="' + i + '">' + Account.AccountNameL1 + '</option>')
+                if (i == 0) {
+                    vAccountId = Account.AccountId;
+                }
+            })
+            if (parseInt('@ViewBag.vbcAccountId') >0 ) {
+                vAccountId = parseInt('@ViewBag.vbcAccountId');
+            }
+            $('#selectAccount').val(vAccountId);
+
+            // Refresh Select Picker
+            $('#selectAccount').selectpicker('refresh');
+        }
+    )
+
+
+    // List GetCostCenter
+    $.post('/Home/GetCostCenter',
+        { pQueryTypeId: 400 },
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, CostCenter) {
+                $('#selectCostCenter').append('<option data-id="' + CostCenter.CostCenterId + '" value="' + CostCenter.CostCenterId + '" sort-id="' + i + '">' + CostCenter.CostCenterNameL1 + '</option>')
+                if (i == 0) {
+                    vCostCenterId = CostCenter.CostCenterId;
+                }
+            })
+            if (parseInt('@ViewBag.vbcCostCenterId') >0 ) {
+                vCostCenterId = parseInt('@ViewBag.vbcCostCenterId');
+            }
+            $('#selectCostCenter').val(vCostCenterId);
+
+            // Refresh Select Picker
+            $('#selectCostCenter').selectpicker('refresh');
+        }
+    )
+
+</script>

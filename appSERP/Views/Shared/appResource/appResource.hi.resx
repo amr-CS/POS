@@ -1,0 +1,1092 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="lblSecurityPolicy" xml:space="preserve">
+    <value>सुरक्षा नीतियां</value>
+  </data>
+  <data name="SecurityPolicyId" xml:space="preserve">
+    <value>सुरक्षा नीति</value>
+  </data>
+  <data name="SecurityPolicySeq" xml:space="preserve">
+    <value>सुरक्षा नीति अनुक्रम</value>
+  </data>
+  <data name="lblSecurityLog" xml:space="preserve">
+    <value>सुरक्षा लॉग</value>
+  </data>
+  <data name="lblSecurityRole" xml:space="preserve">
+    <value>सुरक्षा भूमिकाएँ</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>नया पासवर्ड</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>पुराना पासवर्ड</value>
+  </data>
+  <data name="SecurityLogDate" xml:space="preserve">
+    <value>सुरक्षा लॉग दिनांक</value>
+  </data>
+  <data name="SecurityLogDevice" xml:space="preserve">
+    <value>सुरक्षा लॉग डिवाइस</value>
+  </data>
+  <data name="SecurityLogDeviceIsMobile" xml:space="preserve">
+    <value>मोबाइल</value>
+  </data>
+  <data name="SecurityLogId" xml:space="preserve">
+    <value>सुरक्षा लॉग</value>
+  </data>
+  <data name="SecurityLogLat" xml:space="preserve">
+    <value>सुरक्षा लॉग अक्षांश</value>
+  </data>
+  <data name="SecurityLogLng" xml:space="preserve">
+    <value>सुरक्षा लॉग देशांतर</value>
+  </data>
+  <data name="SecurityLogLocation" xml:space="preserve">
+    <value>सुरक्षा लॉग स्थान</value>
+  </data>
+  <data name="SecurityLogTime" xml:space="preserve">
+    <value>सुरक्षा लॉग टाइम</value>
+  </data>
+  <data name="SecurityRoleId" xml:space="preserve">
+    <value>सुरक्षा भूमिका</value>
+  </data>
+  <data name="AccountCodeHierarchy" xml:space="preserve">
+    <value>खाता कोड पदानुक्रम</value>
+  </data>
+  <data name="AccountTypeId" xml:space="preserve">
+    <value>खाते का प्रकार</value>
+  </data>
+  <data name="BaseCurrencyValue" xml:space="preserve">
+    <value>बेस मुद्रा मूल्य</value>
+  </data>
+  <data name="btnBrowse" xml:space="preserve">
+    <value>ब्राउज</value>
+  </data>
+  <data name="btnClose" xml:space="preserve">
+    <value>बंद करे</value>
+  </data>
+  <data name="btnDelete" xml:space="preserve">
+    <value>हटाना</value>
+  </data>
+  <data name="btnDetails" xml:space="preserve">
+    <value>विवरण</value>
+  </data>
+  <data name="btnEdit" xml:space="preserve">
+    <value>संपादित करें</value>
+  </data>
+  <data name="btnExcel" xml:space="preserve">
+    <value>एक्सेल</value>
+  </data>
+  <data name="btnExportExcel" xml:space="preserve">
+    <value>एक्सेल निर्यात करें</value>
+  </data>
+  <data name="btnExportPDF" xml:space="preserve">
+    <value>पीडीएफ निर्यात करें</value>
+  </data>
+  <data name="btnFirst" xml:space="preserve">
+    <value>प्रथम</value>
+  </data>
+  <data name="btnHold" xml:space="preserve">
+    <value>पकड़</value>
+  </data>
+  <data name="btnImage" xml:space="preserve">
+    <value>छवि</value>
+  </data>
+  <data name="btnImport" xml:space="preserve">
+    <value>आयात</value>
+  </data>
+  <data name="btnIssue" xml:space="preserve">
+    <value>बचाना</value>
+  </data>
+  <data name="btnLast" xml:space="preserve">
+    <value>अंतिम</value>
+  </data>
+  <data name="btnLogin" xml:space="preserve">
+    <value>लॉग इन करें</value>
+  </data>
+  <data name="btnLogout" xml:space="preserve">
+    <value>लोग आउट</value>
+  </data>
+  <data name="btnNew" xml:space="preserve">
+    <value>नया</value>
+  </data>
+  <data name="btnNext" xml:space="preserve">
+    <value>आगामी</value>
+  </data>
+  <data name="btnPermission" xml:space="preserve">
+    <value>अनुमति</value>
+  </data>
+  <data name="btnPost" xml:space="preserve">
+    <value>पद</value>
+  </data>
+  <data name="btnPrev" xml:space="preserve">
+    <value>पिछला</value>
+  </data>
+  <data name="btnPrint" xml:space="preserve">
+    <value>छाप</value>
+  </data>
+  <data name="btnReport" xml:space="preserve">
+    <value>रिपोर्ट</value>
+  </data>
+  <data name="btnSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="btnSearch" xml:space="preserve">
+    <value>खोज</value>
+  </data>
+  <data name="btnSpec" xml:space="preserve">
+    <value>विशेष विवरण</value>
+  </data>
+  <data name="btnView" xml:space="preserve">
+    <value>राय</value>
+  </data>
+  <data name="CashFlowTypeId" xml:space="preserve">
+    <value>कैश फ्लो टाइप</value>
+  </data>
+  <data name="CityCenterLat" xml:space="preserve">
+    <value>सिटी सेंटर अक्षांश</value>
+  </data>
+  <data name="CityCenterLng" xml:space="preserve">
+    <value>सिटी सेंटर देशांतर</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>पासवर्ड की पुष्टि कीजिये</value>
+  </data>
+  <data name="ContactPerson" xml:space="preserve">
+    <value>संपर्क व्यक्ति</value>
+  </data>
+  <data name="CostCenterIsRequired" xml:space="preserve">
+    <value>लागत केंद्र आवश्यक है</value>
+  </data>
+  <data name="CountryTypeId" xml:space="preserve">
+    <value>देश प्रकार</value>
+  </data>
+  <data name="CultureName" xml:space="preserve">
+    <value>संस्कृति का नाम</value>
+  </data>
+  <data name="CurrencyDecimal" xml:space="preserve">
+    <value>मुद्रा दशमलव</value>
+  </data>
+  <data name="CurrencyExchange" xml:space="preserve">
+    <value>मुद्रा विनिमय</value>
+  </data>
+  <data name="CurrencyFactorId" xml:space="preserve">
+    <value>मुद्रा कारक</value>
+  </data>
+  <data name="DefaultCurrencyId" xml:space="preserve">
+    <value>डिफ़ॉल्ट मुद्रा</value>
+  </data>
+  <data name="DefaultFontId" xml:space="preserve">
+    <value>मूलभूत अक्षर</value>
+  </data>
+  <data name="DepositIsSentDirectToBank" xml:space="preserve">
+    <value>बैंक को डिपॉजिट डायरेक्ट भेजा जाता है</value>
+  </data>
+  <data name="DocStatusId" xml:space="preserve">
+    <value>दस्तावेज़ की स्थिति</value>
+  </data>
+  <data name="dtDisplay" xml:space="preserve">
+    <value>प्रदर्शन करना</value>
+  </data>
+  <data name="dtFilteredFrom" xml:space="preserve">
+    <value>से फ़िल्टर किया गया</value>
+  </data>
+  <data name="dtFirst" xml:space="preserve">
+    <value>प्रथम</value>
+  </data>
+  <data name="dtFrom" xml:space="preserve">
+    <value>से</value>
+  </data>
+  <data name="dtLast" xml:space="preserve">
+    <value>अंतिम</value>
+  </data>
+  <data name="dtNext" xml:space="preserve">
+    <value>आगामी</value>
+  </data>
+  <data name="dtNoData" xml:space="preserve">
+    <value>कोई आकड़ा उपलब्ध नहीं है</value>
+  </data>
+  <data name="dtPage" xml:space="preserve">
+    <value>पृष्ठ</value>
+  </data>
+  <data name="dtPer" xml:space="preserve">
+    <value>प्रति</value>
+  </data>
+  <data name="dtPrevious" xml:space="preserve">
+    <value>पिछला</value>
+  </data>
+  <data name="dtRecord" xml:space="preserve">
+    <value>रिकॉर्ड</value>
+  </data>
+  <data name="dtSearch" xml:space="preserve">
+    <value>खोजना</value>
+  </data>
+  <data name="dtShowing" xml:space="preserve">
+    <value>दिखाना</value>
+  </data>
+  <data name="dtTo" xml:space="preserve">
+    <value>से</value>
+  </data>
+  <data name="dtTotal" xml:space="preserve">
+    <value>संपूर्ण</value>
+  </data>
+  <data name="FinancialYearEnd" xml:space="preserve">
+    <value>वित्तीय वर्ष का अंत</value>
+  </data>
+  <data name="FinancialYearStart" xml:space="preserve">
+    <value>वित्तीय वर्ष प्रारंभ</value>
+  </data>
+  <data name="FinancialYearStatusId" xml:space="preserve">
+    <value>वित्तीय वर्ष की स्थिति</value>
+  </data>
+  <data name="FixedAssetCompanyId" xml:space="preserve">
+    <value>फिक्स्ड एसेट कंपनी</value>
+  </data>
+  <data name="FixedAssetCompanyTypeId" xml:space="preserve">
+    <value>फिक्स्ड एसेट कंपनी प्रकार</value>
+  </data>
+  <data name="FontId" xml:space="preserve">
+    <value>फ़ॉन्ट</value>
+  </data>
+  <data name="FontName" xml:space="preserve">
+    <value>फ़ॉन्ट का नाम</value>
+  </data>
+  <data name="FontPath" xml:space="preserve">
+    <value>फ़ॉन्ट पथ</value>
+  </data>
+  <data name="FontSizeTypeId" xml:space="preserve">
+    <value>फ़ॉन्ट आकार प्रकार</value>
+  </data>
+  <data name="GLVoucherCategoryId" xml:space="preserve">
+    <value>वाउचर श्रेणी</value>
+  </data>
+  <data name="GLVoucherDtlId" xml:space="preserve">
+    <value>वाउचर विवरण</value>
+  </data>
+  <data name="GLVoucherId" xml:space="preserve">
+    <value>वाउचर</value>
+  </data>
+  <data name="GLVoucherNo" xml:space="preserve">
+    <value>वाउचर नंबर</value>
+  </data>
+  <data name="GLVoucherTypeId" xml:space="preserve">
+    <value>वाउचर टाइप</value>
+  </data>
+  <data name="GracePeriodDays" xml:space="preserve">
+    <value>ग्रेस पीरियड डेज़</value>
+  </data>
+  <data name="GroupAssetAccount" xml:space="preserve">
+    <value>एसेट अकाउंट ग्रुप</value>
+  </data>
+  <data name="GroupCreditAccount" xml:space="preserve">
+    <value>क्रेडिट खाता समूह</value>
+  </data>
+  <data name="GroupDebitAccount" xml:space="preserve">
+    <value>डेबिट खाता समूह</value>
+  </data>
+  <data name="GroupId" xml:space="preserve">
+    <value>समूह</value>
+  </data>
+  <data name="GroupPercent" xml:space="preserve">
+    <value>समूह का प्रतिशत</value>
+  </data>
+  <data name="GroupPurchaseAccount" xml:space="preserve">
+    <value>खरीद खाता समूह</value>
+  </data>
+  <data name="GroupSalesAccount" xml:space="preserve">
+    <value>बिक्री खाता समूह</value>
+  </data>
+  <data name="IconB" xml:space="preserve">
+    <value>आइकन ब्लैक</value>
+  </data>
+  <data name="IconW" xml:space="preserve">
+    <value>आइकन सफेद</value>
+  </data>
+  <data name="IdPayType" xml:space="preserve">
+    <value>पे टाइप करें</value>
+  </data>
+  <data name="InvTransactionTypeId" xml:space="preserve">
+    <value>सौदे का प्रकार</value>
+  </data>
+  <data name="IsHolding" xml:space="preserve">
+    <value>अधिकार वाली कंपनी</value>
+  </data>
+  <data name="IsPostZeroEntry" xml:space="preserve">
+    <value>क्या पोस्ट जीरो एंट्री है</value>
+  </data>
+  <data name="IsUserLock" xml:space="preserve">
+    <value>क्या उपयोगकर्ता बंद है</value>
+  </data>
+  <data name="LastClosedMonth" xml:space="preserve">
+    <value>अंतिम बंद महीना</value>
+  </data>
+  <data name="LastClosedYear" xml:space="preserve">
+    <value>अंतिम बंद वर्ष</value>
+  </data>
+  <data name="lblAccountType" xml:space="preserve">
+    <value>खाता प्रकार</value>
+  </data>
+  <data name="lblCashFlowType" xml:space="preserve">
+    <value>कैश फ्लो टाइप</value>
+  </data>
+  <data name="lblCountryType" xml:space="preserve">
+    <value>देश प्रकार</value>
+  </data>
+  <data name="lblCurrencyFactor" xml:space="preserve">
+    <value>मुद्रा कारक</value>
+  </data>
+  <data name="lblDocStatus" xml:space="preserve">
+    <value>दस्तावेज़ क़ानून</value>
+  </data>
+  <data name="lblFinancialYearStatus" xml:space="preserve">
+    <value>वित्तीय वर्ष क़ानून</value>
+  </data>
+  <data name="lblFixedAssetCompany" xml:space="preserve">
+    <value>फिक्स्ड एसेट कंपनियां</value>
+  </data>
+  <data name="lblFixedAssetCompanyType" xml:space="preserve">
+    <value>फिक्स्ड एसेट कंपनी के प्रकार</value>
+  </data>
+  <data name="lblFont" xml:space="preserve">
+    <value>फोंट्स</value>
+  </data>
+  <data name="lblFontSizeType" xml:space="preserve">
+    <value>फ़ॉन्ट आकार प्रकार</value>
+  </data>
+  <data name="lblGLVoucher" xml:space="preserve">
+    <value>वाउचर</value>
+  </data>
+  <data name="lblGLVoucherDtl" xml:space="preserve">
+    <value>वाउचर विवरण</value>
+  </data>
+  <data name="lblGLVoucherType" xml:space="preserve">
+    <value>वाउचर प्रकार</value>
+  </data>
+  <data name="lblGroup" xml:space="preserve">
+    <value>समूह</value>
+  </data>
+  <data name="lblMainGroups" xml:space="preserve">
+    <value>मुख्य समूह</value>
+  </data>
+  <data name="lblPaymentTypeId" xml:space="preserve">
+    <value>भुगतान के प्रकार</value>
+  </data>
+  <data name="lblSecurityGrade" xml:space="preserve">
+    <value>सुरक्षा ग्रेड</value>
+  </data>
+  <data name="lblSystemMessage" xml:space="preserve">
+    <value>सिस्टम संदेश</value>
+  </data>
+  <data name="lblTransactionSource" xml:space="preserve">
+    <value>लेनदेन के स्रोत</value>
+  </data>
+  <data name="lblTransactionType" xml:space="preserve">
+    <value>लेन-देन के प्रकार</value>
+  </data>
+  <data name="lblUser" xml:space="preserve">
+    <value>उपयोगकर्ता</value>
+  </data>
+  <data name="MainGroupId" xml:space="preserve">
+    <value>मुख्य समूह</value>
+  </data>
+  <data name="msgRequired" xml:space="preserve">
+    <value>कृपया डेटा दर्ज करें</value>
+  </data>
+  <data name="ObjectAction" xml:space="preserve">
+    <value>वस्तु क्रिया</value>
+  </data>
+  <data name="ObjectIsMainMenu" xml:space="preserve">
+    <value>वस्तु इस्मैनमेनु</value>
+  </data>
+  <data name="OppsVoucherYearId" xml:space="preserve">
+    <value>विपरीत वाउचर वर्ष</value>
+  </data>
+  <data name="PaymentTypeId" xml:space="preserve">
+    <value>भुगतान के प्रकार</value>
+  </data>
+  <data name="PLAccountId" xml:space="preserve">
+    <value>लाभ और हानि खाता</value>
+  </data>
+  <data name="PostIsSerialized" xml:space="preserve">
+    <value>पोस्ट सीरियल है</value>
+  </data>
+  <data name="ProName" xml:space="preserve">
+    <value>कार्यक्रम का नाम</value>
+  </data>
+  <data name="RDAccountId" xml:space="preserve">
+    <value>आवर्ती जमा खाता</value>
+  </data>
+  <data name="RefNumberIsVisible" xml:space="preserve">
+    <value>संदर्भ संख्या दर्शनीय है</value>
+  </data>
+  <data name="SalesPurchasePerson" xml:space="preserve">
+    <value>बिक्री खरीद व्यक्ति</value>
+  </data>
+  <data name="SecurityGradeId" xml:space="preserve">
+    <value>सुरक्षा ग्रेड</value>
+  </data>
+  <data name="SystemId" xml:space="preserve">
+    <value>प्रणाली</value>
+  </data>
+  <data name="SystemLastUpdated" xml:space="preserve">
+    <value>सिस्टम अंतिम अद्यतन</value>
+  </data>
+  <data name="SystemMessageId" xml:space="preserve">
+    <value>प्रणाली संदेश</value>
+  </data>
+  <data name="SystemMessageTypeId" xml:space="preserve">
+    <value>सिस्टम संदेश प्रकार</value>
+  </data>
+  <data name="SystemTransactionTypeId" xml:space="preserve">
+    <value>सिस्टम ट्रांजेक्शन टाइप</value>
+  </data>
+  <data name="SystemVersion" xml:space="preserve">
+    <value>सिस्टम संस्करण</value>
+  </data>
+  <data name="TaxNumber" xml:space="preserve">
+    <value>कर संख्या</value>
+  </data>
+  <data name="TransactionSourceId" xml:space="preserve">
+    <value>लेन-देन स्रोत</value>
+  </data>
+  <data name="TransactionTypeId" xml:space="preserve">
+    <value>सौदे का प्रकार</value>
+  </data>
+  <data name="ttAdd" xml:space="preserve">
+    <value>जोड़ना</value>
+  </data>
+  <data name="ttClose" xml:space="preserve">
+    <value>समाप्ति</value>
+  </data>
+  <data name="ttCopy" xml:space="preserve">
+    <value>प्रतिलिपि</value>
+  </data>
+  <data name="ttCut" xml:space="preserve">
+    <value>कटौती</value>
+  </data>
+  <data name="ttEdit" xml:space="preserve">
+    <value>संपादित करें</value>
+  </data>
+  <data name="ttExcel" xml:space="preserve">
+    <value>एक्सेल</value>
+  </data>
+  <data name="ttFirst" xml:space="preserve">
+    <value>प्रथम</value>
+  </data>
+  <data name="ttFullScreen" xml:space="preserve">
+    <value>Full Screen</value>
+  </data>
+  <data name="ttLast" xml:space="preserve">
+    <value>अंतिम</value>
+  </data>
+  <data name="ttNext" xml:space="preserve">
+    <value>आगामी</value>
+  </data>
+  <data name="ttPaste" xml:space="preserve">
+    <value>चिपकाएं</value>
+  </data>
+  <data name="ttPDF" xml:space="preserve">
+    <value>पीडीएफ</value>
+  </data>
+  <data name="ttPrev" xml:space="preserve">
+    <value>पिछला</value>
+  </data>
+  <data name="ttPrint" xml:space="preserve">
+    <value>छाप</value>
+  </data>
+  <data name="ttSortAsc" xml:space="preserve">
+    <value>छोटे से बड़े क्रम में क्रमबद्ध करें</value>
+  </data>
+  <data name="ttSortDesc" xml:space="preserve">
+    <value>अवरोही क्रम</value>
+  </data>
+  <data name="ttWord" xml:space="preserve">
+    <value>वर्ड</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>यूआरएल</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>उपयोगकर्ता</value>
+  </data>
+  <data name="UserSecurityTransactionTypeId" xml:space="preserve">
+    <value>उपयोगकर्ता सुरक्षा लेनदेन प्रकार</value>
+  </data>
+  <data name="UserType" xml:space="preserve">
+    <value>उपयोगकर्ता का प्रकार</value>
+  </data>
+  <data name="UserTypeMaxDis" xml:space="preserve">
+    <value>उपयोगकर्ता प्रकार अधिकतम दशमलव</value>
+  </data>
+  <data name="VoucherSequence" xml:space="preserve">
+    <value>वाउचर अनुक्रम</value>
+  </data>
+  <data name="_Account" xml:space="preserve">
+    <value>लेखा</value>
+  </data>
+  <data name="_Address" xml:space="preserve">
+    <value>पता</value>
+  </data>
+  <data name="_Area" xml:space="preserve">
+    <value>क्षेत्र</value>
+  </data>
+  <data name="_Branch" xml:space="preserve">
+    <value>डाली</value>
+  </data>
+  <data name="_CashDesk" xml:space="preserve">
+    <value>भुगतान डेस्क</value>
+  </data>
+  <data name="_City" xml:space="preserve">
+    <value>शहर</value>
+  </data>
+  <data name="_Code" xml:space="preserve">
+    <value>कोड</value>
+  </data>
+  <data name="_Company" xml:space="preserve">
+    <value>कंपनी</value>
+  </data>
+  <data name="_CostCenter" xml:space="preserve">
+    <value>लागत केंद्र</value>
+  </data>
+  <data name="_Country" xml:space="preserve">
+    <value>देश</value>
+  </data>
+  <data name="_Credit" xml:space="preserve">
+    <value>श्रेय</value>
+  </data>
+  <data name="_CreditBase" xml:space="preserve">
+    <value>क्रेडिट बेस</value>
+  </data>
+  <data name="_CreditLimit" xml:space="preserve">
+    <value>क्रेडिट सीमा</value>
+  </data>
+  <data name="_CSGroup" xml:space="preserve">
+    <value>ग्राहक प्रदायक समूह</value>
+  </data>
+  <data name="_Currency" xml:space="preserve">
+    <value>मुद्रा</value>
+  </data>
+  <data name="_Customer" xml:space="preserve">
+    <value>ग्राहक</value>
+  </data>
+  <data name="_Date" xml:space="preserve">
+    <value>दिनांक</value>
+  </data>
+  <data name="_Debit" xml:space="preserve">
+    <value>नामे</value>
+  </data>
+  <data name="_DebitBase" xml:space="preserve">
+    <value>डेबिट बेस</value>
+  </data>
+  <data name="_DocStatus" xml:space="preserve">
+    <value>डॉक्टर का दर्जा</value>
+  </data>
+  <data name="_Email" xml:space="preserve">
+    <value>ईमेल</value>
+  </data>
+  <data name="_FinancialYear" xml:space="preserve">
+    <value>वित्तीय वर्ष</value>
+  </data>
+  <data name="_FontSizeType" xml:space="preserve">
+    <value>फ़ॉन्ट आकार प्रकार</value>
+  </data>
+  <data name="_Gender" xml:space="preserve">
+    <value>लिंग</value>
+  </data>
+  <data name="_Iamge" xml:space="preserve">
+    <value>छवि</value>
+  </data>
+  <data name="_Image" xml:space="preserve">
+    <value>छवि</value>
+  </data>
+  <data name="_IsAccumulative" xml:space="preserve">
+    <value>संचय है</value>
+  </data>
+  <data name="_IsActive" xml:space="preserve">
+    <value>सक्रिय है</value>
+  </data>
+  <data name="_IsCancelled" xml:space="preserve">
+    <value>रद्द कर दिया है</value>
+  </data>
+  <data name="_IsCredit" xml:space="preserve">
+    <value>क्रेडिट है</value>
+  </data>
+  <data name="_IsCustomer" xml:space="preserve">
+    <value>ग्राहक है</value>
+  </data>
+  <data name="_IsCustomerGroup" xml:space="preserve">
+    <value>ग्राहक समूह है</value>
+  </data>
+  <data name="_IsDebit" xml:space="preserve">
+    <value>डेबिट है</value>
+  </data>
+  <data name="_IsDefault" xml:space="preserve">
+    <value>डिफ़ॉल्ट है</value>
+  </data>
+  <data name="_IsDeleted" xml:space="preserve">
+    <value>हटा दिया गया है</value>
+  </data>
+  <data name="_IsPosted" xml:space="preserve">
+    <value>पोस्ट की गई है</value>
+  </data>
+  <data name="_IsRepeat" xml:space="preserve">
+    <value>रिपीट है</value>
+  </data>
+  <data name="_IsRequired" xml:space="preserve">
+    <value>आवश्यक है</value>
+  </data>
+  <data name="_IsWait" xml:space="preserve">
+    <value>प्रतीक्षा है</value>
+  </data>
+  <data name="_Language" xml:space="preserve">
+    <value>भाषा</value>
+  </data>
+  <data name="_Level" xml:space="preserve">
+    <value>स्तर</value>
+  </data>
+  <data name="_MainCashDesk" xml:space="preserve">
+    <value>मुख्य कैश डेस्क</value>
+  </data>
+  <data name="_Note" xml:space="preserve">
+    <value>ध्यान दें</value>
+  </data>
+  <data name="_Object" xml:space="preserve">
+    <value>वस्तु</value>
+  </data>
+  <data name="_Parent" xml:space="preserve">
+    <value>माता-पिता</value>
+  </data>
+  <data name="_Path" xml:space="preserve">
+    <value>पथ</value>
+  </data>
+  <data name="_Phone1" xml:space="preserve">
+    <value>फोन 1</value>
+  </data>
+  <data name="_Phone2" xml:space="preserve">
+    <value>फ़ोन २</value>
+  </data>
+  <data name="_SecurityGrade" xml:space="preserve">
+    <value>सुरक्षा ग्रेड</value>
+  </data>
+  <data name="_Store" xml:space="preserve">
+    <value>दुकान</value>
+  </data>
+  <data name="_Supplier" xml:space="preserve">
+    <value>प्रदायक</value>
+  </data>
+  <data name="_System" xml:space="preserve">
+    <value>प्रणाली</value>
+  </data>
+  <data name="_Time" xml:space="preserve">
+    <value>पहर</value>
+  </data>
+  <data name="_TransactionSource" xml:space="preserve">
+    <value>लेन-देन स्रोत</value>
+  </data>
+  <data name="_TransactionType" xml:space="preserve">
+    <value>सौदे का प्रकार</value>
+  </data>
+  <data name="_Type" xml:space="preserve">
+    <value>प्रकार</value>
+  </data>
+  <data name="_UserFullName" xml:space="preserve">
+    <value>उपयोगकर्ता का पूरा नाम</value>
+  </data>
+  <data name="_UserSecurityTransactionType" xml:space="preserve">
+    <value>उपयोगकर्ता सुरक्षा लेनदेन प्रकार</value>
+  </data>
+  <data name="_Value" xml:space="preserve">
+    <value>मूल्य</value>
+  </data>
+  <data name="_VoucherType" xml:space="preserve">
+    <value>वाउचर टाइप</value>
+  </data>
+  <data name="_Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="AssetContract" xml:space="preserve">
+    <value>एसेट कॉन्ट्रैक्ट</value>
+  </data>
+  <data name="AssetContractDetail" xml:space="preserve">
+    <value>एसेट अनुबंध विवरण</value>
+  </data>
+  <data name="AssetContractNo" xml:space="preserve">
+    <value>एसेट कॉन्ट्रैक्ट नंबर</value>
+  </data>
+  <data name="AssetContractNote" xml:space="preserve">
+    <value>टिप्पणियाँ</value>
+  </data>
+  <data name="AssetContractPayType" xml:space="preserve">
+    <value>एसेट कॉन्ट्रैक्ट पे टाइप</value>
+  </data>
+  <data name="AssetContractPeriod" xml:space="preserve">
+    <value>एसेट अनुबंध अवधि</value>
+  </data>
+  <data name="AssetContractRefNo" xml:space="preserve">
+    <value>एसेट कॉन्ट्रैक्ट रेफरेंस नंबर</value>
+  </data>
+  <data name="AssetContractValue" xml:space="preserve">
+    <value>एसेट कॉन्ट्रैक्ट वैल्यू</value>
+  </data>
+  <data name="AssetDep" xml:space="preserve">
+    <value>एसेट डेप्रिसिएशन</value>
+  </data>
+  <data name="AssetDepDate" xml:space="preserve">
+    <value>एसेट मूल्यह्रास तिथि</value>
+  </data>
+  <data name="AssetId" xml:space="preserve">
+    <value>एसेट</value>
+  </data>
+  <data name="AssetLastDepDate" xml:space="preserve">
+    <value>एसेट लास्ट डेप्रिसिएशन डेट</value>
+  </data>
+  <data name="AssetReasonType" xml:space="preserve">
+    <value>एसेट ट्रांजेक्शन कारण प्रकार</value>
+  </data>
+  <data name="AssetReasonTypeNote" xml:space="preserve">
+    <value>टिप्पणियाँ</value>
+  </data>
+  <data name="AssetRelease" xml:space="preserve">
+    <value>एसेट रिलीज</value>
+  </data>
+  <data name="AssetReleaseDetail" xml:space="preserve">
+    <value>एसेट रिलीज़ विवरण</value>
+  </data>
+  <data name="AssetTrans" xml:space="preserve">
+    <value>एसेट ट्रांजेक्शन</value>
+  </data>
+  <data name="AssetTransDate" xml:space="preserve">
+    <value>एसेट ट्रांजैक्शन की तारीख</value>
+  </data>
+  <data name="AssetTransNote" xml:space="preserve">
+    <value>टिप्पणियाँ</value>
+  </data>
+  <data name="AssetTransValue" xml:space="preserve">
+    <value>एसेट ट्रांजैक्शन वैल्यू</value>
+  </data>
+  <data name="AssetTransValueBase" xml:space="preserve">
+    <value>एसेट ट्रांजैक्शन बेस वैल्यू</value>
+  </data>
+  <data name="AssetUnDep" xml:space="preserve">
+    <value>अनडिपेटर्ड एसेट</value>
+  </data>
+  <data name="AssetUnDepDate" xml:space="preserve">
+    <value>अनडिपेटेड एसेट डेट</value>
+  </data>
+  <data name="BillNo" xml:space="preserve">
+    <value>बील संख्या</value>
+  </data>
+  <data name="BuyGroup" xml:space="preserve">
+    <value>समूह खरीदना</value>
+  </data>
+  <data name="CashDeskTransDate" xml:space="preserve">
+    <value>कैश डेस्क लेनदेन की तारीख</value>
+  </data>
+  <data name="CashDeskTransNo" xml:space="preserve">
+    <value>कैश डेस्क नंबर</value>
+  </data>
+  <data name="CashDeskTransRef" xml:space="preserve">
+    <value>कैश डेस्क लेनदेन संदर्भ</value>
+  </data>
+  <data name="CashDeskTransRefDate" xml:space="preserve">
+    <value>कैश डेस्क संदर्भ तिथि</value>
+  </data>
+  <data name="CashDeskTransTime" xml:space="preserve">
+    <value>कैश डेस्क लेन-देन का समय</value>
+  </data>
+  <data name="CurrencyValue" xml:space="preserve">
+    <value>मुद्रा मान</value>
+  </data>
+  <data name="FixedAssetMethod" xml:space="preserve">
+    <value>फिक्स्ड एसेट विधि</value>
+  </data>
+  <data name="FixedAssetSite" xml:space="preserve">
+    <value>फिक्स्ड एसेट साइट</value>
+  </data>
+  <data name="FixedAssetSiteQty" xml:space="preserve">
+    <value>फिक्स्ड एसेट साइट मात्रा</value>
+  </data>
+  <data name="FixedAssetSiteTransDate" xml:space="preserve">
+    <value>फिक्स्ड एसेट साइट ट्रांजैक्शन की तारीख</value>
+  </data>
+  <data name="FixedAssetUnit" xml:space="preserve">
+    <value>फिक्स्ड एसेट यूनिट</value>
+  </data>
+  <data name="GLOppsVoucherId" xml:space="preserve">
+    <value>विपरीत वाउचर</value>
+  </data>
+  <data name="GLOppsVoucherValue" xml:space="preserve">
+    <value>विपरीत वाउचर मूल्य</value>
+  </data>
+  <data name="GLVoucherDate" xml:space="preserve">
+    <value>वाउचर की तारीख</value>
+  </data>
+  <data name="GLVoucherRef" xml:space="preserve">
+    <value>वाउचर संदर्भ</value>
+  </data>
+  <data name="GLVoucherRefDate" xml:space="preserve">
+    <value>वाउचर संदर्भ तिथि</value>
+  </data>
+  <data name="GLVoucherTime" xml:space="preserve">
+    <value>वाउचर का समय</value>
+  </data>
+  <data name="InvItemId" xml:space="preserve">
+    <value>वस्तु सूची</value>
+  </data>
+  <data name="IsAutoPost" xml:space="preserve">
+    <value>ऑटो पोस्ट है</value>
+  </data>
+  <data name="IsIssued" xml:space="preserve">
+    <value>जारी किए गए</value>
+  </data>
+  <data name="lblAsset" xml:space="preserve">
+    <value>संपत्ति</value>
+  </data>
+  <data name="lblAssetContract" xml:space="preserve">
+    <value>एसेट कॉन्ट्रैक्ट्स</value>
+  </data>
+  <data name="lblAssetContractPayType" xml:space="preserve">
+    <value>एसेट कॉन्ट्रैक्ट पे प्रकार</value>
+  </data>
+  <data name="lblAssetDep" xml:space="preserve">
+    <value>संपत्ति मूल्यह्रास</value>
+  </data>
+  <data name="lblAssetReasonType" xml:space="preserve">
+    <value>एसेट ट्रांजेक्शन कारण प्रकार</value>
+  </data>
+  <data name="lblAssetRelease" xml:space="preserve">
+    <value>एसेट रिलेटेड</value>
+  </data>
+  <data name="lblAssetReleaseDetail" xml:space="preserve">
+    <value>संपत्ति के विवरण जारी करता है</value>
+  </data>
+  <data name="lblAssetTrans" xml:space="preserve">
+    <value>संपत्ति लेनदेन</value>
+  </data>
+  <data name="lblAssetUnDep" xml:space="preserve">
+    <value>अनडिपेटेड एसेट्स</value>
+  </data>
+  <data name="lblBuyGroup" xml:space="preserve">
+    <value>समूह खरीदना</value>
+  </data>
+  <data name="lblFixedAssetMethod" xml:space="preserve">
+    <value>फिक्स्ड एसेट तरीके</value>
+  </data>
+  <data name="lblFixedAssetSite" xml:space="preserve">
+    <value>अचल संपत्ति साइटें</value>
+  </data>
+  <data name="lblFixedAssetUnit" xml:space="preserve">
+    <value>फिक्स्ड एसेट यूनिट्स</value>
+  </data>
+  <data name="lblSite" xml:space="preserve">
+    <value>साइटें</value>
+  </data>
+  <data name="lblSiteDetail" xml:space="preserve">
+    <value>साइट का विवरण</value>
+  </data>
+  <data name="lblSiteDonor" xml:space="preserve">
+    <value>साइट दाताओं</value>
+  </data>
+  <data name="lblTrust" xml:space="preserve">
+    <value>ठेकेदार</value>
+  </data>
+  <data name="PostDate" xml:space="preserve">
+    <value>पद तारीख</value>
+  </data>
+  <data name="ProductPeriod" xml:space="preserve">
+    <value>उत्पाद की अवधि</value>
+  </data>
+  <data name="PurchaseDate" xml:space="preserve">
+    <value>खरीद की तारीख</value>
+  </data>
+  <data name="PurchaseNo" xml:space="preserve">
+    <value>खरीदने की संख्या</value>
+  </data>
+  <data name="Site" xml:space="preserve">
+    <value>साइट</value>
+  </data>
+  <data name="SiteDetail" xml:space="preserve">
+    <value>साइट का विवरण</value>
+  </data>
+  <data name="SiteDetailLat" xml:space="preserve">
+    <value>अक्षांश</value>
+  </data>
+  <data name="SiteDetailLng" xml:space="preserve">
+    <value>देशान्तर</value>
+  </data>
+  <data name="SiteDonor" xml:space="preserve">
+    <value>साइट दाता</value>
+  </data>
+  <data name="SiteLat" xml:space="preserve">
+    <value>अक्षांश</value>
+  </data>
+  <data name="SiteLng" xml:space="preserve">
+    <value>देशान्तर</value>
+  </data>
+  <data name="StoreId" xml:space="preserve">
+    <value>दुकान</value>
+  </data>
+  <data name="TransactionType" xml:space="preserve">
+    <value>सौदे का प्रकार</value>
+  </data>
+  <data name="Trust" xml:space="preserve">
+    <value>ठेकेदार</value>
+  </data>
+  <data name="_BookValue" xml:space="preserve">
+    <value>पुस्तक मूल्य</value>
+  </data>
+  <data name="_BookValueBase" xml:space="preserve">
+    <value>बेस बुक वैल्यू</value>
+  </data>
+  <data name="_IsRepeated" xml:space="preserve">
+    <value>दोहराया गया</value>
+  </data>
+  <data name="_MinPrice" xml:space="preserve">
+    <value>न्यूनतम मूल्य</value>
+  </data>
+  <data name="_MinPriceBase" xml:space="preserve">
+    <value>आधार न्यूनतम मूल्य</value>
+  </data>
+  <data name="_Percent" xml:space="preserve">
+    <value>प्रतिशत</value>
+  </data>
+  <data name="_PurchaseAccount" xml:space="preserve">
+    <value>खरीद खाता</value>
+  </data>
+  <data name="_PurchasePrice" xml:space="preserve">
+    <value>खरीद मूल्य</value>
+  </data>
+  <data name="_PurchasePriceBase" xml:space="preserve">
+    <value>आधार खरीद मूल्य</value>
+  </data>
+  <data name="_Qty" xml:space="preserve">
+    <value>मात्रा</value>
+  </data>
+  <data name="_SalesAccount" xml:space="preserve">
+    <value>विक्रय खाता</value>
+  </data>
+  <data name="_Seq" xml:space="preserve">
+    <value>अनुक्रम</value>
+  </data>
+  <data name="_TotalDep" xml:space="preserve">
+    <value>कुल मूल्यह्रास</value>
+  </data>
+  <data name="_TotalDepBase" xml:space="preserve">
+    <value>बेस कुल मूल्यह्रास</value>
+  </data>
+</root>

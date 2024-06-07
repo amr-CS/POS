@@ -1,0 +1,128 @@
+﻿
+@using System.Data;
+
+@{
+    ViewBag.Title = "حركة مردودات التأمين";
+    Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
+    DataTable Data = ViewBag.vDT;
+
+    double Total = 0;
+    double TotalSales = 0;
+    double TotalVatTotal = 0;
+}
+
+<style>
+    @@media print {
+        #periodWord {
+            font-size: 40px !important;
+            font: bold;
+            line-height: 0;
+            position: absolute;
+            top: 40% !important;
+            padding: 0;
+            -ms-transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+            cursor: pointer;
+            color: red;
+            border: none;
+            outline: none;
+            background: #000000;
+        }
+    }
+
+    #periodWord {
+        font-size: 48px;
+        font: bold;
+        line-height: 0;
+        position: absolute;
+        top: 55%;
+        left: 15%;
+        display: block;
+        padding: 0;
+        -ms-transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        cursor: pointer;
+        color: red;
+        border: none;
+        outline: none;
+        background: #000000;
+    }
+</style>
+
+
+<table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+    <thead style="">
+        <tr>
+            <th>رقم السند </th>
+            <th>التاريخ</th>
+            <th>رقم الفاتورة </th>
+            <th>اسم العميل</th>
+            <th>الهاتف </th>
+            <th>العدد</th>
+            <th>المبلغ</th>
+            <th>الاجمالي</th>
+            <th>الكاشير </th>
+        </tr>
+    </thead>
+    @if (Data != null)
+    {
+        foreach (DataRow item in Data.Rows)
+        {
+
+            double TotalRow = Convert.ToDouble(item["Price"].ToString());
+<tr>
+    <td style="text-align: center; vertical-align: middle;">
+        @item["InvId"]
+        <br />
+    </td>
+    <td style="text-align: center; vertical-align: middle;padding-right:20px">
+        @item["InvDate"]
+    </td>
+    <td style="text-align: center; vertical-align: middle;padding-right:20px">
+        @item["InvRef"]
+    </td>
+    <td style="text-align:center; vertical-align: middle; ">
+        @item["CustomerName"]
+
+    </td>
+
+    <td style="text-align:center; vertical-align: middle; ">
+        @item["InvPhoneNo"]
+
+    </td>
+
+
+    <td style="text-align: center; vertical-align: middle;">
+        @item["ItemQty"]
+
+    </td>
+    <td style="text-align: center; vertical-align: middle;">@item["Price1"]</td>
+    <td style="text-align: center; vertical-align: middle;">@item["Price"]</td>
+    <td style="text-align: center; vertical-align: middle;">@item["CashNameL1"]</td></tr>
+            Total = Total + TotalRow;
+        }
+    }
+<tr class="total">
+    <td style="text-align: center;font:bold; vertical-align: middle;">
+        الاجمالي :
+        <br />
+    </td>
+    <td style="text-align: center; vertical-align: middle;padding-right:20px">
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+    </td>
+    <td style="text-align:center;vertical-align: middle;"></td>
+    <td style="text-align: center; vertical-align: middle;"></td>
+    <td style="text-align: center; vertical-align: middle;">
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+        @Math.Round(Total, 2, MidpointRounding.ToEven)
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+    </td>
+</tr>
+</table>

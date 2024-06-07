@@ -1,0 +1,2908 @@
+﻿@using appSERP.Views.Shared.appResource;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = null;
+}
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="bg-white border rounded p-3">
+        <div class="w-100">
+            <div class="d-flex justify-content-end">
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Save -->
+                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Copy -->
+                    <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                    <!-- Paste -->
+                    <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Print -->
+                    <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnUtility btnClearAll" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                    <!-- Edit -->
+                    <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- PDF -->
+                    <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <!-- Excel -->
+                    <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                    <!-- Word -->
+                    <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Close -->
+<button class="btn btnUtility btnClose" title="@appResource.ttClose"><i class="fa fa-close"></i></button>
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Full Screen -->
+                    <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <div class="dropdown">
+                        <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-table"></i>
+                        </button>
+                        <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- Title -->
+    <div class="bg-light border rounded p-3 mb-3">@appResource._GLCustomer </div>
+    <div class="row bg-white border rounded p-3">
+
+        <div class="col-md-9">
+
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">/@appResource._CustomerNo</label>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control w-25" id="txtCustomerCode" disabled data-id="0" />
+
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource._Customer - AR</label>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control " id="txtCustomerNameL1" data-id="0" />
+
+                </div>
+                <div class="col-sm-5">
+                    <label class="control-label">@appResource._DeletedCustomer</label>
+                    <input type="checkbox" name="gender" value="1" id="chk1">
+
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource._Customer - EN</label>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control " id="txtCustomerNameL2" data-id="0" />
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <label class="control-label">نوع العميل</label>
+                </div>
+                <div class="col-sm-5 d-flex">
+                    <input type="text" class="form-control w-25" id="txtCategoryId" data-id="0" />
+                    <input type="text" class="form-control w-75" readonly id="txtCategoryName" data-id="0" />
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <label class="control-label">الرقم الضريبي  للعميل</label>
+                </div>
+                <div class="col-sm-5 d-flex">
+                    <input type="text" class="form-control" id="txtCustomerVATCode" data-id="0" />
+                   
+
+                </div>
+            </div>
+
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">نوع شركات التوصيل</label>
+                </div>
+                <div class="col-sm-5">
+
+                    <div>
+                        <select class="DelivaryCompanyType  form-control">
+                            <option value="">-</option>
+                            <option value="1">قيمة</option>
+                            <option value="2">نسبة</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-sm-2">
+                    <label class="control-label">قيمة شركات التوصيل</label>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control " id="DelivaryCompanyValue" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource._Address</label>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" name="description" class="form-control" id="txtCustomerAddress" data-id="0" />
+                </div>
+
+                <div class="col-sm-5">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-8">
+                        <div class="row pl-lg-5" style="align-content:center">
+
+                            <input type="radio" name="gender" value="1" id="rd1" class="mt-1"> <label class="control-label mt-1">@appResource._None</label>
+
+
+                            <input type="radio" name="gender" value="2" id="rd2" class="ml-3 mt-1">  <label class="control-label mt-1">@appResource._Notify</label>
+
+
+                            <input type="radio" name="gender" value="3" id="rd3" class="ml-3 mt-1"> <label class="control-label mt-1">@appResource._Stop</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource._Country</label>
+                </div>
+                <div class="col-sm-5 d-flex">
+                    <input type="text" class="form-control w-25" id="txtCountryId" data-id="0" />
+                    <input type="text" class="form-control w-75" readonly id="txtCountryName" data-id="0" />
+                </div>
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <label class="control-label">@appResource._City</label>
+                        </div>
+                        <div class="col-sm-11 d-flex">
+                            <input type="text" class="form-control w-25" id="txtCityId" data-id="0" />
+                            <input type="text" class="form-control w-75" readonly id="txtCityName" data-id="0" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource._Phone</label>
+                </div>
+                <div class="col-sm-5">
+                    <div class="d-flex">
+                        <select value="3" class="TypeId form-control select w-25" id="TypeId" name="TypeId"></select>
+                        <input type="text" class="form-control w-75" id="txtCustomerPhoneNumber" data-id="0" />
+                    </div>
+                    <div>
+                        <span id="spnError" style="font-weight:bold; Font-size: 10pt;" class="d-none"></span>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <label class="control-label">@appResource._Fax</label>
+                        </div>
+                        <div class="col-sm-11 d-flex">
+                            <input type="text" class="form-control " id="txtCustomerFax" data-id="0" />
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource.AuthorizedPersonTel</label>
+                </div>
+                <div class="col-sm-5">
+
+                    <input type="text" class="form-control " id="txtAuthorizePersonTel" data-id="0" />
+
+                </div>
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <label class="control-label" style="font-size: 9px;">@appResource.AuthorizedPerson</label>
+                        </div>
+                        <div class="col-sm-11 d-flex">
+                            <input type="text" class="form-control " id="txtAuthorizePerson" data-id="0" />
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource._Email</label>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control " id="txtCustomerEmail" data-id="0" />
+
+                </div>
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <label class="control-label">@appResource._Salesman</label>
+                        </div>
+                        <div class="col-sm-11 d-flex">
+                            <input type="text" class="form-control w-25" id="txtSalesId" data-id="0" />
+                            <input type="text" class="form-control w-75" readonly id="txtSalesName" data-id="0" />
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource.AccountNo</label>
+                </div>
+                <div class="col-sm-5 d-flex">
+                    <input type="text" class="form-control w-25" id="txtAccountId" data-id="0" />
+                    <input type="text" class="form-control w-75" readonly id="txtAccountName" data-id="0" />
+                    @*<input type="text" class="form-control " id="txtAccountId" data-id="0" />*@
+
+                </div>
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            @*<label class="control-label">الحساب</label>*@
+                            <label class="control-label" style="font-size: 9px;">@appResource._Limit</label>
+                        </div>
+                        <div class="col-sm-11 d-flex">
+                            @*<input type="text" class="form-control" id="txtAccountName" data-id="0" />*@
+                            <input type="number" class="form-control" id="txtCustomerAmountLimit" data-id="0" />
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-3">
+            @*<div style="height:217px"></div>*@
+            @*<div style="height:140px"></div>*@
+
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">المؤسسة</label>
+                </div>
+                <div class="col-sm-10 d-flex">
+                    <input type="text" class="form-control" id="txtOrganization" data-id="0" />
+                </div>
+            </div>
+
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">الشارع</label>
+                </div>
+                <div class="col-sm-10 d-flex">
+                    <input type="text" class="form-control" id="txtStreet" data-id="0" />
+                </div>
+            </div>
+
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">المدينة</label>
+                </div>
+                <div class="col-sm-10 d-flex">
+                    <input type="text" class="form-control" id="txtCity" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">رقم المبنى</label>
+                </div>
+                <div class="col-sm-10 d-flex">
+                    <input type="text" class="form-control" id="txtBuildingNumber" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">المنطقة البريدية</label>
+                </div>
+                <div class="col-sm-10 d-flex">
+                    <input type="text" class="form-control" id="txtPostalZone" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">الحي</label>
+                </div>
+                <div class="col-sm-10 d-flex">
+                    <input type="text" class="form-control" id="txtDistrictName" data-id="0" />
+                </div>
+            </div>
+
+
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource._Type</label>
+                </div>
+                <div class="col-sm-10 d-flex">
+                    <input type="text" class="form-control w-25" id="txtSellCostTypeId" data-id="0" />
+                    <input type="text" class="form-control w-75" readonly id="txtSellCostTypeName" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource._Type</label>
+                </div>
+                <div class="col-sm-10 d-flex">
+                    <input type="text" class="form-control w-25" id="txtAreaId" data-id="0" />
+                    <input type="text" class="form-control w-75" readonly id="txtAreaName" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                    <label class="control-label">@appResource._Post</label>
+                </div>
+                <div class="col-sm-10">
+
+                    <input type="text" class="form-control" id="txtCustomerPostBox" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-10">
+                </div>
+            </div>
+            @*<div style="height:30px"></div>
+        <div class="row pt-1">
+            <div class="col-sm-2">
+                <label class="control-label">السقف المحدد</label>
+            </div>
+            <div class="col-sm-10">
+
+                <input type="text" class="form-control" id="txtpCustomerAmountLimit" data-id="0" />
+            </div>
+        </div>*@
+        </div>
+
+    </div>
+</div>
+@*<div class="divtblSubItem bg-white border p-2">
+        <table class="tblCustomerDtl border" width="100%">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>الكود</th>
+                    <th>الاسم - AR</th>
+                    <th>الاسم -EN</th>
+                    <th colspan="2">الدولة</th>
+                    <th>رقم المدينة</th>
+                    <th>المدينة</th>
+                    <th>العنوان</th>
+                    <th>رقم التليفون</th>
+
+                    <th class="thActions">@appResource._Actions</th>
+
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblCustomerDtlBody"></tbody>
+        </table>
+    </div>*@
+<div class="container-fluid">
+    <ul class="nav nav-tabs" id="myTab3" role="tablist">
+        @*<li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">العملاء الفرعيين</a>
+            </li>*@
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">@appResource._CustomerSites</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">@appResource._CustomerPhone</a>
+        </li>
+
+    </ul>
+    <div class="tab-content" id="myTabContent">
+   
+        <div class="tab-pane fade show active tab1" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <!-- Store Setting Data -->
+            <div class="divCustomerSite  bg-white border p-2">
+                <table class="tblCustomerSite border" width="100%">
+                    <!-- Head -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@appResource._Code</th>
+                            @*<th>اسم الموقع - AR</th>
+                                <th>اسم الموقع -EN</th>*@
+                            <th colspan="2">@appResource._Site</th>
+                            <th class="thActions">@appResource._Actions</th>
+
+                        </tr>
+                    </thead>
+
+                    <!-- Body -->
+                    <tbody class="tblCustomerSiteBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-pane fade tab2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <!-- Store Type Data -->
+            <div class="divCustomerTel bg-white border p-2">
+                <table class="tblCustomerTel border" width="100%">
+                    <!-- Head -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@appResource._Code</th>
+                            <th>@appResource._No</th>
+                            <th class="thActions">@appResource._Actions</th>
+
+                        </tr>
+                    </thead>
+
+                    <!-- Body -->
+                    <tbody class="tblCustomerTelBody"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <div class="flex-shrink-1">
+        <div class="d-flex">
+            @*<button class="btn btn-primary btnSearch">بحث</button>*@
+        </div>
+    </div>
+
+
+
+</div>
+@*<div class="container-fluid">
+        <div class="row bg-white border rounded p-3">
+            <div class="row pt-1">
+                <div class="col-md-6">
+                    <label class="control-label">اسم العميل - AR</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control " id="txtCustomerNameL1" data-id="0" />
+
+                </div>
+            </div>
+
+        </div>
+    </div>*@
+
+<div id="CountryDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CountryDataModalContent"></div>
+    </div>
+</div>
+<div id="CityDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CityDataModalContent"></div>
+    </div>
+</div>
+<div id="AreaDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AreaDataModalContent"></div>
+    </div>
+</div>
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+<div id="SupplierDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="SupplierDataModalContent"></div>
+    </div>
+</div>
+<div id="SellCostTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="SellCostTypeDataModalContent"></div>
+    </div>
+</div>
+<div id="CustomerCategoryDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CustomerCategoryDataModalContent"></div>
+    </div>
+</div>
+<!-- CustomerData Modal -->
+<div id="CustomerDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CustomerDataModalContent"></div>
+    </div>
+</div>
+<div id="SalesMenDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="SalesMenDataModalContent"></div>
+    </div>
+</div>
+<div id="SiteDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="SiteDataModalContent"></div>
+    </div>
+</div>
+<script>
+    $('#rd1').prop('checked', true)
+    //fnClearTable()
+    fnClearTableSite()
+    fnClearTableTel()
+    funLoadSelectList()
+
+
+    function fnClearTable()
+    {
+        $('.tblCustomerDtlBody').html('');
+        var vRowContent3 = '<tr class="tblRow" data-id="0">' +
+            '<td><button class="btn btn-sm btn-light btnCustomerAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control CustomerCode" disabled /></td>' +
+            '<td><input type="text" class="form-control CustomerNameL1" /></td>' +
+            '<td><input type="text" class="form-control CustomerNameL2" /></td>' +
+            '<td width="7%"><input type="text" class="form-control CountryId" /></td>' +
+            '<td><input type="text" class="form-control CountryNameL1" readonly /></td>' +
+            '<td width="7%"><input type="text" class="form-control CityId" /></td>' +
+            '<td><input type="text" class="form-control CityNameL1" readonly /></td>' +
+            '<td><input type="text" class="form-control CustomerAddress"  /></td>' +
+            '<td><input type="text" class="form-control CustomerPhoneNumber"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCustomerDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        $('.tblCustomerDtlBody').append(vRowContent3);
+    }
+    function fnClearTableSite()
+    {
+        $('.tblCustomerSiteBody').html('');
+        var vRowContent3 = '<tr class="tblRow" data-id="0">' +
+            '<td width="7%"><button class="btn btn-sm btn-light btnCustomerSiteAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control CustomerSiteCode" disabled  /></td>' +
+            //'<td><input type="text" class="form-control CustomerSiteNameL1"   /></td>' +
+            //'<td><input type="text" class="form-control CustomerSiteNameL2"  /></td>' +
+            '<td width="7%"><input type="text" class="form-control SiteId" /></td>' +
+            '<td><input type="text" class="form-control SiteName" readonly /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCustomerSiteDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+        $('.tblCustomerSiteBody').append(vRowContent3);
+
+    }
+    function fnClearTableTel() {
+        $('.tblCustomerTelBody').html('');
+            var vRowContent3 = '<tr class="tblRow" data-id="0">' +
+                '<td width="7%"><button class="btn btn-sm btn-light btnCustomerTelAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                '<td width="7%"><input type="text" class="form-control CustomerTelCode" disabled  /></td>' +
+                '<td width="85%"><input type="text" class="form-control CustomerTelNo"    /></td>' +
+                '<td><button class="btn btn-light btn-sm btnCustomerTelDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+
+            $('.tblCustomerTelBody').append(vRowContent3);
+    }
+
+
+    function fnGetMasterAndDetails() {
+        $.post('/GLCustomer/GetMasterAndDetails',
+            {
+                pCustomerId: $('#txtCustomerCode').attr('data-id'),
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Customer) {
+                        $('#txtCustomerCode').attr('data-id', Customer.CustomerId);
+                        $('#txtCustomerCode').val(Customer.CustomerCode);
+                        $('#txtCustomerNameL1').val(Customer.CustomerNameL1);
+                        $('#txtCustomerNameL2').val(Customer.CustomerNameL2);
+                        $('#txtCustomerAddress').val(Customer.CustomerAddress);
+                        $('#txtCustomerPhoneNumber').val(Customer.CustomerPhoneNumber);
+                        $('#txtCustomerPostBox').val(Customer.CustomerPostBox);
+                        $('#txtCustomerFax').val(Customer.CustomerFax);
+                        $('#txtCustomerEmail').val(Customer.CustomerEmail);
+                        $('#txtAuthorizePerson').val(Customer.AuthorizePerson);
+                        // $('#txtCustomerTypeId').val(Customer.CustomerTypeId);
+                        $('#txtSellCostTypeId').attr('data-id', Customer.SellCostTypeId)
+                        $('#txtSellCostTypeId').val(Customer.SellCostTypeCode);
+                        $('#txtSellCostTypeName').val(Customer.SellCostTypeNameL1);
+                        $('#txtAreaId').attr('data-id', Customer.AreaId);
+                        $('#txtAreaId').val(Customer.AreaCode);
+                        $('#txtAreaName').val(Customer.AreaNameL1);
+                        $('#txtCategoryId').attr('data-id', Customer.CategoryId);
+                        $('#txtCategoryId').val(Customer.CustomerCategoryCode);
+                        $('#txtCustomerVATCode').val(Customer.CustomerVATCode);
+                        $('#txtCategoryName').val(Customer.CustomerCategoryNameL1);
+                        $('#txtAuthorizePersonTel').val(Customer.AuthorizePersonTel);
+                        $('#txtCountryId').attr('data-id', Customer.CountryId);
+                        $('#txtCountryId').val(Customer.CountryCode);
+                        $('#txtCountryName').val(Customer.CountryNameL1);
+                        $('#txtCityId').attr('data-id', Customer.CityId)
+                        $('#txtCityId').val(Customer.CityCode);
+                        $('#txtCityName').val(Customer.CityNameL1);
+                        $('#txtCustomerAmountLimit').val(Customer.CustomerAmountLimit);
+                        $('.DelivaryCompanyType').val(Customer.DelivaryCompanyType);
+                        $('#DelivaryCompanyValue').val(Customer.DelivaryCompanyValue);
+                        $('#txtAccountId').attr('data-id', Customer.AccountId)
+                        $('#txtAccountId').val(Customer.AccNo);
+                        $('#txtAccountName').val(Customer.AccountNameL1);
+                        $('#txtSalesId').attr('data-id', Customer.SalesId);
+                        $('#txtSalesId').val(Customer.SalesCode);
+                        $('#txtSalesName').val(Customer.SalesName);
+                        $('#txtOrganization').val(Customer.organization);
+                        $('#txtStreet').val(Customer.street);
+                        $('#txtCity').val(Customer.city);
+                        $('#txtBuildingNumber').val(Customer.building_number);
+                        $('#txtPostalZone').val(Customer.postal_zone);
+                        $('#txtDistrictName').val(Customer.district_name);
+                        if (Customer.CustomerDailyStopType == undefined) {
+                            $('#rd1').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 0) {
+                            $('#rd1').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 1) {
+                            $('#rd2').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 2) {
+                            $('#rd3').prop('checked', true)
+                        }
+                        if (Customer.TypeId != null && Customer.TypeId != undefined) {
+                            $('#TypeId').val(Customer.TypeId);
+                        }
+                        else {
+                            $('#TypeId').val(1);
+                        }
+                        //if (Customer.tblCustomerDTL != undefined && Customer.tblCustomerDTL != '') {
+
+                        //    $('.tblCustomerDtlBody').html('');
+                        //    for (var m = 0; m <= Customer.tblCustomerDTL.length - 1; m++) {
+                        //        var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerDTL[m].ChildCustomerId + '">' +
+                        //            '<td><button class="btn btn-sm btn-light btnCustomerAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CustomerCode" disabled value="' + Customer.tblCustomerDTL[m].ChildCustomerCode + '" /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL1" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL1 + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL2" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL2 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CountryId" data-id="' + Customer.tblCustomerDTL[m].ChildCountryId + '" value="' + Customer.tblCustomerDTL[m].ChildCountryCode + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CountryNameL1" readonly value="' + Customer.tblCustomerDTL[m].ChildCountryNameL1 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CityId" data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityCode  + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CityNameL1" readonly data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityNameL1 + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerAddress" value="' + Customer.tblCustomerDTL[m].ChildCustomerAddress + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerPhoneNumber" value="' + Customer.tblCustomerDTL[m].ChildCustomerPhoneNumber + '"   /></td>' +
+                        //            '<td><button class="btn btn-light btn-sm btnCustomerDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                        //            '</tr>';
+
+                        //        $('.tblCustomerDtlBody').append(vRowContent3);
+                        //    }
+
+                        //}
+                        //else {
+                        //    fnClearTable();
+                        //}
+                        if (Customer.tblCustomerSite != undefined && Customer.tblCustomerSite != '') {
+
+                            $('.tblCustomerSiteBody').html('');
+                            for (var h = 0; h <= Customer.tblCustomerSite.length - 1; h++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerSite[h].CustomerSiteId + '">' +
+                                    '<td width="7%"><button class="btn btn-sm btn-light btnCustomerSiteAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerSiteCode" disabled value="' + Customer.tblCustomerSite[h].CustomerSiteCode + '" /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL1" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL1 + '"   /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL2" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL2 + '"  /></td>' +
+                                    '<td width="7%"><input type="text" class="form-control SiteId" data-id="' + Customer.tblCustomerSite[h].SiteId + '" value="' + Customer.tblCustomerSite[h].SiteCode+'" /></td>' +
+                                    '<td><input type="text" class="form-control SiteName" readonly value="' + Customer.tblCustomerSite[h].SiteNameL1 +'"  /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerSiteDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerSiteBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableSite();
+                        }
+                        if (Customer.tblCustomerTel != undefined && Customer.tblCustomerTel != '') {
+
+                            $('.tblCustomerTelBody').html('');
+                            for (var n = 0; n <= Customer.tblCustomerTel.length - 1; n++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerTel[n].CustomerTelId + '">' +
+                                    '<td  width="7%"><button class="btn btn-sm btn-light btnCustomerTelAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerTelCode" disabled value="' + Customer.tblCustomerTel[n].CustomerTelCode + '" /></td>' +
+                                    '<td width="85%"><input type="text" class="form-control CustomerTelNo" value="' + Customer.tblCustomerTel[n].CustomerTelNo + '"   /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerTelDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerTelBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableTel();
+                        }
+
+
+                    })
+                }
+
+
+            })
+    }
+    function fnGetFirst() {
+        $.post('/GLSupplier/GetFirst',
+            {
+                pIsCustomer:true,
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Customer) {
+                        $('#txtCustomerCode').attr('data-id', Customer.CustomerId);
+                        $('#txtCustomerCode').val(Customer.CustomerCode);
+                        $('#txtCustomerNameL1').val(Customer.CustomerNameL1);
+                        $('#txtCustomerNameL2').val(Customer.CustomerNameL2);
+                        $('#txtCustomerAddress').val(Customer.CustomerAddress);
+                        $('#txtCustomerPhoneNumber').val(Customer.CustomerPhoneNumber);
+                        $('#txtCustomerPostBox').val(Customer.CustomerPostBox);
+                        $('#txtCustomerFax').val(Customer.CustomerFax);
+                        $('#txtCustomerEmail').val(Customer.CustomerEmail);
+                        $('#txtAuthorizePerson').val(Customer.AuthorizePerson);
+                        // $('#txtCustomerTypeId').val(Customer.CustomerTypeId);
+                        $('#txtSellCostTypeId').attr('data-id', Customer.SellCostTypeId)
+                        $('#txtSellCostTypeId').val(Customer.SellCostTypeCode);
+                        $('#txtSellCostTypeName').val(Customer.SellCostTypeNameL1);
+                        $('#txtAreaId').attr('data-id', Customer.AreaId);
+                        $('#txtAreaId').val(Customer.AreaCode);
+                        $('#txtAreaName').val(Customer.AreaNameL1);
+                        $('#txtCategoryId').attr('data-id', Customer.CategoryId);
+                        $('#txtCategoryId').val(Customer.CustomerCategoryCode);
+                        $('#txtCustomerVATCode').val(Customer.CustomerVATCode);
+                        $('#txtCategoryName').val(Customer.CustomerCategoryNameL1);
+                        $('#txtAuthorizePersonTel').val(Customer.AuthorizePersonTel);
+                        $('#txtCountryId').attr('data-id', Customer.CountryId);
+                        $('#txtCountryId').val(Customer.CountryCode);
+                        $('#txtCountryName').val(Customer.CountryNameL1);
+                        $('#txtCityId').attr('data-id', Customer.CityId)
+                        $('#txtCityId').val(Customer.CityCode);
+                        $('#txtCityName').val(Customer.CityNameL1);
+                        $('#txtCustomerAmountLimit').val(Customer.CustomerAmountLimit);
+                        $('.DelivaryCompanyType').val(Customer.DelivaryCompanyType);
+                        $('#DelivaryCompanyValue').val(Customer.DelivaryCompanyValue);
+
+                        $('#txtAccountId').attr('data-id', Customer.AccountId)
+                        $('#txtAccountId').val(Customer.AccNo);
+                        $('#txtAccountName').val(Customer.AccountNameL1);
+                        $('#txtSalesId').attr('data-id', Customer.SalesId);
+                        $('#txtSalesId').val(Customer.SalesCode);
+                        $('#txtSalesName').val(Customer.SalesName);
+
+                        $('#txtOrganization').val(Customer.organization);
+                        $('#txtStreet').val(Customer.street);
+                        $('#txtCity').val(Customer.city);
+                        $('#txtBuildingNumber').val(Customer.building_number);
+                        $('#txtPostalZone').val(Customer.postal_zone);
+                        $('#txtDistrictName').val(Customer.district_name);
+
+                        if (Customer.CustomerDailyStopType  == undefined) {
+                            $('#rd1').prop('checked',true)
+                        }
+                       else if (Customer.CustomerDailyStopType == 0) {
+                            $('#rd1').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 1) {
+                            $('#rd2').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 2) {
+                            $('#rd3').prop('checked', true)
+                        }
+                        if (Customer.TypeId != null && Customer.TypeId != undefined) {
+                            $('#TypeId').val(Customer.TypeId);
+                        }
+                        else {
+                            $('#TypeId').val(1);
+                        }
+                        //if (Customer.tblCustomerDTL != undefined && Customer.tblCustomerDTL != '') {
+
+                        //    //var vDataResultDTL = JSON.parse(Customer.tblCustomerDTL);
+                        //    $('.tblCustomerDtlBody').html('');
+                        //    for (var m = 0; m <= Customer.tblCustomerDTL.length - 1; m++) {
+                        //        var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerDTL[m].ChildCustomerId + '">' +
+                        //            '<td><button class="btn btn-sm btn-light btnCustomerAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CustomerCode" disabled value="' + Customer.tblCustomerDTL[m].ChildCustomerCode + '" /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL1" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL1 + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL2" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL2 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CountryId" data-id="' + Customer.tblCustomerDTL[m].ChildCountryId + '" value="' + Customer.tblCustomerDTL[m].ChildCountryCode + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CountryNameL1" readonly value="' + Customer.tblCustomerDTL[m].ChildCountryNameL1 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CityId" data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityCode + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CityNameL1" readonly data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityNameL1 + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerAddress" value="' + Customer.tblCustomerDTL[m].ChildCustomerAddress + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerPhoneNumber" value="' + Customer.tblCustomerDTL[m].ChildCustomerPhoneNumber + '"   /></td>' +
+                        //            '<td><button class="btn btn-light btn-sm btnCustomerDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                        //            '</tr>';
+
+                        //        $('.tblCustomerDtlBody').append(vRowContent3);
+                        //    }
+
+                        //}
+                        //else {
+                        //    fnClearTable();
+                        //}
+                        if (Customer.tblCustomerSite != undefined && Customer.tblCustomerSite != '') {
+
+                            $('.tblCustomerSiteBody').html('');
+                            for (var h = 0; h <= Customer.tblCustomerSite.length - 1; h++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerSite[h].CustomerSiteId + '">' +
+                                    '<td width="7%"><button class="btn btn-sm btn-light btnCustomerSiteAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerSiteCode" disabled value="' + Customer.tblCustomerSite[h].CustomerSiteCode + '" /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL1" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL1 + '"   /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL2" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL2 + '"  /></td>' +
+                                    '<td width="7%"><input type="text" class="form-control SiteId" data-id="' + Customer.tblCustomerSite[h].SiteId + '" value="' + Customer.tblCustomerSite[h].SiteCode + '" /></td>' +
+                                    '<td><input type="text" class="form-control SiteName" readonly value="' + Customer.tblCustomerSite[h].SiteNameL1 + '"  /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerSiteDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerSiteBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableSite();
+                        }
+                        if (Customer.tblCustomerTel != undefined && Customer.tblCustomerTel != '') {
+
+                            $('.tblCustomerTelBody').html('');
+                            for (var n = 0; n <= Customer.tblCustomerTel.length - 1; n++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerTel[n].CustomerTelId + '">' +
+                                    '<td width="7%"><button class="btn btn-sm btn-light btnCustomerTelAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerTelCode" disabled value="' + Customer.tblCustomerTel[n].CustomerTelCode + '" /></td>' +
+                                    '<td width="85%"><input type="text" class="form-control CustomerTelNo" value="' + Customer.tblCustomerTel[n].CustomerTelNo + '"   /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerTelDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerTelBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableTel();
+
+                        }
+                    })
+                }
+
+
+            })
+    }
+    function fnGetLast() {
+        $.post('/GLSupplier/GetLast',
+            {
+                pIsCustomer: true,
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Customer) {
+                        $('#txtCustomerCode').attr('data-id', Customer.CustomerId);
+                        $('#txtCustomerCode').val(Customer.CustomerCode);
+                        $('#txtCustomerNameL1').val(Customer.CustomerNameL1);
+                        $('#txtCustomerNameL2').val(Customer.CustomerNameL2);
+                        $('#txtCustomerAddress').val(Customer.CustomerAddress);
+                        $('#txtCustomerPhoneNumber').val(Customer.CustomerPhoneNumber);
+                        $('#txtCustomerPostBox').val(Customer.CustomerPostBox);
+                        $('#txtCustomerFax').val(Customer.CustomerFax);
+                        $('#txtCustomerEmail').val(Customer.CustomerEmail);
+                        $('#txtAuthorizePerson').val(Customer.AuthorizePerson);
+                        // $('#txtCustomerTypeId').val(Customer.CustomerTypeId);
+                        $('#txtSellCostTypeId').attr('data-id', Customer.SellCostTypeId)
+                        $('#txtSellCostTypeId').val(Customer.SellCostTypeCode);
+                        $('#txtSellCostTypeName').val(Customer.SellCostTypeNameL1);
+                        $('#txtAreaId').attr('data-id', Customer.AreaId);
+                        $('#txtAreaId').val(Customer.AreaCode);
+                        $('#txtAreaName').val(Customer.AreaNameL1);
+                        $('#txtCategoryId').attr('data-id', Customer.CategoryId);
+                        $('#txtCategoryId').val(Customer.CustomerCategoryCode);
+                        $('#txtCustomerVATCode').val(Customer.CustomerVATCode);
+                        $('#txtCategoryName').val(Customer.CustomerCategoryNameL1);
+                        $('#txtAuthorizePersonTel').val(Customer.AuthorizePersonTel);
+                        $('#txtCountryId').attr('data-id', Customer.CountryId);
+                        $('#txtCountryId').val(Customer.CountryCode);
+                        $('#txtCountryName').val(Customer.CountryNameL1);
+                        $('#txtCityId').attr('data-id', Customer.CityId)
+                        $('#txtCityId').val(Customer.CityCode);
+                        $('#txtCityName').val(Customer.CityNameL1);
+                        $('#txtCustomerAmountLimit').val(Customer.CustomerAmountLimit);
+                        $('.DelivaryCompanyType').val(Customer.DelivaryCompanyType);
+                        $('#DelivaryCompanyValue').val(Customer.DelivaryCompanyValue);
+
+                        $('#txtAccountId').attr('data-id', Customer.AccountId)
+                        $('#txtAccountId').val(Customer.AccNo);
+                        $('#txtAccountName').val(Customer.AccountNameL1);
+                        $('#txtSalesId').attr('data-id', Customer.SalesId);
+                        $('#txtSalesId').val(Customer.SalesCode);
+                        $('#txtSalesName').val(Customer.SalesName);
+                        $('#txtOrganization').val(Customer.organization);
+                        $('#txtStreet').val(Customer.street);
+                        $('#txtCity').val(Customer.city);
+                        $('#txtBuildingNumber').val(Customer.building_number);
+                        $('#txtPostalZone').val(Customer.postal_zone);
+                        $('#txtDistrictName').val(Customer.district_name);
+                        if (Customer.CustomerDailyStopType == undefined) {
+                            $('#rd1').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 0) {
+                            $('#rd1').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 1) {
+                            $('#rd2').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 2) {
+                            $('#rd3').prop('checked', true)
+                        }
+                        if (Customer.TypeId != null && Customer.TypeId != undefined) {
+                            $('#TypeId').val(Customer.TypeId);
+                        }
+                        else {
+                            $('#TypeId').val(1);
+                        }
+                        //if (Customer.tblCustomerDTL != undefined && Customer.tblCustomerDTL != '') {
+                        //    $('.tblCustomerDtlBody').html('');
+
+                        //    for (var m = 0; m <= Customer.tblCustomerDTL.length - 1; m++) {
+                        //        var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerDTL[m].ChildCustomerId + '">' +
+                        //            '<td><button class="btn btn-sm btn-light btnCustomerAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CustomerCode" disabled value="' + Customer.tblCustomerDTL[m].ChildCustomerCode + '" /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL1" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL1 + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL2" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL2 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CountryId" data-id="' + Customer.tblCustomerDTL[m].ChildCountryId + '" value="' + Customer.tblCustomerDTL[m].ChildCountryCode + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CountryNameL1" readonly value="' + Customer.tblCustomerDTL[m].ChildCountryNameL1 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CityId" data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityCode  + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CityNameL1" readonly data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityNameL1 + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerAddress" value="' + Customer.tblCustomerDTL[m].ChildCustomerAddress + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerPhoneNumber" value="' + Customer.tblCustomerDTL[m].ChildCustomerPhoneNumber + '"   /></td>' +
+                        //            '<td><button class="btn btn-light btn-sm btnCustomerDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                        //            '</tr>';
+
+                        //        $('.tblCustomerDtlBody').append(vRowContent3);
+                        //    }
+
+                        //}
+                        //else {
+                        //    fnClearTable();
+                        //}
+                        if (Customer.tblCustomerSite != undefined && Customer.tblCustomerSite != '') {
+
+                            $('.tblCustomerSiteBody').html('');
+                            for (var h = 0; h <= Customer.tblCustomerSite.length - 1; h++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerSite[h].CustomerSiteId + '">' +
+                                    '<td width="7%"><button class="btn btn-sm btn-light btnCustomerSiteAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerSiteCode" disabled value="' + Customer.tblCustomerSite[h].CustomerSiteCode + '" /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL1" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL1 + '"   /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL2" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL2 + '"  /></td>' +
+                                    '<td width="7%"><input type="text" class="form-control SiteId" data-id="' + Customer.tblCustomerSite[h].SiteId + '" value="' + Customer.tblCustomerSite[h].SiteCode + '" /></td>' +
+                                    '<td><input type="text" class="form-control SiteName" readonly value="' + Customer.tblCustomerSite[h].SiteNameL1 + '"  /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerSiteDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerSiteBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableSite();
+                        }
+                        if (Customer.tblCustomerTel != undefined && Customer.tblCustomerTel != '') {
+
+                            $('.tblCustomerTelBody').html('');
+                            for (var n = 0; n <= Customer.tblCustomerTel.length - 1; n++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerTel[n].CustomerTelId + '">' +
+                                    '<td width="7%"><button class="btn btn-sm btn-light btnCustomerTelAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerTelCode" disabled value="' + Customer.tblCustomerTel[n].CustomerTelCode + '" /></td>' +
+                                    '<td width="85%"><input type="text" class="form-control CustomerTelNo" value="' + Customer.tblCustomerTel[n].CustomerTelNo + '"   /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerTelDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerTelBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableTel();
+                        }
+                    })
+                }
+
+
+            })
+    }
+    function fnGetPrevious() {
+        $.post('/GLSupplier/GetPrevious',
+            {
+                pCustomerId: $('#txtCustomerCode').attr('data-id'),
+                pIsCustomer: true,
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Customer) {
+                        $('#txtCustomerCode').attr('data-id', Customer.CustomerId);
+                        $('#txtCustomerCode').val(Customer.CustomerCode);
+                        $('#txtCustomerNameL1').val(Customer.CustomerNameL1);
+                        $('#txtCustomerNameL2').val(Customer.CustomerNameL2);
+                        $('#txtCustomerAddress').val(Customer.CustomerAddress);
+                        $('#txtCustomerPhoneNumber').val(Customer.CustomerPhoneNumber);
+                        $('#txtCustomerPostBox').val(Customer.CustomerPostBox);
+                        $('#txtCustomerFax').val(Customer.CustomerFax);
+                        $('#txtCustomerEmail').val(Customer.CustomerEmail);
+                        $('#txtAuthorizePerson').val(Customer.AuthorizePerson);
+                        // $('#txtCustomerTypeId').val(Customer.CustomerTypeId);
+                        $('#txtSellCostTypeId').attr('data-id', Customer.SellCostTypeId)
+                        $('#txtSellCostTypeId').val(Customer.SellCostTypeCode);
+                        $('#txtSellCostTypeName').val(Customer.SellCostTypeNameL1);
+                        $('#txtAreaId').attr('data-id', Customer.AreaId);
+                        $('#txtAreaId').val(Customer.AreaCode);
+                        $('#txtAreaName').val(Customer.AreaNameL1);
+                        $('#txtCategoryId').attr('data-id', Customer.CategoryId);
+                        $('#txtCategoryId').val(Customer.CustomerCategoryCode);
+                        $('#txtCategoryName').val(Customer.CustomerCategoryNameL1);
+                        $('#txtCustomerVATCode').val(Customer.CustomerVATCode);
+                        $('#txtAuthorizePersonTel').val(Customer.AuthorizePersonTel);
+                        $('#txtCountryId').attr('data-id', Customer.CountryId);
+                        $('#txtCountryId').val(Customer.CountryCode);
+                        $('#txtCountryName').val(Customer.CountryNameL1);
+                        $('#txtCityId').attr('data-id', Customer.CityId)
+                        $('#txtCityId').val(Customer.CityCode);
+                        $('#txtCityName').val(Customer.CityNameL1);
+                        $('#txtCustomerAmountLimit').val(Customer.CustomerAmountLimit);
+                        $('.DelivaryCompanyType').val(Customer.DelivaryCompanyType);
+                        $('#DelivaryCompanyValue').val(Customer.DelivaryCompanyValue);
+
+                        $('#txtAccountId').attr('data-id', Customer.AccountId)
+                        $('#txtAccountId').val(Customer.AccNo);
+                        $('#txtAccountName').val(Customer.AccountNameL1);
+                        $('#txtSalesId').attr('data-id', Customer.SalesId);
+                        $('#txtSalesId').val(Customer.SalesCode);
+                        $('#txtSalesName').val(Customer.SalesName);
+                        $('#txtOrganization').val(Customer.organization);
+                        $('#txtStreet').val(Customer.street);
+                        $('#txtCity').val(Customer.city);
+                        $('#txtBuildingNumber').val(Customer.building_number);
+                        $('#txtPostalZone').val(Customer.postal_zone);
+                        $('#txtDistrictName').val(Customer.district_name);
+                        if (Customer.CustomerDailyStopType == undefined) {
+                            $('#rd1').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 0) {
+                            $('#rd1').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 1) {
+                            $('#rd2').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 2) {
+                            $('#rd3').prop('checked', true)
+                        }
+                        if (Customer.TypeId != null && Customer.TypeId != undefined) {
+                            $('#TypeId').val(Customer.TypeId);
+                        }
+                        else {
+                            $('#TypeId').val(1);
+                        }
+                        //if (Customer.tblCustomerDTL != undefined && Customer.tblCustomerDTL != '') {
+
+                        //    $('.tblCustomerDtlBody').html('');
+                        //    for (var m = 0; m <= Customer.tblCustomerDTL.length - 1; m++) {
+                        //        var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerDTL[m].ChildCustomerId + '">' +
+                        //            '<td><button class="btn btn-sm btn-light btnCustomerAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CustomerCode" disabled value="' + Customer.tblCustomerDTL[m].ChildCustomerCode + '" /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL1" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL1 + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL2" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL2 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CountryId" data-id="' + Customer.tblCustomerDTL[m].ChildCountryId + '" value="' + Customer.tblCustomerDTL[m].ChildCountryCode + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CountryNameL1" readonly value="' + Customer.tblCustomerDTL[m].ChildCountryNameL1 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CityId" data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityCode  + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CityNameL1" readonly data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityNameL1 + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerAddress" value="' + Customer.tblCustomerDTL[m].ChildCustomerAddress + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerPhoneNumber" value="' + Customer.tblCustomerDTL[m].ChildCustomerPhoneNumber + '"   /></td>' +
+                        //            '<td><button class="btn btn-light btn-sm btnCustomerDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                        //            '</tr>';
+
+                        //        $('.tblCustomerDtlBody').append(vRowContent3);
+                        //    }
+
+                        //}
+                        //else {
+                        //    fnClearTable();
+                        //}
+                        if (Customer.tblCustomerSite != undefined && Customer.tblCustomerSite != '') {
+
+                            $('.tblCustomerSiteBody').html('');
+                            for (var h = 0; h <= Customer.tblCustomerSite.length - 1; h++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerSite[h].CustomerSiteId + '">' +
+                                    '<td width="7%"><button class="btn btn-sm btn-light btnCustomerSiteAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerSiteCode" disabled value="' + Customer.tblCustomerSite[h].CustomerSiteCode + '" /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL1" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL1 + '"   /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL2" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL2 + '"  /></td>' +
+                                    '<td width="7%"><input type="text" class="form-control SiteId" data-id="' + Customer.tblCustomerSite[h].SiteId + '" value="' + Customer.tblCustomerSite[h].SiteCode + '" /></td>' +
+                                    '<td><input type="text" class="form-control SiteName" readonly value="' + Customer.tblCustomerSite[h].SiteNameL1 + '"  /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerSiteDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerSiteBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableSite();
+                        }
+                        if (Customer.tblCustomerTel != undefined && Customer.tblCustomerTel != '') {
+
+                            $('.tblCustomerTelBody').html('');
+                            for (var n = 0; n <= Customer.tblCustomerTel.length - 1; n++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerTel[n].CustomerTelId + '">' +
+                                    '<td width="7%"><button class="btn btn-sm btn-light btnCustomerTelAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerTelCode" disabled value="' + Customer.tblCustomerTel[n].CustomerTelCode + '" /></td>' +
+                                    '<td width="85%"><input type="text" class="form-control CustomerTelNo" value="' + Customer.tblCustomerTel[n].CustomerTelNo + '"   /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerTelDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerTelBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableTel();
+                        }
+                    })
+                }
+
+
+            })
+    }
+    function fnGetNext() {
+        $.post('/GLSupplier/GetNext',
+            {
+                pCustomerId: $('#txtCustomerCode').attr('data-id'),
+                pIsCustomer: true,
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Customer) {
+                        $('#txtCustomerCode').attr('data-id', Customer.CustomerId);
+                        $('#txtCustomerCode').val(Customer.CustomerCode);
+                        $('#txtCustomerNameL1').val(Customer.CustomerNameL1);
+                        $('#txtCustomerNameL2').val(Customer.CustomerNameL2);
+                        $('#txtCustomerAddress').val(Customer.CustomerAddress);
+                        $('#txtCustomerPhoneNumber').val(Customer.CustomerPhoneNumber);
+                        $('#txtCustomerPostBox').val(Customer.CustomerPostBox);
+                        $('#txtCustomerFax').val(Customer.CustomerFax);
+                        $('#txtCustomerEmail').val(Customer.CustomerEmail);
+                        $('#txtAuthorizePerson').val(Customer.AuthorizePerson);
+                        // $('#txtCustomerTypeId').val(Customer.CustomerTypeId);
+                        $('#txtSellCostTypeId').attr('data-id', Customer.SellCostTypeId)
+                        $('#txtSellCostTypeId').val(Customer.SellCostTypeCode);
+                        $('#txtSellCostTypeName').val(Customer.SellCostTypeNameL1);
+                        $('#txtAreaId').attr('data-id', Customer.AreaId);
+                        $('#txtAreaId').val(Customer.AreaCode);
+                        $('#txtAreaName').val(Customer.AreaNameL1);
+                        $('#txtCategoryId').attr('data-id', Customer.CategoryId);
+                        $('#txtCategoryId').val(Customer.CustomerCategoryCode);
+                        $('#txtCustomerVATCode').val(Customer.CustomerVATCode);
+                        $('#txtCategoryName').val(Customer.CustomerCategoryNameL1);
+                        $('#txtAuthorizePersonTel').val(Customer.AuthorizePersonTel);
+                        $('#txtCountryId').attr('data-id', Customer.CountryId);
+                        $('#txtCountryId').val(Customer.CountryCode);
+                        $('#txtCountryName').val(Customer.CountryNameL1);
+                        $('#txtCityId').attr('data-id', Customer.CityId)
+                        $('#txtCityId').val(Customer.CityCode);
+                        $('#txtCityName').val(Customer.CityNameL1);
+                        $('#txtCustomerAmountLimit').val(Customer.CustomerAmountLimit);
+                        $('.DelivaryCompanyType').val(Customer.DelivaryCompanyType);
+                        $('#DelivaryCompanyValue').val(Customer.DelivaryCompanyValue);
+
+                        $('#txtAccountId').attr('data-id', Customer.AccountId)
+                        $('#txtAccountId').val(Customer.AccNo);
+                        $('#txtAccountName').val(Customer.AccountNameL1);
+                        $('#txtSalesId').attr('data-id', Customer.SalesId);
+                        $('#txtSalesId').val(Customer.SalesCode);
+                        $('#txtSalesName').val(Customer.SalesName);
+                        $('#txtOrganization').val(Customer.organization);
+                        $('#txtStreet').val(Customer.street);
+                        $('#txtCity').val(Customer.city);
+                        $('#txtBuildingNumber').val(Customer.building_number);
+                        $('#txtPostalZone').val(Customer.postal_zone);
+                        $('#txtDistrictName').val(Customer.district_name);
+                        if (Customer.CustomerDailyStopType == undefined) {
+                            $('#rd1').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 0) {
+                            $('#rd1').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 1) {
+                            $('#rd2').prop('checked', true)
+                        }
+                        else if (Customer.CustomerDailyStopType == 2) {
+                            $('#rd3').prop('checked', true)
+                        }
+                        if (Customer.TypeId != null && Customer.TypeId != undefined ) {
+                            $('#TypeId').val(Customer.TypeId);
+                        }
+                        else {
+                            $('#TypeId').val(1);
+                        }
+
+                        //if (Customer.tblCustomerDTL != undefined && Customer.tblCustomerDTL != '') {
+                        //    $('.tblCustomerDtlBody').html('');
+                        //    for (var m = 0; m <= Customer.tblCustomerDTL.length - 1; m++) {
+                        //        var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerDTL[m].ChildCustomerId + '">' +
+                        //            '<td><button class="btn btn-sm btn-light btnCustomerAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CustomerCode" disabled value="' + Customer.tblCustomerDTL[m].ChildCustomerCode + '" /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL1" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL1 + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerNameL2" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL2 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CountryId" data-id="' + Customer.tblCustomerDTL[m].ChildCountryId + '" value="' + Customer.tblCustomerDTL[m].ChildCountryCode + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CountryNameL1" readonly value="' + Customer.tblCustomerDTL[m].ChildCountryNameL1 + '"  /></td>' +
+                        //            '<td width="7%"><input type="text" class="form-control CityId" data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityCode  + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CityNameL1" readonly data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityNameL1 + '"  /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerAddress" value="' + Customer.tblCustomerDTL[m].ChildCustomerAddress + '"   /></td>' +
+                        //            '<td><input type="text" class="form-control CustomerPhoneNumber" value="' + Customer.tblCustomerDTL[m].ChildCustomerPhoneNumber + '"   /></td>' +
+                        //            '<td><button class="btn btn-light btn-sm btnCustomerDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                        //            '</tr>';
+
+                        //        $('.tblCustomerDtlBody').append(vRowContent3);
+                        //    }
+
+                        //}
+                        //else {
+                        //    fnClearTable();
+                        //}
+                        if (Customer.tblCustomerSite != undefined && Customer.tblCustomerSite != '') {
+
+                            $('.tblCustomerSiteBody').html('');
+                            for (var h = 0; h <= Customer.tblCustomerSite.length - 1; h++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerSite[h].CustomerSiteId + '">' +
+                                    '<td width="7%"><button class="btn btn-sm btn-light btnCustomerSiteAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerSiteCode" disabled value="' + Customer.tblCustomerSite[h].CustomerSiteCode + '" /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL1" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL1 + '"   /></td>' +
+                                    //'<td><input type="text" class="form-control CustomerSiteNameL2" value="' + Customer.tblCustomerSite[h].CustomerSiteNameL2 + '"  /></td>' +
+                                    '<td width="7%"><input type="text" class="form-control SiteId" data-id="' + Customer.tblCustomerSite[h].SiteId + '" value="' + Customer.tblCustomerSite[h].SiteCode + '" /></td>' +
+                                    '<td><input type="text" class="form-control SiteName" readonly value="' + Customer.tblCustomerSite[h].SiteNameL1 + '"  /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerSiteDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerSiteBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableSite();
+
+                        }
+                        if (Customer.tblCustomerTel != undefined && Customer.tblCustomerTel != '') {
+
+                            $('.tblCustomerTelBody').html('');
+                            for (var n = 0; n <= Customer.tblCustomerTel.length - 1; n++) {
+                                var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerTel[n].CustomerTelId + '">' +
+                                    '<td><button class="btn btn-sm btn-light btnCustomerTelAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                    '<td width="7%"><input type="text" class="form-control CustomerTelCode" disabled value="' + Customer.tblCustomerTel[n].CustomerTelCode + '" /></td>' +
+                                    '<td width="85%"><input type="text" class="form-control CustomerTelNo" value="' + Customer.tblCustomerTel[n].CustomerTelNo + '"   /></td>' +
+                                    '<td><button class="btn btn-light btn-sm btnCustomerTelDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                    '</tr>';
+
+                                $('.tblCustomerTelBody').append(vRowContent3);
+                            }
+                        }
+                        else {
+                            fnClearTableTel();
+                        }
+                    })
+                }
+
+
+            })
+    }
+    function fnSaveHeader() {
+        var vIsValid  = true;
+
+        //if ($('#txtCustomerNameL1').val().trim() == '' || $('#txtCustomerNameL1').val() == undefined || $('#txtCustomerPhoneNumber').val().trim() == '' || $('#txtCustomerPhoneNumber').val() == undefined || $('#txtAuthorizePersonTel').val() == undefined || $('#txtAuthorizePersonTel').val().trim() == '' || $('#txtAccountId').val() == undefined || $('#txtAccountId').val().trim() == '') {
+            if ($('#txtCustomerNameL1').val().trim() == '' || $('#txtCustomerNameL1').val() == undefined || $('#txtCustomerPhoneNumber').val().trim() == '' || $('#txtCustomerPhoneNumber').val() == undefined || $('#txtAccountId').val() == undefined || $('#txtAccountId').val().trim() == '') {
+                vIsValid = false;
+                //alert($('.DelivaryCompanyType').children("option:selected").val())
+
+        }
+        else {
+            var vCustomerDailyStopType = 0
+            if ($('#rd2').is(':checked')) {
+                vCustomerDailyStopType = 1
+            }
+            else if ($('#rd3').is(':checked')) {
+                vCustomerDailyStopType = 2
+                }
+                if ($('#txtCategoryId').attr('data-id') == '2') {
+                    vIsValid = false;
+                    $('#txtCustomerVATCode').focus();
+                    $('#txtCustomerVATCode').css("border-color", "red");
+                }
+                else {
+
+
+                    //$.post('/GLSupplier/SaveHeader', {
+                    $.get('/api/APIGLCustomer/GLCustomerGET', {
+                        pCustomerId: $('#txtCustomerCode').attr('data-id'),
+                        pCustomerCode: $('#txtCustomerCode').val(),
+                        pCustomerNameL1: $('#txtCustomerNameL1').val(),
+                        pCustomerNameL2: $('#txtCustomerNameL2').val(),
+                        pCustomerAddress: $('#txtCustomerAddress').val(),
+                        pCustomerPhoneNumber: $('#txtCustomerPhoneNumber').val(),
+                        pCustomerPostBox: $('#txtCustomerPostBox').val(),
+                        pCustomerFax: $('#txtCustomerFax').val(),
+                        pCustomerEmail: $('#txtCustomerEmail').val(),
+                        pAuthorizePerson: $('#txtAuthorizePerson').val(),
+                        pCustomerTypeId: $('#txtCustomerTypeId').val(),
+                        pDelivaryCompanyType: $('.DelivaryCompanyType').val(),
+                        pDelivaryCompanyValue: $('#DelivaryCompanyValue').val(),
+                        pSalesId: $('#txtSalesId').attr('data-id'),
+                        pSellCostTypeId: $('#txtSellCostTypeId').attr('data-id'),
+                        pCustomerDailyStopType: vCustomerDailyStopType,
+                        pCustomerDailyDay: 0,
+                        pAreaId: $('#txtAreaId').attr('data-id'),
+                        pCategoryId: $('#txtCategoryId').attr('data-id'),
+                        pCustomerVATCode: $('#txtCustomerVATCode').val(),
+                        pStatus: 0,
+                        pAuthorizePersonTel: $('#txtAuthorizePersonTel').val(),
+                        pCustomerParentId: 0,
+                        pCountryId: $('#txtCountryId').attr('data-id'),
+                        pCityId: $('#txtCityId').attr('data-id'),
+                        pCustomerAmountLimit: $('#txtCustomerAmountLimit').val(),
+                        pAccountId: $('#txtAccountId').attr('data-id'),
+                        pOrganization: $('#txtOrganization').val(),
+                        pStreet: $('#txtStreet').val(),
+                        pCity: $('#txtCity').val(),
+                        pBuildingNumber: $('#txtBuildingNumber').val(),
+                        pPostalZone: $('#txtPostalZone').val(),
+                        pDistrictName: $('#txtDistrictName').val(),
+                        pIsParent: 1,
+                        pIsCustomer: true,
+                        pIsDeleted: false,
+                        pCustomerIsActive: true,
+                        pTypeId: $('#TypeId').val(),
+                        pQueryTypeId:100
+
+                    }, function (data, status) {
+                        var msg = JSON.parse(data)
+                        console.log(msg)
+                        funNotification(msg[0].msg, 1)
+                        if ($('#txtCustomerCode').attr('data-id') == '0') {
+                            if (data != undefined && data != '') {
+                                var vDataResult = JSON.parse(data);
+                                $('#txtCustomerCode').attr('data-id', vDataResult[0].CustomerId)
+                                $('#txtCustomerCode').val(vDataResult[0].CustomerCode)
+
+                            }
+                        }
+                    });
+                }
+        }
+        //fnSaveDTL();
+        fnSaveSite();
+        fnSaveTel();
+        //if ($('#txtCustomerCode').attr('data-id') == '0' && vIsValid) {
+        //    setTimeout(function () {
+        //        fnGetLast();
+
+
+
+        //    }, 1500);
+
+        //}
+        //if (!vIsValid && $('#txtAuthorizePersonTel').val().trim() =='' ) {
+        if (!vIsValid && $('#txtCustomerNameL1').val().trim() == '') {
+
+            funNotification('@appResource.msgRequiredCustomer', 2);
+            //$('#txtAuthorizePersonTel').focus();
+            $('#txtCustomerNameL1').focus();
+            //$('#txtAuthorizePersonTel').css("border-color", "red");
+            $('#txtCustomerNameL1').css("border-color", "red");
+        }
+
+        if (!vIsValid && $('#txtCustomerPhoneNumber').val().trim()  == '') {
+
+            funNotification('@appResource.msgRequiredTel', 2);
+            //$('#txtAuthorizePersonTel').focus();
+            $('#txtCustomerPhoneNumber').focus();
+            //$('#txtAuthorizePersonTel').css("border-color", "red");
+            $('#txtCustomerPhoneNumber').css("border-color", "red");
+        }
+        if (!vIsValid && $('#txtAccountId').val().trim() == '') {
+            funNotification('@appResource.msgRequiredAccount', 2);
+            $('#txtAccountId').focus();
+            $('#txtAccountId').css("border-color", "red");
+        }
+         else if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+            // Notification
+           // funNotification('@appResource.msgSave', 1);
+        }
+    }
+    $('#txtCustomerPhoneNumber').on('change', function () {
+        if ($('#txtCustomerPhoneNumber').val().trim() != '') {
+            $('#txtCustomerPhoneNumber').css("border-color", "");
+        }
+
+    })
+    $('#txtAccountId').on('blur', function () {
+        if ($('#txtAccountId').val().trim() != '') {
+            $('#txtAccountId').css("border-color", "");
+        }
+
+    })
+    $('#txtCustomerNameL1').on('change', function () {
+        if ($('#txtCustomerNameL1').val().trim() != '') {
+            $('#txtCustomerNameL1').css("border-color", "");
+        }
+
+    })
+    function fnSaveDTL()
+    {
+        $(".tblCustomerDtlBody > tr").each(function () {
+            // Row Data
+            var vRowData = $(this);
+            if (vRowData.find('.CustomerNameL1').val() != undefined && vRowData.find('.CustomerNameL1').val() != '' && vRowData.find('.CustomerPhoneNumber').val() != undefined && vRowData.find('.CustomerPhoneNumber').val() != '' ) {
+                var vCustomerId = vRowData.attr('data-id');
+                var vParentId = $('#txtCustomerCode').attr('data-id');
+                $.post('/GLSupplier/SaveDTL', {
+                    pCustomerId: vCustomerId,
+                    pCustomerCode: vRowData.find('.CustomerCode').val(),
+                    pCustomerNameL1: vRowData.find('.CustomerNameL1').val(),
+                    pCustomerNameL2: vRowData.find('.CustomerNameL2').val(),
+                    pCustomerAddress: vRowData.find('.CustomerAddress').val(),
+                    pCustomerPhoneNumber: vRowData.find('.CustomerPhoneNumber').val(),
+                    pCustomerDailyStopType: 0,
+                    pCustomerDailyDay: 0,
+                    pStatus: null,
+                    pCustomerParentId: vParentId,
+                    pCountryId: vRowData.find('.CountryId').attr('data-id'),
+                    pCityId: vRowData.find('.CityId').attr('data-id'),
+                    pIsParent:0
+
+                }, function (data, status) {
+
+                })
+            }
+
+        })
+        }
+        function fnSaveSite() {
+            $(".tblCustomerSiteBody > tr").each(function () {
+                // Row Data
+                var vRowData = $(this);
+                //if (vRowData.find('.CustomerSiteNameL1').val() != undefined && vRowData.find('.CustomerSiteNameL1').val() != '') {
+                if (vRowData.find('.SiteId').attr('data-id') != undefined && vRowData.find('.SiteId').attr('data-id') != '0') {
+                    var vCustomerId = vRowData.attr('data-id');
+                    var vParentId = $('#txtCustomerCode').attr('data-id');
+                    var vSiteId = vRowData.find('.SiteId').attr('data-id');
+                    $.post('/GLCustomer/SaveSite', {
+                        pCustomerSiteId: vCustomerId,
+                        pCustomerSiteCode: vRowData.find('.CustomerSiteCode').val(),
+                        pCustomerSiteNameL1: vRowData.find('.CustomerSiteNameL1').val(),
+                        pCustomerSiteNameL2: vRowData.find('.CustomerSiteNameL2').val(),
+                        pCustomerId: vParentId,
+                        pSiteId: vSiteId
+
+                    }, function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            vRowData.find('.CustomerSiteCode').attr('data-id', vDataResult[0].CustomerSiteId)
+                            vRowData.find('.CustomerSiteCode').val(vDataResult[0].CustomerSiteCode)
+
+                        }
+
+                    })
+                }
+
+            })
+    }
+        function fnSaveTel() {
+            $(".tblCustomerTelBody > tr").each(function () {
+                // Row Data
+                var vRowData = $(this);
+                if (vRowData.find('.CustomerTelNo').val() != undefined && vRowData.find('.CustomerTelNo').val() != '') {
+                    var vCustomerId = vRowData.attr('data-id');
+                    var vParentId = $('#txtCustomerCode').attr('data-id');
+                    $.post('/GLCustomer/SaveTel', {
+                        pCustomerTelId: vCustomerId,
+                        pCustomerTelCode: vRowData.find('.CustomerTelCode').val(),
+                        pCustomerTelNo: vRowData.find('.CustomerTelNo').val(),
+                        pCustomerId: vParentId
+
+                    }, function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            vRowData.find('.CustomerTelCode').attr('data-id', vDataResult[0].CustomerTelId)
+                            vRowData.find('.CustomerTelCode').val(vDataResult[0].CustomerTelCode)
+
+                        }
+
+                    })
+                }
+
+            })
+        }
+    $('.btnFirst').on('click', function () {
+        fnGetFirst();
+    })
+    $('.btnLast').on('click', function () {
+        fnGetLast();
+    })
+    $('.btnPrev').on('click', function () {
+        fnGetPrevious();
+    })
+    $('.btnNext').on('click', function () {
+        fnGetNext();
+    })
+    //$('.btnUtilityCreate').on('click', function () {
+    $('.btnSave').on('click', function () {
+        fnSaveHeader();
+    })
+    $('body').on('click', '.btnCustomerAddRow', function ()
+    {
+        var vRowContent3 = '<tr class="tblRow" data-id="0">' +
+            '<td><button class="btn btn-sm btn-light btnCustomerAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control CustomerCode" disabled /></td>' +
+            '<td><input type="text" class="form-control CustomerNameL1" /></td>' +
+            '<td><input type="text" class="form-control CustomerNameL2" /></td>' +
+            '<td width="7%"><input type="text" class="form-control CountryId" /></td>' +
+            '<td><input type="text" class="form-control CountryNameL1" readonly /></td>' +
+            '<td width="7%"><input type="text" class="form-control CityId" /></td>' +
+            '<td><input type="text" class="form-control CityNameL1" readonly /></td>' +
+            '<td><input type="text" class="form-control CustomerAddress"  /></td>' +
+            '<td><input type="text" class="form-control CustomerPhoneNumber"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCustomerDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        $('.tblCustomerDtlBody').append(vRowContent3);
+    })
+    $('body').on('click', '.btnCustomerSiteAddRow', function () {
+        funAddSiteEmptyRow();
+    })
+    function funAddSiteEmptyRow() {
+        var vRowContent3 = '<tr class="tblRow" data-id="0">' +
+            '<td width="7%"><button class="btn btn-sm btn-light btnCustomerSiteAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control CustomerSiteCode" disabled /></td>' +
+            //'<td><input type="text" class="form-control CustomerSiteNameL1" /></td>' +
+            //'<td><input type="text" class="form-control CustomerSiteNameL2" /></td>' +
+            '<td width="7%"><input type="text" class="form-control SiteId" data-id="0"  /></td>' +
+            '<td><input type="text" class="form-control SiteName" readonly  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCustomerSiteDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        $('.tblCustomerSiteBody').append(vRowContent3);
+    }
+    $('body').on('click', '.btnCustomerTelAddRow', function () {
+        funAddTelEmptyRow();
+    })
+    function funAddTelEmptyRow() {
+        var vRowContent3 = '<tr class="tblRow" data-id="0">' +
+            '<td width="7%"><button class="btn btn-sm btn-light btnCustomerTelAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control CustomerTelCode" disabled /></td>' +
+            '<td width="85%"><input type="text" class="form-control CustomerTelNo" /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCustomerTelDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+        $('.tblCustomerTelBody').append(vRowContent3);
+    }
+
+
+    $('#txtCountryId').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentCountrytxt', 'txtCountryId')
+            // Get Country Data
+            var vCountryIdElement = $('#txtCountryId');
+            var vCountryNameElement = $('#txtCountryName');
+
+
+            // Search Country
+            var vURL = '/Country/SearchCountry';
+            // Load Content of Country Search
+            $('#CountryDataModalContent').load(vURL);
+            // Modal Show
+            $('#CountryDataModal').modal('show');
+            // Focus
+            $('#CountryDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Country
+                $('body').on('click', '.divcountrySelect', function () {
+                    if (localStorage.getItem('lstcurrentCountrytxt') == 'txtCountryId') {
+                        $('.txtSearch').focus();
+
+                        // Country Id
+                        var vCountryId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vCountryCodeValue = $(this).find('.divCountryNo').text();
+                        var vCountryNameValue = $(this).find('.divCountryName').text();
+
+
+                        if (localStorage.getItem('lstcurrentCountrytxt') == 'txtCountryId') {
+                            // Set Value
+                            vCountryIdElement.val(vCountryCodeValue);
+                            vCountryIdElement.attr('data-id', vCountryId);
+                            vCountryNameElement.val(vCountryNameValue);
+                            $('#txtCityId').attr('data-id', '0')
+                            $('#txtCityId').val('')
+                            $('#txtCityName').val('')
+
+                            // Modal Show
+                            $('#CountryDataModal').modal('hide');
+                            localStorage.setItem('lstcurrentCountrytxt', '')
+                            localStorage.setItem('lstcurrentCountrytxt2', '')
+                        }
+                    }
+
+                })
+            })
+        }
+    });
+    $('#txtCityId').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentCitytxt', 'txtCityId')
+            // Get City Data
+            var vCityIdElement = $('#txtCityId');
+            var vCityNameElement = $('#txtCityName');
+            //vCityIdElement.val('');
+            //vCityNameElement.val('');
+
+            // Search City
+            var vURL = '/City/SearchCity?pCountryId=' + $('#txtCountryId').val();
+            // Load Content of City Search
+            $('#CityDataModalContent').load(vURL);
+            // Modal Show
+            $('#CityDataModal').modal('show');
+            // Focus
+            $('#CityDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select City
+                $('body').on('click', '.divCitySelect', function () {
+                    if (localStorage.getItem('lstcurrentCitytxt') == 'txtCityId') {
+                        $('.txtSearch').focus();
+
+                        // City Id
+                        var vCityId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vCityCodeValue = $(this).find('.divCityNo').text();
+                        var vCityNameValue = $(this).find('.divCityName').text();
+
+
+
+                        // Set Value
+                        vCityIdElement.val(vCityCodeValue);
+                        vCityIdElement.attr('data-id', vCityId);
+                        vCityNameElement.val(vCityNameValue);
+
+                        // Modal Show
+                        $('#CityDataModal').modal('hide');
+                        localStorage.setItem('lstcurrentCitytxt2', '')
+                        localStorage.setItem('lstcurrentCitytxt', '')
+                    }
+
+                })
+            })
+        }
+    });
+    $('#txtAreaId').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentAreatxt', 'txtAreaId')
+            // Get Area Data
+            var vAreaIdElement = $('#txtAreaId');
+            var vAreaNameElement = $('#txtAreaName');
+
+
+            // Search Area
+            var vURL = '/Area/SearchArea';
+            // Load Content of Area Search
+            $('#AreaDataModalContent').load(vURL);
+            // Modal Show
+            $('#AreaDataModal').modal('show');
+            // Focus
+            $('#AreaDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Area
+                $('body').on('click', '.divAreaSelect', function () {
+                    if (localStorage.getItem('lstcurrentAreatxt') == 'txtAreaId') {
+                        $('.txtSearch').focus();
+
+                        // Area Id
+                        var vAreaId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vAreaCodeValue = $(this).find('.divAreaNo').text();
+                        var vAreaNameValue = $(this).find('.divAreaName').text();
+
+
+
+                        // Set Value
+                        vAreaIdElement.val(vAreaCodeValue);
+                        vAreaIdElement.attr('data-id', vAreaId);
+                        vAreaNameElement.val(vAreaNameValue);
+
+                        // Modal Show
+                        $('#AreaDataModal').modal('hide');
+                    }
+
+                })
+            })
+        }
+    });
+    $('#txtAccountId').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentAccounttxt', 'txtAccountId')
+            // Get Account Data
+            var vAccountIdElement = $('#txtAccountId');
+            var vAccountNameElement = $('#txtAccountName');
+
+
+            // Search Account
+            //var vURL = '/Account/SearchAccount';
+            var vURL = '/Account/SearchAccountBranches';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divAccountSelect', function () {
+                    if (localStorage.getItem('lstcurrentAccounttxt') == 'txtAccountId') {
+                        $('.txtSearch').focus();
+
+                        // Account Id
+                        var vAccountId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                        var vAccountNameValue = $(this).find('.divAccountName').text();
+
+
+
+                        // Set Value
+                        vAccountIdElement.val(vAccountCodeValue);
+                        vAccountIdElement.attr('data-id', vAccountId);
+                        vAccountNameElement.val(vAccountNameValue);
+
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                        $('#txtAccountId').css("border-color", "");
+                    }
+
+                })
+            })
+        }
+    });
+
+    $('body').on('keydown dblclick', '.CountryId', function (e) {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentCountrytxt2', 'txtCountryId2')
+            localStorage.setItem('lstcurrentCountryIndex', vTableRow.index)
+            // Get Country Data
+            var vCountryIdElement = vTableRow.find('.CountryId');
+            var vCountryNameElement = vTableRow.find('.CountryNameL1');
+
+
+            // Search Country
+            var vURL = '/Country/SearchCountry';
+            // Load Content of Country Search
+            $('#CountryDataModalContent').load(vURL);
+            // Modal Show
+            $('#CountryDataModal').modal('show');
+            // Focus
+            $('#CountryDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Country
+                $('body').on('click', '.divcountrySelect', function () {
+                    if (localStorage.getItem('lstcurrentCountrytxt2') == 'txtCountryId2') {
+                        if (localStorage.getItem('lstcurrentCountryIndex') == vTableRow.index) {
+                        $('.txtSearch').focus();
+
+                        // Country Id
+                        var vCountryId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vCountryCodeValue = $(this).find('.divCountryNo').text();
+                        var vCountryNameValue = $(this).find('.divCountryName').text();
+
+
+
+                        // Set Value
+                        vCountryIdElement.val(vCountryCodeValue);
+                        vCountryIdElement.attr('data-id', vCountryId);
+                        vCountryNameElement.val(vCountryNameValue);
+
+                        // Modal Show
+                        $('#CountryDataModal').modal('hide');
+                        vTableRow = '';
+                        localStorage.setItem('lstcurrentCountrytxt2', '')
+                        localStorage.setItem('lstcurrentCountrytxt', '')
+                    }
+                    }
+
+                })
+            })
+        }
+    });
+    $('body').on('keydown dblclick', '.CityId', function (e) {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentCitytxt2', 'txtCityId2')
+            localStorage.setItem('lstcurrentCityIndex', vTableRow.index)
+            // Get City Data
+            var vCityIdElement = vTableRow.find('.CityId');
+            var vCityNameElement = vTableRow.find('.CityNameL1');
+
+
+            // Search City
+            var vURL = '/City/SearchCity';
+            // Load Content of City Search
+            $('#CityDataModalContent').load(vURL);
+            // Modal Show
+            $('#CityDataModal').modal('show');
+            // Focus
+            $('#CityDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select City
+                $('body').on('click', '.divCitySelect', function () {
+                    if (localStorage.getItem('lstcurrentCitytxt2') == 'txtCityId2') {
+                        if (localStorage.getItem('lstcurrentCityIndex') == vTableRow.index) {
+                            $('.txtSearch').focus();
+
+                            // City Id
+                            var vCityId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vCityCodeValue = $(this).find('.divCityNo').text();
+                            var vCityNameValue = $(this).find('.divCityName').text();
+
+
+
+                            // Set Value
+                            vCityIdElement.val(vCityCodeValue);
+                            vCityIdElement.attr('data-id', vCityId);
+                            vCityNameElement.val(vCityNameValue);
+
+                            // Modal Show
+                            $('#CityDataModal').modal('hide');
+                            vTableRow = '';
+                            localStorage.setItem('lstcurrentCitytxt2', '')
+                            localStorage.setItem('lstcurrentCitytxt', '')
+                        }
+                    }
+
+                })
+            })
+        }
+    });
+
+    $('#txtSalesId').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            //localStorage.setItem('lstcurrentSuppliertxt', 'txtSupplierId')
+            //// Get Supplier Data
+            //var vSupplierIdElement = $('#txtSalesId');
+            //var vSupplierNameElement = $('#txtSalesName');
+
+
+            //// Search Supplier
+            //var vURL = '/CS/SearchSupplier';
+            //// Load Content of Supplier Search
+            //$('#SupplierDataModalContent').load(vURL);
+            //// Modal Show
+            //$('#SupplierDataModal').modal('show');
+            //// Focus
+            //$('#SupplierDataModal').on('shown.bs.modal', function () {
+            //    $('.txtSearch').focus();
+            //    // Select Supplier
+            //    $('body').on('click', '.divSupplierSelect', function () {
+            //        if (localStorage.getItem('lstcurrentSuppliertxt') == 'txtSupplierId') {
+            //            $('.txtSearch').focus();
+
+            //            // Supplier Id
+            //            var vSupplierId = $(this).attr('data-id');
+
+            //            // Get Values
+            //            var vSupplierCodeValue = $(this).find('.divSupplierNo').text();
+            //            var vSupplierNameValue = $(this).find('.divSupplierName').text();
+
+
+
+            //            // Set Value
+            //            vSupplierIdElement.val(vSupplierCodeValue);
+            //            vSupplierIdElement.attr('data-id', vSupplierId);
+            //            vSupplierNameElement.val(vSupplierNameValue);
+
+            //            // Modal Show
+            //            $('#SupplierDataModal').modal('hide');
+            //        }
+
+            //    })
+            //})
+
+
+            localStorage.setItem('lstcurrentSalesMentxt', 'txtSalesMenId')
+            // Get SalesMen Data
+            var vSalesMenIdElement = $('#txtSalesId');
+            var vSalesMenNameElement = $('#txtSalesName');
+
+
+            // Search SalesMen
+            var vURL = '/SalesMen/SearchSalesMen';
+            // Load Content of SalesMen Search
+            $('#SalesMenDataModalContent').load(vURL);
+            // Modal Show
+            $('#SalesMenDataModal').modal('show');
+            // Focus
+            $('#SalesMenDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select SalesMen
+                $('body').on('click', '.divSalesMenSelect', function () {
+                    if (localStorage.getItem('lstcurrentSalesMentxt') == 'txtSalesMenId') {
+                        $('.txtSearch').focus();
+
+                        // SalesMen Id
+                        var vSalesMenId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vSalesMenCodeValue = $(this).find('.divSalesMenNo').text();
+                        var vSalesMenNameValue = $(this).find('.divSalesMenName').text();
+
+
+
+                        // Set Value
+                        vSalesMenIdElement.val(vSalesMenCodeValue);
+                        vSalesMenIdElement.attr('data-id', vSalesMenId);
+                        vSalesMenNameElement.val(vSalesMenNameValue);
+
+                        // Modal Show
+                        $('#SalesMenDataModal').modal('hide');
+                    }
+
+                })
+            })
+        }
+    });
+    $('#txtSellCostTypeId').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentSellCostTypetxt', 'txtSellCostTypeId')
+            // Get SellCostType Data
+            var vSellCostTypeIdElement = $('#txtSellCostTypeId');
+            var vSellCostTypeNameElement = $('#txtSellCostTypeName');
+
+
+            // Search SellCostType
+            var vURL = '/SellCostType/SearchSellCostType';
+            // Load Content of SellCostType Search
+            $('#SellCostTypeDataModalContent').load(vURL);
+            // Modal Show
+            $('#SellCostTypeDataModal').modal('show');
+            // Focus
+            $('#SellCostTypeDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select SellCostType
+                $('body').on('click', '.divSellCostTypeSelect', function () {
+                    if (localStorage.getItem('lstcurrentSellCostTypetxt') == 'txtSellCostTypeId') {
+                        $('.txtSearch').focus();
+
+                        // SellCostType Id
+                        var vSellCostTypeId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vSellCostTypeCodeValue = $(this).find('.divSellCostTypeNo').text();
+                        var vSellCostTypeNameValue = $(this).find('.divSellCostTypeName').text();
+
+
+
+                        // Set Value
+                        vSellCostTypeIdElement.val(vSellCostTypeCodeValue);
+                        vSellCostTypeIdElement.attr('data-id', vSellCostTypeId);
+                        vSellCostTypeNameElement.val(vSellCostTypeNameValue);
+
+                        // Modal Show
+                        $('#SellCostTypeDataModal').modal('hide');
+                    }
+
+                })
+            })
+        }
+    });
+    $('#txtCategoryId').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentCustomerCategorytxt', 'txtCategoryId')
+            // Get CustomerCategory Data
+            var vCustomerCategoryIdElement = $('#txtCategoryId');
+            var vCustomerCategoryNameElement = $('#txtCategoryName');
+
+
+            // Search CustomerCategory
+            var vURL = '/CustomerCategory/SearchCustomerCategory';
+            // Load Content of CustomerCategory Search
+            $('#CustomerCategoryDataModalContent').load(vURL);
+            // Modal Show
+            $('#CustomerCategoryDataModal').modal('show');
+            // Focus
+            $('#CustomerCategoryDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select CustomerCategory
+                $('body').on('click', '.divCustomerCategorySelect', function () {
+                    if (localStorage.getItem('lstcurrentCustomerCategorytxt') == 'txtCategoryId') {
+                        $('.txtSearch').focus();
+
+                        // CustomerCategory Id
+                        var vCustomerCategoryId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vCustomerCategoryCodeValue = $(this).find('.divCustomerCategoryNo').text();
+                        var vCustomerCategoryNameValue = $(this).find('.divCustomerCategoryName').text();
+
+
+
+                        // Set Value
+                        vCustomerCategoryIdElement.val(vCustomerCategoryCodeValue);
+                        vCustomerCategoryIdElement.attr('data-id', vCustomerCategoryId);
+                        vCustomerCategoryNameElement.val(vCustomerCategoryNameValue);
+
+                        // Modal Show
+                        $('#CustomerCategoryDataModal').modal('hide');
+                    }
+
+                })
+            })
+        }
+    });
+    $('#txtCountryId').on('blur', function () {
+        if ($('#txtCountryId').val() != undefined && $('#txtCountryId').val() != '') {
+            $.post('/GLCustomer/GetCountry',
+                { pCountryId: $('#txtCountryId').val()},
+                function (data, status) {
+                    if (data != undefined && data!= '' ) {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Country) {
+                            $('#txtCountryId').attr('data-id', Country.CountryId);
+                            $('#txtCountryName').val(Country.CountryNameL1);
+                            $('#txtCityId').attr('data-id', '0')
+                            $('#txtCityId').val('')
+                            $('#txtCityName').val('')
+                        });
+                    }
+                    else {
+                        $('#txtCountryId').attr('data-id', '0');
+                        $('#txtCountryName').val('');
+                        $('#txtCityId').attr('data-id', '0')
+                        $('#txtCityId').val('')
+                        $('#txtCityName').val('')
+                        funNotification('@appResource.msgNoNotFound', 2);
+                    }
+            })
+
+        }
+        else {
+
+            $('#txtCountryId').attr('data-id', '0');
+            $('#txtCountryName').val('');
+            $('#txtCityId').attr('data-id', '0')
+            $('#txtCityId').val('')
+            $('#txtCityName').val('')
+        }
+
+    })
+    $('#txtCityId').on('blur', function () {
+        if ($('#txtCityId').val() != undefined && $('#txtCityId').val() != '') {
+            $.post('/GLCustomer/GetCity',
+                { pCityId: $('#txtCityId').val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, City) {
+                            $('#txtCityId').attr('data-id', City.CityId);
+                            $('#txtCityName').val(City.CityNameL1);
+                        });
+                    }
+                    else {
+                        $('#txtCityId').attr('data-id', '0');
+                        $('#txtCityName').val('');
+                        funNotification('@appResource.msgNoNotFound', 2);
+                    }
+                })
+
+        }
+        else {
+            $('#txtCityId').attr('data-id', '0');
+            $('#txtCityName').val('');
+        }
+
+
+    })
+    $('#txtAreaId').on('blur', function () {
+
+        if ($('#txtAreaId').val() != undefined && $('#txtAreaId').val() != '') {
+            $.post('/GLCustomer/GetArea',
+                { pAreaId: $('#txtAreaId').val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Area) {
+                            $('#txtAreaId').attr('data-id', Area.AreaId);
+                            $('#txtAreaName').val(Area.AreaNameL1);
+                        });
+                    }
+                    else {
+                        $('#txtAreaId').attr('data-id', '0');
+                        $('#txtAreaName').val('');
+                        funNotification('@appResource.msgNoNotFound', 2);
+                    }
+                })
+
+        }
+        else {
+            $('#txtAreaId').attr('data-id', '0');
+            $('#txtAreaName').val('');
+        }
+    })
+
+    $('#txtAccountId').on('blur', function () {
+
+        if ($('#txtAccountId').val() != undefined && $('#txtAccountId').val() != '') {
+            $.post('/GLCustomer/GetAccount',
+                { pAccountId: $('#txtAccountId').val().trim() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Account) {
+                            $('#txtAccountId').attr('data-id', Account.AccountId);
+                            $('#txtAccountName').val(Account.AccountNameL1);
+                        });
+                    }
+                    else {
+                        $('#txtAccountId').attr('data-id', '0');
+                        $('#txtAccountName').val('');
+                        funNotification('@appResource.msgNoNotFound', 2);
+                    }
+                })
+
+        }
+        else {
+            $('#txtAccountId').attr('data-id', '0');
+            $('#txtAccountName').val('');
+        }
+    })
+    $('#txtSellCostTypeId').on('blur', function () {
+        if ($('#txtSellCostTypeId').val() != undefined && $('#txtSellCostTypeId').val() != '') {
+            $.post('/GLCustomer/GetSellCostType',
+                { pSellCostTypeId: $('#txtSellCostTypeId').val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, SellCostType) {
+                            $('#txtSellCostTypeId').attr('data-id', SellCostType.SellCostTypeId);
+                            $('#txtSellCostTypeName').val(SellCostType.SellCostTypeNameL1);
+                        });
+                    }
+                    else {
+                        $('#txtSellCostTypeId').attr('data-id', '0');
+                        $('#txtSellCostTypeName').val('');
+                        funNotification('@appResource.msgNoNotFound', 2);
+                    }
+                })
+
+        }
+        else {
+            $('#txtSellCostTypeId').attr('data-id', '0');
+            $('#txtSellCostTypeName').val('');
+        }
+
+    })
+    $('#txtCategoryId').on('blur', function () {
+
+        if ($('#txtCategoryId').val() != undefined && $('#txtCategoryId').val() != '') {
+            $.post('/GLCustomer/GetCustomerCategory',
+                { pCustomerCategoryId: $('#txtCategoryId').val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, CustomerCategory) {
+                            $('#txtCategoryId').attr('data-id', CustomerCategory.CustomerCategoryId);
+                            $('#txtCategoryName').val(CustomerCategory.CustomerCategoryNameL1);
+                        });
+                    }
+                    else {
+                        $('#txtCategoryId').attr('data-id', '0');
+                        $('#txtCategoryName').val('');
+                    }
+                })
+
+        }
+        else {
+            $('#txtCategoryId').attr('data-id', '0');
+            $('#txtCategoryName').val('');
+        }
+    })
+    $('#txtSalesId').on('blur', function () {
+
+        if ($('#txtSalesId').val() != undefined && $('#txtSalesId').val() != '') {
+            //$.post('/GLCustomer/GetSupplier',
+            //    { pSupplierId: $('#txtSalesId').val().trim() },
+            //    function (data, status) {
+            //        if (data != undefined && data != '') {
+            //            var vDataResult = JSON.parse(data);
+            //            $.each(vDataResult, function (i, Supplier) {
+            //                $('#txtSalesId').attr('data-id', Supplier.CSId);
+            //                $('#txtSalesName').val(Supplier.CSNameL1);
+            //            });
+            //        }
+            //        else {
+            //            $('#txtSalesId').attr('data-id', '0');
+            //            $('#txtSalesName').val('');
+            //        }
+            //    })
+            $.post('/SalesMen/GetSales',
+                { pCodeId: $('#txtSalesId').val().trim() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Sales) {
+                            $('#txtSalesId').attr('data-id', Sales.LookupDtlId);
+                            $('#txtSalesName').val(Sales.LookupDtlDesc);
+                        });
+                    }
+                    else {
+                        $('#txtSalesId').attr('data-id', '0');
+                        $('#txtSalesName').val('');
+                    }
+                })
+
+        }
+        else {
+            $('#txtSalesId').attr('data-id', '0');
+            $('#txtSalesName').val('');
+        }
+    })
+    $('#txtCustomerPhoneNumber').on('blur', function () {
+        if ($('#txtCustomerPhoneNumber').val() != undefined && $('#txtCustomerPhoneNumber').val() != '') {
+            $.post('/GLCustomer/CheckPhone',
+                { pCustomerPhoneNumber: $('#txtCustomerPhoneNumber').val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        funNotification('@appResource.msgNoExistedBefore' + vDataResult[0].CustomerCode, 2);
+                        $('#txtCustomerPhoneNumber').val('');
+                        $('#txtCustomerPhoneNumber').focus();
+
+                    }
+                    else {
+
+
+                    }
+                })
+
+        }
+
+    })
+
+    $('body').on('blur', '.CountryId', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+            // Get Country Data
+            var vCountryIdElement = vTableRow.find('.CountryId');
+        var vCountryNameElement = vTableRow.find('.CountryNameL1');
+        if (vCountryIdElement.val() != undefined && vCountryIdElement.val() != '') {
+            $.post('/GLCustomer/GetCountry',
+                { pCountryId: vCountryIdElement.val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Country) {
+                            vCountryIdElement.attr('data-id', Country.CountryId);
+                            vCountryNameElement.val(Country.CountryNameL1);
+                        });
+                    }
+                    else {
+                        vCountryIdElement.attr('data-id', '0');
+                        vCountryNameElement.val('');
+                    }
+                })
+
+        }
+        else {
+            vCountryIdElement.attr('data-id', '0');
+            vCountryNameElement.val('');
+        }
+        vTableRow = '';
+
+    })
+    $('body').on('blur', '.CityId', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get City Data
+        var vCityIdElement = vTableRow.find('.CityId');
+        var vCityNameElement = vTableRow.find('.CityNameL1');
+        if (vCityIdElement.val() != undefined && vCityIdElement.val() != '') {
+            $.post('/GLCustomer/GetCity',
+                { pCityId: vCityIdElement.val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, City) {
+                            vCityIdElement.attr('data-id', City.CityId);
+                            vCityNameElement.val(City.CityNameL1);
+                        });
+                    }
+                    else {
+                        vCityIdElement.attr('data-id', '0');
+                        vCityNameElement.val('');
+                    }
+                })
+
+        }
+        else {
+            vCityIdElement.attr('data-id', '0');
+            vCityNameElement.val('');
+        }
+        vTableRow = '';
+
+    })
+    $('body').on('click', '.btnCustomerDelete', function ()
+    {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get Unit Data
+        var vCustomerIdElement = vTableRow.find('.CustomerId');
+        $.post('/GLCustomer/DeleteCustomerDTL',
+            {
+                pCustomerId:vTableRow.attr('data-id')
+            }, function (data, status)
+        {
+                fnGetMasterAndDetails();
+            })
+        funNotification('@appResource.msgDelete', 1);
+
+    })
+    $('body').on('click', '.btnCustomerSiteDelete', function () {
+        var vElement = $(this);
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.SiteName').val();
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdelSite', vTableRow.index)
+        // Get Unit Data
+        var vCustomerIdElement = vTableRow.find('.CustomerSiteId');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdelSite') == vTableRow.index) {
+                                $.post('/GLCustomer/DeleteSite',
+                                    {
+                                        pCustomerSiteId: vTableRow.attr('data-id')
+                                    }, function (data, status) {
+                                        if (data != undefined && data != '') {
+                                            //fnGetMasterAndDetails();
+                                            //funNotification('تم الحذف بنجاح', 1);
+                                        }
+
+                                    })
+                                vTableRow.remove();
+                                funNotification('@appResource.msgDelete', 1);
+                                vTableRow = '';
+
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblCustomerSiteBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    funAddSiteEmptyRow();
+                                }
+                            }
+                        })
+                    })
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblCustomerSiteBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddSiteEmptyRow();
+                    }
+                }
+            })
+    })
+
+    $('body').on('click', '.btnCustomerTelDelete', function () {
+        var vElement = $(this);
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.SiteName').val();
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdelTel', vTableRow.index);
+
+        // Get Unit Data
+        var vCustomerIdElement = vTableRow.find('.CustomerTelId');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdelTel') == vTableRow.index) {
+
+                                $.post('/GLCustomer/DeleteTel',
+                                    {
+                                        pCustomerTelId: vTableRow.attr('data-id')
+                                    }, function (data, status) {
+                                        //fnGetMasterAndDetails();
+                                    })
+                                vTableRow.remove();
+                                funNotification('@appResource.msgDelete', 1);
+                                vTableRow = '';
+
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblCustomerTelBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    funAddTelEmptyRow();
+                                }
+                            }
+                        })
+                    })
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblCustomerTelBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddTelEmptyRow();
+                    }
+                }
+            })
+
+
+    })
+    $('.btnCut').on('click', function () {
+    //$('.btnClose').on('click', function () {
+        fnDeleteAll();
+    })
+    function fnDeleteAll() {
+        var vElementId = $('.btnCut')
+        var vDataId = $('#txtCustomerCode').attr('data-id');
+        var vDataName = $('#txtCustomerNameL1').val();
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    if ($('#txtCustomerCode').attr('data-id') != '0') {
+                        // Modal
+                        $('#confirmDeleteModalContent').html(data);
+                        $('#confirmDeleteModal').modal('show');
+                        $('#confirmDeleteModal').on('shown.bs.modal', function () {
+                            // Click Confirm Delete
+                            $("body").on("click", "#btnDeleteConfirm", function () {
+                           // DELETE Header
+                                $.post('/GLCustomer/DeleteCustomer',
+                                    {
+                                        pCustomerId: $('#txtCustomerCode').attr('data-id'),
+                                    },
+                                    function (data, status) {
+
+                                        if (data != undefined && data != '') {
+                                            //Error deleting
+                                            if ($.isNumeric(data)) {
+                                                funNotification('@appResource.msgCannotDelete', 2);
+                                            }
+                                            // Deleted successfully
+                                            else {
+                                                $('#txtCustomerCode').attr('data-id', '0');
+                                                $('#txtCustomerCode').val('');
+                                                $('#txtCustomerNameL1').val('');
+                                                $('#txtCustomerNameL2').val('');
+                                                $('#txtCustomerAddress').val('');
+                                                $('#txtCustomerPhoneNumber').val('');
+                                                $('#txtCustomerPostBox').val('');
+                                                $('#txtCustomerFax').val('');
+                                                $('#txtCustomerEmail').val('');
+                                                $('#txtAuthorizePerson').val('');
+                                                $('#txtSellCostTypeId').attr('data-id', '0')
+                                                $('#txtSellCostTypeId').val('');
+                                                $('#txtSellCostTypeName').val('');
+                                                $('#txtAreaId').val('');
+                                                $('#txtAreaName').val('');
+                                                $('#txtCategoryId').attr('data-id', '0');
+                                                $('#txtCategoryId').val('');
+                                                $('#txtCustomerVATCode').val('');
+                                                $('#txtCategoryName').val('');
+                                                $('#txtAuthorizePersonTel').val('');
+                                                $('#txtCountryId').attr('data-id', '0');
+                                                $('#txtCountryId').val('');
+                                                $('#txtCountryName').val('');
+                                                $('#txtCityId').val('');
+                                                $('#txtCityName').val('');
+                                                $('#txtCustomerAmountLimit').val('');
+                                                $('#txtAccountId').attr('data-id', '0')
+                                                $('#txtAccountId').val('');
+                                                $('#txtAccountName').val('');
+                                                $('#txtSalesId').attr('data-id', '0');
+                                                $('#txtSalesId').val('');
+                                                $('#txtOrganization').val('');
+                                                $('#txtStreet').val('');
+                                                $('#txtCity').val('');
+                                                $('#txtBuildingNumber').val('');
+                                                $('#txtPostalZone').val('');
+                                                $('#txtDistrictName').val('');
+                                                $('#rd1').prop('checked', true)
+                                                //fnClearTable();
+                                                fnClearTableSite();
+                                                fnClearTableTel();
+                                                funNotification('@appResource.msgDelete', 1);
+                                            }
+                                        }
+                                        else {
+
+                                        }
+                                    })
+
+                            })
+                        })
+                    }
+
+                }
+            })
+
+    }
+
+    $('.btnClearAll').on('click', function () {
+        //$('.btnClose').on('click', function () {
+        funClearAll();
+    })
+    function funClearAll() {
+        $('#txtCustomerCode').attr('data-id', '0');
+        $('#txtCustomerCode').val('');
+        $('#txtCustomerNameL1').val('');
+        $('#txtCustomerNameL2').val('');
+        $('#txtCustomerAddress').val('');
+        $('#txtCustomerPhoneNumber').val('');
+        $('#txtCustomerPostBox').val('');
+        $('#txtCustomerFax').val('');
+        $('#txtCustomerEmail').val('');
+        $('#txtAuthorizePerson').val('');
+        $('#txtSellCostTypeId').attr('data-id', '0')
+        $('#txtSellCostTypeId').val('');
+        $('#txtSellCostTypeName').val('');
+        $('#txtAreaId').val('');
+        $('#txtAreaName').val('');
+        $('#txtCategoryId').attr('data-id', '0');
+        $('#txtCategoryId').val('');
+        $('#txtCustomerVATCode').val('');
+        $('#txtCategoryName').val('');
+        $('#txtAuthorizePersonTel').val('');
+        $('#txtCountryId').attr('data-id', '0');
+        $('#txtCountryId').val('');
+        $('#txtCountryName').val('');
+        $('#txtCityId').val('');
+        $('#txtCityName').val('');
+        $('#txtCustomerAmountLimit').val('');
+        $('#txtAccountId').attr('data-id', '0')
+        $('#txtAccountId').val('');
+        $('#txtAccountName').val('');
+        $('#txtSalesId').attr('data-id', '0');
+        $('#txtSalesId').val('');
+        $('#txtSalesName').val('');
+        $('#txtOrganization').val('');
+        $('#txtStreet').val('');
+        $('#txtCity').val('');
+        $('#txtBuildingNumber').val('');
+        $('#txtPostalZone').val('');
+        $('#txtDistrictName').val('');
+        $('#rd1').prop('checked', true)
+        //fnClearTable();
+        fnClearTableSite();
+        fnClearTableTel();
+    }
+    function funLoadSelectList()
+    {
+        $.post('/GLCustomer/GetCommunicationType', {},
+            function (data, status) {
+                if (data != undefined && data != '') {
+
+                    var vDataResult = JSON.parse(data);
+                    var vSelectType = $('#TypeId')
+                    $.each(vDataResult, function (i, Type) {
+                        vSelectType.append('<option value="' + Type.TypeId + '" data-id = "' + Type.TypeId+'">' + Type.TypeNameL1 + '</option>');
+                    })
+                }
+            })
+
+    }
+
+
+    //$('#txtCustomerPhoneNumber').on('blur', function () {
+    //    console.log('valueeeeeee' + $('#TypeId').val());
+    //    if ($('#TypeId').val() == 1) {
+    //        if (!validatePhone($('#txtCustomerPhoneNumber').val())) {
+    //            $('#spnError').html('التليفون غير صحيح');
+    //            $('#spnError').css('color', 'red');
+    //            $('#spnError').removeClass('d-none');
+
+    //            setTimeout(function () {
+    //                $('#spnError').addClass('d-none');
+    //            }, 2000);
+    //        }
+
+    //    })
+    //    if ($('#TypeId').val() == 2) {
+    //        if (!isEmail($('#txtCustomerPhoneNumber').val())) {
+    //            $('#spnError').html('الايميل غير صحيح');
+    //            $('#spnError').css('color', 'red');
+    //            $('#spnError').removeClass('d-none');
+
+    //            setTimeout(function () {
+    //                $('#spnError').addClass('d-none');
+    //            }, 2000);
+    //        }
+    //    }
+
+    //});
+    function validatePhone(txtPhone) {
+        //var a = document.getElementById(txtPhone).value;
+        var filter = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
+        if (filter.test(txtPhone)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+   function isEmail(email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+    }
+    // Search CustomerDataModal
+    $('.btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/GLCustomer/CustomerSearch';
+        // Load Content of CostCenter Search
+        $('#CustomerDataModalContent').load(vURL);
+        // Modal Full
+        $('#CustomerDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#CustomerDataModal').modal('show');
+    })
+    // Select Customer
+    $('body').on('click', '.btnSelect', function () {
+        var count = $("input[name='chkIsValid']:checked").length;
+        if (count == 0) {
+
+        }
+        else if (count == 1) {
+            $('.tblGLCustomer > tbody > tr ').each(function () {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Check
+                if (vSelectedChk) {
+                    // Get Id
+                    var vCustomerId = vElement.attr('data-id');
+                    $('#txtCustomerCode').attr('data-id', vCustomerId)
+                    fnGetMasterAndDetails();
+                    // close The Modal
+                    $('#CustomerDataModal').modal('hide');
+                }
+            })
+        }
+        else {
+
+            $('.tblGLCustomer > tbody > tr ').each(function () {
+                // Element
+                //var vElement = $(".tblGLCustomer > tbody > tr :first").find('.clsChk')
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Check
+                if (vSelectedChk) {
+                    // Get Id
+                    var vCustomerId = vElement.attr('data-id');
+                    $('#txtCustomerCode').attr('data-id', vCustomerId)
+                    fnGetMasterAndDetails();
+                    // close The Modal
+                    $('#CustomerDataModal').modal('hide');
+                    return false;
+                }
+            })
+        }
+    })
+    //$('body').on('change', '.clsChk', function () {
+    //    if ($(this).prop('checked')) {
+    //        $('.clsChk').not($(this)).attr("disabled", true);
+    //    }
+    //    else {
+    //        $('.clsChk').removeAttr("disabled");
+    //    }
+
+
+    //})
+    // Type Code, Name - F9
+    $('body').on('keydown dblclick', '.SiteId', function (e) {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentSitetxt', '0')
+            localStorage.setItem('lstSitecurrentindex', vTableRow.index)
+            // Get Site Data
+            var vSiteIdElement = vTableRow.find('.SiteId');
+            var vSiteNameElement = vTableRow.find('.SiteName');
+
+
+            // Search Site
+            var vURL = '/Site/SiteSearch';
+            // Load Content of Site Search
+            $('#SiteDataModalContent').load(vURL);
+            // Modal Show
+            $('#SiteDataModal').modal('show');
+            // Focus
+            $('#SiteDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Site
+                $('body').on('click', '.divSiteSelect', function () {
+                    if (localStorage.getItem('lstSitecurrentindex') == vTableRow.index) {
+                        $('.txtSearch').focus();
+
+                        // Site Id
+                        var vSiteId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vSiteCodeValue = $(this).find('.divSiteCode').text();
+                        var vSiteNameValue = $(this).find('.divSiteName').text();
+
+
+
+                        // Set Value
+                        vSiteIdElement.val(vSiteCodeValue);
+                        vSiteIdElement.attr('data-id', vSiteId);
+                        vSiteNameElement.val(vSiteNameValue);
+
+                        // Modal Show
+                        $('#SiteDataModal').modal('hide');
+                        vTableRow = '';
+                    }
+
+
+
+                })
+            })
+        }
+    })
+
+    $('body').on('blur', '.SiteId ', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get VecType Data
+        var vSiteIdElement = vTableRow.find('.SiteId');
+        var vSiteNameElement = vTableRow.find('.SiteName');
+        if (vSiteIdElement.val() != undefined && vSiteIdElement.val() != '') {
+            $.post('/Site/SearchSiteByCode',
+                { pSiteCode: vSiteIdElement.val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Site) {
+                            vSiteIdElement.attr('data-id', Site.SiteId);
+                            vSiteNameElement.val(Site.SiteNameL1);
+                        });
+                    }
+                    else {
+                        vSiteIdElement.attr('data-id', '0');
+                        vSiteNameElement.val('');
+                    }
+                })
+
+        }
+        vTableRow = '';
+
+    })
+
+
+
+    $('.btnPrint').on('click', function () {
+        var url = '/GLCustomer/GLCustomerReport?pCustomerId=' + $('#txtCustomerCode').attr('data-id')
+        var popupWindow = window.open(url);
+    });
+
+</script>
+
+

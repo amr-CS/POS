@@ -1,0 +1,90 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.Setting.User
+@using appSERP.appCode.dbCode.SYSSETT;
+@{
+    Layout = null;
+}
+<style>
+    .star {
+        color: #FFD700;
+    }
+</style>
+
+<!-- Is New -->
+@{ bool vIsNew = ViewBag.vbIsNew;}
+
+<!-- Is Collapse -->
+@{ bool vIsCollapse = ViewBag.vbIsCollapse;}
+<!-- Header -->
+<div class="divViewHeader">
+    <!-- Title -->
+    <div class="row d-flex">
+        <!-- Header Content -->
+        <div class="divViewHeaderTitle col-md-12">
+
+            <div class="p-2 w-100">
+
+                @if (vIsCollapse)
+                {
+                    <!-- Sidebar Collapse -->
+                    <button class="btn btn-ligt bg-white appMainColortext btnSidebarCollapse"><i class="fa fa-bars"></i></button>
+                }
+                <!-- Favorite -->
+                <button type="button" class=" btn bg-light btnFav"></button>
+                <!-- View Title -->
+                <span class="divViewHeaderTitleText"></span>
+            </div>
+            <div class="p-2 mt-1 flex-shrink-1">
+                @if (vIsNew)
+                {
+                    <!-- New Button -->
+                    <button type="button" class="btn btnCreate" data-id="0">@appResource.btnNew</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        var vStar = '<div><span class="fa fa-star"></span></div>';
+        var vStarO = '<div><span class="fa fa-star-o"></span></div>';
+        var vIsObject = '@clsUser.ObjectIsFav';
+        if (vIsObject == 'True') {
+            $('.btnFav').html(vStar);
+        }
+        else {
+
+            $('.btnFav').html(vStarO);
+        }
+
+    })
+  $('.btnFav').click(function () {
+            var vStar = '<div><span class="fa fa-star"></span></div>';
+            var vStarO ='<div><span class="fa fa-star-o"></span></div>';
+            var vFav = $(this).html();
+            if (vFav == vStar) {
+                $(this).html(vStarO);
+                // Delete Action URL
+                var vDeleteActionURL = '/UserFavorite/DataModel/';
+               var  vId = '@clsUser.ObjectId';
+            // Delete
+            $.post(vDeleteActionURL, { id: vId, pIsDelete: true }, function () {
+            });
+
+            }
+            else {
+
+            $(this).html(vStar);
+                $.post('/UserFavorite/DataModel', { id: @clsUser.ObjectId }, function () {
+                });
+
+            }
+
+    })
+</script>

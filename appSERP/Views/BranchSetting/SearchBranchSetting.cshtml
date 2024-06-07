@@ -1,0 +1,198 @@
+﻿
+@using appSERP.Views.Shared.appResource
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblSearchBranchSettingBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <div>رقم الاعداد<input type="text" class="form-control txtCode text-center" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                الاعداد عربي
+                                <input type="text" class="form-control txtNameL1 text-center" />
+                            </div>
+                            <div class="col-sm-6">
+                                الاعداد انجليزي
+                                <input type="text" class="form-control txtNameL2 text-center" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+
+                            </div>
+                            <div class="col-sm-6">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+
+                    </div>
+                    <div class=" col-sm-1">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearchh">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblSearchBranchSetting">
+            <thead>
+                <tr>
+                    <th class=" " data-checked="false">
+                        <input type="checkbox" class="btnCheckAll">
+                        تحديد الكل
+                    </th>
+                    <th>الرقم </th>
+                    <th>الاعداد - عربي</th>
+                    <th>الاعداد انجليزي</th>
+                </tr>
+            </thead>
+
+            <tbody class="tblSearchBranchSettingBody"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelectBranch">اختيار</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    //function Append
+    function funSearchBranchSettingRowConfig(pBranchSettingRow) {
+        // Content
+        var RowContent = '<tr data-id="' + pBranchSettingRow.BranchSettingId + '" data-BranchSettingid="' + pBranchSettingRow.BranchSettingId +'">' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-name="' + pBranchSettingRow.BranchDesc + '" data-phone="' + pBranchSettingRow.BranchPhone + '" data-id="' + pBranchSettingRow.BranchSettingId + '" data-BranchSettingid="' + pBranchSettingRow.BranchSettingId+'"/></td> ' +
+            '<td>' + pBranchSettingRow.BranchSettingCode + '</td>' +
+            '<td>' + pBranchSettingRow.BranchDesc + '</td>' +
+            '<td>' + pBranchSettingRow.BranchPhone + '</td>' +
+           
+            +'</tr > '
+        return RowContent
+    }
+    function funGetBranchSettingData(pBranchSettingCode, pBranchSettingDesc, pBranchSettingDescL) {
+        var vDataResult;
+        $.get('/api/APIBranchSetting/BranchSettingGet',
+            {
+                // search Parameters
+                pBranchSettingId: pBranchSettingCode,
+                pBranchDesc: pBranchSettingDesc,
+                pBranchDescL: pBranchSettingDescL,
+                phIsDeleted: false,
+                // Query Type Id
+                pQueryTypeId: '406',
+                //pItemTypeId: pItemTypeId,
+            },
+            function (data, status) {
+
+                // JSON Parse
+                vDataResult = JSON.parse(data);
+                $('.tblSearchBranchSettingBody').html('');
+                $.each(vDataResult, function (m, BranchSettingData) {
+                    // GET Cash Desk Row Content
+
+                    var vAccountRowContent = funSearchBranchSettingRowConfig(vDataResult[m]);
+
+                    // Append Row Content
+                    $('.tblSearchBranchSettingBody').append(vAccountRowContent);
+                });
+
+            })
+
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearchh').on('click', function () {
+        var vCode;
+        var NameL1;
+        var Namel2;
+        if ($('.txtCode').val().trim() != '') {
+            vCode = $('.txtCode').val();
+        }
+        if ($('.txtNameL1').val().trim() != '') {
+            NameL1 = $('.txtNameL1').val();
+        }
+        if ($('.txtNameL2').val().trim() != '') {
+            Namel2 = $('.txtNameL2').val();
+        }
+
+        //console.log(Group)
+        //console.log(CatAccount)
+        //console.log(Store)
+        // Get Row
+        funGetBranchSettingData(vCode, NameL1, Namel2)
+    })
+    // Actione Load
+    $(document).ready(function () {
+        //var vItemTypeId = $('.txtItemType').val();
+        //// Get Row
+        //funGetBranchSettingData(null, null, null, null, null, null, null, vItemTypeId)
+    });
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+</script>

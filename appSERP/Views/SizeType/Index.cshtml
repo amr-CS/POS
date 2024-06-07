@@ -1,0 +1,754 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.INV;
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblSizeType, pIsNew = false })
+</div>
+
+<style>
+    .divTableContainer {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .divSizeType, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }
+
+    .divSectionTitle {
+        background-color: rgba(41, 128, 185, 0.04);
+        font-weight: bold;
+        color: #2980b9;
+    }
+</style>
+<!-- Size Type -->
+<div class="divTableContainer">
+    <!-- Utlity -->
+    <div class="divUtilityBar d-flex ">
+        @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+    </div>
+    <!-- Cash Desk Header -->
+    <div class="w-100 divSectionTitle p-2 px-4"> @appResource.lblSizeType</div>
+
+    <!-- Cash Desks Data -->
+    <div class="divSizeType bg-white border p-2">
+        <table class="table tblSizeType">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th width="20px"></th>
+                    <th>@appResource._Code</th>
+                    <th> @appResource.SizeTypeId</th>
+                    <th>  @appResource.SizeTypeId</th>
+                    <th>@appResource._IsActive</th>
+                    <th class="thActions">@appResource._Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblSizeTypeBody"></tbody>
+        </table>
+
+    </div>
+
+    <!--Size Type Save -->
+    <div class=" bg-white border p-2 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1">
+        @*<button class="btn btn-success btnSizeTypeSave">@appResource.btnSave</button>*@
+        </div>
+    </div>
+</div>
+<div class="divTableContainer">
+    <!-- Account Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">@appResource.lblSize</div>
+
+    <!-- Account Data -->
+    <div class="divAccount bg-white border p-2">
+        <table class="table tblAccount">
+            <!-- Head -->
+            <thead class="">
+                <tr>
+                    <th width="20px"></th>
+                    <th>@appResource._Code</th>
+                    <th>@appResource.SizeId</th>
+                    <th>@appResource.SizeId</th>
+                    <th>@appResource._IsActive</th>
+                    <th class="thActions">@appResource._Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblSizeBody">
+                <tr class="tblSizeRow"></tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Size Save -->
+    <div class=" bg-white border p-3 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1">
+        @*<button class="btn btn-success btnSizeSave">@appResource.btnSave</button>*@
+        </div>
+    </div>
+</div>
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+
+
+<!-- Cash Desk Scripts -->
+<!-- Cash Desk -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Drop Down  Font Size
+        //funFillSizeType(null, 0, null, null,null, null, 1, null, null, false);
+
+        // Wait 2 Seconds
+        setTimeout( function () {
+            // GET Font Size By Selected List
+            funGETSizeTypeBySelectedList();
+        },1000);
+    })
+
+
+
+    function funSaveType() {
+
+        
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblSizeTypeBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get SizeType Id
+            var vSizeTypeId = vRowData.attr('data-id');
+            // Code
+            var vSizeTypeCode = vRowData.find('.SizeTypeCode').val();
+            // Name L1
+            var vSizeTypeNameL1 = vRowData.find('.SizeTypeNameL1').val();
+            // Name L2
+            var vSizeTypeNameL2 = vRowData.find('.SizeTypeNameL2').val();
+            // Is Active
+            var vSizeTypeIsActive = vRowData.find('.SizeTypeIsActive').prop('checked');
+
+            // Check Cash Desk If Empty
+            if (vSizeTypeNameL1 != '') {
+
+                // Save
+                $.post('/SizeType/SizeTypeGET',
+                    {
+                        pSizeTypeId: vSizeTypeId,
+                        pSizeTypeCode: vSizeTypeCode,
+                        pSizeTypeNameL1: vSizeTypeNameL1,
+                        pSizeTypeNameL2: vSizeTypeNameL2,
+                        pSizeTypeIsActive: vSizeTypeIsActive,
+                        pIsDeleted: false,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+
+                        //// Drop Down Main Cash Desk
+                        //funFillSizeType(null, 0, null, null,null, null, 1, null, null, false);
+
+                        // GET Cash Desk By Selected List
+                        funGETSizeTypeBySelectedList();
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+             funNotification('@appResource.msgSave', '1');
+        }
+    }
+
+
+        // Save - Click
+
+    $('.btnSizeTypeSave').on('click', function () {
+        funSaveType();
+
+    }); // End of Save Click
+
+    function funSaveSize() {
+        
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblSizeBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get SizeType Id
+            var vSizeTypeId = localStorage.getItem('vSizeTypeId');
+            // Id
+            var vSizeId = vRowData.attr('data-size-id');
+
+            // Code
+            var vSizeCode = vRowData.find('.SizeCode').val();
+            // Name L1
+            var vSizeNameL1 = vRowData.find('.SizeNameL1').val();
+            // Name L2
+            var vSizeNameL2 = vRowData.find('.SizeNameL2').val();
+            // Is Active
+            var vSizeIsActive = vRowData.find('.SizeIsActive').prop('checked');
+
+            console.log(vSizeIsActive)
+            // Check Cash Desk If Empty
+            if (vSizeNameL1 != '') {
+
+                // Save
+                $.post('/SizeType/SizeGET',
+                    {
+                        pSizeId: vSizeId,
+                        pSizeCode: vSizeCode,
+                        pSizeNameL1: vSizeNameL1,
+                        pSizeNameL2: vSizeNameL2,
+                        pSizeIsActive: vSizeIsActive,
+                        pSizeTypeId: vSizeTypeId,
+                        pIsDetail: false,
+                        pIsDeleted: false,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+                        // GET Cash Desk By Selected List
+                        funGETSizeTypeDTl(vSizeTypeId);
+
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+            funNotification('@appResource.msgSave', 1);
+        }
+    }
+       // Save - Click
+
+    $('.btnSizeSave').on('click', function () {
+        funSaveSize()
+
+    }); // End of Save Click
+    $('.btnSave').on('click', function () {
+        funSaveType();
+        funSaveSize();
+
+    })
+
+
+    $('body').on('click', '.btnSizeTypeDelete', function () {
+        // Get SizeType Id
+        var vSizeTypeIdDelete = $(this).attr('data-id');
+        // Save
+        $.post('/SizeType/SizeTypeGET',
+            {
+                pSizeTypeId: vSizeTypeIdDelete,
+                pSizeTypeCode: null,
+                pSizeTypeNameL1: null,
+                pSizeTypeNameL2: null,
+                pSizeTypeIsActive: null,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+
+                //// Drop Down Main Cash Desk
+                //funFillSizeType(null, 0, null, null, null, null, 1, null, null, false);
+
+                // GET Cash Desk By Selected List
+                funGETSizeTypeBySelectedList();
+                funGETSizeTypeDTl(0);
+
+            });
+
+        // Notification
+        funNotification('@appResource.msgDelete', 1);
+
+    })
+    
+    $('body').on('click', '.btnSizeDelete', function () {
+        // Get SizeType Id
+        var vSizeTypeIdDelete = $(this).attr('data-id');
+          // Get Size Id
+        var vSizeIdDelete = $(this).attr('data-size-id');
+        // Save
+        $.post('/SizeType/SizeGET',
+            {
+                pSizeId: vSizeIdDelete,
+                pSizeCode: null,
+                pSizeNameL1: null,
+                pSizeNameL2: null,
+                pSizeIsActive: null,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+                var vSizeTypeId = localStorage.getItem('vSizeTypeId');
+                // GET Cash Desk By Selected List
+                funGETSizeTypeDTl(vSizeTypeId);
+
+            });
+
+        // Notification
+              funNotification('@appResource.msgDelete', 1);
+    })
+    // Add New Row
+    $('body').on('click', '.btnSizeTypeAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funSizeTypeAddRow(vCurrentRow);
+    })
+
+    // GET Cash Desk By Selected List
+    function funGETSizeTypeBySelectedList() {
+
+        // Get Value [Id]
+        var vSelectedSizeType = $('#selectSizeTypeMain').val();
+
+        // GET Data
+        $.get('/SizeType/SizeTypeGET',
+            {
+                pSizeTypeId: null,
+                pSizeTypeCode: '',
+                pSizeTypeNameL1: '',
+                pSizeTypeNameL2: '',
+                pSizeTypeIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (SizeTypeData, status) {
+
+                // Table Body
+                var vSizeTypeTableBody = $('.tblSizeTypeBody');
+                // HTML CLEAR
+                vSizeTypeTableBody.html('');
+
+                // JSON
+                var vSizeTypeDataResult = JSON.parse(SizeTypeData);
+
+                // For Each Cash Desk - Main
+                $.each(vSizeTypeDataResult, function (m, SizeTypeSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vSizeTypeRowContent = funSizeTypeRowConfig(vSizeTypeDataResult[m]);
+                    // Append Row Content
+                    vSizeTypeTableBody.append(vSizeTypeRowContent);
+
+                })
+                //funSizeTypeRow();
+            }) }
+    // Cash Desk Add Row
+    function funSizeTypeAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+        {
+            "SizeTypeIsActive": true,
+            "SizeTypeId": 0,
+            "SizeTypeCode": '',
+            "SizeTypeNameL1": '',
+            "SizeTypeNameL2": '',
+        }
+
+        var vRowContent = funSizeTypeRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+
+    // Cash Desk Row Config
+    function funSizeTypeRowConfig(pSizeTypeDataResult) {
+
+        // Checked
+        var vChecked = null;
+        if (pSizeTypeDataResult.SizeTypeIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vSizeTypeId = pSizeTypeDataResult.SizeTypeId;
+        if (vSizeTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        var vRowContent = '<tr class="tblRow" data-id="' + pSizeTypeDataResult.SizeTypeId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnSizeTypeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control SizeTypeCode" disabled value="' + pSizeTypeDataResult.SizeTypeCode + '" /></td>' +
+            '<td><input type="text" class="form-control SizeTypeNameL1" value="' + pSizeTypeDataResult.SizeTypeNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control SizeTypeNameL2" value="' + pSizeTypeDataResult.SizeTypeNameL2 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  SizeTypeIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnSizeTypeDelete" data-id="' + pSizeTypeDataResult.SizeTypeId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+
+    // Row Select
+    $('.tblSizeTypeBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divSizeType').on('click', 'table tr', function () {
+        var vSizeTypeId = $(this).attr('data-id')
+        localStorage.setItem('vSizeTypeId', vSizeTypeId);
+        funGETSizeTypeDTl(vSizeTypeId)
+    });
+
+
+    // GET Cash Desk By Selected List
+    function funGETSizeTypeDTl(pSizeType) {
+
+
+        // GET Data
+        $.get('/SizeType/SizeGET',
+            {
+                pSizeId: null,
+                pSizeCode: '',
+                pSizeNameL1: '',
+                pSizeNameL2: '',
+                pSizeTypeId: pSizeType,
+                pSizeIsActive: null,
+                pIsDetail: true,
+                pQueryTypeId: 400
+            },
+            function (SizeTypeData, status) {
+
+                // Table Body
+                var vSizeTypeTableBody = $('.tblSizeBody');
+                // HTML CLEAR
+                vSizeTypeTableBody.html('');
+
+                // JSON
+                var vSizeTypeDataResult = JSON.parse(SizeTypeData);
+
+                // For Each Cash Desk - Main
+                $.each(vSizeTypeDataResult, function (m, SizeTypeSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vSizeTypeRowContent = funSizeTypeDTlRowConfig(vSizeTypeDataResult[m]);
+                    // Append Row Content
+                    vSizeTypeTableBody.append(vSizeTypeRowContent);
+
+                })
+
+                // Cash Desk Add Row
+                funAccountAddRow()
+            })
+    }
+
+
+
+</script>
+<!-- Account Scripts -->
+<!-- Add Row -->
+<script>
+
+
+    // Add Row
+    $('.btnSizeAddRow').on('click', function () {
+        // Cash Desk Add Row
+        funAccountAddRow();
+        // Cash Desk Scroll
+        funAccountScroll();
+    })
+
+    // Account Scroll
+    function funAccountScroll() {
+        // Scroll To Bottom
+        $('.divSize').animate({ scrollTop: $('.divSize').prop("scrollHeight") }, 1000);
+    }
+</script>
+
+<script>
+
+    // Cash Desk Row Config
+    function funSizeTypeDTlRowConfig(pBankDataResult) {
+        // Checked
+        var vChecked = null;
+        if (pBankDataResult.SizeIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vBankTypeId = pBankDataResult.BankTypeId;
+        if (vBankTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        //var vRowContent = '<tr class="tblRow" data-id="' + pBankDataResult.SizeTypeId + '"data-Size-id="' + pBankDataResult.SizeId + '">' +
+        //    '<td width="20px"><button class="btn btn-sm btn-light btnSizeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        //    '<td><input type="text" class="form-control SizeTypeNameL1" value="' + pBankDataResult.SizeNameL1 + '" /></td>' +
+        //    '<td><input type="text" class="form-control SizeTypeNameL2" value="' + pBankDataResult.SizeNameL2 + '" /></td>' +
+        //    '<td width="7%"><input type="text" class="form-control SizeCode" value="' + pBankDataResult.SizeCode + '" /><input type="text" class="form-control AccountId d-none" value="' + pBankDataResult.SizeId + '" /></td>' +
+        //    '<td><input type="text" class="form-control AccountNameL1" disabled value="' + pBankDataResult.SizeNameL1 + '" /></td>' +
+        //    '<td><input type="checkbox" class="form-control  SizeIsActive" ' + vChecked + ' /></td>' +
+        //    '<td><button class="btn btn-light btn-sm btnSizeDelete" data-id="' + pBankDataResult.SizeId + '"><i class="fa fa-trash"></i></button></td>' +
+        //    '</tr>';
+        var vRowContent = '<tr class="tblRow" data-id="' + pBankDataResult.SizeTypeId + '" data-Size-id="' + pBankDataResult.SizeId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnSizeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control SizeCode" disabled value="' + pBankDataResult.SizeCode + '" /></td>' +
+            '<td><input type="text" class="form-control SizeNameL1" value="' + pBankDataResult.SizeNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control SizeNameL2" value="' + pBankDataResult.SizeNameL2 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  SizeIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnSizeDelete" data-id="' + pBankDataResult.SizeTypeId + '" data-Size-id="' + pBankDataResult.SizeId + '" ><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+    ////////// Account Add Row
+    // Add New Row
+    $('body').on('click', '.btnSizeAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funSizeAddRow(vCurrentRow);
+    })
+
+
+    // Cash Desk Add Row
+    function funSizeAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "SizeTypeIsActive": true,
+                "SizeCode": '',
+                "SizeId": 0,
+                "SizeNameL1": '',
+                "SizeNameL2": '',
+
+            }
+
+        var vRowContent = funSizeTypeDTlRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+    // Add Row On Load Page
+    function funBankRow() {
+
+        // Table Body
+        var vSizeTypeTableBody = $('.tblSizeTypeBody');
+        // Append
+        vSizeTypeTableBody.append('<tr class="tblRow" data-id="0">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnSizeTypeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control SizeTypeCode" disabled  /></td>' +
+            '<td><input type="text" class="form-control SizeTypeNameL1"  /></td>' +
+            '<td><input type="text" class="form-control SizeTypeNameL2" /></td>' +
+            '<td><input type="checkbox" class="form-control  SizeTypeIsActive"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnSizeTypeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>');
+    }
+
+
+    // Account Add Row
+    function funAccountAddRow() {
+
+        // Table Body
+        var vSizeTableBody = $('.tblSizeBody');
+        // Append
+        //vSizeTableBody.append(' <tr class= "tblRow" data-Account-id="0" > ' +
+        //    '<td width="20px"><button class="btn btn-sm btn-light btnSizeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        //    '<td><input type="text" class="form-control SizeTypeNameL1" /></td>' +
+        //    '<td><input type="text" class="form-control SizeTypeNameL2"  /></td>' +
+        //    '<td><input type="text" class="form-control SizeCode"  /><input type="text" class="form-control SizeId d-none"  /></td>' +
+        //    '<td><input type="text" class="form-control SizeNameL1" disabled /></td>' +
+        //    '<td><input type="checkbox" class="form-control  SizeIsActive" /></td>' +
+        //    '<td><button class="btn btn-light btn-sm btnSizeTypeDelete"><i class="fa fa-trash"></i></button></td>' +
+        //    '</tr>'
+        //);
+        vSizeTableBody.append('<tr class="tblRow" data-Size-id="0">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnSizeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control SizeCode" disabled  /></td>' +
+            '<td><input type="text" class="form-control SizeNameL1"  /></td>' +
+            '<td><input type="text" class="form-control SizeNameL2" /></td>' +
+            '<td><input type="checkbox" class="form-control  SizeIsActive"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnSizeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>'
+        );
+    }
+
+</script>
+
+<!-- SizeData Modal -->
+<div id="SizeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="SizeDataModalContent"></div>
+    </div>
+</div>
+<!--Above Checked-->
+<!-- Get Account -->
+<script>
+
+    // Account Code, Name - F9
+    $('body').on('keydown dblclick', '.SizeNameL1,.SizeCode', function (e) {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+
+            // Get Account Data
+            var vAccountIdElement = vTableRow.find('.SizeId');
+            var vAccountCodeElement = vTableRow.find('.SizeCode');
+            var vAccountNameElement = vTableRow.find('.SizeNameL1');
+            var vAccountCurrencyFactorElement = vTableRow.find('.txtAccountCurrencyFactor');
+
+            // Search Account
+            var vURL = '/SizeType/SizeGET';
+            // Load Content of Account Search
+            $('#SizeDataModalContent').load(vURL);
+            // Modal Show
+            $('#sizeDataModal').modal('show');
+
+            // Select Account
+            $('body').on('click', '.divSizeSelect', function () {
+
+                // Account Id
+                var vSizeId = $(this).attr('data-id');
+
+                // Get Values
+                var vSizeCodeValue = $(this).find('.divSizeCode').text();
+                var vSizeNameValue = $(this).find('.divSizeName').text();
+              
+
+
+                // Set Value
+                vAccountIdElement.val(vSizeId);
+                vAccountCodeElement.val(vSizeCodeValue);
+                vAccountNameElement.val(vSizeNameValue);
+
+                // Modal Show
+                $('#AccountDataModal').modal('hide');
+
+            })
+        }
+    })
+</script>
+<script>
+    // When Change Value Of Id
+    $('body').on('keydown', '.SizeCode', function (e) {
+        $('input').on('blur', function () {
+            var row = $(this).closest('tr');
+            var vAccountNo = row.find('.SizeCode').val();
+            // List GetAccount
+            $.post('/SizeType/SizeGET',
+                { AccountNo: vAccountNo },
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Size) {
+                        // Account Name
+                        row.find('.SizeNameL1').val(Size.SizeNameL1);
+                        // AccountId
+                        row.find('.SizeId').val(Size.SizeId);
+                    })
+                });
+
+        });
+    });
+</script>
+<script>
+    //$('body').on('keydown', '.SizeTypeNameL1', function (e) {
+    //    $('input').on('blur', function () {
+    //        var row = $(this).closest('tr');
+    //        var vSizeTypeName1 = row.find('.SizeTypeNameL1').val();
+    //        row.find('.SizeTypeNameL2').val(vSizeTypeName1);
+
+    //    });
+    //});
+
+    $('body').on('keydown', 'input', function (e) {
+             $('input').on('blur', function () {
+                 if ($(this).attr('class').indexOf('NameL1') > -1) {
+                     // Get The Current Row
+                     var row = $(this).closest('tr');
+                     // substring the first part of the element class name
+                     var vElementNameL1Partial = $(this).attr('class').substring($(this).attr('class').indexOf(' ') , $(this).attr('class').indexOf('NameL1') )
+                      // get the class name of the element that contains NameL2
+                     var vElementNameL2 = vElementNameL1Partial + 'NameL2'
+                       // check if the value of NameL2 Element Is not Empty
+                     if (row.find('.' + vElementNameL2.trim()).val() == undefined || row.find('.' + vElementNameL2.trim()).val() == '') {
+                               // change of the element Name 
+                         row.find('.' + vElementNameL2.trim()).val($(this).val());
+                     }
+                    
+                 }
+
+        });
+     
+    });
+    $('.btnPrint').on('click', function () {
+        var url = '/SizeType/SizeTypeReport'
+        var popupWindow = window.open(url);
+    });
+
+</script>
+

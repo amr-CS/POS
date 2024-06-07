@@ -1,0 +1,257 @@
+﻿@{
+    ViewBag.Title = "الرئيسية";
+}
+    <style>
+        .appDarkColor {
+            color: #404E67;
+        }
+
+        #canvasChart {
+            font-family: Cairo !important;
+            margin: auto;
+        }
+    </style>
+
+    <!DOCTYPE HTML>
+    <html>
+    <head>
+        <link href="~/Content/DashBoard/style.css" rel="stylesheet" />
+        <script src="~/Scripts/Chart.js"></script>
+
+    </head>
+    <body class="cbp-spmenu-push">
+        <div class="main-content container-fluid">
+
+            <!-- //header-ends -->
+            <!-- main content start-->
+            <div id="page-wrapper">
+                <div class="main-page">
+                    <div class="row">
+                        <div class="col-md-3 widget">
+                            <div class="stats-left ">
+                                <h5>اليوم</h5>
+                                <h4>المبيعات</h4>
+                            </div>
+                            <div class="stats-right">
+                                <label class="lblSales"> 0</label>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 widget states-mdl">
+                            <div class="stats-left">
+                                <h5>اليوم</h5>
+                                <h4>العملاء</h4>
+                            </div>
+                            <div class="stats-right">
+                                <label class="lblCustomer"> 0</label>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="col-md-4 widget states-last">
+                            <div class="stats-left">
+                                <h5>اليوم</h5>
+                                <h4>الطلبات</h4>
+                            </div>
+                            <div class="stats-right">
+                                <label class="lblOrder">0</label>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="clearfix"> </div>
+                    </div>
+                    <div class="charts row">
+                        <div class="col-md-4 charts-grids widget">
+                            <h4 class="title" 0>شريط الرسم البياني لمبيعات الوجبات</h4>
+                            <canvas id="bar" height="300" width="400"> </canvas>
+                        </div>
+                        <div class="col-md-4 charts-grids widget states-mdl">
+                            <h4 class="title"> خط الرسم البياني للمبيعات</h4>
+                            <canvas id="line" height="300" width="400"> </canvas>
+                        </div>
+                        <div class="col-md-3 charts-grids widget">
+                            <h4 class="title"> الرسم البياني دائري للمبيعات</h4>
+                            <canvas id="pie" height="300" width="400"> </canvas>
+                        </div>
+                        <div class="clearfix"> </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 stats-info widget">
+                            <div class="stats-title">
+                                <h4 class="title">فئات البيع</h4>
+                            </div>
+                            <div class="stats-body">
+                                <ul class="list-unstyled lstType">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-7 stats-info stats-last widget-shadow ml-5">
+                            <table class="table table-bordered table-hover table-striped stats-table tblBestItem">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="text-center">الترتيب</th>
+                                        <th>الوجبات الاكثر مبيعاّ </th>
+                                        <th>الحالة</th>
+                                        <th>النسبة</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix"> </div>
+                    </div>
+                    <div class="row">
+
+
+                        <div class="clearfix"> </div>
+                    </div>
+
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </body>
+</html>
+<script>
+    var LoginData = localStorage.getItem("login")
+    console.log(LoginData);
+
+    var lineChartData = {
+        labels: ["يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو", "يوليو"],
+        datasets: [
+            {
+                fillColor: "rgba(242, 179, 63, 1)",
+                strokeColor: "#F2B33F",
+                pointColor: "rgba(242, 179, 63, 1)",
+                pointStrokeColor: "#fff",
+                data: [70, 60, 72, 61, 75, 59, 80]
+
+            },
+            {
+                fillColor: "rgba(97, 100, 193, 1)",
+                strokeColor: "#6164C1",
+                pointColor: "rgba(97, 100, 193,1)",
+                pointStrokeColor: "#9358ac",
+                data: [50, 65, 51, 67, 52, 64, 50]
+
+            }
+        ]
+
+    };
+    var pieData = [
+        {
+            value: 90,
+            color: "rgba(233, 78, 2, 1)",
+            label: "الدجاج المدفون والمقلوبة"
+        },
+        {
+            value: 50,
+            color: "rgba(242, 179, 63, 1)",
+            label: "اللحوم"
+        },
+        {
+            value: 60,
+            color: "rgba(88, 88, 88,1)",
+            label: "المقبلات"
+        },
+        {
+            value: 40,
+            color: "rgba(79, 82, 186, 1)",
+            label: "الدجاج الشواية والمظبي"
+        }
+        ,
+        {
+            value: 40,
+            color: "#2980b9",
+            label: "المشروبات"
+        }
+
+    ];
+
+    new Chart(document.getElementById("line").getContext("2d")).Line(lineChartData);
+
+
+
+
+    $.get('/api/Board/DashboardGet', function (data) {
+        var Result = JSON.parse(data)
+        pieData = Result[0].Chart
+        console.log(Result)
+        $.each(pieData, function (index, data) {
+            if (index < 7) {
+                $('.lstType').append('<li><h4 > ' + pieData[index].label + '</h4><span class="pull-right">' + pieData[index].value + '</span><div class="progress progress-striped active progress-right"><div class="bar ' + pieData[index].Notes + '" style="width:60%;"></div></div></li>')
+            }
+        })
+
+        var departement = []; // create array here
+        $.each(Result[0].Line, function (index, Line) {
+            departement.push(Line.data); //push values here
+        });
+
+        var barChartData = {
+            labels: ["يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو", "يوليو"],
+            datasets: [
+                {
+                    fillColor: "rgba(233, 78, 2, 0.9)",
+                    strokeColor: "rgba(233, 78, 2, 0.9)",
+                    highlightFill: "#e94e02",
+                    highlightStroke: "#e94e02",
+                    data: [70, 60, 72, 61, 75, 59, 80]
+                },
+                {
+                    fillColor: "#6164C1",
+                    strokeColor: "#6164C1",
+                    highlightFill: "#6164C1",
+                    highlightStroke: "#6164C1",
+                    data: [50, 65, 51, 67, 52, 64, 50]
+                }
+            ]
+
+        };
+
+
+
+        $('.lblSales').text(Result[0].SalesCount)
+        $('.lblCustomer').text(Result[0].CustomerCount)
+        $('.lblOrder').text(Result[0].OrderCount)
+
+        new Chart(document.getElementById("bar").getContext("2d")).Bar(barChartData);
+        new Chart(document.getElementById("pie").getContext("2d")).Pie(pieData);
+
+
+        var BestItem = Result[0].BestItem
+        // Best Items
+        $.each(BestItem, function (m, Best) {
+            // GET Cash Desk Row Content
+            var vBestRowContent = funBestRowConfig(BestItem[m], m);
+            // Append Row Content
+            $('.tblBestItem').append(vBestRowContent);
+        })
+
+    })
+
+    // Cash Desk Row Config
+    function funBestRowConfig(pBestDataResult, m) {
+        var m = m + 1
+        // Row Content
+        var vRowContent =
+            '<tr>' +
+            '<th scope="row">' + m + '</th>' +
+            '<td>' + pBestDataResult.InvItemNameL1 + '</td>' +
+            '<td><span class="label label-success">   فعال / نشط    </span></td>' +
+            '<td><h5>' + pBestDataResult.ItemCount + ' <i class="fa fa-level-up"></i></h5></td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+</script>
+

@@ -1,0 +1,236 @@
+﻿@model appSERP.Models.SEC.ObjectsModel
+@using appSERP.Views.Shared.appResource
+
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    @using (Html.BeginForm("ObjectsDataModel", "CPanel", FormMethod.Post, new { enctype = "multipart/form-data", @data_ajax = "false" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+
+            <!-- Header -->
+            <div class="container-fluid">
+                @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._Object, pId = Model.ObjectId })
+            </div>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ObjectId)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectSeq, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectSeq, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                    @Html.ValidationMessageFor(model => model.ObjectSeq, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectProName, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectProName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectProName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectCode, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectCode, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL1, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL2, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL3, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL3, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL3, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL4, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL4, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL4, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL5, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL5, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL5, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL6, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL6, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL6, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL7, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL7, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL7, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL8, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL8, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL8, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL9, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL9, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL9, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectNameL10, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectNameL10, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectNameL10, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectIconW, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    <input name="pFile" id="pFile" type="file" multiple="multiple" accept="image/*" onchange="funShowImage(this)" />
+                    @if (@Model.ObjectIconW == "")
+                    {
+                        <img id="imgData" width="100" />
+                    }
+                    else
+                    {
+                        <img id="imgData" src="@Model.ObjectIconW" width="100" />
+                    }
+
+
+                    @Html.ValidationMessageFor(model => model.ObjectIconW, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.ObjectIconB, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <input name="" id="pFile" type="file" multiple="multiple" accept="image/*" onchange="funShowImage(this)" />
+
+                            <img id="imgData" width="100" />
+
+                        @Html.ValidationMessageFor(model => model.ObjectIconB, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectAction, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectAction, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectAction, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectImage, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectImage, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectImage, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectURL, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectURL, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectURL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="custom-control custom-checkbox col-md-12">
+                    @Html.EditorFor(model => model.ObjectIsMainMenu, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck12" } })
+                    @Html.LabelFor(model => model.ObjectIsMainMenu, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck12" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="custom-control custom-checkbox col-md-12">
+                    @Html.EditorFor(model => model.ObjectIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                    @Html.LabelFor(model => model.ObjectIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjectTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.ObjectTypeId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ObjectTypeId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+        </div>
+        <div class="form-group divModalFooter">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+
+    }
+
+
+</body>
+</html>
+<script>
+
+    // Show Image [on Change]
+    function funShowImage(pElement) {
+        if (pElement.files && pElement.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#imgData').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(pElement.files[0]);
+        }
+    }
+
+</script>  

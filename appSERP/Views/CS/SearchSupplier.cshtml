@@ -1,0 +1,151 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "SupplierSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divSupplier {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divSupplierSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divSupplierSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divSupplierNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Supplier</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divSupplier">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodySupplier"></tbody>
+    </table>
+</div>
+
+
+<!-- Supplier GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Supplier GET
+        funSupplierGET();
+    })
+
+    // Supplier GET
+    function funSupplierGET() {
+        $.get('/api/APICustomerSupplier/CustomerSupplierGET',
+            {
+                pCSIsCustomer: false
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodySupplier');
+
+
+                // Suppliers
+                $.each(vDataResult, function (i, SupplierData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].CSId + '">';
+
+                    var vSupplierName = vDataResult[i].CSNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vSupplierName = vDataResult[i].CSNameL2;
+                        }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divSupplierSelect d-flex p-2" data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divSupplierNo px-4">' + vDataResult[i].CSCode + '</div>';
+                                vRowContent += '<div class="divSupplierName px-4">' + vSupplierName + '</div>';
+                                //vRowContent += '<div class="divSupplierCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search Supplier -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divSupplierSelect').each(function () {
+
+                // Get Supplier Code
+                var vSupplierCode = $(this).find('.divSupplierNo').text();
+                var vSupplierName = $(this).find('.divSupplierName').text();
+
+                if (vSupplierCode.search(vSearchInput) != -1 || vSupplierName.search(vSearchInput) != -1) {
+
+                    $(this).addClass('table-success');
+                    $(this).hide();
+
+                    console.log('found')
+                }
+                else {
+                    $(this).removeClass('table-success');
+                    $(this).show();
+                }
+
+            })
+
+        }
+        else {
+            $('.divSupplierSelect').removeClass('table-success');
+            $(this).show();
+        }
+    })
+</script>
+

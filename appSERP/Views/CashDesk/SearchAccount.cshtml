@@ -1,0 +1,45 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "SearchAccount";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<div class=" container-fluid">
+    <table class="table table-bordered table-hover tblDataSearch " id="tblDataSchool">
+        <thead>
+            <tr>
+                <th>@appResource.AccountNo</th>
+                <th>@appResource._Account </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @ViewBag.vbAccount)
+            {
+
+                <tr>
+                    <td><button class="btn btn-light btn-block btnSelect" data-dismiss="modal" data-id="@item["AccountNo"]" data-Name="@item["AccountNameL1"]">@item["AccountNo"]</button> </td>
+                    <td><button class="btn btn-light btn-block " data-dismiss="modal" data-id="@item["AccountId"]">@item["AccountNameL1"]</button> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    // VAR
+    var vlastFocused;
+    var row;
+    // On Blur
+    $('input').on('blur', function () {
+        // GET Focused
+        vlastFocused = $(this);
+        // Get the current row
+         row = $(this).closest('tr');
+
+    })
+    $('.btnSelect').on('click', function () {
+        vId = $(this).attr('data-id');
+        vAccountName = $(this).attr('data-Name');
+        vlastFocused.val(vId)
+        row.find('.AccountNameL1').val(vAccountName)
+    });
+</script>

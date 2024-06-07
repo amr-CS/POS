@@ -1,0 +1,405 @@
+﻿@using System.Data
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType;
+@using appSERP.appCode.dbCode.RES;
+@{
+
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    string name = ticket.Name;
+
+       DateTime ORderTime = DateTime.Now;
+}
+@{
+    ViewBag.Title = "قائمة اصناف المندوبين ";
+}
+<style>
+    body {
+        font-family: Cairo;
+    }
+
+    .fullHeightInput {
+        height: 30px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+        padding: 0px;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+    }
+    /*.table td {
+        margin-top: 0.5rem;
+        padding: 0rem !important;
+    }*/
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+</style>
+<div id="loading">
+    <img src="~/Image/PreloaderImage/load-from-cloud.gif" class="loader" />
+</div>
+<!-- Utility Bar -->
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="">
+        @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblAccountType })
+    </div>
+    <!-- Utlity -->
+    <div class="divUtilityBar d-flex ">
+        @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+    </div>
+    <!-- Head -->
+    <div class="bg-white border rounded p-3">
+        <div class="row">
+            <!-- Main Inputs -->
+            <div class="col-sm-8">
+                <!-- Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">رقم الطلب</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control  txtOrderId" disabled />
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="custom-control custom-checkbox">
+
+                            <input type="checkbox" class="custom-control-input disabled txtDelivery" id="chkDelivery">
+                            <label class="custom-control-label small" for="chkDelivery">توصيل الطلب</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2 txtOrderStatus">حالة الطلب</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control  txtOrderStatues" disabled />
+                    </div>
+                </div>
+                <!-- Doc Date -->
+                <div class="row controlRow">
+
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">تاريخ الطلب</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control  txtOrderDate" value="@DateTime.Now" disabled />
+                    </div>
+                    <!-- Doc Date -->
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">تاريخ التوصيل</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control  txtDeliverDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control  txtDate d-none" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <!-- Ref Doc No -->
+                <div class="row controlRow">
+                    @*<div class="col-sm-2">
+                            <label class="small float-right pt-2">مدخل الفاتورة</label>
+                        </div>*@
+                    @*<div class="col-sm-4">
+                            <input type="text" class="form-control  clsUser" value="@clsUser.vUserFullName" disabled />
+                        </div>*@
+                    <!-- Ref Doc No -->
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">وقت التوصيل</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="time" class="form-control  txtDeliverTime" value="12:00" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">اختيار الفترة</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <select id="PeriodType" class="PeriodId form-control " name="PeriodType" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required></select>
+                    </div>
+                </div>
+
+                <div class="row controlRow">
+
+
+                </div>
+                <!-- Ref Doc Date -->
+                <div class="row ">
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">العميل</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="d-flex txtCustomer">
+                            <input type="text" class="form-control  txtCustomerCode w-50" />
+                            <input type="text" class="form-control  txtCustomerName" disabled />
+                        </div>
+                    </div>
+                    <!-- Ref Doc Date -->
+
+                    <div class="col-sm-2">
+                        <label class="float-right small">البيان</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control  txtNote" />
+                    </div>
+                </div>
+
+
+            </div> <!-- End of Main Inputs -->
+            <!-- Left Controls [Doc No, Ref, ..] -->
+            <div class="col-sm-4 mt-3">
+
+                <!-- Ref Doc Date -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">اجمالي الطلب</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control  txtTotalOrder" value="0.00" disabled />
+                    </div>
+                </div>
+                <!-- Source -->
+                @*<div class="row controlRow">
+                        <div class="col-sm-4">
+                            <label class="small float-right pt-2">الضريبة</label>
+                        </div>
+                        <div class="col-sm-8 d-flex">
+                            <input type="number" class="form-control" id="totalVat" disabled />
+                        </div>
+                    </div>*@
+                <!-- Source -->
+                @*<div class="row controlRow">
+                        <div class="col-sm-4">
+                            <label class="small float-right pt-2">الصافي</label>
+                        </div>
+                        <div class="col-sm-8 d-flex">
+                            <input type="number" class="form-control   txtTotalPrice" disabled />
+                        </div>
+                    </div>*@
+                <!-- Source -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">اجمالي التأمين</label>
+                    </div>
+                    <div class="col-sm-8 d-flex">
+                        <input type="number" class="form-control   txtTotalIns" value="0.00" disabled />
+                    </div>
+                </div>
+              
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">اجمالي الخصم</label>
+                    </div>
+                    <div class="col-sm-8 d-flex">
+                        <input type="number" class="form-control   txtTotalDiscount" value="0.00" disabled />
+                    </div>
+                </div>
+                <!-- Source -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">اجمالي المطلوب</label>
+                    </div>
+                    <div class="col-sm-8 d-flex">
+                        <input type="number" class="form-control   txtTotalReq" value="0.00" disabled />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- Details Main -->
+    <div class="bg-white border rounded p-3 mt-3">
+        <div class="col-sm-12 pt-2">
+            <table class="table  tblOrderLocation">
+                <tr>
+                    <th>الموقع</th>
+                    <th>العنوان</th>
+                    <th>البيان</th>
+                </tr>
+                <tr>
+                    <td><select id="selectSite" class="selectpicker selSite form-control btn" name="SiteId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select></td>
+                    <td><input type="text" class="form-control  txtAddress" /></td>
+                    <td><input type="text" class="form-control  txtNotes" /></td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- Details Main -->
+    <div class="bg-white border rounded p-3 mt-3 ">
+        <!-- Details -->
+        <table class="table table-sm table-responsive-sm tblMeal">
+            <thead>
+                <tr class="tblHead">
+                    <th class=""></th>
+                    <th class="" width="15%">
+                        <div>الوجبة</div>
+                    </th>
+                    <th class="" width="7%">
+                        <div>الوسم</div>
+                    </th>
+                    <th class="" width="5%">
+                        <div>الكمية</div>
+                    </th>
+                    <th class="" width="5%">
+                        <div>السعر</div>
+
+                    </th>
+                    <th class="" width="5%">
+                        <div>سعر التأمين</div>
+                    </th>
+
+                    <th class="" width="5%">
+                        <div>الضريبة</div>
+                    </th>
+                    <th class="" width="5%">
+                        <div>الاجمالي</div>
+                    </th>
+                    <th class="" width="7%">
+                        <div>علي قدر</div>
+                    </th>
+                    <th class="" width="7%">
+                        <div>طريقة التقطيع</div>
+                    </th>
+                    <th class="" width="7%">
+                        <div>الذبيحة خاصة ب</div>
+                    </th>
+                    <th class="" width="7%">
+                        <div>المتبقي من الذبيحة</div>
+                    </th>
+                    <th class="" width="5%">
+                        <div>عدد الصحون</div>
+                    </th>
+                    <th class="">
+                        <div>البيان</div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody class="tblOrderBody">
+               
+            </tbody>
+
+        </table>
+
+        <div class="row" style="align-content:center">
+            <div class="">
+                <label class="small  mx-1 pt-2">نقدا</label>
+            </div>
+            <div class="">
+                <input class="form-control  text-center disabled font-weight-bold txtPayCash " type="text" min=0 required />
+            </div>
+            <div class="">
+                <label class="small  mx-1 pt-2">شبكة</label>
+            </div>
+            <div class="">
+                <input class="form-control  text-center disabled font-weight-bold   txtPayNet" type="text" min=0 required />
+            </div>
+            <div class="">
+                <div class="d-flex">
+                    <label class="small mx-1 pt-2">أجل</label>
+                    <input class="form-control  text-center disabled txtCredit font-weight-bold" id="future-sum" disabled type="text" required />
+                </div>
+
+            </div>
+            <div class="">
+                <div class="d-flex">
+                    <label class="small mx-1 pt-2">الخصم</label>
+                    <input class="form-control  text-center disabled txtDiscount font-weight-bold" id="future-sum" @ViewBag.Discount type="text" required />
+                </div>
+
+            </div>
+            <div class="">
+                <input type="button" class="btn btn-info btnCustomer" value="العملاء" />
+            </div>
+            <div class="">
+                <input type="button" class="btn btn-success btnInvPosted" value="اصدار الفاتورة" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AccountData Modal -->
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+<div id="tagDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="tagDataModalContent"></div>
+    </div>
+</div>
+<!-- AccountData Modal -->
+<div id="ItemDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="ItemDataModalContent"></div>
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>

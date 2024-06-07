@@ -1,0 +1,182 @@
+﻿@model appSERP.Models.SEC.UserSecurityLogModel
+@using appSERP.Views.Shared.appResource
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.lblSecurityLog, pId = Model.SecurityLogId })
+        </div>
+        <div class="form-horizontal">
+           
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.HiddenFor(model => model.SecurityLogId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.SecurityLogId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SecurityLogId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecurityLogLat, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SecurityLogLat, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SecurityLogLat, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecurityLogLng, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SecurityLogLng, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SecurityLogLng, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecurityLogLocation, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SecurityLogLocation, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SecurityLogLocation, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecurityLogDevice, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SecurityLogDevice, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SecurityLogDevice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecurityLogDeviceIsMobile, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.SecurityLogDeviceIsMobile)
+                        @Html.ValidationMessageFor(model => model.SecurityLogDeviceIsMobile, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecurityLogDate, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SecurityLogDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SecurityLogDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecurityLogTime, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SecurityLogTime, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SecurityLogTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.OldPassword, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.OldPassword, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.OldPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.NewPassword, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.NewPassword, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.NewPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    <select id="selectUser" class="selectpicker form-control form-control" name="ObjectId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserSecurityTransactionTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    <select id="selectUserSecurityTransactionType" class="selectpicker form-control form-control" name="ObjectId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    @Html.ValidationMessageFor(model => model.UserSecurityTransactionTypeId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecurityLogIsActive, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.SecurityLogIsActive)
+                        @Html.ValidationMessageFor(model => model.SecurityLogIsActive, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+    }
+
+</body>
+</html>
+<script>
+        // List GetObject
+    $.post('/Home/GetUserSecurityTransactionType',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, UserSecurityTransactionType) {
+                $('#selectUserSecurityTransactionType').append('<option data-id="' + UserSecurityTransactionType.UserSecurityTransactionTypeId + '" value="' + UserSecurityTransactionType.UserSecurityTransactionTypeId + '" sort-id="' + i + '">' + UserSecurityTransactionType.UserSecurityTransactionTypeNameL1 + '</option>')
+                if (i == 0) {
+                    vUserSecurityTransactionTypeId = UserSecurityTransactionType.UserSecurityTransactionTypeId;
+                }
+            })
+                    if (parseInt('@ViewBag.vbcUserSecurityTransactionTypeId') > 0) {
+                vUserId = parseInt('@ViewBag.vbcUserSecurityTransactionTypeId');
+            }
+            $('#selectUser').val(vUserId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+
+
+            // List GetObject
+    $.post('/Home/GetUser',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, User) {
+                $('#selectUser').append('<option data-id="' + User.UserId + '" value="' + User.UserId + '" sort-id="' + i + '">' + User.UserName + '</option>')
+                if (i == 0) {
+                    vUserId = User.UserId;
+                }
+            })
+                    if (parseInt('@ViewBag.vbcUserId') > 0) {
+                vUserId = parseInt('@ViewBag.vbcUserId');
+            }
+            $('#selectUser').val(vUserId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+</script>

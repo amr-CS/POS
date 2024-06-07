@@ -1,0 +1,226 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    //Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+    Layout = null;
+}
+@{
+    DateTime dateTimeFrom = ViewBag.DateFrom;
+    DateTime dateTimeTo = ViewBag.DateTo;
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl, .divDtl {
+        height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .clsSelected {
+        background-color: #0094ff;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div>@appResource.GLVoucherNo<input type="text" class="form-control txtDocSearchNo" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-5">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @appResource.dtFrom
+                                <input type="Date" class="form-control txtDateFrom"  value="@dateTimeFrom.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="col-md-6">
+                                @appResource.dtTo
+                                <input type="Date" class="form-control txtDateTo"  value="@dateTimeTo.ToString("yyyy-MM-dd")" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div>@appResource.btnSearch بالكل<input type="text" id="myInput" class="form-control" min="0" /></div>
+                    </div>
+
+
+                    <div class=" col-sm-2 bg-white">
+                        <div class="card-footer bg-white">
+                            <button type="button" class="btn btn-secondary btn-block btnSearch">@appResource.btnSearch</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="divFormDtl">
+                <table class="table table-bordered table-hover tblGlVoucher">
+                    <thead>
+                        <tr>
+                            <th>رقم الفاتورة</th>
+                            <th>العميل</th>
+                            <th>الرقم</th>
+                            <th>اسم السائق</th>
+                            <th>الموقع</th>
+                            <th>@appResource._Date</th>
+                            <th>@appResource._Branch</th>
+                            <th>قيمة الفاتورة</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody class="tblGlVoucherBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card row">
+
+        <div class="card-body row">
+            <div class="col-md-4"></div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-secondary btn-block btnRefresh">تحديث القائمة</button>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-secondary btn-block btnClose">اغلاق</button>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+    //function Append
+    function funGlVoucherRowConfig(pGLVoucherRow) {
+        var InvoiceDtl = JSON.stringify(pGLVoucherRow.InvoiceDTL)
+        var Total = (pGLVoucherRow.Total).toFixed(2)
+        // Content
+        var RowContent = '<tr class="tblGlVoucherRow" data-id="' + pGLVoucherRow.InvId + '">' +
+            //'<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pGLVoucherRow.InvId + '"/></td> ' +
+            '<td class="d-none clsData">' + InvoiceDtl + '</td>' +
+            '<td class="code">' + pGLVoucherRow.InvCode + '</td>' +
+            '<td>' + pGLVoucherRow.CustomerName + '</td>' +
+            '<td>' + pGLVoucherRow.InvPhoneNo + '</td>' +
+            '<td>' + pGLVoucherRow.ResEmployeeNameL1 + '</td>' +
+            '<td>' + pGLVoucherRow.InvoiceType + '</td>' +
+
+            '<td>' + pGLVoucherRow.InvDate + '</td>' +
+            '<td>' + pGLVoucherRow.CompanyId + '</td>' +
+            '<td>' + (Total) + '</td>' +
+
+
+            +'</tr > '
+        return RowContent
+    }
+    function funGetGLVoucherData(DocNo, psDateFrom, psDateTo, phGLVoucherRef, phGLVoucherRefDate, phGLVoucherNote, phNumbers, phInvType) {
+        var vDataResult;
+        $.get('/api/APIINVInvoice/INVInvoiceGET',
+            {
+                // Head Parameters
+                psGLVoucherNo: DocNo,
+                psDateFrom: psDateFrom,
+                psDateTo: psDateTo,
+                phInvRef: phGLVoucherRef,
+                phNotes: phGLVoucherNote,
+                phNumbers: phNumbers,
+
+                //phIsDeleted: false,
+                // Query Type Id
+                pQueryTypeId: '400',
+                phInvtype: 33,
+            },
+            function (data, status) {
+
+                // JSON Parse
+                vDataResult = JSON.parse(data);
+
+                $('.tblGlVoucherBody').html('');
+                $.each(vDataResult, function (m, GLVoucherData) {
+                    // GET Cash Desk Row Content
+                    var vAccountRowContent = funGlVoucherRowConfig(vDataResult[m]);
+
+                    // Append Row Content
+                    $('.tblGlVoucherBody').append(vAccountRowContent);
+                });
+
+            })
+
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearch').on('click', function () {
+        var vDocSearchNo = $('.txtDocSearchNo').val();
+        var vDateFrom = $('.txtDateFrom').val();
+        var vDateTo = $('.txtDateTo').val();
+        var vRefNum = $('.txtRefNum').val();
+        var vRefDate = $('.txtRefDate').val();
+        var vText = $('#txtNote').val();
+        var vhInvTypeId = $('.txtInvType').val();
+
+        // Get Row
+        funGetGLVoucherData(vDocSearchNo, vDateFrom, vDateTo, vRefNum, vRefDate, vText, null, vhInvTypeId)
+    })
+    // Actione Load
+    $(document).ready(function () {
+             var vhInvTypeId = $('.txtInvType').val();
+        var vDateFrom = $('.txtDateFrom').val();
+        var vDateTo = $('.txtDateTo').val();
+   
+        // Get Row
+        funGetGLVoucherData(null, vDateFrom, vDateTo, null, null, null, null, vhInvTypeId)
+    });
+
+</script>
+
+<!--ON CLICK ROW-->
+<script>
+    $('.tblGlVoucherBody').on('click', '.tblGlVoucherRow', function () {
+        $('.tblGlVoucherRow').removeClass('clsSelected')
+        $(this).addClass('clsSelected')
+
+    })
+</script>
+<!--Search-->
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("table tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $('.btnClose').on('click', function () {
+        $('#AccountDataModal').modal('hide')
+    })
+
+    $('.btnRefresh').on('click', function () {
+        funNotification('تم تحديث القائمة', '2')
+        var vhInvTypeId = $('.txtInvType').val();
+        // Get Row
+        funGetGLVoucherData(null, null, null, null, null, null, null, vhInvTypeId)
+
+    })
+</script>

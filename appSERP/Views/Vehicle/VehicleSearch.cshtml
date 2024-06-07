@@ -1,0 +1,442 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    Layout = null;
+}
+<style>
+    /*body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }*/
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblBodyVehicleDriver {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+@*<div class="divContainer bg-light">
+        <div class="divFormDtl">
+            <table class="table table-bordered table-hover tblVehicleSearch">
+                <thead>
+                    <tr>
+                        <th></th>
+            <th>VehicleCode</th>
+            <th>VehicleName</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody class="tblVehicleBodySearch"></tbody>
+            </table>
+
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+            </div>
+        </div>
+    </div>*@
+
+<div class="divContainer bg-light">
+    <div class="w-100 bg-white border font-weight-bold p-4">المركبات</div>
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>@appResource._Code<input type="text" class="form-control txtCode" /></div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                حالة المركبة
+                                <select id="selectStatus" multiple class="selectStatus form-control" name="VehicleStatusId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-3">
+                                نوع المركبة
+                                <select id="selectType" multiple class="selectType form-control" name="VehicleTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-3">
+                                الماركة
+                                <select id="selectBrand" multiple class="selectBrand form-control" name="VehicleBrandId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-3">
+                                اللون
+                                <select id="selectColor" multiple class="selectColor form-control" name="VehicleColorId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                التاريخ
+                                <input type="text" class="form-control txtDate" />
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearch btnSearchh">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblVehicleSearch">
+            <thead>
+                <tr>
+                    <th class="btnCheckAll" data-checked="false">
+                        تحديد الكل
+                        <input type="checkbox" class="btnCheckAll">
+
+                    </th>
+                    <th>الكود</th>
+                    <th>المركبة </th>
+                    <th>التاريخ </th>
+
+
+                </tr>
+            </thead>
+
+            <tbody class="tblVehicleBodySearch"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Actione Load
+    $(document).ready(function () {
+        $('#selectStatus').append('<option data-id="" value="" sort-id="">-</option>');
+        $('#selectType').append('<option data-id="" value="" sort-id="">-</option>');
+        $('#selectBrand').append('<option data-id="" value="" sort-id="">-</option>');
+        $('#selectColor').append('<option data-id="" value="" sort-id="">-</option>');
+        //// Get Row
+        //funGetVehicles();
+        funGetLists();
+    });
+
+
+    //function Append
+    function funVehicleRowConfig(pVehicleRow) {
+        // Content
+        var RowContent = '<tr data-id="' + pVehicleRow.VehicleId + '">' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pVehicleRow.VehicleId + '"/></td> ' +
+            '<td align="center">' + pVehicleRow.VehicleCode + '</td>' +
+            '<td align="center">' + pVehicleRow.VecDescL1 + '</td>' +
+            '<td align="center">' + pVehicleRow.InitialDate + '</td>' +
+            +'</tr > '
+        //var vRowContent = '<tr data-id="' + Vehicle.VehicleId + '" style="height:70px;">' +
+        //          '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pVehicleRow.VehicleId+ '"/></td> ' +
+        //        '<td align="center">' + pVehicleRow.VehicleCode + '</td>' +
+        //    '<td align="center">' + pVehicleRow.VecDescL1 + '</td>' +
+        //    '<td align="center">' + pVehicleRow.VecDescL2 + '</td>' +
+        //    +'</tr > '
+
+        return RowContent
+    }
+
+    function funGetVehicles() {
+        //$.get('/api/APIVehicle/VehicleGET',
+        $.post('/Vehicle/GetVehicle',
+            {
+                pIsVehicle: true,
+                // Query Type Id
+                pQueryTypeId: '400',
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, VehicleData) {
+                        // GET Cash Desk Row Content
+
+                        var vVehicleRowContent = funVehicleRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblVehicleBodySearch').append(vVehicleRowContent);
+                    });
+
+                }
+            })
+
+    }
+
+    function funGetLists() {
+        //$.get('/api/APIVehicle/VehicleGET',
+        $.post('/Vehicle/GetSelectLists',
+            {
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    var vSelectListStatus = '';
+                    var vSelectListType = '';
+                    var vSelectListBrand = '';
+                    var vSelectListColor = '';
+                    for (var m = 0; m < vDataResult[0].VVehicleStatus.length; m++) {
+                        var vSelected = '';
+                       
+                        vSelectListStatus += '<option  value = "' + vDataResult[0].VVehicleStatus[m].CodeId + '"  sort-id="' + m + '" > ' + vDataResult[0].VVehicleStatus[m].LookupDtlDesc + '</option >'
+                        
+                    }
+                    for (var m = 0; m < vDataResult[0].VVehicleType.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListType += '<option  value = "' + vDataResult[0].VVehicleType[m].CodeId + '"  sort-id="' + m + '" > ' + vDataResult[0].VVehicleType[m].LookupDtlDesc + '</option >'
+
+                    }
+                    for (var m = 0; m < vDataResult[0].VVehicleBrand.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListBrand += '<option  value = "' + vDataResult[0].VVehicleBrand[m].CodeId + '"  sort-id="' + m + '" > ' + vDataResult[0].VVehicleBrand[m].LookupDtlDesc + '</option >'
+
+                    }
+                    for (var m = 0; m < vDataResult[0].VVehicleColor.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListColor += '<option  value = "' + vDataResult[0].VVehicleColor[m].CodeId + '"  sort-id="' + m + '" > ' + vDataResult[0].VVehicleColor[m].LookupDtlDesc + '</option >'
+
+                    }
+                  
+
+
+                    $('#selectStatus').append(vSelectListStatus);
+                    $('#selectStatus').selectpicker('refresh');
+
+                    $('#selectType').append(vSelectListType);
+                    $('#selectType').selectpicker('refresh');
+
+                    $('#selectBrand').append(vSelectListBrand);
+                    $('#selectBrand').selectpicker('refresh');
+
+                    $('#selectColor').append(vSelectListColor);
+                    $('#selectColor').selectpicker('refresh');
+                }
+            })
+
+    }
+
+
+
+
+    $('.btnSearchh').on('click', function () {
+
+
+        var vVehicleCode = null;
+        var vStatus = null;
+        var vType = null;
+        var vBrand = null;
+        var vColor = null;
+        var vDate = null;
+
+        if ($('.txtCode').val().trim() != '') {
+            vVehicleCode = $('.txtCode').val()
+        }
+        else {
+            vVehicleCode = null
+        }
+
+        if ($('#selectStatus').prop('selectedIndex') > 0) {
+            vStatus = $('#selectStatus').val()
+        }
+        else {
+            vStatus = null
+        }
+        if ($('#selectType').prop('selectedIndex') > 0) {
+            vType = $('#selectType').val()
+        }
+        else {
+            vType = null
+        }
+        if ($('#selectBrand').prop('selectedIndex') > 0) {
+            vBrand = $('#selectBrand').val()
+        }
+        else {
+            vBrand = null
+        }
+        if ($('#selectColor').prop('selectedIndex') > 0) {
+            vColor = $('#selectColor').val()
+        }
+        else {
+            vColor = null
+        }
+    
+        if ($('.txtDate').val().trim() != '') {
+            vDate = $('.txtDate').val()
+        }
+        else {
+            vDate = null
+        }
+
+
+        funGetVehiclesBySearch(vVehicleCode, vStatus, vType, vBrand, vColor, vDate)
+
+    })
+
+    function funGetVehiclesBySearch(pVehicleCode, pStatus, pType,pBrand,pColor,pDate)
+    {
+        console.log('ptypeeeeeeeeeeeee' + pType)
+
+        var vLstStatus = [];
+        var vLstType = [];
+        var vLstBrand = [];
+        var vLstColor = [];
+        if (pStatus == null) {
+
+
+        }
+        else if (pStatus.indexOf(',')) {
+            for (i = 0; i < pStatus.length; i++) {
+                vLstStatus.push(pStatus[i]);
+            }
+            pStatus = vLstStatus.toString();
+
+        }
+        else {
+
+        }
+        if (pType == null) {
+
+
+        }
+        else if (pType.indexOf(',')) {
+            for (i = 0; i < pType.length; i++) {
+                vLstType.push(pType[i]);
+            }
+            pType = vLstType.toString();
+
+        }
+        else {
+
+        }
+        if (pBrand == null) {
+
+
+        }
+        else if (pBrand.indexOf(',')) {
+            for (i = 0; i < pBrand.length; i++) {
+                vLstBrand.push(pBrand[i]);
+            }
+            pBrand = vLstBrand.toString();
+
+        }
+        else {
+
+        }
+        if (pColor == null) {
+
+
+        }
+        else if (pColor.indexOf(',')) {
+            for (i = 0; i < pColor.length; i++) {
+                vLstColor.push(pColor[i]);
+            }
+            pColor = vLstColor.toString();
+
+        }
+        else {
+
+        }
+        $.post('/Vehicle/FilterVehicles',
+            {
+                pVehicleCode: pVehicleCode,
+                pStatus: pStatus,
+                pType: pType,
+                pBrand: pBrand,
+                pColor: pColor,
+                pDate: pDate
+
+            }
+            , function (data, status) {
+                $('.tblVehicleBodySearch').html('');
+                if (data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, VehicleData) {
+                        // GET Cash Desk Row Content
+
+                        var vVehicleRowContent = funVehicleRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblVehicleBodySearch').append(vVehicleRowContent);
+                    });
+
+
+
+                }
+            })
+
+    }
+
+
+
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+</script>
+
+
+

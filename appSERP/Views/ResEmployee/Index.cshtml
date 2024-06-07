@@ -1,0 +1,1411 @@
+﻿@using appSERP.Views.Shared.appResource;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "موظفي المطاعم";
+}
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "", pIsNew = false })
+</div>
+@*<div class="container-fluid">*@
+<div class="bg-white border rounded p-3">
+    <div class="w-100">
+        <div class="d-flex justify-content-end">
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Save -->
+                <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Copy -->
+                <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                <!-- Cut -->
+                <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                <!-- Paste -->
+                <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Print -->
+                <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                <!-- Sort Asc -->
+                <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                <!-- Sort Asc -->
+                <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- ADD -->
+                <button class="btn btnUtility btnAdd" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                <!-- Edit -->
+                <button class="btn btnUtility" id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- PDF -->
+                <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                <!-- Excel -->
+                <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                <!-- Word -->
+                <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Close -->
+                <button class="btn btnUtility btnClose btnDelete" title="@appResource.ttClose"><i class="fa fa-close"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Next -->
+                <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                <!-- Prev -->
+                <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                <!-- First -->
+                <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                <!-- Last -->
+                <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Full Screen -->
+                <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <div class="dropdown">
+                    <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-table"></i>
+                    </button>
+                    <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*</div>*@
+<div class="container-fluid">
+    <div class="row bg-white border rounded p-3 divPrinter">
+        <div class="col-md-6">
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource._No</label>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control " id="txtResEmployeeId" disabled data-id="0" />
+                </div>
+                <div class="col-2">
+                    <label>@appResource._IsActive</label>
+                </div>
+                <div class="col-4">
+                    <input type="checkbox" class="chkEmployee" />
+                </div>
+
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource._Name عربي</label>
+                </div>
+                <div class="col-10">
+                    <input type="text" class="form-control " id="txtResEmployeeNameL1" data-id="0" />
+                </div>
+
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource._Name لاتيني</label>
+                </div>
+                <div class="col-10">
+                    <input type="text" class="form-control " id="txtResEmployeeNameL2" data-id="0" />
+                </div>
+
+            </div>  
+        
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>جهاز مدي</label>
+                </div>
+                <div class="col-10">
+                    <select id="txtCredit" class="txtCredit form-control" name="txtCredit"></select>
+                    @*<input type="text" class="form-control " id="txtCredit" data-id="0" />*@
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource._Gender</label>
+                </div>
+                <div class="col-4">
+                    <input type="radio" id="rdMale" name="gender" value="male" checked> @appResource._Male
+                    <input type="radio" id="rdFemale" name="gender" value="female">  @appResource._Female
+                </div>
+                <div class="col-2">
+                    <label>@appResource.CardType</label>
+                </div>
+                <div class="col-4">
+                    <div class="row pt-1 d-flex w-100 ml-0">
+                        <input type="text" class="form-control w-25" id="txtIdentityTypeId" data-id="0" />
+                        <input type="text" class="form-control w-75" id="txtIdentityTypeName" disabled data-id="0" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource.CardNo</label>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control " id="txtIdentityNumber" data-id="0" />
+                </div>
+                <div class="col-2">
+                    <label>@appResource.IdentificationDate</label>
+                </div>
+                <div class="col-4">
+
+                    <input type="date" class="form-control" id="txtIdentityDate" data-id="0" />
+
+                </div>
+
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource._Nationality</label>
+                </div>
+                <div class="col-4">
+                    <div class="row pt-1 d-flex w-100 ml-0">
+                        <input type="text" class="form-control  w-25" id="txtNationalityId" data-id="0" />
+                        <input type="text" class="form-control  w-75" id="txtNationalityName" disabled data-id="0" />
+                    </div>
+                </div>
+                <div class="col-2">
+                    <label>@appResource.EmpStatus</label>
+                </div>
+                <div class="col-4">
+
+                    <div class="row pt-1 d-flex w-100 ml-0">
+                        <input type="text" class="form-control  w-25" id="txtEmpStatusId" data-id="0" />
+                        <input type="text" class="form-control  w-75" id="txtEmpStatusName" disabled data-id="0" />
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource.BirthDate</label>
+                </div>
+                <div class="col-4">
+                    <input type="date" class="form-control " id="txtBirthDate" data-id="0" />
+                </div>
+                <div class="col-2">
+                    <label>@appResource._Phone</label>
+                </div>
+                <div class="col-4">
+
+                    <input type="text" class="form-control" id="txtMobile" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource._Address</label>
+                </div>
+                <div class="col-10">
+                    <input type="text" class="form-control " id="txtAddress" data-id="0" />
+                </div>
+
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>وظيفة الموظف</label>
+                </div>
+                <div class="col-4">
+
+                    <div class="row pt-1 d-flex w-100 ml-0">
+                        <input type="text" class="form-control  w-25" id="txtValueTypeId" data-id="0" />
+                        <input type="text" class="form-control  w-75" id="txtValueTypeName" disabled data-id="0" />
+                    </div>
+                </div>
+                <div class="col-2">
+                    <label>@appResource.DeliveryValue</label>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control" id="txtDeliveryValue" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource.CalcLimit</label>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control" id="txtPercentageRange" data-id="0" />
+
+                </div>
+                <div class="col-2">
+                    <label>@appResource.ExitDate</label>
+                </div>
+                <div class="col-4">
+
+                    <input type="date" class="form-control" id="txtExitDate" data-id="0" />
+
+                </div>
+
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource.ExitType</label>
+                </div>
+                <div class="col-4">
+
+                    <div class="row pt-1 d-flex w-100 ml-0">
+                        <input type="text" class="form-control  w-25" id="txtExitTypeId" data-id="0" />
+                        <input type="text" class="form-control  w-75" id="txtExitTypeName" disabled data-id="0" />
+                    </div>
+
+                </div>
+                <div class="col-2">
+
+                </div>
+                <div class="col-4">
+                </div>
+
+            </div>
+            <div class="row pt-1">
+                <div class="col-2">
+                    <label>@appResource.ExitReason</label>
+                </div>
+                <div class="col-10">
+                    <input type="text" class="form-control" id="txtExitReason" data-id="0" />
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div id="IdentityTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="IdentityTypeDataModalContent"></div>
+        </div>
+    </div>
+    <div id="NationalityDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="NationalityDataModalContent"></div>
+        </div>
+    </div>
+    <div id="EmpStatusDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="EmpStatusDataModalContent"></div>
+        </div>
+    </div>
+    <div id="ValueTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="ValueTypeDataModalContent"></div>
+        </div>
+    </div>
+    <div id="ExitTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="ExitTypeDataModalContent"></div>
+        </div>
+    </div>
+    <!-- ResEmployeeData Modal -->
+    <div id="ResEmployeeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="ResEmployeeDataModalContent"></div>
+        </div>
+
+    </div>
+    <!-- Confirm Delete Modal -->
+    <div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="confirmDeleteModalContent"></div>
+        </div>
+    </div>
+</div>
+<script>
+            var Credit =  $.parseJSON($.ajax({
+            url: '/api/APILookup/LookupGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: { pIsDetail: true, pLookupId: 140, pQueryTypeId: '400' },
+            async: false
+            }).responseText);
+            console.log(Credit)
+        var vAllData = '';
+        var vCurrentData = '';
+        var vCurrentIndex = 0;
+            var vLstCheckedItems = [];
+            var vIsClear = 0;
+       // funGetAllEmp()
+
+        function funGetAllEmp() {
+                $.post('/ResEmployee/GetAllEmp', {
+
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        vAllData = vDataResult;
+                        vCurrentData = vAllData[vCurrentIndex];
+                        funRowConfig(vCurrentData)
+
+                        $.each(vDataResult, function (i, Emp) {
+                        })
+
+                    }
+                })
+
+        }
+        function funRowConfig(vRow) {
+            //$('#txtResEmployeeId').attr('data-id', vRow.ResEmployeeId)
+            //$('#txtResEmployeeId').val(vRow.ResEmployeeCode)
+            //$('#txtResEmployeeNameL1').val(vRow.ResEmployeeNameL1)
+            //$('#txtResEmployeeNameL2').val(vRow.ResEmployeeNameL2)
+            //$('#txtHireDate').val(vRow.HireDate)
+            //$('#txtEmpStatusId').attr('data-id', vRow.EmpStatusId)
+            //$('#txtEmpStatusId').val(vRow.StatusCode)
+            //$('#txtEmpStatusName').val(vRow.StatusDesc)
+            //$('#txtExitDate').val(vRow.ExitDate)
+            //$('#txtAddress').val(vRow.Address)
+            //$('#txtMobile').val(vRow.Mobile)
+            //$('#txtBirthDate').val(vRow.BirthDate)
+            //$('#txtIdentityNumber').val(vRow.IdentityNumber)
+            //$('#txtIdentityDate').val(vRow.IdentityDate)
+            //$('#txtDeliveryValue').val(vRow.DeliveryValue)
+            //$('#txtValueTypeId').attr('data-id', vRow.ValueTypeId)
+            //$('#txtValueTypeId').val(vRow.ValueTypeCode)
+            //$('#txtValueTypeName').val(vRow.ValueTypeDesc)
+            //$('#txtPercentageRange').val(vRow.PercentageRange)
+            //$('#txtExitTypeId').attr('data-id', vRow.ExitTypeId)
+            //$('#txtExitTypeId').val(vRow.ExitTypeCode)
+            //$('#txtExitTypeName').val(vRow.ExitTypeDesc)
+            //$('#txtExitReason').val(vRow.ExitReason)
+            //$('#txtIdentityTypeId').attr('data-id', vRow.IdentityTypeId)
+            //$('#txtIdentityTypeId').val(vRow.IdentityCode)
+            //$('#txtIdentityTypeName').val(vRow.IdentityDesc)
+            //$('#txtNationalityId').attr('data-id', vRow.NationalityId)
+            //$('#txtNationalityId').val(vRow.NationalityCode)
+            //$('#txtNationalityName').val(vRow.NationalityDesc)
+            //if (vRow.Gender == 49) {
+            //    $("#rdMale").prop("checked", true);
+            //}
+            //else {
+            //    $("#rdFemale").prop("checked", true);
+            //}
+
+        }
+        function GetIndex(pcheckeditem)
+        {
+            var vFound = 0;
+            for (var i = 0; i <= vLstCheckedItems.length - 1; i++) {
+                if (vFound == 0) {
+                    if (pcheckeditem == vLstCheckedItems[i]) {
+                        vFound = 1
+                        return i;
+
+                    }
+                    else {
+
+
+                    }
+                }
+
+            }
+
+        }
+
+
+        var vResEmployeeList = '';
+
+        $('.btnFirst').click(function () {
+            if (vLstCheckedItems.length == 0) {
+                vCurrentIndex = 0;
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+                console.log('nooooooooooooooooooooot');
+            }
+            else {
+                vCurrentIndex = vLstCheckedItems[0];
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+                console.log('vLstCheckedItems' + vLstCheckedItems.toString());
+                console.log('vCurrentIndexxxxxxxxx' + vLstCheckedItems[0].toString());
+                console.log('goooooooooooooooooooooooooooooooooooooooooooooooot');
+
+            }
+
+            //funGetFirstEmp();
+        })
+        $('.btnNext').click(function () {
+            if (vLstCheckedItems.length == 0) {
+                if (vCurrentIndex + 1 <= vAllData.length - 1) {
+                    vCurrentIndex = vCurrentIndex + 1;
+                    vCurrentData = vAllData[vCurrentIndex];
+                    funRowConfig(vCurrentData);
+                    console.log('nooooooooooooooooooooot');
+                }
+
+            }
+            else {
+                console.log('vLstCheckedItems' + vLstCheckedItems.toString());
+                var vCurrentCode = $('#txtResEmployeeId').val();
+
+                if (GetIndex(vCurrentCode - 1) < vLstCheckedItems.length - 1 ) {
+                    vCurrentIndex = vLstCheckedItems[GetIndex(vCurrentCode - 1) + 1]
+                    vCurrentData = vAllData[vCurrentIndex];
+                    funRowConfig(vCurrentData);
+                }
+
+                console.log('goooooooooooooooooooooooooooooooooooooooooooooooot' + vCurrentIndex);
+
+            }
+            //funGetNextEmp();
+        })
+        $('.btnPrev').click(function () {
+            if (vLstCheckedItems.length == 0) {
+                if (vCurrentIndex - 1 >=0) {
+                    vCurrentIndex = vCurrentIndex - 1;
+                    vCurrentData = vAllData[vCurrentIndex];
+                    funRowConfig(vCurrentData);
+                    console.log('nooooooooooooooooooooot');
+                }
+
+            }
+            else {
+                var vCurrentCode = $('#txtResEmployeeId').val();
+                if (GetIndex(vCurrentCode - 1) > 0) {
+                    vCurrentIndex = vLstCheckedItems[GetIndex(vCurrentCode - 1) - 1]
+                    vCurrentData = vAllData[vCurrentIndex];
+                    funRowConfig(vCurrentData);
+                }
+                console.log('goooooooooooooooooooooooooooooooooooooooooooooooot');
+
+            }
+           // funGetPreviousEmp();
+        })
+        $('.btnLast').click(function () {
+            if (vLstCheckedItems.length == 0) {
+                vCurrentIndex = vAllData.length - 1;
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+                console.log('nooooooooooooooooooooot');
+            }
+            else {
+                vCurrentIndex = vLstCheckedItems[vLstCheckedItems.length - 1];
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+                console.log('goooooooooooooooooooooooooooooooooooooooooooooooot');
+            }
+           // funGetLastEmp();
+        })
+        $('.btnSave').click(function () {
+            funSaveEmp();
+        })
+
+        $('body').on('click', '.btnSearchh', function () {
+            var vCode = null;
+            var vNat = null;
+            var vIdentityType = null;
+            var vStatus = null;
+
+            var vValueType = null;
+            var vExitType = null;
+            var vDate = null;
+            var vMobile = null;
+
+            if ($('.txtCode').val().trim() != '') {
+                vCode = $('.txtCode').val()
+            }
+            else {
+                vCode = null
+            }
+            if ($('.txtMobile').val().trim() != '') {
+                vMobile = $('.txtMobile').val()
+            }
+            else {
+                vMobile = null
+            }
+            if ($('#selectNat').prop('selectedIndex') > 0) {
+                vNat = $('#selectNat').val()
+            }
+            else {
+                vNat = null
+            }
+            if ($('#selectIdentityType').prop('selectedIndex') > 0) {
+                vIdentityType = $('#selectIdentityType').val()
+            }
+            else {
+                vIdentityType = null
+            }
+            if ($('#selectStatus').prop('selectedIndex') > 0) {
+                vStatus = $('#selectStatus').val()
+            }
+            else {
+                vStatus = null
+            }
+
+            if ($('#selectValueType').prop('selectedIndex') > 0) {
+                vValueType = $('#selectValueType').val()
+            }
+            else {
+                vValueType = null
+            }
+            if ($('#selectExitType').prop('selectedIndex') > 0) {
+                vExitType = $('#selectExitType').val()
+            }
+            else {
+                vExitType = null
+            }
+           // funFilterEmp(pResEmployeeCode, pLstNationality, pLstIdentityType, pLstEmpStatus, pLstValueType, pLstExitType, pMobile)
+            funFilterEmp(vCode, vNat, vIdentityType, vStatus, vValueType, vExitType, vMobile)
+
+        })
+
+        function funGetFirstEmp() {
+            $.post('/ResEmployee/GetfirstEmp', {
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.ValueTypeCode)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id',Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id',Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+
+
+
+                    })
+
+                }
+
+
+            })
+
+        }
+        function funGetLastEmp() {
+            $.post('/ResEmployee/GetLastEmp', {
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.txtValueTypeId)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id', Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id', Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+                    })
+
+                }
+
+
+            })
+
+        }
+        function funGetPreviousEmp() {
+            $.post('/ResEmployee/GetPreviousEmp', {
+                pResEmployeeId: $('#txtResEmployeeId').attr('data-id')
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.ValueTypeCode)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id', Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id', Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+                    })
+
+                }
+
+
+            })
+
+        }
+        function funGetNextEmp() {
+            $.post('/ResEmployee/GetNextEmp', {
+                pResEmployeeId: $('#txtResEmployeeId').attr('data-id')
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.ValueTypeCode)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id', Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id', Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+                    })
+
+                }
+
+
+            })
+
+        }
+        function funSaveEmp() {
+            var vIsValid = true;
+            if ($('#txtResEmployeeNameL1').val().trim() != '') {
+            
+                $.get('/api/APIResEmployee/ResEmployeeGET',
+                    {
+                        pResEmployeeId: $('#txtResEmployeeId').attr('data-id'),
+                        pResEmployeeNameL1: $('#txtResEmployeeNameL1').val(),
+                        pResEmployeeNameL2: $('#txtResEmployeeNameL2').val(),
+                        pHireDate: $('#txtHireDate').val(),
+                        pEmpStatusId: $('#txtEmpStatusId').attr('data-id'),
+                        pExitDate: $('#txtExitDate').val(),
+                        pAddress: $('#txtAddress').val(),
+                        pBirthDate: $('#txtBirthDate').val(),
+                        pMobile: $('#txtMobile').val(),
+                       // pGender: vGender,
+                        pIdentityTypeId: $('#txtIdentityTypeId').attr('data-id'),
+                        pIdentityNumber: $('#txtIdentityNumber').val(),
+                        pIdentityDate: $('#txtIdentityDate').val(),
+                        pNationalityId: $('#txtNationalityId').attr('data-id'),
+                        pDeliveryValue: $('#txtDeliveryValue').val(),
+                        pValueTypeId: $('#txtValueTypeId').attr('data-id'),
+                        pPercentageRange: $('#txtPercentageRange').val(),
+                        pExitTypeId: $('#txtExitTypeId').attr('data-id'),
+                        pExitReason: $('#txtExitReason').val(),
+                        Credit: $('#txtCredit').val(),
+                        pResEmployeeIsActive: $('.chkEmployee').prop('checked'),
+                        pQueryTypeId: 100,
+                    }, function (data, status) {
+
+                        if (data != undefined && data != '' ) {
+                            var vDataResult = JSON.parse(data);
+                            vAllData = vDataResult[0].tblAllData
+                        }
+                        //if ($('#txtResEmployeeId').attr('data-id').trim() == '0') {
+                        //    funClearAll()
+                        //}
+
+                    })
+            }
+            else {
+                vIsValid = false;
+            }
+
+
+             if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+            // Notification
+            funNotification('@appResource.msgSave', 1);
+        }
+
+        }
+        function funClearAll() {
+                        var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var yyyy = today.getFullYear();
+
+                today = yyyy + '-' + mm + '-' + dd;
+            $('#txtResEmployeeId').attr('data-id', '0')
+            $('#txtResEmployeeId').val('')
+            $('#txtResEmployeeNameL1').val('')
+            $('#txtResEmployeeNameL2').val('')
+            $('#txtHireDate').val(today)
+            $('#txtEmpStatusId').attr('data-id', '0')
+            $('#txtEmpStatusId').val('')
+            $('#txtEmpStatusName').val('')
+            $('#txtExitDate').val(today)
+            $('#txtAddress').val('')
+            $('#txtMobile').val('')
+            $('#txtBirthDate').val(today)
+            $('#txtIdentityNumber').val('')
+            $('#txtIdentityDate').val(today)
+            $('#txtDeliveryValue').val('')
+            $('#txtValueTypeId').attr('data-id', '0')
+            $('#txtValueTypeId').val('')
+            $('#txtValueTypeName').val('')
+            $('#txtPercentageRange').val('')
+            $('#txtExitTypeId').attr('data-id', '0')
+            $('#txtExitTypeId').val('')
+            $('#txtExitTypeName').val('')
+            $('#txtExitReason').val('')
+            $('#txtIdentityTypeId').attr('data-id', '0')
+            $('#txtIdentityTypeId').val('')
+            $('#txtIdentityTypeName').val('')
+            $('#txtNationalityId').attr('data-id', '0')
+            $('#txtNationalityId').val('')
+            $('#txtNationalityName').val('')
+            $("#rdMale").prop("checked", true);
+
+        }
+        function funDeleteEmp() {
+            $.post('/ResEmployee/GetfirstEmp',
+                {
+                    pResEmployeeId: $('#txtResEmployeeId').attr('data-id'),
+
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        vAllData = vDataResult[0].tblAllData
+                    }
+
+                    vCurrentIndex = 0;
+                     vLstCheckedItems = [];
+                //    funGetAllEmp();
+
+                })
+
+        }
+        $('#txtIdentityTypeId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchIdentityType';
+                $('#IdentityTypeDataModalContent').load(vURL);
+                // Modal Show
+                $('#IdentityTypeDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divIdentityTypeSelect', function () {
+
+                    vElementGroupAccount = $('body').find('#txtIdentityTypeId');
+                    // IdentityType Id
+                    var vIdentityTypeId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vIdentityTypeCodeValue = $(this).find('.divIdentityTypeNo').text();
+                    var vIdentityTypeNameValue = $(this).find('.divIdentityTypeName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtIdentityTypeId').val(vIdentityTypeCodeValue);
+                    $('#txtIdentityTypeId').attr('data-id', vIdentityTypeId)
+                    $('#txtIdentityTypeName').val(vIdentityTypeNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#IdentityTypeDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtNationalityId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchNationality';
+                $('#NationalityDataModalContent').load(vURL);
+                // Modal Show
+                $('#NationalityDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divNationalitySelect', function () {
+
+                    vElementGroupAccount = $('body').find('#txtNationalityId');
+                    // Nationality Id
+                    var vNationalityId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vNationalityCodeValue = $(this).find('.divNationalityNo').text();
+                    var vNationalityNameValue = $(this).find('.divNationalityName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtNationalityId').val(vNationalityCodeValue);
+                    $('#txtNationalityId').attr('data-id', vNationalityId)
+                    $('#txtNationalityName').val(vNationalityNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#NationalityDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtEmpStatusId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchEmpStatus';
+                $('#EmpStatusDataModalContent').load(vURL);
+                // Modal Show
+                $('#EmpStatusDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divEmpStatusSelect', function () {
+
+                    vElementGroupAccount = $('body').find('#txtEmpStatusId');
+                    // EmpStatus Id
+                    var vEmpStatusId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vEmpStatusCodeValue = $(this).find('.divEmpStatusNo').text();
+                    var vEmpStatusNameValue = $(this).find('.divEmpStatusName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtEmpStatusId').val(vEmpStatusCodeValue);
+                    $('#txtEmpStatusId').attr('data-id', vEmpStatusId)
+                    $('#txtEmpStatusName').val(vEmpStatusNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#EmpStatusDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtValueTypeId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchValueType';
+                $('#ValueTypeDataModalContent').load(vURL);
+                // Modal Show
+                $('#ValueTypeDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divValueTypeSelect', function () {
+
+                    vElementGroupAccount = $('body').find('#txtValueTypeId');
+                    // ValueType Id
+                    var vValueTypeId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vValueTypeCodeValue = $(this).find('.divValueTypeNo').text();
+                    var vValueTypeNameValue = $(this).find('.divValueTypeName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtValueTypeId').val(vValueTypeCodeValue);
+                    $('#txtValueTypeId').attr('data-id', vValueTypeId)
+                    $('#txtValueTypeName').val(vValueTypeNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#ValueTypeDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtExitTypeId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchExitType';
+                $('#ExitTypeDataModalContent').load(vURL);
+                // Modal Show
+                $('#ExitTypeDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divExitTypeSelect', function () {
+
+                    vElementGroupAccount = $('body').find('#txtExitTypeId');
+                    // ExitType Id
+                    var vExitTypeId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vExitTypeCodeValue = $(this).find('.divExitTypeNo').text();
+                    var vExitTypeNameValue = $(this).find('.divExitTypeName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtExitTypeId').val(vExitTypeCodeValue);
+                    $('#txtExitTypeId').attr('data-id', vExitTypeId)
+                    $('#txtExitTypeName').val(vExitTypeNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#ExitTypeDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtIdentityTypeId').on('blur', function (e) {
+
+            if ($('#txtIdentityTypeId').val().trim() == '') {
+                $('#txtIdentityTypeName').val('')
+            }
+            else {
+                $.post('/ResEmployee/GetIdentityType', {
+                    pCodeId: $('#txtIdentityTypeId').val()
+
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            $('#txtIdentityTypeId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtIdentityTypeName').val(Emp.LookupDtlDesc)
+                        })
+
+                    }
+
+
+                })
+            }
+
+
+
+        });
+        $('#txtNationalityId').on('blur', function (e) {
+            if ($('#txtNationalityId').val().trim() == '') {
+                $('#txtNationalityName').val('')
+            }
+            else {
+                $.post('/ResEmployee/GetNationality', {
+                    pCodeId: $('#txtNationalityId').val()
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            $('#txtNationalityId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtNationalityName').val(Emp.LookupDtlDesc)
+                        })
+
+                    }
+
+
+                })
+            }
+
+
+
+
+        });
+        $('#txtEmpStatusId').on('blur', function (e) {
+
+            if ($('#txtEmpStatusId').val().trim() == '') {
+                $('#txtEmpStatusName').val('')
+            }
+            else {
+                $.post('/ResEmployee/GetEmpStatus', {
+                    pCodeId: $('#txtEmpStatusId').val()
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            $('#txtEmpStatusId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtEmpStatusName').val(Emp.LookupDtlDesc)
+                        })
+
+                    }
+
+
+                })
+
+            }
+
+
+
+        });
+        $('#txtValueTypeId').on('blur', function (e) {
+
+            if ($('#txtValueTypeId').val().trim() == '') {
+                $('#txtValueTypeName').val('')
+            }
+            else {
+                $.get('/api/APILookup/LookupGET', {
+                pIsDetail: true,
+                pLookupId: 110,
+                pdORD: $(this).val(),
+                pQueryTypeId: '400',
+
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            console.log(Emp)
+                            $('#txtValueTypeId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtValueTypeName').val(Emp.LookupDtlDesc)
+                        })
+
+                    }
+
+
+                })
+
+            }
+
+
+
+        });
+        $('#txtExitTypeId').on('blur', function (e) {
+            if ($('#txtExitTypeId').val().trim() == '') {
+                $('#txtExitTypeName').val('')
+
+            }
+            else {
+
+                $.post('/ResEmployee/GetExitType', {
+                    pCodeId: $('#txtExitTypeId').val()
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            $('#txtExitTypeId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtExitTypeName').val(Emp.LookupDtlDesc)
+                        })
+
+                    }
+
+
+                })
+
+            }
+
+
+
+        });
+        // Search ResEmployeeDataModal
+        $('.btnSearch').on('click', function () {
+            // Search CostCenter
+            var vURL = '/ResEmployee/ResEmployeeSearch';
+            // Load Content of CostCenter Search
+            $('#ResEmployeeDataModalContent').load(vURL);
+            // Modal Full
+            $('#ResEmployeeDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#ResEmployeeDataModal').modal('show');
+        })
+        $('body').on('click', '.btnSelect', function () {
+            var count = $("input[name='chkIsValid']:checked").length;
+
+            vLstCheckedItems = [];
+            vCurrentIndex = 0;
+            if (count == 0) {
+                $('#ResEmployeeDataModal').modal('hide');
+            }
+            else {
+                $('.tblResEmployeeSearch > tbody > tr ').each(function () {
+
+                    // Element
+                    var vCurrentDataRow = $(this);
+                    var vElement = $(this).find('.clsChk')
+                    var vCountChecked = 0;
+                    var vSelectedChk = vElement.prop('checked')
+                    // Check
+                    if (vSelectedChk) {
+                        vCountChecked++;
+                        //if (vCountChecked == 1) {
+                            // Fill The List Of Checked Indexes
+                        vLstCheckedItems.push(vCurrentDataRow.attr('data-code') - 1);
+                        //}
+                        // Get Id
+                        var vResEmployeeId = vElement.attr('data-id');
+                        $('#txtResEmployeeId').attr('data-id', vResEmployeeId)
+                        funGetEmpById()
+                        // close The Modal
+                        $('#ResEmployeeDataModal').modal('hide');
+
+                    }
+                })
+            }
+
+            if (count > 0) {
+                console.log('vLstCheckedItems' + vLstCheckedItems.toString());
+                vCurrentIndex = vLstCheckedItems[0];
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+            }
+
+
+
+        })
+
+        function funGetEmpById() {
+            $.get('/api/APIResEmployee/ResEmployeeGET', {
+                pResEmployeeId: $('#txtResEmployeeId').attr('data-id'),
+                pQueryTypeId:408
+            }, function (data, status) {
+                console.log(data)
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    console.log(vDataResult)
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtCredit').val(Emp.Credit)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('.chkEmployee').prop('checked',Emp.ResEmployeeIsActive)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.ValueTypeId)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id', Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id', Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+                    })
+
+                }
+
+
+            })
+
+        }
+
+        //$('body').on('change', '.clsChk', function () {
+        //    if ($(this).prop('checked')) {
+        //        $('.clsChk').not($(this)).attr("disabled", true);
+        //    }
+        //    else {
+        //        $('.clsChk').removeAttr("disabled");
+        //    }
+
+
+        //})
+
+        $('.btnDelete').on('click', function () {
+            // Id - NameAr - NameEn
+            var vDataId = $('#txtResEmployeeId').attr('data-id');
+            if (vDataId !='0') {
+                var vDataName = $('#txtResEmployeeNameL1').val();
+                // URL
+                var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+                // Get HTML Content of [Confirm Delete] Partial View
+                $.get(
+                    // URL
+                    vDataURL,
+                    // Parameters
+                    {
+                        id: vDataId,
+                        pName: vDataName,
+                    },
+                    // Function
+                    function (data, status) {
+                        // Modal
+                        $('#confirmDeleteModalContent').html(data);
+                        $('#confirmDeleteModal').modal('show');
+                        // Click Event [Delete Confirm]
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            funNotification('@appResource.msgSave', 1);
+                            // Delete Action URL
+                            var vDeleteActionURL = '/ResEmployee/DeleteEmp/';
+                            // Delete
+                            $.post(vDeleteActionURL, { pResEmployeeId: vDataId, pIsDelete: true }, function () {
+                                window.location.href = '/ResEmployee';
+                            });
+                        });
+                    });
+            }
+        }); // End of Click Event [Delete Button]
+
+
+            $('.btnAdd').on('click', function () {
+                vIsClear = 1;
+                funClearAll();
+                vIsClear = 0;
+        })
+
+
+
+</script>
+<script>
+            $('#txtResEmployeeNameL2').on('keydown', function (e) {
+                var keyCode = e.keyCode || e.which;
+
+                if (keyCode == 9) {
+                    e.preventDefault();
+                    $('#txtIdentityTypeId').focus();
+                    // call custom function here
+                }
+            });
+            $('#txtMobile').on('blur', function () {
+                var vMobile = $('#txtMobile').val().trim();
+                if (vMobile != '') {
+                    if (vIsClear == 0) {
+                        $.post('/ResEmployee/CheckMobile',
+                            { pMobile: vMobile },
+                            function (data, status) {
+                                if (data != undefined && data != '') {
+                                    var vDataResult = JSON.parse(data);
+                                    if (vDataResult[0].ResEmployeeCode != $('#txtResEmployeeId').val().trim()) {
+                                        funNotification(vDataResult[0].ResEmployeeCode + '@appResource.msgEmpExistedBefore', 2);
+                                        $('#txtMobile').focus();
+                                    }
+                                }
+                            })
+                    }
+                }
+                })
+</script>
+
+<script>
+    // Print
+    $('.btnPrint').on('click', function () {
+        @*location.href = '/Account/ChartAccountReport?pCompanyId=' + '@clsUser.vUserCompanyId'*@
+        var url = '/ResEmployee/ResEmployeeReport'
+        var popupWindow = window.open(url);
+    });
+    //SimpleInSameWin()
+   // fillCredit(Credit)
+    function fillCredit(data) {
+            var vDataJSON = JSON.parse(data);
+
+            $('#txtCredit').append('<option data-id="" value="" sort-id="" class="selected"  >-</option>')
+            $.each(vDataJSON, function (i, Credit) {
+                $('#txtCredit').append('<option data-id="' + Credit.LookupDtlId + '" value="' + Credit.LookupDtlId + '" sort-id="' + i + '">' + Credit.LookupDtlDesc + '</option>')
+            })
+        }
+</script>

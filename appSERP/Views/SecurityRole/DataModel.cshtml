@@ -1,0 +1,66 @@
+﻿@model appSERP.Models.SEC.SecurityRoleModel
+@using appSERP.Views.Shared.appResource
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.SecurityRoleId, pId = Model.SecurityRoleId })
+        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.HiddenFor(model => model.SecurityRoleId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.SecurityRoleId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SecurityRoleId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SecurityRoleNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SecurityRoleNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SecurityRoleNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SecurityRoleNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SecurityRoleNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SecurityRoleNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.SecurityRoleIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "SecurityRoleIsActive" } })
+                @Html.LabelFor(model => model.SecurityRoleIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "SecurityRoleIsActive" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+    </div>
+    }
+
+ 
+</body>
+</html>

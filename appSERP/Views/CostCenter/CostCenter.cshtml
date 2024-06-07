@@ -1,0 +1,591 @@
+﻿@model System.Data.DataTable
+@using System.Data
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.ACC
+
+
+<style>
+    .divDataContainer {
+        width: 80%;
+        max-height: 75vh;
+        height: 75vh;
+        overflow-y: scroll;
+        background-color: #FFF;
+        border: 1px solid #eaeaea;
+        padding: 1.5rem;
+    }
+
+    .divTreeContainer {
+        width: 20%;
+        max-height: 75vh;
+        height: 75vh;
+        overflow-y: scroll;
+        background-color: #FFF;
+        border: 1px solid #eaeaea;
+        padding: 1.5rem;
+    }
+</style>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<link href="~/Content/TreeView/style.min.css" rel="stylesheet" />
+<div class="row ">
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-6">
+        <div class="row bg-light" style="text-align:center">
+
+
+        </div>
+    </div>
+</div>
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource._CostCenter, pIsNew = false })
+</div>
+<!-- Utlity -->
+<div class="divUtilityBar d-flex ">
+    @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+</div>
+<div class="">
+
+    <div class="bg-white border rounded d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-3">
+            <div class="btn-group">
+                <button type="button" class="btn btn-success btnSave">@appResource.btnSave</button>
+                <button type="button" class="btn btn-secondary btnCostCenterAddLastRow">@appResource.btnNew</button>
+                <button type="button" class="btn btn-danger btnDelete" style="display:none">@appResource.btnDelete</button>
+                <button type="button" class="btn btn-primary btnPrint" style="display:none">@appResource.btnPrint</button>
+                <button type="button" class="btn btn-info btnSearch" style="display:none">@appResource.btnSearch</button>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!--Ajax Link -->
+@Ajax.ActionLink("Load More Posts", "CostCenter", "CostCenter", new { pCostCenterId = "1"}, new AjaxOptions()
+{
+    HttpMethod = "GET",
+    AllowCache = true,
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "tblCostCenter"
+}, new { @class = "btn btn-success btnParent P_1 d-none", @id = "ajaxLinkCostCenter" })
+
+<div class="">
+    <div class="d-flex bg-white border">
+        <div class="border-right  p-2" style="width:20%"></div>
+
+        <div class="form-inline  p-2" style="width:80%">
+            <label> @appResource.MainCashDesk</label>
+            <button type="button" class="btnMainLevel btn btn-light ml-2" id="btnMainLevel"><i class="fa fa-arrow-right"></i></button>
+            <input type="text" class="form-control txtMainNo" style="width:75px">
+            <input type="text" disabled class="form-control txtMainName" />
+            <input type="text" disabled class="form-control txtCostCenterId d-none" />
+            <input type="text" disabled class="form-control txtCostCenterLevel d-none" />
+            <input type="text" disabled class="form-control txtCostCenterParentId d-none" />
+            <input type="text" disabled class="form-control txtCompanyCodeH d-none" />
+            <input type="text" disabled class="form-control txtCompanyCurrency d-none" />
+        </div>
+    </div>
+</div>
+<div class="d-flex">
+    <div class="divTreeContainer">
+        <div id="jstree" class="">
+        </div>
+    </div>
+
+
+    <div class="divDataContainer">
+        <div class="">
+            <!-- Data Container -->
+            <div id="" class="container-fluid">
+                <table id="table" class="table table-hover tblCostCenter">
+                    <!-- DataTable Header -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>@appResource._Code</th>
+                            <th>@appResource._CostCenter عربي</th>
+                            <th>@appResource._CostCenter انجليزي</th>
+                            <th>@appResource._Level</th>
+                            <th>@appResource._IsAccumulative</th>
+                            <th>@appResource._IsActive</th>
+                            <th></th>
+                        </tr>
+                    </thead> <!-- End of DataTable Header -->
+                    <!-- DataTable Body -->
+                    <tbody class="tblCostCenterBody"></tbody>
+                </table>
+            </div> <!-- End of Data Container -->
+
+        </div>
+    </div>
+</div>
+
+<!-- CostCenterData Modal -->
+<div id="CostCenterDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CostCenterDataModalContent"></div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/TreeView/jsTree.js"></script>
+<script>
+    // Fill Tree View
+    $(document).ready(function () {
+        $.get('/api/APICostCenter/CostCenterGET', {}, function (data, status) {
+            var vDataResult = JSON.parse(data);
+            console.log(vDataResult)
+            $('#jstree').jstree({
+                'core': {
+                    'data': vDataResult
+                }
+            });
+        })
+    })
+    $('#jstree').on("changed.jstree", function (e, data) {
+        var vId = data.selected;
+        localStorage.setItem('CostCenterId', vId)
+        // Get Main CostCenter
+        // GetMainCostCenter(vId)
+        // Load Table
+        funGETCostCenter(vId, null)
+    });
+    $(document).ready(function () {
+        funGETCostCenter('0', null)
+    })
+</script>
+<script>
+    // Main CostCenter
+    function GetMainCostCenter(pId) {
+        // List GetCostCenter
+        $.get('/api/APICostCenter/CostCenterGET',
+            {
+                pCostCenterId: pId,
+                pQueryTypeId: 400
+            },
+
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, CostCenter) {
+                    // Set Main CostCenter
+                    funSetMainValue(pId, CostCenter.text, CostCenter.CostCenterCode, CostCenter.CostCenterLevel, CostCenter.CostCenterParentId, CostCenter.AccountCodeHierarchy, CostCenter.DefaultCurrencyId)
+                })
+            });
+    }
+</script>
+<script>
+    // Set Main Value
+    function funSetMainValue(CostCenterId, CostCenterName, CostCenterNo, CostCenterLevel, CostCenterParentId, CompanyCodeH, CompanyCurrency) {
+        // CostCenter Name
+        $('.txtMainName').val(CostCenterName);
+        // CostCenterId
+        $('.txtCostCenterId').val(CostCenterId);
+        $('.txtMainNo').val(CostCenterNo);
+        $('.txtCostCenterLevel').val(CostCenterLevel);
+        $('.txtCostCenterParentId').val(CostCenterParentId);
+        $('.txtCompanyCodeH').val(CompanyCodeH);
+        $('.txtCompanyCurrency').val(CompanyCurrency);
+    }
+</script>
+<script>
+    // Delete
+    $('body').on('click', '.btnDelete', function () {
+        // Get CostCenter Id
+        var vCostCenterId = $(this).attr('data-id');
+        var vCurrentRow = $(this).closest('tr');
+        // Save
+        $.get('/api/APICostCenter/CostCenterGET',
+            {
+                pCostCenterId: vCostCenterId,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+                var vResultData = JSON.parse(data)
+                // Notification
+                funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                //vCurrentRow.remove();
+                var vId = localStorage.getItem('CostCenterId')
+
+                // Load Table
+                funGETCostCenter(vId, null)
+            });
+    })
+</script>
+<script>
+
+    // GET Prev Main Level
+    $('#btnMainLevel').click(function () {
+        var vCostCenterParent = $('.txtMainNo').val();
+        var vCostCenterId = $('.txtCostCenterId').val();
+
+        var res = vCostCenterParent.split(".");
+        var lastEl = (res[res.length - 1]).length + 1;
+        var id = (vCostCenterParent.slice(0, -lastEl));
+
+        // List GetCostCenter
+        // GetMainCostCenter(id)
+        funGETCostCenter(null, id)
+
+    })
+    // GET Prev  Level
+    $('body').on('click', '.btnLevel', function () {
+        var vCostCenterId = $('.CostCenterId').val();
+        funGETCostCenter(vCostCenterId, null)
+
+    })
+
+</script>
+
+
+<script>
+    // Function Save Head Voucher
+    $('.btnSave').on('click', function () {
+        //
+        var vMessege;
+        var vMessageType;
+
+        // Is Valid
+        var vIsValid = true;
+        // Check All Rows
+        $(".tblCostCenterBody > tr").each(function () {
+            // Row Data
+            var vRowData = $(this);
+            // Get CostCenter Id
+            var vCostCenterId = vRowData.find('.CostCenterId').val();
+            // Get CostCenter No
+            var vCostCenterCode = vRowData.find('.CostCenterCode').val();
+
+            // CostCenterNameL1
+            var vCostCenterNameL1 = vRowData.find('.CostCenterNameL1').val();
+            // CostCenterNameL2
+            var vCostCenterNameL2 = vRowData.find('.CostCenterNameL2').val();
+
+            // vCostCenterLevel Id
+            var vCostCenterLevel = parseInt($('.txtCostCenterLevel').val()) + 1;
+
+
+            // IsCostCenterIsCumulative
+            var vCostCenterIsCumulative = vRowData.find('.CostCenterIsAccumulative').prop('checked');
+
+            // IsActive
+            var vIsActive = vRowData.find('.CostCenterIsActive').prop('checked');
+
+            // Parent Id
+            var vCostCenterParentId = $('.txtCostCenterId').val();
+            console.log(vCostCenterParentId)
+            // Check Cash Desk If Empty
+            if (vCostCenterNameL1) {
+                // Save
+                $.get('/api/APICostCenter/CostCenterGET',
+                    {
+                        pCostCenterId: vCostCenterId,
+                        pCostCenterCode: vCostCenterCode,
+                        pCostCenterParentId: vCostCenterParentId,
+                        pCostCenterLevel: vCostCenterLevel,
+                        pCostCenterNameL1: vCostCenterNameL1,
+                        pCostCenterNameL2: vCostCenterNameL2,
+                        pCostCenterIsAccumulative: vCostCenterIsCumulative,
+                        pCostCenterIsActive: vIsActive,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+                        // CostCenterId
+                       var vCostCenterId= localStorage.getItem('CostCenterId')
+                        // Drop Down Main Cash Desk
+                        funGETCostCenter(vCostCenterId, null);
+
+                        // Notification - Field Required
+                        var vResultData = JSON.parse(data)
+                        vMessageType = vResultData[0].SystemMessageTypeId;
+                        vMessege = vResultData[0].SystemMessageText;
+
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+
+
+        } else {
+            funNotification(vMessege, vMessageType);
+
+        }
+
+    }); // End of Save Click
+</script>
+
+<!--Fill Chart CostCenter Table -->
+<script>
+
+
+    function funCostCenterRowConfig(pCostCenterRow) {
+        // Checked
+        var vIsCumulative = null;
+        var vIsActive = null;
+
+        if (pCostCenterRow.CostCenterIsAccumulative) {
+            vIsCumulative = 'checked';
+        }
+        if (pCostCenterRow.CostCenterIsActive) {
+            vIsActive = 'checked';
+        }
+
+        // Content
+        var RowContent = ' <tr>' +
+            '<td><button type="button" data-id=" " class="btn btn-light btnLevel">' +
+            '<i class="fa fa-arrow-left"></i>' +
+            ' </button>' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnCostCenterAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td class="" style="display:none"><input type="text" value="' + pCostCenterRow.CostCenterId + '" class="form-control CostCenterId" name="CostCenterCode" id="CostCenterCode"></td>' +
+            '<td class="" width="7%"><input type="text" value="' + pCostCenterRow.CostCenterCode + '" class="form-control CostCenterCode" name="CostCenterCode" id="CostCenterCode" disabled></td>' +
+            '<td class="" data-id="' + pCostCenterRow.CostCenterId + '" Data-Level="' + pCostCenterRow.CostCenterLevel + '" data-parent-name="' + pCostCenterRow.CostCenterParentId + '" data-branch-id="' + pCostCenterRow.CompanyId + '" data-Branch-Name="' + pCostCenterRow.CompanyBranchNameL1 + '" data-parent-Id="' + pCostCenterRow.CostCenterParentId + '"><input type="text"autocomplete="off" value="' + pCostCenterRow.CostCenterNameL1 + '" class="form-control CostCenterNameL1" name="CostCenterNameL1" id="CostCenterNameL1"></td>' +
+            '<td><input type="text"autocomplete="off" value="' + pCostCenterRow.CostCenterNameL2 + '" class="form-control CostCenterNameL2" name="CostCenterNameL2" id="CostCenterNameL1"></td>' +
+            '<td class="" width="7%"><input type="text" value="' + pCostCenterRow.CostCenterLevel + '" class="form-control CostCenterLevel" name="CostCenterLevel" id="CostCenterLevel" disabled></td>' +
+
+            ' <td width="7%"><div class="custom-control custom-checkbox">' +
+            ' <input type="checkbox" class="custom-control-input disabled CostCenterIsAccumulative" ' + vIsCumulative + ' id="AccountIsCumulative' + pCostCenterRow.CostCenterId + '">' +
+            ' <label class="custom-control-label small" for="AccountIsCumulative' + pCostCenterRow.CostCenterId + '""></label>' +
+            '</div></td>' +
+
+            ' <td width="7%"><div class="custom-control custom-checkbox">' +
+            ' <input type="checkbox" class="custom-control-input disabled CostCenterIsActive" ' + vIsActive + ' id="CostCenterIsActive' + pCostCenterRow.CostCenterId + '">' +
+            ' <label class="custom-control-label small" for="CostCenterIsActive' + pCostCenterRow.CostCenterId + '""></label>' +
+            '</div></td>' +
+
+            //'<td class=""><input type="checkbox" ' + vIsCumulative + ' class="form-control CostCenterIsAccumulative " name="CostCenterIsAccumulative"  id="CostCenterIsAccumulative"></td>' +
+            //'<td class=""><input type="checkbox" ' + vIsActive + ' class="form-control CostCenterIsActive" name="CostCenterIsActive"  id="CostCenterIsActive"></td>' +
+            '<td><button class="btn btn-sm btn-light btnDelete" data-id="' + pCostCenterRow.CostCenterId + '" data-toggle="tooltip" data-placement="top"  title="حذف" data-parent-Id="' + pCostCenterRow.CostCenterParentId + '" data-itemId="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>'
+        return RowContent
+    }
+    // CostCenter Add Row
+    function funCostCenterAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+        {
+            "CostCenterLevel": '',
+            "CostCenterIsCumulative": true,
+            "IsCostCenter": true,
+            "CostCenterNo": '',
+            "CostCenterId": 0,
+            "CostCenterCode": '',
+            "CostCenterNameL1": '',
+            "CostCenterNameL2": '',
+            "parent": '',
+            "CompanyId": '',
+            "CompanyBranchNameL1": 0,
+            "ParentId": ''
+        }
+        var vRowContent = funCostCenterRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+
+
+
+        GetCompanyData();
+    }
+    // Add New Row
+    $('body').on('click', '.btnCostCenterAddRow', function () {
+        var vCurrentRow = $(this).closest('tr');
+
+        // Cash Desk Add Row
+        funCostCenterAddRow(vCurrentRow);
+
+    })
+    // Add New Row
+    $('body').on('click', '.btnCostCenterAddLastRow', function () {
+        var vCurrentRow = $('.tblCostCenterBody').find('tr').last();
+
+        // Cash Desk Add Row
+        funCostCenterAddRow(vCurrentRow);
+
+    })
+
+    // GET Cash Desk By Selected List
+    function funGETCostCenter(pCostCenterId, pCostCenterCode) {
+        var vCostCenterId;
+        var vCostCenterCode;
+        var vCostCenterParentName;
+        var vCostCenterLevel;
+        var vCostCenterParentId;
+        var vCompanyCodeH
+        var vCompanyCurrency
+        // GET Data
+        $.post('/Home/GetCostCenter',
+            {
+                CostCenterId: pCostCenterId,
+                CostCenterCode: pCostCenterCode,
+                pQueryTypeId: 405
+            },
+            function (CostCenterData, status) {
+                // Table Body
+                var vCostCenterTableBody = $('.tblCostCenterBody');
+                // HTML CLEAR
+                vCostCenterTableBody.html('');
+                if (CostCenterData) {
+                    // JSON
+                    var vCostCenterDataResult = JSON.parse(CostCenterData);
+                    // For Each Cash Desk - Main
+                    $.each(vCostCenterDataResult, function (m, cashDeskSubData) {
+                        // GET Cash Desk Row Content
+
+                        var vCostCenterRowContent = funCostCenterRowConfig(vCostCenterDataResult[m]);
+
+                        // Append Row Content
+                        vCostCenterTableBody.append(vCostCenterRowContent);
+                        // ToolTip
+                        $('[data-toggle="tooltip"]').tooltip()
+                        // CostCenterData
+                        vCostCenterNo = vCostCenterDataResult[m].CostCenterParentNo
+                        vCostCenterParentId = vCostCenterDataResult[m].ParentId
+
+                        vCostCenterLevel = vCostCenterDataResult[m].CostCenterParentLevel
+                        vCostCenterParentName = vCostCenterDataResult[m].CostCenterParentName
+
+                        // Get Company Data
+                        vCompanyCodeH = vCostCenterDataResult[m].AccountCodeHierarchy
+                        vCompanyCurrency = vCostCenterDataResult[m].DefaultCurrencyId
+
+
+                    })
+                    if (pCostCenterId) { GetMainCostCenter(pCostCenterId); }
+                    if (vCostCenterNo) {
+                        //funSetMainValue(vCostCenterParentId, vCostCenterParentName, vCostCenterNo, vCostCenterLevel, vCostCenterParentId, vCompanyCodeH, vCompanyCurrency)
+                    } else {
+
+                        $('.tblCostCenterBody').append('<tr class="d-none"><td></td></tr>')
+
+                    }
+                }
+
+                GetCompanyData();
+
+            })
+    }
+
+</script>
+
+<!-- Get CostCenter -->
+<script>
+    // CostCenter Code, Name - F9
+    $('.txtMainName,.txtMainNo').on('keydown dblclick', function (e) {
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search CostCenter
+            var vURL = '/CostCenter/SearchCostCenter';
+            // Load Content of CostCenter Search
+            $('#CostCenterDataModalContent').load(vURL);
+            // Modal Show
+            $('#CostCenterDataModal').modal('show');
+
+            // Select CostCenter
+            $('body').on('click', '.divCostCenterSelect', function () {
+
+                // CostCenter Id
+                var vCostCenterId = $(this).attr('data-id');
+
+                // Get Values
+                var vCostCenterCodeValue = $(this).find('.divCostCenterCode').text();
+                var vCostCenterNameValue = $(this).find('.divCostCenterName').text();
+
+                // Set Value
+                $('.txtCostCenterId').val(vCostCenterId);
+                $('.txtMainNo').val(vCostCenterCodeValue);
+                $('.txtMainName').val(vCostCenterNameValue);
+
+                var vPath = '/CostCenter/SearchCostCenter?pCostCenterCode=' + vCostCenterCodeValue;
+
+                // Load Table
+                funGETCostCenter(null, vCostCenterCodeValue)
+
+                // Modal Show
+                $('#CostCenterDataModal').modal('hide');
+
+            })
+        }
+    })
+
+    // When Change Value Of Id
+    $('.txtMainNo').on('change', function () {
+        var vCostCenterNo = $('.txtMainNo').val();
+        var vCostCenterId;
+        if (vCostCenterNo == '') {
+            vCostCenterId = '0';
+            // CostCenterId
+            $('.txtMainName').val('');
+            $('.txtCostCenterId').val('0');
+            $('.txtCostCenterLevel').val('');
+            $('.txtCostCenterParentId').val('0');
+        }
+        else {
+
+            // List GetCostCenter
+            $.post('/Home/GetCostCenter',
+                { CostCenterNo: vCostCenterNo },
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, CostCenter) {
+                        // CostCenter Name
+                        $('.txtMainName').val(CostCenter.text);
+                        // CostCenterId
+                        $('.txtCostCenterId').val(CostCenter.Id);
+                        $('.txtCostCenterLevel').val(CostCenter.CostCenterLevel);
+                        $('.txtCostCenterParentId').val(CostCenter.CostCenterParentId);
+                    })
+                });
+        }
+        var vId = $('.txtMainNo').val();
+
+        funGETCostCenter(vCostCenterId, vId)
+
+    });
+</script>
+
+<script>
+    function GetCompanyData() {
+        // Company Hierarchy
+        var vCompanyCodeHierarchy = $('.txtCompanyCodeH').val();
+        var vCompanyLength = vCompanyCodeHierarchy.length + 1
+        // CostCenterLevel
+        var vCostCenterLevel = parseInt($('.txtCostCenterLevel').val(), 10) + 1
+        // IS Cumulative
+        $('table > tbody >tr').each(function () {
+            // Check CostCenterLevel
+            if (vCostCenterLevel > vCompanyLength) {
+
+                $('.CostCenterIsAccumulative').prop('disabled', true)
+                $('.CostCenterIsCumulative').prop('checked', false)
+            }
+        })
+        //Company Currency
+        var vCompanyCurrency = $('.txtCompanyCurrency').val();
+
+    }
+</script>
+<script>
+    // Print
+    $('.btnPrint').on('click', function () {
+        var url = '/CostCenter/CostCenterReport'
+        var popupWindow = window.open(url);
+    });
+    //SimpleInSameWin()
+
+
+</script>
+<!DOCTYPE html>
+

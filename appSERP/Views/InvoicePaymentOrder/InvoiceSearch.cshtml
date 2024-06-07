@@ -1,0 +1,207 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    //Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+    Layout = null;
+
+
+    int UserId = 0;
+    if (Request.Cookies["UserId"] != null)
+    { UserId = Convert.ToInt32(Request.Cookies["UserId"].Value); };
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>@appResource.GLVoucherNo<input type="text" class="form-control txtDocSearchNo" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @appResource.dtFrom
+                                <input type="date" class="form-control txtDateFrom" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="col-md-6">
+                                @appResource.dtTo
+                                <input type="date" class="form-control txtDateTo" value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @appResource.GLVoucherRef
+                                <input type="text" class="form-control txtRefNum" min="0" />
+                            </div>
+                            <div class="col-md-6 d-none">
+                                @appResource.GLVoucherRefDate
+                                <input type="Date" class="form-control txtRefDate" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        البيان
+                        <input type="text" class="txtNote form-control" id="txtNote" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearch">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblInvoiceSearch">
+            <thead>
+                <tr>
+                    <th class=" " data-checked="false">
+                        <input type="checkbox" class="btnCheckAll">
+                        تحديد الكل
+                    </th>
+                    <th>رقم القيد</th>
+                    <th>@appResource._Date</th>
+                    <th>المرجع</th>
+                    <th>المخزن</th>
+                    <th>ملاحظات</th>
+                </tr>
+            </thead>
+            <tbody class="tblInvoiceSearchBody"></tbody>
+        </table>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+<script>
+    //function Append
+    function funGlVoucherRowConfig(pGLVoucherRow) {
+        // Content
+        var RowContent = '<tr>' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pGLVoucherRow.InvId + '"/></td> ' +
+            '<td>' + pGLVoucherRow.InvCode + '</td>' +
+            '<td>' + pGLVoucherRow.InvDate + '</td>' +
+            '<td>' + pGLVoucherRow.InvRef + '</td>' +
+            '<td>' + pGLVoucherRow.StoreNameL1 + '</td>' +
+            '<td>' + pGLVoucherRow.Notes + '</td>' +
+            +'</tr > '
+        return RowContent
+    }
+    function funGetGLVoucherData(DocNo, psDateFrom, psDateTo, phGLVoucherRef, phGLVoucherRefDate, phGLVoucherNote, phNumbers, phInvType) {
+        var vDataResult;
+        $.get('/api/APIINVInvoice/INVInvoiceGET',
+            {
+                // Head Parameters
+                //psGLVoucherNo: DocNo,
+                psGLVoucherNo: DocNo,
+                psDateFrom: psDateFrom,
+                psDateTo: psDateTo,
+                //pSearchDateFrom: psDateFrom,
+                //pSearchsDateTo: psDateTo,
+                phInvRef: phGLVoucherRef,
+                phNotes: phGLVoucherNote,
+                phNumbers: phNumbers,
+                //phIsDeleted: false,
+                // Query Type Id
+                pQueryTypeId: '400',
+                phInvtype: phInvType,
+                branchId:@BranchId
+            },
+            function (data, status) {
+
+                // JSON Parse
+                vDataResult = JSON.parse(data);
+
+                console.log(vDataResult)
+                //$('.tblGlVoucherBody').html('');
+                $('.tblInvoiceSearchBody').html('');
+
+                $.each(vDataResult, function (m, GLVoucherData) {
+                    // GET Cash Desk Row Content
+
+                    var vAccountRowContent = funGlVoucherRowConfig(vDataResult[m]);
+
+                    // Append Row Content
+
+                    //$('.tblGlVoucherBody').append(vAccountRowContent);
+                    $('.tblInvoiceSearchBody').append(vAccountRowContent);
+                });
+
+            })
+
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearch').on('click', function () {
+        var vDocSearchNo = $('.txtDocSearchNo').val();
+        var vDateFrom = $('.txtDateFrom').val();
+        var vDateTo = $('.txtDateTo').val();
+        var vRefNum = $('.txtRefNum').val();
+        var vRefDate = $('.txtRefDate').val();
+        var vText = $('#txtNote').val();
+        var vhInvTypeId = $('.txtInvType').val();
+
+        // Get Row
+        funGetGLVoucherData(vDocSearchNo, vDateFrom, vDateTo, vRefNum, vRefDate, vText, null, vhInvTypeId)
+    })
+    // Actione Load
+    $(document).ready(function () {
+        var vhInvTypeId = $('.txtInvType').val();
+        // Get Row
+        //funGetGLVoucherData(null, null, null, null, null, null, null, vhInvTypeId)
+    });
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+</script>

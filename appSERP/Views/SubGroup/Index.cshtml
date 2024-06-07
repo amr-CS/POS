@@ -1,0 +1,364 @@
+﻿@using appSERP.Views.Shared.appResource
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "الخزائن" })
+</div>
+
+<!-- Main Container -->
+<div class="">
+
+    <!-- Main Group -->
+    <div class="divMainGroup bg-white border p-2">
+        <div>@appResource.lblMainGroups</div>
+        <table class="table table-hover MainGroup">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th> @appResource.MainGroupId -عربي</th>
+                    <th> @appResource.MainGroupId - انجليزي</th>
+                    <th> رمز  الاهلاك</th>
+                    <th> @appResource._Percent</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblMainGroup">
+                <tr class="trMainGroup">
+                    <td><input type="text" class="form-control" /></td>
+                    <td><input type="text" class="form-control" /></td>
+                    <td>
+                        <select class="MainGroupType form-control form-control-sm">
+                            <option selected data-id="1">القسط الثابت</option>
+                            <option data-id="2">المتغير</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" /></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+        <div class=" bg-white border p-3 d-flex">
+            <div class="w-100"></div>
+            <div class="flex-shrink-1 p-1"><button class="btn btn-light btnMainGroupAddRow">@appResource.btnNew</button></div>
+            <div class="flex-shrink-1 p-1">       <button type="button" class="btn btn-outline-success btnSaveMainGroup" style="text-align:left">@appResource.btnSave</button></div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+
+<!-- Sub Group -->
+<div class="divGroup bg-white border p-2">
+    <div>@appResource.lblGroup</div>
+    <table class="table table-hover SubGroup">
+        <!-- Head -->
+        <thead>
+            <tr>
+                <th> @appResource.GroupId -عربي</th>
+                <th> @appResource.GroupId - انجليزي</th>
+                <th> رمز  الاهلاك</th>
+                <th> @appResource._Percent</th>
+                <th> @appResource.GroupAssetAccount</th>
+            </tr>
+        </thead>
+
+        <!-- Body -->
+        <tbody class="tblSubGroup">
+            <tr>
+                <td><input type="text" class="form-control" /></td>
+                <td><input type="text" class="form-control" /></td>
+                <td>
+                    <select class="MainGroupType form-control form-control-sm">
+                        <option selected data-id="1">القسط الثابت</option>
+                        <option data-id="2">المتغير</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" /></td>
+                <td><input type="text" class="form-control" /></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+    <div class=" bg-white border p-3 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1"><button class="btn btn-light btnGroupAddRow">@appResource.btnNew</button></div>
+        <div class="flex-shrink-1 p-1"> <button type="button" class="btn btn-outline-success btnSaveSubGroup" style="text-align:left">@appResource.btnSave</button></div>
+    </div>
+</div>
+</div>
+
+
+<script>
+
+    // For MainGroup
+    funMainGroup(null, null, null, null, null, null, null, null, null, null, null, 400)
+
+
+
+    function funMainGroup(
+        pMainGroupId,
+        pMainGroupNameL1,
+        pMainGroupNameL2,
+        pMainGroupIsActive,
+        pFixedAssetMethodId,
+        pMainGroupPercent,
+        pMainGroupDebitAccount,
+        pMainGroupCreditAccount,
+        pMainGroupPurchaseAccount,
+        pMainGroupSalesAccount,
+        pIsDeleted,
+        pQueryTypeId
+    ) {
+        $.post('/SubGroup/MainGroupGET'
+            ,
+            {
+                pMainGroupId: pMainGroupId,
+                pMainGroupNameL1: pMainGroupNameL1,
+                pMainGroupNameL2: pMainGroupNameL2,
+                pMainGroupIsActive: pMainGroupIsActive,
+                pFixedAssetMethodId: pFixedAssetMethodId,
+                pMainGroupPercent: pMainGroupPercent,
+                pMainGroupDebitAccount: pMainGroupDebitAccount,
+                pMainGroupCreditAccount: pMainGroupCreditAccount,
+                pMainGroupPurchaseAccount: pMainGroupPurchaseAccount,
+                pMainGroupSalesAccount: pMainGroupSalesAccount,
+                pIsDeleted: pIsDeleted,
+                pQueryTypeId: pQueryTypeId
+            }
+            ,
+            function (MainGroupData, status) {
+
+                // Table Body
+                var vMainGroupTableBody = $('.tblMainGroup');
+                // HTML CLEAR
+                vMainGroupTableBody.html('');
+                // Data
+                var vMainGroupDataResult = JSON.parse(MainGroupData)
+                // Get All Data
+                $.each(vMainGroupDataResult, function (m, cashDeskSubData) {
+
+                    // NameL1
+                    var vMainGroupId = vMainGroupDataResult[m].MainGroupId;
+                    var vMainGroupNameL1 = vMainGroupDataResult[m].MainGroupNameL1;
+                    var vMainGroupNameL2 = vMainGroupDataResult[m].MainGroupNameL2;
+                    var vFixedAssetMethodId = vMainGroupDataResult[m].FixedAssetMethodId;
+                    var vMainGroupPercent = vMainGroupDataResult[m].MainGroupPercent;
+                    vMainGroupTableBody.append('<tr class="trMainGroup" data-id="' + vMainGroupId + '">' +
+                        '<td width="15%"><input type="text" class="form-control MainGroupNameL1" value="' + vMainGroupNameL1 + '" /></td>' +
+                        ' <td><input type="text" value=' + vMainGroupNameL2 + ' class="form-control MainGroupNameL2" /></td>' +
+                        '<td>' +
+                        '<select class="FixedAssetMethodId form-control form-control-sm ">' +
+                        '<option selected data-id="1">القسط الثابت</option>' +
+                        '<option data-id="2">المتغير</option>' +
+                        ' </select>' +
+                        ' </td>' +
+                        '<td><input type="text" value=' + vMainGroupPercent + ' class="form-control MainGroupPercent" /></td>' +
+                        '</tr >');
+
+                })
+                // Cash Desk Add Row
+                funMainGroupAddRow();
+            })
+    };
+
+    // Get Id Of Main Group
+    $('.divMainGroup').on('click', 'table tr', function () {
+        var vMainGroupId = $(this).attr('data-id')
+        funSubGroup(null, vMainGroupId, null, null, null, null, null, null, null, null, null, null, 400)
+    });
+
+
+    // For   SubGroup
+    function funSubGroup(
+        pGroupId,
+        pMainGroupId,
+        pGroupNameL1,
+        pGroupNameL2,
+        pGroupIsActive,
+        pFixedAssetMethodId,
+        pGroupPercent,
+        pGroupDebitAccount,
+        pGroupCreditAccount,
+        pGroupPurchaseAccount,
+        pGroupSalesAccount,
+        pIsDeleted,
+        pQueryTypeId) {
+        $.post('/SubGroup/GroupGET'
+            ,
+            {
+                pGroupId: pGroupId,
+                pMainGroupId: pMainGroupId,
+                pGroupNameL1: pGroupNameL1,
+                pGroupNameL2: pGroupNameL2,
+                pGroupIsActive: pGroupIsActive,
+                pFixedAssetMethodId: pFixedAssetMethodId,
+                pGroupPercent: pGroupPercent,
+                pGroupDebitAccount: pGroupDebitAccount,
+                pGroupCreditAccount: pGroupCreditAccount,
+                pGroupPurchaseAccount: pGroupPurchaseAccount,
+                pGroupSalesAccount: pGroupSalesAccount,
+                pIsDeleted: pIsDeleted,
+                pQueryTypeId: pQueryTypeId
+            }
+            ,
+            function (GroupData, status) {
+
+                // Table Body
+                var vGroupTableBody = $('.tblSubGroup');
+                // HTML CLEAR
+                vGroupTableBody.html('');
+                // Data
+                var vGroupDataResult = JSON.parse(GroupData)
+
+                // Get All Data
+                $.each(vGroupDataResult, function (m, cashDeskSubData) {
+
+                    // NameL1
+                    var vGroupId = vGroupDataResult[m].GroupId;
+                    var vGroupNameL1 = vGroupDataResult[m].GroupNameL1;
+                    var vGroupNameL2 = vGroupDataResult[m].GroupNameL2;
+                    var vFixedAssetMethodId = vGroupDataResult[m].FixedAssetMethodId;
+                    var vpercent = vGroupDataResult[m].GroupPercent;
+                    var vGroupAssetAccount = vGroupDataResult[m].GroupAssetAccount;
+
+                    vGroupTableBody.append('<tr data-id="' + vGroupId + '">' +
+                        '<td width="15%"><input type="text" class="form-control GroupNameL1" value="' + vGroupNameL1 + '" /></td>' +
+                        ' <td><input type="text" value=' + vGroupNameL2 + ' class="form-control GroupNameL2"  /></td>' +
+                        '<td>' +
+                        '<select class="GroupType form-control form-control-sm FixedAssetMethodId">' +
+                        '<option selected data-id="1">القسط الثابت</option>' +
+                        '<option data-id="2">المتغير</option>' +
+                        ' </select>' +
+                        ' </td>' +
+                        '<td><input type="text" value=' + vpercent + ' class="form-control GroupPercent" /></td>' +
+                        '<td><input type="text" value=' + vGroupAssetAccount + ' class="form-control GroupAssetAccount" /></td>' +
+                        '</tr >');
+
+                })
+
+            })
+    };
+
+
+    // Save Main Group
+    $('.btnSaveMainGroup').on('click', function () {
+
+        //Code Of Save
+        $('.MainGroup > tbody >tr').each(function () {
+
+            // Row Index
+            var vRowData = $(this);
+            // Get MainGroup Id
+            var vMainGroupId = vRowData.attr('data-id');
+            // Name L1
+            var vMainGroupNameL1 = vRowData.find('.MainGroupNameL1').val();
+            // Name L2
+            var vMainGroupNameL2 = vRowData.find('.MainGroupNameL2').val();
+            // Type
+            var vFixedAssetMethodId = vRowData.find('.FixedAssetMethodId').children("option:selected").attr('data-id');
+            // MainGroupPercent
+            var vMainGroupPercent = vRowData.find('.MainGroupPercent').val();
+
+            // Case Insert
+            funMainGroup(vMainGroupId, vMainGroupNameL1, vMainGroupNameL2, true, vFixedAssetMethodId, vMainGroupPercent, null, null, null, null, null, 100)
+
+            // Case Refresh
+            funMainGroup({ pQueryTypeId: 400 })
+        });
+
+
+    });
+    // Save Sub Group
+    $('.btnSaveSubGroup').on('click', function () {
+        // Code Of Save
+
+        //Code Of Save
+        $('.SubGroup > tbody >tr').each(function () {
+            // Row Index
+            var vRowData = $(this);
+            // Get Group Id
+            var vGroupId = vRowData.attr('data-id');
+            console.log(vGroupId)
+            // Name L1
+            var vGroupNameL1 = vRowData.find('.GroupNameL1').val();
+
+            // Name L2
+            var vGroupNameL2 = vRowData.find('.GroupNameL2').val();
+            // Type
+            var vFixedAssetMethodId = vRowData.find('.FixedAssetMethodId').children("option:selected").attr('data-id');
+            // GroupPercent
+            var vGroupPercent = vRowData.find('.GroupPercent').val();
+            // GroupPercent
+            var vGroupAssetAccount = vRowData.find('.GroupAssetAccount').val();
+            console.log(vGroupAssetAccount)
+            funSubGroup(vGroupId, vGroupNameL1, vGroupNameL2, true, vFixedAssetMethodId, vGroupPercent, null, null, null, null, null, 100)
+
+        });
+        //// Case Update
+        //// Case Refresh
+        funSubGroup({ pQueryTypeId: 400 })
+    });
+</script>
+
+<!-- Add Row -->
+<script>
+
+    // funMainGroupAddRow Add Row
+    function funMainGroupAddRow() {
+
+        // Table Body
+        var vMainGroupTableBody = $('.tblMainGroup');
+        // Append
+        vMainGroupTableBody.append('<tr>' +
+            '<td width="15%"><input type="text" class="form-control MainGroupNameL1" " /></td>' +
+            ' <td><input type="text" class="form-control MainGroupNameL2" /></td>' +
+            '<td>' +
+            '<select class="GroupType form-control form-control-sm FixedAssetMethodId">' +
+            '<option selected data-id="1">القسط الثابت</option>' +
+            '<option data-id="2">المتغير</option>' +
+            ' </select>' +
+            ' </td>' +
+            '<td><input type="text"  class="form-control MainGroupPercent" /></td>' +
+
+            '</tr >');
+    }
+    // Add Row
+    $('.btnMainGroupAddRow').on('click', function () {
+        // Cash Desk Add Row
+        funMainGroupAddRow();
+    })
+</script>
+<!-- Add Row -->
+<script>
+
+    // funGroupAddRow Add Row
+    function funGroupAddRow() {
+
+        // Table Body
+        var vGroupTableBody = $('.tblSubGroup');
+        // Append
+        vGroupTableBody.append('<tr>' +
+            '<td width="15%"><input type="text" class="form-control GroupNameL1" " /></td>' +
+            ' <td><input type="text" class="form-control GroupNameL2" /></td>' +
+            '<td>' +
+            '<select class="GroupType form-control form-control-sm FixedAssetMethodId">' +
+            '<option selected data-id="1">القسط الثابت</option>' +
+            '<option data-id="2">المتغير</option>' +
+            ' </select>' +
+            ' </td>' +
+            '<td><input type="text"  class="form-control GroupPercent" /></td>' +
+            '<td><input type="text"  class="form-control GroupAssetAccount" /></td>' +
+            '</tr >');
+    }
+    // Add Row
+    $('.btnGroupAddRow').on('click', function () {
+        // Cash Desk Add Row
+        funGroupAddRow();
+    })
+</script>
+

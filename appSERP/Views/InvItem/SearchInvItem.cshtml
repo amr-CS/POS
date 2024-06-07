@@ -1,0 +1,198 @@
+﻿
+@using appSERP.Views.Shared.appResource
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblInvItemBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <div>رقم المنتج<input type="text" class="form-control txtCode text-center" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                الاسم عربي
+                                <input type="text" class="form-control txtNameL1 text-center" />
+                            </div>
+                            <div class="col-sm-6">
+                                الاسم انجليزي
+                                <input type="text" class="form-control txtNameL2 text-center" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+                               
+                            </div>
+                            <div class="col-sm-6">
+                             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+                     
+                    </div>
+                    <div class=" col-sm-1">
+                     
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer text-muted">
+                <button type="button" class="btn btn-secondary btnSearchh">@appResource.btnSearch</button>
+
+            </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblInvItemSearch">
+            <thead>
+                <tr>
+                    <th class=" " data-checked="false">
+                        <input type="checkbox" class="btnCheckAll">
+                        تحديد الكل
+                    </th>
+                    <th>رقم الصنف</th>
+                    <th>الاسم عربي</th>
+                    <th> الاسم انجليزي</th>
+                </tr>
+            </thead>
+
+            <tbody class="tblInvItemSearchBody"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    //function Append
+    function funInvItemRowConfig(pInvItemRow) {
+        // Content
+        var RowContent = '<tr>' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pInvItemRow.InvItemId + '"/></td> ' +
+            '<td>' + pInvItemRow.InvItemCode + '</td>' +
+            '<td>' + pInvItemRow.InvItemNameL1 + '</td>' +
+            '<td>' + pInvItemRow.InvItemNameL2 + '</td>' +
+     
+            +'</tr > '
+        return RowContent
+    }
+    function funGetInvItemData(pInvItemCode, pInvItemNameL1, pInvItemNameL2) {
+        var vDataResult;
+        $.get('/api/APIInvItem/InvItemGet',
+            {
+                // search Parameters
+                pInvItemCode: pInvItemCode,
+                pInvItemNameL1: pInvItemNameL1,
+                pInvItemNameL2: pInvItemNameL2,
+                // Query Type Id
+                pQueryTypeId: '411',
+                //pItemTypeId: pItemTypeId,
+            },
+            function (data, status) {
+
+                // JSON Parse
+                vDataResult = JSON.parse(data);
+                $('.tblInvItemSearchBody').html('');
+                $.each(vDataResult, function (m, InvItemData) {
+                    // GET Cash Desk Row Content
+
+                    var vAccountRowContent = funInvItemRowConfig(vDataResult[m]);
+
+                    // Append Row Content
+                    $('.tblInvItemSearchBody').append(vAccountRowContent);
+                });
+
+            })
+
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearchh').on('click', function () {
+        var vCode = $('.txtCode').val();
+        var NameL1 = $('.txtNameL1').val();
+        var Namel2 = $('.txtNameL2').val();
+    
+
+
+        // Get Row
+        funGetInvItemData(vCode, NameL1, Namel2)
+    })
+    // Actione Load
+    $(document).ready(function () {
+        var vItemTypeId = $('.txtItemType').val();
+        // Get Row
+        funGetInvItemData(null, null, null)
+    });
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+    var vGroupId=0
+ 
+    var vCatAccountId = 0
+    // List GetCatAccount
+   
+
+    var vStoreId = 0
+    // List GetStore
+    
+</script>
+
+

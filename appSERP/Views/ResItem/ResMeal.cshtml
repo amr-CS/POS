@@ -1,0 +1,3854 @@
+﻿
+@using appSERP.appCode.Setting.User
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType;
+@{
+    ViewBag.Title = "الوجبات";
+}
+<style>
+    body {
+        font-family: Cairo;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[disabled] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+
+    .divUnitPrice {
+        max-height: 18vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .divCashBox, .divChkStat {
+        background-color: #eef1f5;
+        padding: 5px;
+        border: 1px solid #d4d4d4;
+        border-radius: 3px;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+
+    .cardHeader {
+        background-color: #D3EDFF;
+    }
+
+    .divHead {
+        max-height: 29vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .selected {
+        color: #fff;
+        font-weight: bold
+    }
+</style>
+<!--Scrolling Table-->
+<style>
+    #table-wrapper {
+        position: relative;
+    }
+
+    #table-scroll {
+        height: 250px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    #table-scroll-unit {
+        height: 100px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    #table-wrapper table thead th {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: #fff;
+    }
+
+    .clsDiv {
+        /*position: fixed;*/
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        position: absolute;
+        top: -20px;
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        background-color: #D3EDFF !important;
+        background-color: #D3EDFF !important;
+    }
+</style>
+
+<!-- Head -->
+<div class="">
+
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "الوجبات", pIsNew = false })
+
+</div>
+<div class="">
+    <div class="bg-white border rounded ">
+        <div class="w-100">
+            <div class="d-flex justify-content-end">
+             
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Save -->
+                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Copy -->
+                    <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                    <!-- Paste -->
+                    <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <select class="selectpicker " id="reportType">
+                        <option value="1">تجميعي</option>
+                        <option value="2">تفصيلي</option>
+                    </select>
+                    <!-- Print -->
+                    <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                    <!-- Sort Desc -->
+                    <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                    <!-- Edit -->
+                    <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- PDF -->
+                    <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <!-- Excel -->
+                    <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                    <!-- Word -->
+                    <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Close -->
+                    <button class="btn btnUtility btnDeleteHead" title="@appResource.btnDelete"><i class="fa fa-close"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Full Screen -->
+                    <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <div class="dropdown">
+                        <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-table"></i>
+                        </button>
+                        <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="">
+
+
+    <div>
+        <input class="form-control  text-center  txtHeadItemId d-none" type="text" value="0" required />
+        <input class="form-control  text-center  txtHeadUnitId  d-none" type="text" value="0" required />
+        <input class="form-control  text-center  txtHeadContentId d-none " type="text" value="0" required />
+        <input class="form-control  text-center  txtItemType d-none" type="text" value="3" required />
+    </div>
+
+    <div class="bg-white" id="table-wrapper">
+        @*<div class=" clsDiv"><div style="visibility:hidden;">1</div></div>*@
+        <div id="table-scroll">
+            <table>
+                <thead class="cardHeader">
+                    <tr class="tblHead">
+                        <th class=""></th>
+                        <th class="" width="5%">
+                            <div class="text">@appResource.MealNo</div>
+                        </th>
+                        <th class="" width="">
+                            <div class="text">@appResource.MealName -@appResource.Arabic</div>
+                        </th>
+                        <th class="" width="">
+                            <div class="text">@appResource.MealName -@appResource.English</div>
+                        </th>
+                        @*<th class="" width="">
+            <div class="text">صورة</div>
+        </th>*@
+                        <th class="">
+                            <div class="text">@appResource._Sort</div>
+                        </th>
+                        <th class="">
+                            <div class="text">فئات البيع</div>
+                        </th>
+                        <th class="">
+                            <div class="text">فئات الوجبات</div>
+                        </th>
+
+                        @*<th class="">
+            <div class="text">@appResource.DefaultStore </div>
+        </th>*@
+                        @*<th class="">
+            <div class="text"> النقاط</div>
+        </th>*@
+                        @*<th class="">
+            <div class="text">@appResource.OrderLimit </div>
+        </th>*@
+                        <th class="" width="7%">
+                            <div class="text">@appResource._Printer</div>
+                        </th>
+                        <th class="" >
+                            <div class="text">الحساب</div>
+                        </th>
+                        <th class="">
+                            <div class="text">منتج مكون</div>
+                        </th>
+                        <th class="">
+                            <div class="text">@appResource.TypeDtl</div>
+                        </th>
+                        <th class="">
+                            <div class="text">@appResource._IsActive</div>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody class="tblItemBody">
+                   @Html.Action("ItemHead", "ResItem", new { pItemType = 3 })
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="row   bg-white border rounded mt-3 ">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header cardHeader">
+                    الوحدات
+                </div>
+                @*<div class="card-body">*@
+                    <div class="bg-white" id="table-wrapper">
+                        <div id="table-scroll-unit">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <!--CashDesk-->
+                                    <tr>
+                                        <th><div class="text"></div></th>
+                                        <th><div class="text">@appResource.UnitId</div> </th>
+                                        <th><div class="text">@appResource._Package</div> </th>
+                                        <th><div class="text">@appResource.UnitMain</div></th>
+                                        <th><div class="text">@appResource._Parcode</div></th>
+                                        <th><div class="text">@appResource.DeductingQty</div> </th>
+                                        <th><div class="text">@appResource._IsDefault</div></th>
+                                        <th><div class="text">@appResource._IsActive</div></th>
+                                        <th><div class="text"></div></th>
+                                    </tr>
+                                </thead>
+                                <!--blackList-->
+                                <tbody class="tblUnitBody ">
+                                    <tr class="tblUnitRow " data-id="0" data-changed="0">
+                                        <td class="">
+                                            <button class="btn btn-light btn-sm border btnAddUnitRow" type="submit">
+                                                <i class="fa fa-plus-circle"></i>
+                                            </button>
+                                        </td>
+                                        <td class="" width="15%">
+                                            <div class="d-flex txtUnit">
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control  text-center  d-none txtUnitId" type="text" required />
+                                                    <input class="form-control  text-center  txtUnitCode" type="text" required readonly />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control  text-center  txtUnitName" type="text" required readonly />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="" width="15%">
+                                            <input class="form-control  text-center txtPartsInParent" required />
+                                        </td>
+                                        <td class="" width="25%">
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control  text-center  d-none txtUnitParentId" type="text" required />
+                                                    <input class="form-control  text-center  txtUnitParentCode" title="@appResource.ChoseCostCenterTitle" type="text" required disabled />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control  text-center  txtUnitParentName" type="text" required disabled />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="" width="">
+                                            <input class="form-control  text-center txtBarcode" required />
+                                        </td>
+                                        <td class="" style=" padding-right:3rem !important;">
+                                            <div class="custom-control custom-checkbox ">
+                                                <input type="checkbox" class="txtIsDecreasable" id="txtIsDecreasable">
+                                                @*<label class="custom-control-label small" for="txtIsDecreasable"></label>*@
+                                            </div>
+                                        </td>
+                                        <td class="" style=" padding-right:2rem !important;">
+                                            <div class="custom-control custom-checkbox ">
+                                                <input type="checkbox" class="chkIsDefault" id="chkIsDefault">
+                                                @*<label class="custom-control-label small" for="chkIsDefault"></label>*@
+                                            </div>
+                                        </td>
+                                        <td class="" style=" padding-right:2rem !important;">
+                                            <div class="custom-control custom-checkbox ">
+                                                <input type="checkbox" class="chkIsActive" id="chkIsActive" checked>
+                                                @*<label class="custom-control-label small" for="chkIsActive"></label>*@
+                                            </div>
+                                        </td>
+                                        <td><button class="btn btn-light btn-sm btnUnitDelete"><i class="fa fa-trash"></i></button></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @*</div>*@
+            </div>
+        </div>
+        <div class="col-md-4 ">
+            <div class="card">
+                <div class="card-header cardHeader ">
+                    @appResource._Price
+                </div>
+                <div class="card-body ">
+                    <div class="bg-white" id="table-wrapper">
+                        <div id="table-scroll-unit">
+                            <table class="table table-bordered table-hover ">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th><div class="text">@appResource.PriceType1</div></th>
+                                        <th><div class="text">        @appResource._Price</div> </th>
+                                        <th><div class="text">@appResource._IsActive </div></th>
+                                        <th><div class="text"></div></th>
+                                    </tr>
+                                </thead>
+                                <!--blackList-->
+                                <tbody class="tblPriceBody">
+                                    <tr class="tblPriceRow " data-id="0" data-changed="0">
+                                        <td>
+                                            <button class="btn btn-light btn-sm border btnAddPriceRow" type="submit">
+                                                <i class="fa fa-plus-circle"></i>
+                                            </button>
+                                        </td>
+                                        <td class="">
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control  text-center  d-none txtPriceCatId" type="text" required />
+                                                    <input class="form-control  text-center d-none txtPriceCatCode" title="@appResource.ChoseCostCenterTitle" type="text" required />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control  text-center  txtPriceCatDesc" type="text" required disabled />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="" width="">
+                                            <input class="form-control  text-center txtPrice" required />
+                                        </td>
+                                        <td class="" style=" padding-right:1rem !important;">
+                                            <div class="custom-control custom-checkbox ">
+                                                <input type="checkbox" class="chkIsActive" checked id="chkIsActive2">
+                                                @*<label class="custom-control-label small" for="chkIsActive2"></label>*@
+                                            </div>
+                                        </td>
+
+                                        <td><button class="btn btn-light btn-sm btnPriceDelete"><i class="fa fa-trash"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=" bg-white border rounded  mt-3">
+
+        <ul class="nav nav-tabs  cardHeader" id="myTab" role="tablist">
+
+            <li class="nav-item divCash " id="divCash">
+                <a class="nav-link    show active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">@appResource.MealsContents</a>
+            </li>
+            <li class="nav-item divMaster" id="divMaster">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">@appResource.MealsDishes</a>
+            </li>
+            <li class="nav-item divMaster" id="divMaster">
+                <a class="nav-link" id="product-tab" data-toggle="tab" href="#product" role="tab" aria-controls="product" aria-selected="false">@appResource.MealsAdds</a>
+            </li>
+        </ul>
+        <div class="tab-content table-wrapper" id="myTabContent">
+
+            <div class="tab-pane fade  divCash active show table-scroll" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                <table class="table table-bordered table-hover" id="tblContent">
+                    <thead>
+                        <tr>
+                            <th> <div class="text"></div></th>
+                            <th>
+                                <div class="text">@appResource._Content</div>
+                            </th>
+                            <th><div class="text"> @appResource.UnitId</div> </th>
+                            <th>
+                                <div class="text">@appResource._Qty</div>
+                            </th>
+
+                            <th>
+                                <div class="text"> @appResource._Amount</div>
+                            </th>
+                            <th><div class="text"> @appResource._IsActive</div></th>
+                            <th> <div class="text"> @appResource._Exception</div></th>
+                            <th> <div class="text"></div></th>
+                      
+                        </tr>
+                    </thead>
+                    <!--CashDesk-->
+                    <tbody class="tblContentBody">
+                        <tr class="trBaseRow tblContentRow" data-id="0" data-changed="0">
+                            <td>
+                                <button class="btn btn-light btn-sm border btnAddContentRow" type="submit">
+                                    <i class="fa fa-plus-circle"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="col-sm-3 p-0">
+                                        <input class="form-control  text-center  txtContentItemId d-none" type="text" value="0" required />
+                                        <input class="form-control  text-center  d-none txtContentId" type="text" value="1" required />
+                                        <input class="form-control  text-center  txtContentCode" type="text" required />
+                                    </div>
+                                    <div class="col-sm-9 p-0">
+                                        <input class="form-control  text-center  txtContentName" type="text" required disabled />
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td>
+                                <input class="form-control text-center font-weight-bold txtUnitName" type="text" min=0 readonly />
+                                <input class="form-control text-center font-weight-bold txtUnitId d-none" type="text" min=0 />
+                                <input class="form-control text-center  txtUnitPrice d-none" value="0" type="text" required />
+                            </td>
+                            <td>
+                                <input class="form-control  text-center font-weight-bold txtQty" type="text" min=0 required />
+                            </td>
+
+                            <td>
+                                <input class="form-control  text-center font-weight-bold txtPrice" value="0" type="text" min=0 />
+                            </td>
+                            <td class="" style=" padding-right:3rem !important;">
+                                <div class="custom-control custom-checkbox ">
+                                    <input type="checkbox" class="chkIsActive" checked id="chkIsActive1">
+                                    @*<label class="custom-control-label small" for="chkIsActive1"></label>*@
+                                </div>
+                            </td>
+                            <td class="" style=" padding-right:3rem !important;">
+                                <div class="custom-control custom-checkbox ">
+                                    <input type="checkbox" class="chkIsExp" id="chkIsExp">
+                                    @*<label class="custom-control-label small" for="chkIsExp"></label>*@
+                                </div>
+                            </td>
+                            <td width="7%"><button class="btn btn-light btn-sm btnContentDelete"><i class="fa fa-trash"></i></button></td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Details Footer -->
+                <table class="table table-sm  border-0">
+                    <tbody class="">
+                        <tr class="d-flex mr-4">
+                            <td class="col-sm-3"></td>
+                            <td class="col-sm-2"></td>
+
+                            <td class="col-sm-2"></td>
+                            <td class="col-sm-3">
+                                <label class="small float-right mx-1 pt-2">@appResource._Total</label>
+                            </td>
+                            <td class="col-sm-2">
+                                <input class="form-control  text-center disabled font-weight-bold txtTotal" value="0" disabled type="number" min=0 required />
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+
+            <div class="tab-pane fade divMaster" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+                <div class="container-fluid ">
+                    <table class="table table-bordered table-hover tblPlate">
+                        <!--CashDesk-->
+                        <tr>
+                            <th></th>
+                            <th>
+                                <div>@appResource._Content</div>
+                            </th>
+                            <th>
+                                <div>@appResource._Qty</div>
+                            </th>
+
+                            <th>@appResource._IsActive</th>
+
+                            <th></th>
+                        </tr>
+                        <!--CashDesk-->
+                        <tbody class="tblPlateBody">
+                            <tr class="trBaseRow tblPlateRow" data-id="0" data-changed="0">
+                                <td class="">
+                                    <button class="btn btn-light btn-sm border btnPlateAddRow" type="submit">
+                                        <i class="fa fa-plus-circle"></i>
+                                    </button>
+                                </td>
+                                <td class="" width="">
+                                    <div class="d-flex">
+                                        <div class="col-sm-4 p-0">
+                                            <input class="form-control  text-center  d-none txtPlateId" type="text" required />
+                                            <input class="form-control  text-center  txtPlateCode" type="text" required />
+                                        </div>
+                                        <div class="col-sm-8 p-0">
+                                            <input class="form-control  text-center  txtPlateName" type="text" required disabled />
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td class="">
+                                    <input class="form-control  text-center font-weight-bold txtPlateQty" type="text" min=0 required />
+                                </td>
+
+                                <td class="" style=" padding-right:3rem !important;">
+                                    <div class="custom-control custom-checkbox ">
+                                        <input type="checkbox" class="chkIsActive" id="chkIsActive">
+                                        @*<label class="custom-control-label small" for="chkIsActive"></label>*@
+                                    </div>
+                                </td>
+
+                                <td><button class="btn btn-light btn-sm btnPlateDelete"><i class="fa fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane fade " id="product" role="tabpanel" aria-labelledby="product-tab">
+
+                <div class="container-fluid ">
+                    <table class="table table-bordered table-hover">
+                        <!--ItemAdd-->
+                        <tr>
+                            <th></th>
+
+                            <th>
+                                <div>@appResource._Add</div>
+                            </th>
+                            <th>
+                                <div>@appResource._Qty</div>
+                            </th>
+                            <th>
+                                <div>@appResource._Price</div>
+                            </th>
+                            <th></th>
+                        </tr>
+                        <!--ItemAdd-->
+                        <tbody class="tblItemAddBody">
+                            <tr class="trBaseRow tblItemAddRow" data-id="0" data-changed="0">
+                                <td class="" width="5%">
+                                    <button class="btn btn-light btn-sm border btnItemAddAddRow" type="submit">
+                                        <i class="fa fa-plus-circle"></i>
+                                    </button>
+                                </td>
+                                <td class="">
+                                    <div class="d-flex txtItemContent">
+                                        <div class="col-sm-4 p-0">
+                                            <input class="form-control  text-center   txtItemContentId d-none" value="0" type="text" required />
+                                            <input class="form-control  text-center  txtItemContentCode" title="@appResource.ChoseCostCenterTitle" type="text" required />
+                                        </div>
+                                        <div class="col-sm-8 p-0">
+                                            <input class="form-control  text-center  txtItemContentName" type="text" required disabled />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="">
+                                    <input class="form-control  text-center font-weight-bold txtItemQty" value="0" type="text" min=0 />
+                                </td>
+                                <td class="">
+                                    <input class="form-control  text-center font-weight-bold txtItemPrice" value="0" type="text" min=0 />
+                                </td>
+
+
+                                <td class="" width="5%"><button class="btn btn-light btn-sm btnCashDelete"><i class="fa fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- AccountData Modal -->
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+
+<!-- CostCenterData Modal -->
+<div id="CostCenterDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CostCenterDataModalContent"></div>
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<!-- PrinterData Modal -->
+<div id="PrinterDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="PrinterDataModalContent"></div>
+    </div>
+</div>
+
+<script>
+    //var   Item = $.parseJSON($.ajax({
+    //        url: '/api/APIInvItem/InvItemGET',
+    //        dataType: "json",
+    //        method: 'GET', contentType: 'application/json',
+    //        data: { phNumbers: '1,2', pQueryTypeId: '409', },
+    //        async: false
+    //          }).responseText);
+
+    //    localStorage.setItem("Item",Item)
+
+
+
+    //// Save All Vouchers
+    //function funSaveALL() {
+    //    funSave()
+    //}
+
+       var PriceMeal ;
+       var TotalMeal ;
+
+    // Save Using button
+    $('.btnSave').on('click', function () {
+        // Save  ALL
+        funSaveALL()
+        $('.tblItemRow').removeAttr('has-new-data');
+    }) // End BtnSave
+
+    // Save Using F10
+    $('body').on('keyup', function (e) {
+        // Check F10
+        if (e.keyCode == 121) {
+            // Save  ALL
+            funSaveALL()
+        }
+    })
+
+
+    // Check ItemAdd
+    $('.tblItemAddBody').on('keyup keydown click', '.tblItemAddRow', function (e) {
+        $(this).find('.txtItemQty').removeClass('errorClass')
+        $(this).find('.txtItemContent').removeClass('errorClass')
+        $(this).find('.txtItemPrice').removeClass('errorClass')
+    })
+
+
+    // Check ItemAdd
+    $('.tblItemBody').on('keyup keydown click', '.tblItemRow', function (e) {
+        // Error Class Validation
+        $(this).find('.txtItemNameL1').removeClass('errorClass')
+        $(this).find('.txtGroup').removeClass('errorClass')
+        $(this).find('.txtCatAccount').removeClass('errorClass')
+        $(this).find('.txtReOrder').removeClass('errorClass')
+    })
+    // Check ItemAdd
+    $('.tblItemBody').on('keyup keydown click', '.tblItemRow', function (e) {
+        // Error Class Validation
+        $(this).find('.txtItemNameL1').removeClass('errorClass')
+        $(this).find('.txtGroup').removeClass('errorClass')
+        $(this).find('.txtCatAccount').removeClass('errorClass')
+        $(this).find('.txtReOrder').removeClass('errorClass')
+    })
+
+    // Check UnitAdd
+    $('.tblUnitBody').on('keyup keydown click', '.tblUnitRow', function (e) {
+        // Error Class Validation
+        $(this).find('.txtUnit').removeClass('errorClass')
+        $(this).find('.txtPartsInParent').removeClass('errorClass')
+
+    })
+    var successStatus = true; // هل تم التنفيذ
+    // Save Unit
+    function funSaveUnit(pItemId) {
+
+        // Check Valid Unit
+        $('.tblUnitRow').each(function () {
+            // Row Data
+            var vRowData = $(this).closest('tr');
+
+            // Save Items
+            var vInvItemUnitId = vRowData.attr('data-id');
+            var vUnitId = vRowData.find('.txtUnitId').val();
+            var vPartsInParents = vRowData.find('.txtPartsInParent').val();
+            if (vPartsInParents === '') {
+                vPartsInParents = 1
+            }
+            var vUnitParentId = vRowData.find('.txtUnitParentId').val();
+            var vItemId = $('.txtHeadItemId').val();
+
+            var vBarcode = vRowData.find('.txtBarcode').val();
+            var vIsDecreasable = vRowData.find('.txtIsDecreasable').prop('checked');
+            var vIsDefault = vRowData.find('.chkIsDefault').prop('checked');
+            var vUnitIsActive = vRowData.find('.chkIsActive').prop('checked');
+            // Check If The Row Changed
+           // if (vRowData.attr('data-changed') == '1') {
+                if (vUnitId && parseInt(vUnitId) > 0 ) {
+                    vRowData.attr('data-changed', '0')
+                    $.post('/ResItem/funSaveUnit',
+                        {
+                            pInvItemUnitId: vInvItemUnitId,
+                            pUnitId: vUnitId,
+                            pPartsInParents: vPartsInParents,
+                            pUnitParentId: vUnitParentId,
+                            pItemId: pItemId,
+                            pBarcode: vBarcode,
+                            pIsDecreasable: vIsDecreasable,
+                            pIsDefault: vIsDefault,
+                            pUnitIsActive: vUnitIsActive,
+                            pQueryTypeId: 100
+                        }
+                        , function (data) {
+                            vRowData.attr('data-changed', '0')
+                            var vResultData = JSON.parse(data)
+                            if (vInvItemUnitId == 0) {
+                                vRowData.attr('data-id', vResultData[0].UnitId);
+                                $('.txtHeadUnitId').val(vResultData[0].UnitId)
+                                SavePrice();
+                            }
+
+                            @*if (successStatus == true) {
+                                if (vResultData[0].SuccessStatus == 'undefined' || vResultData[0].SuccessStatus == false)
+                                    funNotification(vResultData[0].SystemMessageText, 3);
+                                else funNotification('@appResource.msgSave', 1);
+                            }*@
+                            return true;
+
+                        });
+
+
+
+
+                }
+                else {
+
+                    // Error Class Validation
+                    if (vUnitId || vUnitId == '0') { vRowData.find('.txtUnit').addClass('errorClass')}
+                    if (vPartsInParents == '' || vPartsInParents == '0') { vRowData.find('.txtPartsInParent').addClass('errorClass') }
+
+                    return false;
+                }
+            //}
+        });
+    }
+
+    // Table Save Item
+    function funSaveItem() {
+        var valid = true;
+        successStatus = true;
+        // Check Rows
+        $('.tblItemRow').each(function () {
+            var vElement = $(this).closest('tr')
+            // Get Data
+            var vItemId = vElement.find('.txtItemId').val()
+            var vItemCode = vElement.find('.txtItemCode').val()
+            var vItemNameL1 = vElement.find('.txtItemNameL1').val()
+            var vItemNameL2 = vElement.find('.txtItemNameL2').val()
+            var vItemOrder = vElement.find('.txtItemOrder').val()
+            var vGroupId = vElement.find('.txtGroupId').val()
+            var vCatAccount = vElement.find('.txtCatAccountId').val()
+            var vReOrder = vElement.find('.txtReOrder').val()
+            var vStoreDefaultDesc = vElement.find('.txtStoreDefaultId').val()
+            var chkIsDefault = vElement.find('.chkIsDefault').prop('checked')
+            var chkDetailGroup = vElement.find('.chkDetailGroup').prop('checked')
+            var chkIsActive = vElement.find('.chkIsActive').prop('checked')
+            var vPrinterId = vElement.find('.txtPrinterId').attr('data-id')
+            var vPoints = vElement.find('.txtPoints').val();
+            var Account = vElement.find('.txtAccount').val();
+            var Image = "/Image/DataImage/" + vElement.find('.img').attr('data-src');
+                //vElement.find('.txtPoints').val();
+            // Check If The Row Changed
+            if (vElement.attr('data-changed') == '1') {
+                //if (vItemCode == null || vItemCode.length == 0 || vItemCode.trim() == '0') {
+                //    funNotification("يجب إدخال كود الوجبة لا يقبل الفراغ", 2);
+                //    successStatus = false;
+                //    vElement.find('.txtItemCode').focus();
+                //    return valid = false;
+                //}
+                if (vItemNameL1 != '') {
+
+                    $.get('/ResItem/funSaveItem',
+                        {
+                            pInvItemId: vItemId,
+                            pInvItemNameL1: vItemNameL1,
+                            pInvItemNameL2: vItemNameL2,
+                            pInvItemCode: vItemCode,
+                            pGRPId: vGroupId,
+                            pCategoryId: vCatAccount,
+                            pOrderLimit: vReOrder,
+                            pPoints: vPoints,
+                            pStoreId: vStoreDefaultDesc,
+                            pIsDefault: chkDetailGroup,
+                            pDetailGroup: chkDetailGroup,
+                            pItemImage: Image,
+                            pSequenceByCategory: vItemOrder,
+                            //
+                            pItemType: 3,
+                            pInvItemIsActive: chkIsActive,
+                            pIsDeleted: false,
+                            pQueryTypeId: '100',
+                            pPrinterId: vPrinterId,
+                            pAccount: Account
+                        }, function (data) {
+                            var vResultData = JSON.parse(data)
+                            if (vResultData[0].SuccessStatus == 'undefined' || vResultData[0].SuccessStatus == false) {
+                                funNotification(vResultData[0].SystemMessageText, 3);
+                                successStatus = false;
+                                valid = false;
+                                return valid = false;
+                            }
+                            vElement.attr('data-changed', '0');
+                            if (vItemId == 0) {
+                                $('.txtHeadItemId').val(vResultData[0].InvItemId)
+                                vElement.find('.txtItemId').val(vResultData[0].InvItemId)
+                                //  vElement.find('.txtItemCode').val(vResultData[0].InvItemCode)
+                                // Save Unit
+                                var Valid33 = funSaveUnit(vResultData[0].InvItemId);
+                                SaveContent(vResultData[0].InvItemId);
+                                // saveItemAdd
+                                //SaveItemAdd(vResultData[0].InvItemId);
+                            }
+                            else {
+                                 //var vItemId = $('.txtHeadItemId').val();
+                                if (vItemId != 0) {
+                                    SaveContent(vItemId);
+
+                                    funSaveUnit(vItemId);
+
+                                    SavePrice(); // مكررة في اضافات الوحدات
+                                    //SaveItemAdd()
+                                    //SaveItemAdd(vItemId)
+
+                                    SavePlateAdd(vItemId)
+                                    // Validate For Message
+                                }
+                            }
+                            if (successStatus == true)
+                                funNotification('@appResource.msgSave', 1)
+                            return valid = true;
+                        });
+                    return valid;
+                }
+                else {
+
+                    // Error Class Validation
+                    if (vItemNameL1 == '') { vElement.find('.txtItemNameL1').addClass('errorClass')}
+                    if (vReOrder == '' || vReOrder == '0') { vElement.find('.txtReOrder').addClass('errorClass')}
+                    return valid = false;
+                }
+            }
+
+        })
+        return valid;
+    }
+
+
+
+
+    // Save Item
+    function SaveItem() {
+        var valid = false;
+        // Validate Unit
+        if ($('.tblUnitRow').length == 1) {
+
+            if ($(".tblUnitRow:first").find('.txtUnitId').val() == '0' || $(".tblUnitRow:first").find('.txtUnitId').val().trim() == '') {
+                funNotification('@appResource.msgRequiredUnitss', 2);
+                $(".tblUnitRow:first").find('.txtUnitId').focus();
+                successStatus = false;
+                return valid = false;
+            }
+        }
+
+            // Save Item
+            valid = funSaveItem();
+            //funLoadItemData();
+            return valid;// return true;
+
+
+    }
+
+    // function Save
+    function funSaveALL() {
+        var PriceMeal = $('.tblPriceBody tr:first .txtPrice').val()
+         var TotalMeal = $('.txtTotal').val();
+
+        var valid = true;
+        var duplicateNumbers = {};
+        $('.tblContentRow').each(function () {
+            var vElement = $(this).closest('tr')
+
+            // Get Data
+            var vContentId = vElement.find('.txtContentId').val();
+
+            // التحقق من تكرار رقم الصنف
+            if (duplicateNumbers[vContentId]) {
+                // رقم الصنف تم تكراره
+                // يمكنك عرض رسالة الخطأ هنا أو تنفيذ إجراءات أخرى
+                vElement.find('.txtContentName').addClass('errorClass');
+                var vContentName = vElement.find('.txtContentName').val();
+                funNotification('تم تكرار رقم المكون : ' + vContentName, 3);
+                valid = false;
+            } else {
+                // رقم الصنف لم يتم تكراره
+                // قم بتسجيله في الكائن لتتبع الأرقام المكررة
+                duplicateNumbers[vContentId] = true;
+            }
+
+            var vQty = vElement.find('.txtQty').val();
+            var vUnitId = vElement.find('.txtUnitId').val();
+            var vPrice = vElement.find('.txtPrice').val();
+            if (vContentId == '' || vQty == '' || vUnitId == '' || vPrice == '') {
+                // Error Class Validation
+                if (vContentId == '' || vContentId == '0') {
+                    vElement.find('.txtContentCode').addClass('errorClass')
+                }
+
+                if (vUnitId == '' || vUnitId == '0') {
+                    vElement.find('.txtUnitName').addClass('errorClass')
+                }
+                if (vQty == '' || vQty == '0') {
+                    vElement.find('.txtQty').addClass('errorClass')
+                }
+                if (vPrice == '') {
+                    vElement.find('.txtPrice').addClass('errorClass')
+                }
+                valid = false;
+                successStatus = false;
+            }
+            else {
+                vElement.find('.txtContentName').removeClass('errorClass');
+                vElement.find('.txtContentCode').removeClass('errorClass');
+                vElement.find('.txtQty').removeClass('errorClass');
+                vElement.find('.txtPrice').removeClass('errorClass');
+            }
+
+        })
+
+
+
+        if (valid == true) {
+
+            if (parseFloat(PriceMeal) === parseFloat(TotalMeal)) {
+                // Save Item
+                var ValidItem = SaveItem();
+                if (ValidItem == false)
+                    return;// من اجل التعديل حسب الكود القديم
+
+                @*// Save Price
+                var vContentId = $('.txtHeadContentId').val();
+                var vUnitId = $('.txtHeadUnitId').val();
+                // Save Price
+
+                // Item Id
+                var vItemId = $('.txtHeadItemId').val();
+                if (vItemId != 0) {
+                    SaveContent(vItemId);
+
+                    funSaveUnit(vItemId);
+
+                    SavePrice(); // مكررة في اضافات الوحدات
+                    //SaveItemAdd()
+                    //SaveItemAdd(vItemId)
+
+                    SavePlateAdd(vItemId)
+                    // Validate For Message
+                    funNotification('@appResource.msgSave', 1) // BH
+                }*@
+
+
+            }
+            else {
+                funNotification(' يجب ان يتطابق اجمالي سعر الوحدة واجمالي سعر المحتوي', 3)
+            }
+
+        }
+        else {
+            funNotification('يجب استكمال البيانات', 3)
+        }
+
+
+    }
+
+    // Save Content
+    function SaveContent(pItemId) {
+        $('.tblContentRow').each(function () {
+            var vElement = $(this).closest('tr')
+
+            // Get Data
+            var ItemId = $('.txtHeadItemId').val();
+            var vContentItemId = vElement.find('.txtContentItemId').val()
+            var vContentId = vElement.find('.txtContentId').val()
+            var vQty = vElement.find('.txtQty').val()
+            var vUnitId = vElement.find('.txtUnitId').val()
+            var vPrice = vElement.find('.txtPrice').val()
+            var chkIsExp = vElement.find('.chkIsExp').prop('checked')
+            var chkIsActive = vElement.find('.chkIsActive').prop('checked')
+            if (vElement.attr('data-changed') == '1') {
+                //if (vContentItemId && parseInt(ItemId) > 0) {
+                if (vContentItemId) {
+                    vElement.attr('data-changed', '0')
+                    $.get('/ResItem/funSaveItem',
+                        {
+                            pIsItemContent: true,
+                            pItemContentId: vContentItemId,
+                            pCont_id: vContentId,
+                            pItemId: pItemId,
+                            pExp: chkIsExp,
+                            pQty: vQty,
+                            pUnit_id: vUnitId,
+                            pItem_con_status: chkIsActive,
+                            pPrice: vPrice,
+                            pIsDeleted: false,
+                            pQueryTypeId: '100'
+
+                        }, function (data) {
+
+                            if (vContentItemId == 0) {
+                                var vResultData = JSON.parse(data)
+
+                                vElement.attr('data-id', vResultData[0].ContentId);
+                                vElement.find('.txtContentItemId').val(vResultData[0].ContentId)
+
+                            }
+                        })
+                }
+                else {
+                    Valid = false;
+                    funNotification('@appResource.msgCompleteData', '2')
+                }
+            }
+        })
+    }
+
+    // Save Price
+    function SavePrice() {
+
+        // Save Price
+        $('.tblPriceRow').each(function (pUnit) {
+            var vElement = $(this).closest('tr')
+
+            // Get Data
+            var vPriceId = $(this).closest('tr').attr('data-id')
+            var vUnitId = $('.txtHeadUnitId').val();
+
+            var vPriceCat = vElement.find('.txtPriceCatId').val();
+            var vPrice = vElement.find('.txtPrice').val()
+
+            var chIsActive = vElement.find('.chkIsActive').prop('checked')
+
+
+        ///    if (vElement.attr('data-changed') == '1') {
+                if (vPrice) {
+
+                    //  Save
+                    $.get('/ResItem/funSavePrice'
+                        , {
+                            pPriceId: vPriceId,
+                            pUnitId: vUnitId,
+                            pPrice: vPrice,
+                            pPriceCat: vPriceCat,
+                            pPriceIsActive: chIsActive,
+                            pIsDeleted: false,
+                            pQueryTypeId: 100
+                        }, function () {
+                            vElement.attr('data-changed', '0')
+
+                        })
+
+
+                }
+                else {
+                }
+           // }
+
+        })
+
+
+
+    }
+
+    // Save ItemAdd
+    function SaveItemAdd(pItemId) {
+        $('.tblItemAddRow').each(function () {
+            var vElement = $(this).closest('tr')
+            // Get Data
+            var vItemAddId = vElement.attr('data-id')
+
+            var vItemAddContentId = vElement.find('.txtItemContentId').val()
+            var vItemQty = vElement.find('.txtItemQty').val()
+            var vItemPrice = vElement.find('.txtItemPrice').val()
+            var vItemId = vElement.find('.txtItemId').val()
+            var vItemHeadId = $('.txtHeadItemId').val();
+
+            if (vElement.attr('data-changed') == '1') {
+                if (vItemAddContentId && vItemQty && vItemPrice) {
+                    vElement.attr('data-changed', '0')
+                    // Save
+                    $.get('/ResItem/funSaveItem',
+                        {
+                            pItemAddId: vItemAddId,
+                            //pItemId: vItemHeadId,
+                            pItemId: pItemId,
+                            pIsItemAdd: true,
+                            pAddOrder: vItemAddContentId,
+                            pItemAddQty: vItemQty,
+                            pItemAddPrice: vItemPrice,
+                            pIsDeleted: false,
+                            pQueryTypeId: '100'
+                        }, function (data) {
+                            vElement.attr('data-changed', '0')
+                            if (vItemAddId == 0) {
+                                var vResultData = JSON.parse(data)
+                                vElement.attr('data-id', vResultData[0].ItemAddId)
+
+                            }
+                        })
+                }
+                else {
+
+                    if (vItemQty == '' || vItemQty == '0') {
+                        vElement.find('.txtItemQty').addClass('errorClass')
+                    }
+                    if (vItemAddContentId == '' || vItemAddContentId == '0') {
+                        vElement.find('.txtItemContent').addClass('errorClass')
+                    }
+                    if (vItemPrice == '' || vItemPrice == '0') {
+                        vElement.find('.txtItemPrice').addClass('errorClass')
+                    }
+                }
+            }
+        })
+
+
+    }
+
+</script>
+<!--Modal-->
+<script>
+    // Account Code, Name - F9 - Double Click
+    $('.tblContentBody').on('keyup dblclick', '.txtUnitName', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            var vItemId = vTableRow.find('.txtContentId').val()
+            // Search Account
+            var vURL = '/ResItem/UnitSearch?pItemId=' + vItemId;
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divUnitSelect', function () {
+
+                    // Get Values
+                    var vUnitId = $(this).attr('data-id');
+                    var vUnitNameValue = $(this).find('.divUnitName').text();
+                    //var vUnitCodeValue = $(this).find('.divUnitCode').text();
+                    var vUnitPriceValue = $(this).find('.divUnitPrice').text();
+
+
+                    // Get Unit Data
+                    var vUnitIdElement = vTableRow.find('.txtUnitId');
+                    var vUnitNameElement = vTableRow.find('.txtUnitName');
+                    var vUnitPriceElement = vTableRow.find('.txtUnitPrice');
+
+                    //funNotification(vUnitId, '2');
+                    // Set Value
+                    vUnitIdElement.val(vUnitId);
+                    vUnitNameElement.val(vUnitNameValue);
+                    vUnitPriceElement.val(vUnitPriceValue);
+                    vTableRow.attr('data-changed', '1')
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+
+    // Account Code, Name - F9 - Double Click
+    $('table').on('keyup dblclick', '.txtStoreDefaultDesc', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/StoreSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divStoreSelect', function () {
+
+                    // Get Values
+                    var vStoreId = $(this).attr('data-id');
+                    var vStoreNameValue = $(this).find('.divStoreName').text();
+                    var vStoreCodeValue = $(this).find('.divStoreCode').text();
+
+
+                    // Get GLVoucherStore Data
+                    var vStoreIdElement = vTableRow.find('.txtStoreDefaultId');
+                    var vStoreNameElement = vTableRow.find('.txtStoreDefaultDesc');
+                    var vStoreCodeElement = vTableRow.find('.txtStoreDefaultCode');
+
+
+
+                    // Set Value
+                    vStoreIdElement.val(vStoreId);
+                    vStoreNameElement.val(vStoreNameValue);
+                    vStoreCodeElement.val(vStoreCodeValue);
+                    vTableRow.attr('data-changed', '1')
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+
+
+                })
+            })
+        }
+    })
+
+    // Open Voucher Group Modal
+    $('body').on('keyup dblclick', '.txtGroupCode', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            // Search Account
+            var vURL = '/ResItem/CatProductSearch/';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divGroupSelect', function () {
+                    // Get Values
+                    var vGroupId = $(this).attr('data-id');
+                    var vGroupNameValue = $(this).find('.divGroupName').text();
+                    var vGroupCodeValue = $(this).find('.divGroupCode').text();
+                    var vGroupIdValue = $(this).find('.divGroupId').text();
+                    // Get GLVoucherGroup Data
+                    var vGroupIdElement = vTableRow.find('.txtGroupId');
+                    var vGroupNameElement = vTableRow.find('.txtGroupName');
+                    var vGroupCodeElement = vTableRow.find('.txtGroupCode');
+                    // Set Value
+                    vGroupIdElement.val(vGroupIdValue);
+                    vGroupNameElement.val(vGroupNameValue);
+                    vGroupCodeElement.val(vGroupCodeValue);
+                    vTableRow.attr('data-changed', '1')
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+
+    var vTableRow
+    // Open Voucher Group Modal
+    $('body').on('keyup click', '.pop', function (e) {
+
+        // F9 - Double Click
+            // Table Row - Closest Row
+         vTableRow = $(this).closest('tr');
+
+            // Modal Show
+        $('#imagemodal').modal('show');
+            // Focus
+        $('#imagemodal').on('shown.bs.modal', function () {
+                // Select Account
+
+    })
+    })
+    $('body').on('click', '.btnOK', function () {
+        // Get Values
+
+        var result = $('.imagepreview').attr('src');
+        alert(result)
+
+        vTableRow.find('.img').attr('src', result)
+
+        var filename = $('input[type=file]').val().split('\\').pop();
+        vTableRow.find('.img').attr('data-src', filename)
+
+        // $('modal').hide();
+        $('#imagemodal').modal('hide');
+
+        vTableRow.attr('data-changed', '1')
+        // Modal Show
+        $('#AccountDataModal').modal('hide');
+        vTableRow.removeClass('table-info');
+
+        vTableRow = '';
+    })
+
+
+
+    $('body').on('change', '.txtGroupCode', function (e) {
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+
+        // Get  Data
+        var vGroupIdElement = vTableRow.find('.txtGroupId');
+        var vGroupNameElement = vTableRow.find('.txtGroupName');
+        var vGroupCodeElement = vTableRow.find('.txtGroupCode');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APILookup/LookupGET',
+            {
+                pIsDetail: true,
+                pLookupId: 120,
+                pdORD: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect',
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vGroupIdElement.val('');
+                        vGroupNameElement.val('');
+                        vGroupCodeElement.val('');
+                        funNotification('@appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Group) {
+                            // Set Value
+                            vGroupIdElement.val(Group.LookupDtlId);
+                            vGroupCodeElement.val(Group.ORD);
+                            vGroupNameElement.val(Group.LookupDtlDesc);
+
+                        });
+                    }
+                });
+    })
+    // Open Voucher CatAccount Modal
+    $('body').on('keyup dblclick', '.txtCatAccountCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            // Search Account
+            var vURL = '/ResItem/CatAccountSearch_124/';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divCatAccountSelect', function () {
+                    // Get Values
+                    var vCatAccountId = $(this).attr('data-id');
+                    var vCatAccountNameValue = $(this).find('.divCatAccountName').text();
+                    var vCatAccountCodeValue = $(this).find('.divCatAccountCode').text();
+                    var vCatAccountIdValue = $(this).find('.divCatAccountId').text();
+                    // Get GLVoucherCatAccount Data
+                    var vCatAccountIdElement = vTableRow.find('.txtCatAccountId');
+                    var vCatAccountNameElement = vTableRow.find('.txtCatAccountName');
+                    var vCatAccountCodeElement = vTableRow.find('.txtCatAccountCode');
+                    // Set Value
+                    vCatAccountIdElement.val(vCatAccountIdValue);
+                    vCatAccountNameElement.val(vCatAccountNameValue);
+                    vCatAccountCodeElement.val(vCatAccountCodeValue);
+                    vTableRow.attr('data-changed', '1')
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+
+    $('body').on('change', '.txtCatAccountCode', function (e) {
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+            // Get  Data
+            var vCatAccountIdElement = vTableRow.find('.txtCatAccountId');
+            var vCatAccountNameElement = vTableRow.find('.txtCatAccountName');
+            var vCatAccountCodeElement = vTableRow.find('.txtCatAccountCode');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APILookup/LookupGET',
+            {
+                pIsDetail: true,
+                pLookupId: 123,
+                pdORD: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vCatAccountIdElement.val('');
+                        vCatAccountNameElement.val('');
+                        vCatAccountCodeElement.val('');
+                           funNotification('@appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, CatAccount) {
+                            // Set Value
+                            vCatAccountIdElement.val(CatAccount.LookupDtlId);
+                            vCatAccountCodeElement.val(CatAccount.ORD);
+                            vCatAccountNameElement.val(CatAccount.LookupDtlDesc);
+                            vTableRow.attr('data-changed', '1')
+
+                        });
+                    }
+                });
+    })
+
+    // Open PrinterDTL Modal
+    $('body').on('keyup dblclick', '.txtPrinterId', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            // Search Printer
+            var vURL = '/Printers/SearchPrinterDTL/';
+            // Load Content of Printer Search
+            $('#PrinterDataModalContent').load(vURL);
+            // Modal Show
+            $('#PrinterDataModal').modal('show');
+            // Focus
+            $('#PrinterDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Printer
+                $('body').on('click', '.divPrinterDTLSelect', function () {
+                    // Get Values
+                    var vPrinterDTLId = $(this).attr('data-id');
+
+                    var vPrinterDTLNameValue = $(this).find('.divPrinterDTLName').text();
+                    var vPrinterDTLCodeValue = $(this).find('.divPrinterDTLCode').text();
+                    var vPrinterDTLIdValue = $(this).find('.divPrinterDTLId').text();
+                    // Get GLVoucherPrinterDTL Data
+                    var vPrinterDTLIdElement = vTableRow.find('.txtPrinterId');
+                    var vPrinterDTLNameElement = vTableRow.find('.txtPrinterName');
+                    // Set Value
+                    vPrinterDTLIdElement.val(vPrinterDTLCodeValue);
+                    vPrinterDTLNameElement.val(vPrinterDTLNameValue);
+                    vPrinterDTLIdElement.attr('data-id', vPrinterDTLId );
+                    vTableRow.attr('data-changed', '1')
+                    // Modal Show
+                    $('#PrinterDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+    $('body').on('change', '.txtPrinterId', function (e) {
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+            // Get  Data
+        var vPrinterIdElement = vTableRow.find('.txtPrinterId');
+        var vPrinterNameElement = vTableRow.find('.txtPrinterName');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APIPrinter/PrinterGET',
+            {
+
+                pPrinterCode: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vPrinterIdElement.val('');
+                        vPrinterNameElement.val('');
+                         funNotification('@appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Printer) {
+                            //// Set Value
+                            //vPrinterIdElement.val(Printer.PrinterDTLCode);
+                            vPrinterIdElement.attr('data-id',Printer.PrinterId);
+                            vPrinterNameElement.val(Printer.ReportNameL1);
+                            vTableRow.attr('data-changed', '1')
+
+                        });
+                    }
+                });
+    })
+</script>
+<!--config-->
+<script>
+    var vContent;
+    var vUnit;
+    function funConfigHead(pData) {
+
+        if (pData != 'undefined' && pData != 'null') {
+            // Content
+            vContent = JSON.stringify(pData.Content);
+
+            // Unit
+            vUnit = JSON.stringify(pData.Unit);
+            // ItemAdd
+            var vItemAdd = JSON.stringify(pData.ItemAdd);
+            var Plate = JSON.stringify(pData.Plate);
+            // CheckBoxes
+            var vIsDefault = null;
+
+            if (pData.IsDefault) {
+                vIsDefault = 'checked';
+            }
+
+            // CheckBoxes
+            var vIsActive = null;
+
+            if (pData.InvItemIsActive) {
+                vIsActive = 'checked';
+            }
+
+
+            // CheckBoxes
+            var vDetailGroup = null;
+
+            if (pData.DetailGroup) {
+                vDetailGroup = 'checked';
+            }
+            var RowContent =
+                ' <tr class="tblItemRow" data-id="' + pData.InvItemId + '" data-changed="0">' +
+
+                '<td class="">' +
+                '<button class="btn btn-light btn-sm border btnAddItemRow" type="submit">' +
+                ' <i class="fa fa-plus-circle"></i>' +
+                ' </button>' +
+                '  </td>' +
+
+                '<td class="" width="7%">' +
+
+                '<textarea class="d-none clsData">' + vContent + '</textarea>' +
+                '<textarea class="d-none clsDataUnit">' + vUnit + '</textarea>' +
+                '<textarea class="d-none clsDataItemAdd">' + vItemAdd + '</textarea>' +
+                '<textarea class="d-none clsPlate">' + Plate + '</textarea>' +
+
+                ' <input class="form-control  text-center  txtItemId d-none" value="' + pData.InvItemId + '" type="text" value="0" required />' +
+                ' <input class="form-control  text-center   txtItemCode" value="' + pData.InvItemCode + '" type="text" required />' +
+
+                '  </td>' +
+
+                ' <td class="" width="15%">' +
+                ' <input class="form-control  text-center fullHeightInput txtItemNameL1" value="' + pData.InvItemNameL1 + '" type="text" min=0 required />' +
+
+                '  </td>' +
+                '  <td class="" width="15%">' +
+                ' <input class="form-control  text-center fullHeightInput txtItemNameL2" value="' + pData.InvItemNameL2 + '" type="text" min=0 required />' +
+                '</td>' +
+
+                '  <td class="" >' +
+                '<div class="">' +
+
+                ' <input class="form-control  text-center fullHeightInput txtItemOrder" value="' + pData.RowNumber + '" type="text" min=0 required />' +
+
+                '  </div>' +
+                '   </td>' +
+                ' <td>' +
+                '<div class="d-flex txtGroup">' +
+                '  <div class="col-sm-4 p-0">' +
+                '  <input class="form-control  text-center  d-none txtGroupId" value="' + pData.GRPId + '" type="text" required />' +
+                ' <input class="form-control  text-center fullHeightInput txtGroupCode" value="' + pData.GroupCode + '" type="text" min=0 required />' +
+
+                '</div>' +
+                ' <div class="col-sm-8 p-0">' +
+                '<input class="form-control  text-center  txtGroupName" value="' + pData.GroupName + '" type="text" required disabled />' +
+                ' </div>' +
+                '</div>' +
+
+                ' </td>' +
+                ' <td>' +
+                ' <div class="d-flex txtCatAccount">' +
+                ' <div class="col-sm-4 p-0 ">' +
+                ' <input class="form-control  text-center  d-none txtCatAccountId" value="' + pData.CategoryId + '" type="text" required />' +
+                ' <input class="form-control  text-center fullHeightInput txtCatAccountCode" value="' + pData.CategoryCode + '" type="text" min=0 required />' +
+                '</div>' +
+                ' <div class="col-sm-8 p-0">' +
+                '<input class="form-control  text-center  txtCatAccountName" value="' + pData.CategoryName + '" type="text" required disabled />' +
+                ' </div>' +
+                '</div>' +
+
+                ' </td>' +
+
+                //' <td class="">' +
+                //'<div class="">' +
+                //'<input class="form-control  text-center d-none   txtStoreDefaultId" value="' + pData.StoreId + '" type="text" required disabled />' +
+                //' <input class="form-control  text-center d-none  txtStoreDefaultCode" value="' + pData.StoreCode + '" type="text" required disabled />' +
+
+                //' <input class="form-control  text-center fullHeightInput txtStoreDefaultDesc" value="' + pData.StoreName + '" readonly type="text" min=0 required />' +
+
+                //' </div>' +
+                //'<td class="">' +
+                //'<div class="">' +
+                //'<input class="form-control  text-center txtPoints" value="' + pData.Points + '" type="text" required  />' +
+                //'</div>' +
+                //'</td>' +
+                //' </td>' +
+                //' <td class="" width="5%">' +
+                //' <div class="">' +
+                //' <input class="form-control  text-center fullHeightInput txtReOrder" value="' + pData.OrderLimit + '"  type="text" min=0 required />' +
+
+                //'</div>' +
+                //' </td>' +
+                '<td width="">' +
+                '<div class="d-flex txtPrinter">' +
+                '<div class="col-sm-4 p-0">' +
+                '<input class="form-control  text-center fullHeightInput txtPrinterId" value="' + pData.PrinterCode + '" data-id = "' + pData.PrinterId + '"  type="text" min=0 required />' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                '<input class="form-control  text-center  txtPrinterName" value="' + pData.PrinterName + '" type="text" required disabled />' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td class=""  width="15%">' +
+                ' <input class="form-control  text-center fullHeightInput txtAccount" value="' + pData.Account + '" type="text" min=0 required />' +
+                '</td>' +
+                ' <td class="" style=" padding-right:3rem !important;">' +
+                '<div class="custom-control custom-checkbox ">' +
+                '<input type="checkbox" class="chkReProduction" ' + vIsDefault + '  id="chkIsDefault' + pData.InvItemId + '">' +
+                //' <label class="custom-control-label small" for="chkIsDefault' + pData.InvItemId + '"></label>' +
+                '</div>' +
+                ' </td>' +
+                '  <td class="" style=" padding-right:3rem !important;">' +
+                '<div class="custom-control custom-checkbox ">' +
+                ' <input type="checkbox" class="chkDetailGroup" ' + vDetailGroup + ' id="chkDetailGroup' + pData.InvItemId + '">' +
+                //'  <label class="custom-control-label small" for="chkDetailGroup' + pData.InvItemId + '"></label>' +
+                '</div>' +
+                ' </td>' +
+                '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+                '<div class="custom-control custom-checkbox ">' +
+                ' <input type="checkbox" class="chkIsActive" ' + vIsActive + ' id="chkIsActive' + pData.InvItemId + '">' +
+                //'  <label class="custom-control-label small" for="chkIsActive' + pData.InvItemId + '"></label>' +
+                '</div>' +
+                '</td>' +
+                ' <td><button class="btn btn-light btn-sm btnItemDelete" data-id="' + pData.InvItemId + '"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+        }
+        return RowContent;
+    }
+
+
+
+    $('body').on('click', '.btnAddItemRow', function () {
+        var vRow = $(this).closest('tr')
+
+        // Add New Row
+        funAddItemRow(vRow)
+
+    })
+    funAddItemRow()
+    // Add Item Row
+    function funAddItemRow(pCurrentRow) {
+        var RowContent = {
+            'InvItemId': '0',
+            'InvItemCode': '',
+            'InvItemNameL1': '',
+            'InvItemNameL2': '',
+            'RowNumber': '',
+            'SequenceByCategory': '',
+            'GRPId': '',
+            'GroupCode': '',
+            'GroupName': '',
+            'CategoryId': '',
+            'CategoryCode': '',
+            'CategoryName': '',
+            'StoreId': '',
+            'StoreCode': '',
+            'StoreName': '',
+            'OrderLimit': '',
+            'InvItemIsActive': 'checked',
+            'PrinterId': '0',
+            'PrinterCode': '',
+            'PrinterName': '',
+            'Account': '',
+        };
+        var vBody = $('.tblItemBody')
+        var vRow = ''
+
+        var vRowContent = funConfigHead(RowContent)
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+
+    }
+    function funAddItemEmptyRow() {
+        var RowContent = {
+            'InvItemId': '0',
+            'InvItemCode': '',
+            'InvItemNameL1': '',
+            'InvItemNameL2': '',
+            'RowNumber': '',
+            'GRPId': '',
+            'GroupCode': '',
+            'GroupName': '',
+            'CategoryId': '',
+            'CategoryCode': '',
+            'CategoryName': '',
+            'StoreId': '',
+            'StoreCode': '',
+            'StoreName': '',
+            'OrderLimit': '',
+            'InvItemIsActive': 'checked'
+        };
+        var vBody = $('.tblItemBody')
+        var vRow = ''
+
+        var vRowContent = funConfigHead(RowContent)
+        // Add Row After Current Row
+        vBody.append(vRowContent);
+
+    }
+    function funAddPlateEmptyRow() {
+        var RowContent = {
+            'PlateItemId': '0',
+            'PlateId': '',
+            'PlateName': '',
+            'PlateQty': '',
+        };
+        var vBody = $('.tblPlateBody')
+        var vRow = ''
+
+        var vRowContent = ConfigPlate(RowContent)
+        // Add Row After Current Row
+        vBody.append(vRowContent);
+
+    }
+</script>
+<script>
+
+</script>
+
+<script>
+    function funConfigContent(pData) {
+
+        if (pData) {
+            // CheckBoxes
+            var vIsActive = '';
+
+            if (pData.Item_con_status) {
+                vIsActive = 'checked';
+            }
+
+            // CheckBoxes
+            var vIsExp = '';
+
+            if (pData.Exp) {
+                vIsExp = 'checked';
+            }
+
+            var RowContent =
+                '<tr class="trBaseRow tblContentRow" data-id="' + pData.ItemContentId + '" data-changed="0">' +
+                ' <td class="">' +
+                ' <button class="btn btn-light btn-sm border btnAddContentRow"  type="submit">' +
+                '   <i class="fa fa-plus-circle"></i>' +
+                '</button>' +
+                '</td>' +
+                '<td class="" width="">' +
+                ' <div class="d-flex">' +
+                ' <div class="col-sm-3 p-0">' +
+                '   <input class="form-control  text-center  txtContentItemId d-none" value="' + pData.ItemContentId + '" type="text"  required />' +
+                '  <input class="form-control  text-center  d-none txtContentId" value="' + pData.Cont_id + '" type="text"  required />' +
+                ' <input class="form-control  text-center txtContentCode fullHeightInput" value="' + pData.InvItemCode + '" type="text" required />' +
+                '</div>' +
+                ' <div class="col-sm-9 p-0">' +
+                '  <input class="form-control  text-center  txtContentName" value="' + pData.InvItemNameL1 + '" type="text" required disabled />' +
+                '</div>' +
+                ' </div>' +
+                '  </td>' +
+
+                ' <td class="">' +
+                '<input class="form-control  text-center font-weight-bold txtUnitName" value="' + pData.UnitNameL1 + '" type="text" min=0 readonly />' +
+                ' <input class="form-control  text-center font-weight-bold txtUnitId d-none" value="' + pData.Unit_id + '" type="text" min=0 disabled />' +
+                '<input class="form-control  text-center  txtUnitPrice d-none" value="0" type="text" value="' + pData.UnitPrice + '" required />' +
+
+                ' </td>' +
+
+                ' <td class="">' +
+                ' <input class="form-control  text-center font-weight-bold txtQty" value="' + pData.Qty + '" type="text" min=0 required />' +
+                ' </td>' +
+                '<td class="">' +
+                '<input class="form-control  text-center font-weight-bold txtPrice" value="' + pData.Price + '" type="text" min=0  />' +
+                '</td>' +
+                '<td class="" style=" padding-right:3rem !important;">' +
+                ' <div class="custom-control custom-checkbox ">' +
+                ' <input type="checkbox" class="chkIsActive"  ' + vIsActive + '   id="chkIsActive' + pData.ItemContentId + '">' +
+                //' <label class="custom-control-label small" for="chkIsActive' + pData.ItemContentId + '"></label>' +
+                ' </div>' +
+                '</td>' +
+                '<td class="" style=" padding-right:3rem !important;">' +
+                '<div class="custom-control custom-checkbox ">' +
+                '<input type="checkbox" class="chkIsExp"  ' + vIsExp + '  id="chkIsExp' + pData.ItemContentId + '">' +
+                //' <label class="custom-control-label small" for="chkIsExp' + pData.ItemContentId + '"></label>' +
+                ' </div>' +
+                '</td>' +
+                '<td width="7%"><button class="btn btn-light btn-sm btnContentDelete" data-id="' + pData.ItemContentId + '"><i class="fa fa-trash"></i></button></td>' +
+                ' </tr>';
+        }
+
+        return RowContent;
+    }
+
+    $('body').on('click', '.btnAddContentRow', function () {
+        var Current = $(this).closest('tr')
+        // Add New Row
+        funAddContentRow(Current)
+
+    })
+
+    // Add Item Row
+    function funAddContentRow(pCurrentRow) {
+        var RowContent = {
+            'Item_unit_id': '0',
+
+            'ItemContentId': '0',
+            'InvItemCode': '',
+            'InvItemNameL1': '',
+            'ItemId': '0',
+            'Grp_id': '0',
+            'Cont_id': '',
+            'Exp': '',
+            'Qty': '',
+            'Unit_id': '',
+            'UnitNameL1': '',
+            'Item_con_status': 'checked',
+            'Price': '0',
+        };
+
+        
+
+        var vBody = $('.tblContentBody')
+        $(pCurrentRow).closest("tr").after(funConfigContent(RowContent));
+        funTotal();
+    }
+    // Add Item Row
+    function funAddContentEmptyRow() {
+
+        console.log('Emptyyyy')
+        var RowContent = {
+            'Item_unit_id': '0',
+
+            'ItemContentId': '0',
+            'InvItemCode': '',
+            'InvItemNameL1': '',
+            'ItemId': '0',
+            'Grp_id': '0',
+            'Cont_id': '',
+            'Exp': '',
+            'Qty': '',
+            'Unit_id': '',
+            'UnitNameL1': '',
+            'Item_con_status': 'checked',
+            'Price': '',
+        };
+        var vBody = $('.tblContentBody')
+        vBody.append(funConfigContent(RowContent));
+    }
+
+
+    function funLoadContentData(Data) {
+
+        var vBody = $('.tblContentBody')
+
+        if (Data && typeof Data === 'string' && Data.trim().length > 0 && Data != 'null' && Data != 'undefined') {
+
+            vBody.html('')
+            //funAddContentEmptyRow();
+            var DataResult = JSON.parse(Data)
+            $.each(DataResult, function (i, Item) {
+                vBody.append(funConfigContent(Item));
+
+            })
+
+        }
+        else {
+
+
+            vBody.html('')
+
+            var RowContent = {
+                'Item_unit_id': '0',
+                'ItemContentId': '0',
+                'InvItemCode': '',
+                'InvItemNameL1': '',
+                'ItemId': '0',
+                'Grp_id': '0',
+                'Cont_id': '',
+                'Exp': '',
+                'Qty': '',
+                'Unit_id': '',
+                'UnitNameL1': '',
+                'Item_con_status': 'checked',
+                'Price': '',
+            };
+            var vBody = $('.tblContentBody')
+            vBody.append(funConfigContent(RowContent));
+        }
+        // Total Cost
+        funTotal()
+    }
+
+
+    function funLoadItemAddData(Data) {
+
+        var vBody = $('.tblItemAddBody')
+
+        if (Data && typeof Data === 'string' && Data.trim().length > 0 && Data != 'null' && Data != 'undefined') {
+            vBody.html('')
+            var DataResult = JSON.parse(Data)
+            $.each(DataResult, function (i, Item) {
+                vBody.append(funConfigItemAdd(Item));
+            })
+        }
+        else {
+            vBody.html('')
+            var RowItemAdd = {
+                'Item_unit_id': '0',
+                'ItemAddId': '0',
+                'InvItemCode': '',
+                'InvItemNameL1': '',
+                'ItemId': '0',
+                'Grp_id': '0',
+                'Cont_id': '',
+                'Exp': '',
+                'Qty': '',
+                'ItemAddQty': '0',
+                'ItemAddPrice':'0',
+                'Unit_id': '',
+                'UnitNameL1': '',
+                'Item_con_status': 'checked',
+                'Price': '',
+            };
+            var vBody = $('.tblItemAddBody')
+            vBody.append(funConfigItemAdd(RowItemAdd));
+        }
+        // Total Cost
+        funTotal()
+    }
+
+    function funLoadPlateData(Data) {
+
+        var vBody = $('.tblPlateBody')
+
+        if (Data && typeof Data === 'string' && Data.trim().length > 0 && Data != 'null' && Data != 'undefined') {
+            vBody.html('')
+            var DataResult = JSON.parse(Data)
+            console.log(DataResult)
+            $.each(DataResult, function (i, Item) {
+                vBody.append(configPlate(Item));
+            })
+        }
+        else {
+            vBody.html('')
+            var RowItemAdd = {
+                'PlateItemId': '0',
+                'PlateId': '',
+                'PlateName': '',
+                'PlateQty': '',
+            };
+            var vBody = $('.tblPlateBody')
+            vBody.append(configPlate(RowItemAdd));
+        }
+        // Total Cost
+        funTotal()
+    }
+    let selectedItem, currentInput;
+    // Row Select
+    $('.tblItemBody').on('keyup keydown click', '.tblItemRow', function (e) {
+
+        //var vItemId = $(this).attr('data-id')
+        var vItemId = $(this).find('.txtItemId').val();
+        let hasNewData = $('.tblItemRow[data-id="' + selectedItem + '"]').eq(0).attr('has-new-data');
+        if (selectedItem != vItemId)
+            if(hasNewData === 'true') {
+            $('.tblItemRow').removeClass('table-primary');
+            $('.tblItemRow[data-id="' + selectedItem + '"]').eq(0).addClass('table-primary');
+            e.preventDefault();
+            currentInput.focus();
+        }
+        else {
+            $('.tblItemRow[data-id="' + selectedItem + '"]').eq(0).removeAttr('has-new-data')
+            currentInput = $(this).find('input:focus');
+            selectedItem = vItemId;
+
+        $('.tblItemRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+        // Content Data
+        var Data = $(this).find('.clsData').text()
+
+        var DataUnit = $(this).find('.clsDataUnit').text()
+
+        var DataItemAdd = $(this).find('.clsDataItemAdd').text()
+        var DataPlate = $(this).find('.clsPlate').text()
+        $('.txtHeadItemId').val(vItemId);
+        if (DataUnit) {
+            //funLoadUnitData(DataUnit);
+        }
+        if (Data) {
+            // funLoadContentData(Data)
+        }
+        if (DataPlate) {
+
+            //funLoadPlateData(DataPlate)
+        }
+        if (DataItemAdd != '') {
+            //funLoadItemAddData(DataItemAdd)
+        }
+
+        $.get('/api/APIINVItemUnit/InvItemUnitGET',
+            {
+                pItemId: vItemId,
+                pQueryTypeId: '400',
+            },
+            function (data, status) {
+
+                //var vDataJSON = JSON.parse(data);
+                funLoadUnitData(data);
+
+
+            });
+
+        $.get('/api/APIInvItem/InvItemGet',
+            {
+                // Head Parameters
+                pItemId: vItemId,
+                // Query Type Id
+                pQueryTypeId: '8020'
+            },
+            function (data, status) {
+
+                // JSON Parse
+                funLoadContentData(data)
+            })
+
+    }
+    });
+    $(document).on('change', '.tblUnitRow input, .tblPriceRow input, .tblContentRow input, .tblCashDeskRow input, .tblItemAddRow input', function () {
+        if (selectedItem)
+            $('.tblItemRow[data-id="' + selectedItem + '"]').attr('has-new-data', 'true');
+    })
+    $('.tblUnitBody').on('keyup keydown click', '.tblUnitRow', function (e) {
+        var vUnitId = $(this).attr('data-id')
+        $('.txtHeadUnitId').val(vUnitId);
+        funLoadPriceData(vUnitId);
+    })
+    $('.tblContentBody').on('keyup keydown click', '.tblUnitRow', function (e) {
+        var vUnitId = $(this).attr('data-id')
+        $('.txtHeadContentId').val(vUnitId);
+    })
+</script>
+<script>
+
+        $('table').on('keyup dblclick', '.txtContentCode', function (e) {
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+                localStorage.setItem('lsType', 'Content')
+
+                // Search Account
+                var vURL = '/ResItem/ContentSearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divContentSelect', function () {
+                        if (localStorage.getItem('lsType') == 'Content') {
+                        // Get Values
+                        var vContentId = $(this).attr('data-id');
+                        var vContentNameValue = $(this).find('.divContentName').text();
+                        var vContentCodeValue = $(this).find('.divContentCode').text();
+
+
+                        // Get GLVoucherContent Data
+                        var vContentIdElement = vTableRow.find('.txtContentId');
+                        var vContentNameElement = vTableRow.find('.txtContentName');
+                        var vContentCodeElement = vTableRow.find('.txtContentCode');
+
+                        // Set Value
+                        vContentIdElement.val(vContentId);
+                        vContentNameElement.val(vContentNameValue);
+                        vContentCodeElement.val(vContentCodeValue);
+
+                        // تصفير بيانات الوحدو بعد إختبار صنف جديد
+                        vTableRow.find('.txtUnitId').val('');
+                        vTableRow.find('.txtUnitName').val('');
+                        vTableRow.find('.txtUnitPrice').val('');
+
+                         vTableRow.attr('data-changed', '1')
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                        vTableRow.removeClass('table-info');
+
+                        vTableRow = '';
+                    }
+                    })
+                })
+            }
+        })
+
+        $('body').on('change', '.txtContentCode', function (e) {
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+            // Get  Data
+            var vContentIdElement = vTableRow.find('.txtContentId');
+            var vContentNameElement = vTableRow.find('.txtContentName');
+            var vContentCodeElement = vTableRow.find('.txtContentCode');
+            var UnitId = vTableRow.find('.txtUnitId');
+            var UnitName = vTableRow.find('.txtUnitName');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+          $.get('/InvItem/GetItem',
+                {
+                    ItemCode: vCode,
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vContentIdElement.val('');
+                        vContentNameElement.val('');
+                        vContentCodeElement.val('');
+                           funNotification('@appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Content) {
+                            // Set Value
+                            vContentIdElement.val(Content.InvItemId);
+                            vContentCodeElement.val(Content.InvItemCode);
+                            vContentNameElement.val(Content.InvItemNameL1);
+
+                            UnitId.val(Content.UnitId);
+                            UnitName.val(Content.UnitName);
+                        });
+                    }
+                });
+    })
+</script>
+<script>
+
+    // Debit Change
+    //$('body').on('blur', '.txtUnitName,.txtQty', function () {
+
+    //    // Table Row
+    //    var vTableRow = $(this).closest('.tblContentRow');
+    //    // GET Value
+    //    var vValue = $(this).val();
+    //    // Factor
+    //    var vUnitPrice = vTableRow.find('.txtUnitPrice').val();
+
+    //    if (vUnitPrice == 0) {
+    //        vUnitPrice = 1
+    //    }
+
+    //    console.log(vUnitPrice)
+    //    // Base Value
+    //    var Price = (parseFloat(vValue) * parseFloat(vUnitPrice)).toFixed(2);
+    //    // SET Value to Base
+    //    vTableRow.find('.txtPrice').val(Price);
+
+    //    // Total Cost
+    //    funTotal()
+    //})
+    $('.tblContentBody').on('change focus', '.txtPrice', function () {
+
+        // Get Value
+        funTotal();
+    })
+
+    function funTotal() {
+
+        // Total Debit
+        var Total = 0;
+
+        var Price = 0;
+        $('.trBaseRow .txtPrice').each(function () {
+            // Get Value
+            Price = $(this).val();
+            // Check Value
+            if (Price == '' || Price == null || Price == undefined) {
+                Price = 0;
+            }
+            // Add Value
+            Total += parseFloat(Price);
+        })
+
+        // SET Values
+        $('.txtTotal').val(Total.toFixed(2));
+
+    }
+</script>
+<!--Units-->
+<script>
+    $('table').on('keyup dblclick', '.txtUnitCode', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+
+            // Search Account
+            var vURL = '/Unit/SearchBasicUnit';
+            // Load Unit of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divUnitSelect', function () {
+
+                    // Get Values
+                    var vUnitId = $(this).attr('data-id');
+                    var vUnitNameValue = $(this).find('.divUnitName').text();
+                    var vUnitCodeValue = $(this).find('.divUnitNo').text();
+
+
+                    // Get GLVoucherUnit Data
+                    var vUnitIdElement = vTableRow.find('.txtUnitId');
+                    var vUnitNameElement = vTableRow.find('.txtUnitName');
+                    var vUnitCodeElement = vTableRow.find('.txtUnitCode');
+
+
+
+                    // Set Value
+                    vUnitIdElement.val(vUnitId);
+                    vUnitNameElement.val(vUnitNameValue);
+                    vUnitCodeElement.val(vUnitCodeValue);
+                    vTableRow.attr('data-changed', '1')
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+
+    $('body').on('change', '.txtUnitCode', function (e) {
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+        // Get Unit Data
+        var vUnitIdElement = vTableRow.find('.txtUnitId');
+        var vUnitCodeElement = vTableRow.find('.txtUnitCode');
+        var vUnitNameElement = vTableRow.find('.txtUnitName');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APIVUnit/VUnitGET',
+            {
+                pCodeId: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vUnitIdElement.val('');
+                        vUnitNameElement.val('');
+                        vUnitCodeElement.val('');
+                           funNotification('@appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Unit) {
+                            // Set Value
+                            vUnitIdElement.val(Unit.LookupDtlId);
+                            vUnitCodeElement.val(Unit.CodeId);
+                            vUnitNameElement.val(Unit.LookupDtlDesc);
+                        });
+                    }
+                });
+    })
+</script>
+<script>
+    function funConfigUnit(pData) {
+        if (pData) {
+            // CheckBoxes
+            var vIsActive = '';
+
+            if (pData.UnitIsActive) {
+                vIsActive = 'checked';
+            }
+
+            // CheckBoxes
+            var vIsDefault = '';
+
+            if (pData.IsDefault) {
+                vIsDefault = 'checked';
+            }
+
+            // CheckBoxes
+            var vIsDecreasable = '';
+
+            if (pData.IsDecreasable) {
+                vIsDecreasable = 'checked';
+            }
+            funLoadPriceData(pData.InvItemUnitId)
+
+            var RowContent =
+                '<tr class="tblUnitRow " data-id="' + pData.InvItemUnitId + '" data-changed="0">' +
+                ' <td class="">' +
+                '<button class="btn btn-light btn-sm border btnAddUnitRow" type="submit">' +
+                ' <i class="fa fa-plus-circle"></i>' +
+                '</button>' +
+                ' </td>' +
+                '<td class="" width="15%">' +
+                '<div class="d-flex txtUnit">' +
+                ' <div class="col-sm-4 p-0">' +
+                '<input class="form-control  text-center  d-none txtUnitId" value="' + pData.UnitId + '" type="text" required />' +
+                /*'<input class="form-control  text-center  txtUnitCode" value="' + pData.UnitCode + '" type="text" required />' +*/
+                '<input class="form-control  text-center  txtUnitCode" value="' + pData.UnitId + '" type="text" required readonly />' +
+
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                ' <input class="form-control  text-center  txtUnitName" value="' + pData.UnitNameL1 + '" type="text" required readonly />' +
+                '</div>' +
+                ' </div>' +
+                ' </td>' +
+                '<td class="" width="15%">' +
+                ' <input class="form-control  text-center txtPartsInParent" value="' + pData.PartsInParents + '" required />' +
+                ' </td>' +
+                '<td class="" width="25%">' +
+                '<div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<input class="form-control  text-center  d-none txtUnitParentId" value="' + pData.UnitParentId + '" type="text" required />' +
+                ' <input class="form-control  text-center  txtUnitParentCode" value="' + pData.UnitParentCode + '" disabled type="text" required />' +
+                ' </div>' +
+                ' <div class="col-sm-8 p-0">' +
+                ' <input class="form-control  text-center  txtUnitParentName" value="' + pData.UnitParentName + '" type="text" required disabled />' +
+                ' </div>' +
+                '</div>' +
+                '</td>' +
+
+                '<td class="" width="">' +
+                ' <input class="form-control  text-center txtBarcode" value="' + pData.Barcode + '" required />' +
+                '</td>' +
+                '  <td class="" style=" padding-right:3rem !important;">' +
+                '<div class="custom-control custom-checkbox ">' +
+                ' <input type="checkbox" class="txtIsDecreasable" ' + vIsDecreasable + ' id="txtIsDecreasable' + pData.InvItemUnitId + '">' +
+                //' <label class="custom-control-label small" for="txtIsDecreasable' + pData.InvItemUnitId + '"></label>' +
+                ' </div>' +
+                ' </td>' +
+                '  <td class="" style=" padding-right:2rem !important;">' +
+                '<div class="custom-control custom-checkbox ">' +
+                '<input type="checkbox" class="chkIsDefault" ' + vIsDefault + '  id="chkIsDefault' + pData.InvItemUnitId + '">' +
+                //' <label class="custom-control-label small" for="chkIsDefault' + pData.InvItemUnitId + '"></label>' +
+                ' </div>' +
+                ' </td>' +
+                ' <td class="" style=" padding-right:2rem !important;">' +
+                '<div class="custom-control custom-checkbox ">' +
+                '<input type="checkbox" class="chkIsActive" ' + vIsActive + ' id="chkIsActive' + pData.InvItemUnitId + '">' +
+                //' <label class="custom-control-label small" for="chkIsActive' + pData.InvItemUnitId + '"></label>' +
+                '</div>' +
+                '</td>' +
+                '<td><button class="btn btn-light btn-sm btnUnitDelete" data-id="' + pData.InvItemUnitId + '"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+        }
+        return RowContent;
+    }
+    // Add Item Row
+    function funAddUnitRow(pCurrentRow) {
+        var RowContent = {
+            'InvItemUnitId': '0',
+            'UnitId': '0',
+            'UnitCode': '',
+            'UnitNameL1': '',
+            'PartsInParents': '',
+            'UnitParentId': '1',
+            'UnitParentCode': '1',
+            'UnitParentName': '@appResource._KiloGram',
+            'Barcode': '',
+            'UnitIsActive': 'checked',
+        };
+        var vBody = $('.tblUnitBody')
+        $(pCurrentRow).closest("tr").after(funConfigUnit(RowContent));
+        // vBody.append(funConfigUnit(RowContent));
+    }
+
+    $('body').on('click', '.btnAddUnitRow', function () {
+        var vTableRow = $(this).closest('.tblUnitRow');
+        var vParentId = vTableRow.find('.txtUnitId').val();
+        var vParentCode = vTableRow.find('.txtUnitCode').val();
+        var vParentName = vTableRow.find('.txtUnitName').val();
+        var RowContent = {
+            'InvItemUnitId': '0',
+            'UnitId': '0',
+            'UnitCode': '',
+            'UnitNameL1': '',
+            'PartsInParents': '',
+            'UnitParentId': vParentId,
+            'UnitParentCode': vParentCode,
+            'UnitParentName': vParentName,
+            'Barcode': '',
+            'UnitIsActive': 'checked'
+        };
+        var vBody = $('.tblUnitBody')
+        $(vTableRow).closest("tr").after(funConfigUnit(RowContent));
+        // Add New Row
+        // funAddUnitRow()
+        $('.tblItemRow[data-id="' + selectedItem + '"]').attr('has-new-data', 'true');
+    })
+    function funAddUnitEmptyRow() {
+        var vTableRow = $(this).closest('.tblUnitRow');
+        var vParentId = vTableRow.find('.txtUnitId').val();
+        var vParentCode = vTableRow.find('.txtUnitCode').val();
+        var vParentName = vTableRow.find('.txtUnitName').val();
+        if (vParentCode == undefined) {
+            vParentCode = ''
+        }
+        if (vParentName == undefined) {
+            vParentName = ''
+        }
+        var RowContent = {
+            'InvItemUnitId': '0',
+            'UnitId': '0',
+            'UnitCode': '',
+            'UnitNameL1': '',
+            'PartsInParents': '',
+            'UnitParentId': vParentId,
+            'UnitParentCode': vParentCode,
+            'UnitParentName': vParentName,
+            'Barcode': '',
+            'UnitIsActive': 'checked'
+        };
+        var vBody = $('.tblUnitBody')
+        vBody.append(funConfigUnit(RowContent));
+    }
+
+    function funLoadUnitData(pData) {
+        var vBody = $('.tblUnitBody')
+        if (pData && typeof pData === 'string' && pData.trim().length > 0 && pData != 'null' && pData != 'undefined') {
+            vBody.html('')
+            var DataResult = JSON.parse(pData)
+
+            $.each(DataResult, function (i, Item) {
+                vBody.append(funConfigUnit(Item));
+            })
+        }
+        else {
+            vBody.html('')
+            var RowContent = {
+                'InvItemUnitId': '0',
+                'UnitId': '0',
+                'UnitCode': '',
+                'UnitNameL1': '',
+                'PartsInParents': '',
+                'UnitParentId': '',
+                'UnitParentCode': '',
+                'UnitParentName': '',
+                'Barcode': '',
+                'UnitIsActive': 'checked'
+            };
+            var vBody = $('.tblUnitBody')
+            vBody.append(funConfigUnit(RowContent));
+        }
+
+    }
+</script>
+<!--Price-->
+<script>
+    function funConfigPrice(pData) {
+
+        if (pData) {
+            // CheckBoxes
+            var vIsActive = '';
+
+            if (pData.PriceIsActive) {
+                vIsActive = 'checked';
+            }
+
+
+
+
+            var RowContent =
+                '<tr class="tblPriceRow " data-id="' + pData.PriceId + '" data-changed="0">' +
+                ' <td>' +
+                ' <button class="btn btn-light btn-sm border btnAddPriceRow" type="submit">' +
+                '   <i class="fa fa-plus-circle"></i>' +
+                '</button>' +
+                '</td>' +
+                '<td class="">' +
+                ' <div class="d-flex">' +
+                ' <div class="col-sm-4 p-0">' +
+                ' <input class="form-control  text-center  d-none txtPriceCatId" value="' + pData.PriceCat + '"  type="text" required />' +
+                ' <input class="form-control  text-center d-none txtPriceCatCode" value="' + pData.PriceCatCode + '" type="text" required />' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                '  <input class="form-control  text-center  txtPriceCatDesc" value="' + pData.PriceCatName + '" type="text" required disabled />' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td class="" width="">' +
+                '<input class="form-control  text-center txtPrice" value="' + pData.Price + '" required />' +
+                '</td>' +
+                '<td class="" style=" padding-right:1rem !important;">' +
+                ' <div class="custom-control custom-checkbox ">' +
+                ' <input type="checkbox" class="chkIsActive" ' + vIsActive + '  id="chkIsActive2' + pData.PriceId + '">' +
+                //' <label class="custom-control-label small" for="chkIsActive2' + pData.PriceId + '"></label>' +
+                ' </div>' +
+                '</td>' +
+                '<td><button class="btn btn-light btn-sm btnPriceDelete " data-id="' + pData.PriceId + '"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+
+
+            return RowContent;
+        }
+    }
+
+    $('body').on('click', '.btnAddPriceRow', function () {
+        var Current = $(this).closest('tr')
+        // Add New Row
+        funAddPriceRow(Current)
+        $('.tblItemRow[data-id="' + selectedItem + '"]').attr('has-new-data', 'true');
+    })
+
+    // Add PRice Row
+    function funAddPriceRow(pCurrentRow) {
+        var RowContent = {
+            'PriceId': '0',
+            'Price': '0',
+            'PriceCat': '',
+            'PriceCatName': '',
+            'PriceIsActive': 'checked'
+
+        };
+        var vBody = $('.tblPriceBody')
+        //vBody.append(funConfigPrice(RowContent));
+        $(pCurrentRow).closest("tr").after(funConfigPrice(RowContent));
+    }
+    // Add PRice Row
+    function funAddPriceEmptyRow() {
+        var RowContent = {
+            'PriceId': '0',
+            'Price': '0',
+            'PriceCat': '',
+            'PriceCatName': '',
+            'PriceIsActive': 'checked'
+
+        };
+        var vBody = $('.tblPriceBody')
+        //vBody.append(funConfigPrice(RowContent));
+        vBody.append(funConfigPrice(RowContent));
+    }
+
+
+    // funLoadContentData()
+    function funLoadPriceData(pUnitId) {
+        $.get('/api/APIInvItemsUnitsPrice/InvItemsUnitsPriceGet',
+            {
+                pUnitId: pUnitId
+            },
+            function (data, status) {
+                var vBody = $('.tblPriceBody')
+                if (data != undefined && data != '') {
+
+                    vBody.html('')
+
+                    var DataResult = JSON.parse(data)
+
+                    if (DataResult[0] == undefined) {
+                        funAddPriceRow()
+                    }
+                    // If The Unit Is new row
+                    if (pUnitId == 0) {
+                        // Add EmptyRow
+                        funAddPriceEmptyRow()
+                    }
+                    else {
+                        $.each(DataResult, function (i, Item) {
+                            vBody.append(funConfigPrice(Item));
+                        })
+                    }
+                }
+                // If The Data Is Empty
+                else {
+
+                    vBody.html('')
+                    // Add EmptyRow
+                    funAddPriceEmptyRow()
+
+                }
+            })
+    }
+
+    // Open Voucher PriceCat Modal
+    $('body').on('keyup dblclick', '.txtPriceCatDesc', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            // Search Account
+            var vURL = '/ResItem/PriceCatSearch/';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divPriceCatSelect', function () {
+                    // Get Values
+                    var vPriceCatId = $(this).attr('data-id');
+                    var vPriceCatNameValue = $(this).find('.divPriceCatName').text();
+                    var vPriceCatCodeValue = $(this).find('.divPriceCatCode').text();
+                    var vPriceCatIdValue = $(this).find('.divPriceCatId').text();
+                    // Get GLVoucherPriceCat Data
+                    var vPriceCatIdElement = vTableRow.find('.txtPriceCatId');
+                    var vPriceCatNameElement = vTableRow.find('.txtPriceCatDesc');
+                    var vPriceCatCodeElement = vTableRow.find('.txtPriceCatCode');
+                    // Set Value
+                    vPriceCatIdElement.val(vPriceCatIdValue);
+                    vPriceCatNameElement.val(vPriceCatNameValue);
+                    vPriceCatCodeElement.val(vPriceCatCodeValue);
+                    vTableRow.attr('data-changed', '1')
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+
+</script>
+
+<!--Delete-->
+<script>
+    //New Delete
+    $('body').on('click', '.btnItemDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("#deleteConfirmModal").on("click", "#btnDeleteConfirm", function () { //$("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIINVItem/INVItemGET';
+                        // Delete
+                        $.get(vDeleteActionURL, { pInvItemId: vDataId, pIsDeleted: true, pQueryTypeId: '300' }, function (data) {
+                            // BH
+                            var vResultData = JSON.parse(data)
+                            if (vResultData[0].SuccessStatus == 'undefined' || vResultData[0].SuccessStatus == false) {
+                                funNotification(vResultData[0].SystemMessageText, 3);
+                                return;
+                            }
+
+                            if ($.isNumeric(data)) {
+                                funNotification('@appResource.msgCannotDeleteProd', 2);
+                            }
+                            else {
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblItemBody').find('tr').attr('data-id')
+
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    //funAddDTLEmptyRow($('.tblItemBody'))
+                                    funAddItemEmptyRow();
+                                }
+                                // Notification
+                                funNotification('@appResource.msgDelete', 1);
+                                $('#confirmDeleteModal').modal('hide');
+                            }
+
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblDtlBody').find('tr').attr('data-id');
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //funAddDTLEmptyRow($('.tblDtlBody'))
+                        funAddItemEmptyRow();
+                    }
+                }
+            });
+    }); // End of Click Event [Delete Button]
+
+    $('body').on('click', '.btnUnitDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vTableRow = $(this).closest('tr');
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+     // var  vDataId = vTableRow.attr('data-id');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+
+        @*$.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+
+
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIINVItemUnit/INVItemUnitGet';
+                        // Delete
+                        $.get(vDeleteActionURL, { pInvItemUnitId: vDataId, pIsDeleted: true, pQueryTypeId: '300' }, function (data) {
+                            var message = JSON.parse(data)
+                            if (message[0].s == '1') {
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblUnitBody').find('tr').attr('data-id')
+
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    //funAddDTLEmptyRow($('.tblUnitBody'))
+                                    funAddUnitEmptyRow()
+                                }
+                                // Notification
+                                funNotification('@appResource.msgDelete', 1);
+                                location.reload(true);
+
+                            } else {
+                                funNotification('لا يلا يمكن حذف هذه الوحدة لارتباطها بفواتير اخري', 3);
+                                location.reload(true);
+                            }
+                            //funLoadData();
+
+                        });
+                    });
+
+
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblUnitBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //funAddDTLEmptyRow($('.tblUnitBody'))
+                        funAddUnitEmptyRow()
+                    }
+                }
+            });*@
+        if (vDataId > 0) {
+                    // Modal
+
+                    // Click Event [Delete Confirm]
+
+
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIINVItemUnit/INVItemUnitGet';
+                        // Delete
+                        $.get(vDeleteActionURL, { pInvItemUnitId: vDataId, pIsDeleted: true, pQueryTypeId: '300' }, function (data) {
+                            var message = JSON.parse(data)
+                            if (message[0].s == '1') {
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblUnitBody').find('tr').attr('data-id')
+
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    //funAddDTLEmptyRow($('.tblUnitBody'))
+                                    funAddUnitEmptyRow()
+                                }
+                                // Notification
+                                funNotification('@appResource.msgDelete', 1);
+                                //location.reload(true);
+
+                            } else {
+                                funNotification('لا يلا يمكن حذف هذه الوحدة لارتباطها بفواتير اخري', 3);
+                                //location.reload(true);
+                            }
+                            //funLoadData();
+
+                        });
+
+
+
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblUnitBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //funAddDTLEmptyRow($('.tblUnitBody'))
+                        funAddUnitEmptyRow()
+                    }
+                }
+    }); // End of Click Event [Delete Button]
+
+    $('body').on('click', '.btnContentDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        vTableRow = $(this).closest('tr');
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        vDataId = vTableRow.attr('data-id');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIINVItem/INVItemGet';
+                        // Delete
+                        $.get(vDeleteActionURL, { pItemContentId: vDataId, pIsDeleted: true, pQueryTypeId: '302' }, function () {
+                            funNotification('@appResource.msgDelete', 1);
+                            vElement.closest('tr').remove();
+                            // Check If IT The Last Row
+                            var vLastRow = $('.tblContentBody').find('tr').attr('data-id')
+
+                            // Add Row If Empty
+                            if (vLastRow == undefined) {
+                                //funAddDTLEmptyRow($('.tblContentBody'))
+                                funAddContentEmptyRow()
+                            }
+                            //funLoadData();
+
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblContentBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //funAddDTLEmptyRow($('.tblContentBody'))
+                        funAddContentEmptyRow()
+                    }
+                }
+            });
+    }); // End of Click Event [Delete Button]
+
+    $('body').on('click', '.btnItemAddDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this);
+        vTableRow = $(this).closest('tr');
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        vDataId = vTableRow.attr('data-id');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML ItemAdd of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIINVItem/INVItemGet';
+                        // Delete
+                        $.get(vDeleteActionURL, { pItemAddId: vDataId, pIsDeleted: true, pQueryTypeId: '302' }, function (data) {
+                              funNotification('@appResource.msgDelete', 1);
+                            vElement.closest('tr').remove();
+                            // Check If IT The Last Row
+                            var vLastRow = $('.tblItemAddBody').find('tr').attr('data-id')
+
+                            // Add Row If Empty
+                            if (vLastRow == undefined) {
+                                //funAddDTLEmptyRow($('.tblItemAddBody'))
+                                funAddItemAddEmptyRow()
+                            }
+                            //funLoadData();
+
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblItemAddBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //funAddDTLEmptyRow($('.tblItemAddBody'))
+                        funAddItemAddEmptyRow()
+                    }
+                }
+            });
+    }); // End of Click Event [Delete Button]
+
+
+
+
+    $('body').on('click', '.btnPriceDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIINVItemsUnitsPrice/INVItemsUnitsPriceGet';
+                        // Delete
+                        $.get(vDeleteActionURL, { pPriceId: vDataId, pIsDeleted: true, pQueryTypeId: '300' }, function () {
+                            vElement.closest('tr').remove();
+                            // Check If IT The Last Row
+                            var vLastRow = $('.tblPriceBody').find('tr').attr('data-id')
+
+                            // Add Row If Empty
+                            if (vLastRow == undefined) {
+                                //funAddDTLEmptyRow($('.tblPriceBody'))
+                                funAddPriceEmptyRow();
+                            }
+                              funNotification('@appResource.msgDelete', 1);
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblPriceBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //funAddDTLEmptyRow($('.tblPriceBody'))
+                        funAddPriceEmptyRow();
+                    }
+                }
+            });
+    }); // End of Click Event [Delete Button]
+</script>
+
+<!--SeachModal-->
+<script>
+    //funLoadData()
+    var vDataSearch;
+    var vCount = 0;
+    $('.btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/ResItem/ItemSearch';
+        // Load Content of CostCenter Search
+        $('#AccountDataModalContent').load(vURL);
+        // Modal Full
+        $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#AccountDataModal').modal('show');
+    })
+    // SElECT
+    $('body').on('click', '.btnSelect', function () {
+
+        var count = $("input[name='chkIsValid']:checked").length;
+        if (count == 0) {
+
+            // alert("No rows selected to Print");
+            return false;
+        }
+        else {
+
+            // Selected Permissions
+            var vSelected = '';
+            // Check If All True Or False
+            $('table > tbody > tr ').each(function () {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Check
+                if (vSelectedChk) {
+                    // Get Id
+                    var vGlVoucherId = vElement.attr('data-id');
+                    // Add Selected Action
+                    vSelected += vGlVoucherId + ',';
+                    vCount += $(this).length
+                }
+            });
+            // close The Modal
+            $('#AccountDataModal').modal('hide');
+            $('.txtTotalCount').text(vCount)
+            // Get Data From Gl Voucher After Select
+            $.get('/api/APIInvItem/InvItemGet',
+                {
+                    // Head Parameters
+                    phNumbers: vSelected,
+                    // Query Type Id
+                    pQueryTypeId: '400'
+                },
+                function (data, status) {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+               
+
+                    vDataSearch = vDataResult
+
+                    funLoadData()
+                })
+        }
+    });
+
+    function funLoadData() {
+        // For Modal
+        if (vDataSearch) {
+
+            if (vDataSearch != undefined && vDataSearch != '') {
+                var vBody = $('.tblItemBody')
+                vBody.html('')
+                $.each(vDataSearch, function (i, Item) {
+                    vBody.append(funConfigHead(Item));
+                })
+            }
+
+        }
+        // Load Page
+        else {
+            $.get('/api/APIInvItem/InvItemGet',
+                {
+                    pItemType: 3
+                },
+                function (data, status) {
+                    //alert('yes')
+                    if (data != undefined && data != '') {
+                        var vBody = $('.tblItemBody')
+                        vBody.html('')
+                        var DataResult = JSON.parse(data)
+                        $.each(DataResult, function (i, Item) {
+                            vBody.append(funConfigHead(Item));
+                        })
+                    }
+                })
+        }
+    }
+
+    // Load Item Function
+    function funLoadItemData() {
+
+        $.get('/api/APIInvItem/InvItemGet',
+            {
+                pItemType: 3
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    var vBody = $('.tblItemBody')
+                    vBody.html('')
+                    var DataResult = JSON.parse(data)
+                    $.each(DataResult, function (i, Item) {
+                        vBody.append(funConfigHead(Item));
+                    })
+
+                }
+            })
+    }
+</script>
+<script>
+    $('table').on('keyup dblclick', '.txtItemContentCode', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+                localStorage.setItem('lsType', 'Item')
+                // Search Account
+                //var vURL = '/ResItem/ContentSearch';
+                var vURL = '/ResItem/AddSearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    //$('body').on('click', '.divContentSelect', function () {
+                        $('body').on('click', '.divPriceCatSelect', function () {
+                        if (localStorage.getItem('lsType') == 'Item') {
+
+                            // Get Values
+                            var vContentId = $(this).attr('data-id');
+                            //var vContentNameValue = $(this).find('.divContentName').text();
+                            //var vContentCodeValue = $(this).find('.divContentCode').text();
+                            var vContentNameValue = $(this).find('.divPriceCatName').text();
+                            var vContentCodeValue = $(this).find('.divPriceCatCode').text();
+
+
+                            // Get GLVoucherContent Data
+                            var vContentIdElement = vTableRow.find('.txtItemContentId');
+                            var vContentNameElement = vTableRow.find('.txtItemContentName');
+                            var vContentCodeElement = vTableRow.find('.txtItemContentCode');
+
+                            // Set Value
+                            vContentIdElement.val(vContentId);
+                            vContentNameElement.val(vContentNameValue);
+                            vContentCodeElement.val(vContentCodeValue);
+                            vTableRow.attr('data-changed', '1')
+                            // Modal Show
+                            $('#AccountDataModal').modal('hide');
+                            vTableRow.removeClass('table-info');
+                            localStorage.setItem('lsType', '')
+                            vTableRow = '';
+                        }
+                    })
+                })
+            }
+        })
+
+    $('body').on('change', '.txtItemContentCode', function (e) {
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+            // Get  Data
+        var vContentIdElement = vTableRow.find('.txtItemContentId');
+        var vContentNameElement = vTableRow.find('.txtItemContentName');
+        var vContentCodeElement = vTableRow.find('.txtItemContentCode');
+
+        var vCode = $(this).val();
+          // List GetCostCenter
+
+        //$.get('/api/APIInvItem/InvItemGET',
+        $.get('/api/APILookup/LookupGET',
+                {
+                    @*pItemType: 2,
+                    pInvItemCode: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect',*@
+                    pIsDetail: true,
+                    pLookupId: 126,
+                    pdORD: vCode,
+                    pQueryTypeId: '@clsQueryType.qSelect',
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vContentIdElement.val('');
+                        vContentNameElement.val('');
+                        vContentCodeElement.val('');
+                        funNotification('@appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Content) {
+                            // Set Value
+                            //vContentIdElement.val(Content.InvItemId);
+                            //vContentCodeElement.val(Content.InvItemCode);
+                            //vContentNameElement.val(Content.InvItemNameL1);
+                            vContentIdElement.val(Content.LookupDtlId);
+                            //vContentCodeElement.val(Content.InvItemCode);
+                            vContentNameElement.val(Content.LookupDtlDesc);
+                        });
+                    }
+                });
+    })
+</script>
+<script>
+
+    function funConfigItemAdd(pData) {
+
+        var RowContent =
+            ' <tr class="trBaseRow tblItemAddRow" data-changed="0"  data-id="' + pData.ItemAddId + '">' +
+            '<td class="" width="5%">' +
+            ' <button class="btn btn-light btn-sm border btnItemAddAddRow" type="submit">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            '</button>' +
+            ' </td>' +
+            ' <td class="">' +
+            '<div class="d-flex txtItemContent">' +
+            '<div class="col-sm-4 p-0">' +
+            '<input class="form-control  text-center   txtItemContentId d-none" value="' + pData.AddOrder + '" type="text" required />' +
+            '<input class="form-control  text-center  txtItemContentCode" value="' + pData.InvItemCode + '"  type="text" required />' +
+            '</div>' +
+            ' <div class="col-sm-8 p-0">' +
+            ' <input class="form-control  text-center  txtItemContentName" value="' + pData.InvItemNameL1 + '" type="text" required disabled />' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control  text-center font-weight-bold txtItemQty" value="' + pData.ItemAddQty + '" type="text" min=0 />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control  text-center font-weight-bold txtItemPrice" value="' + pData.ItemAddPrice + '" type="text" min=0 />' +
+            '</td>' +
+            '<td class="" width="5%"><button class="btn btn-light btn-sm btnItemAddDelete" data-id="' + pData.ItemAddId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        return RowContent;
+    }
+
+    $('body').on('click', '.btnItemAddAddRow', function () {
+        var Current = $(this).closest('tr')
+        // Add New Row
+        funAddItemAddRow(Current)
+
+        $('.tblItemRow[data-id="' + selectedItem + '"]').attr('has-new-data', 'true');
+    })
+
+    // Add Item Row
+    function funAddItemAddRow(pCurrentRow) {
+        var RowItemAdd = {
+            'ItemAddId': '0',
+            'InvItemNameL1': '',
+            'InvItemCode': '',
+            'ItemAddSeq': '',
+            'AddOrder': '',
+            'ItemAddQty': '0',
+            'ItemAddPrice': '0',
+        };
+        var vBody = $('.tblItemAddBody')
+        $(pCurrentRow).closest("tr").after(funConfigItemAdd(RowItemAdd));
+    }
+    function funAddItemAddEmptyRow(pCurrentRow) {
+        var RowItemAdd = {
+            'ItemAddId': '0',
+            'InvItemNameL1': '',
+            'InvItemCode': '',
+            'ItemAddSeq': '',
+            'AddOrder': '',
+            'ItemAddQty': '0',
+            'ItemAddPrice': '0',
+        };
+        var vBody = $('.tblItemAddBody')
+        vBody.append(funConfigItemAdd(RowItemAdd));
+    }
+
+
+    //function funLoadItemAddData(Data) {
+
+    //    var vBody = $('.tblItemAddBody')
+
+    //    if (Data != 'null' && Data != 'undefined') {
+    //        vBody.html('')
+    //        var DataResult = JSON.parse(Data)
+    //        $.each(DataResult, function (i, Item) {
+    //            vBody.append(funConfigItemAdd(Item));
+    //        })
+    //    }
+    //    else {
+    //        vBody.html('')
+    //        var RowItemAdd = {
+    //            //'ItemAddId': '',
+    //            'ItemAddId': '0',
+    //            'ItemAddSeq': '',
+    //            'InvItemNameL1': '',
+    //            'InvItemCode': '',
+    //            'AddOrder': '',
+    //            'ItemAddQty': '0',
+    //            'ItemAddPrice': '0',
+    //        };
+    //        var vBody = $('.tblItemAddBody')
+    //        vBody.append(funConfigItemAdd(RowItemAdd));
+    //    }
+
+    //}
+    $('.tblItemBody').on('change', '.txtItemNameL1,.txtItemNameL2,.txtItemCode,.txtItemOrder,.txtGroupCode,.txtCatAccountCode,.txtReOrder,.chkReProduction,.chkDetailGroup,.chkIsActive,.txtPoints,.txtAccount', function () {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblItemRow');
+        vTableRow.attr('data-changed', '1')
+    })
+
+
+    $('.tblPlateBody').on('change', '.txtPlateQty,.PlateIsActive', function () {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblPlateRow');
+        vTableRow.attr('data-changed', '1')
+    })
+    $('.tblUnitBody').on('change', '.txtUnitCode,.txtPartsInParent,.txtUnitParentCode,.txtBarcode,.txtIsDecreasable,.chkIsDefault,.chkIsActive', function () {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblUnitRow');
+        vTableRow.attr('data-changed', '1')
+    })
+    $('.tblContentBody').on('change', '.txtContentCode,.txtQty,.txtPrice,.chkIsActive,.chkIsExp', function () {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblContentRow');
+        vTableRow.attr('data-changed', '1')
+    })
+    $('.tblItemAddBody').on('change', '.txtItemContentCode,.txtItemQty,.txtItemPrice', function () {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblItemAddRow');
+        vTableRow.attr('data-changed', '1')
+    })
+    $('.tblPriceBody').on('change', '.txtPrice,.chkIsActive2', function () {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblPriceRow');
+        vTableRow.attr('data-changed', '1')
+    })
+    var vCurrentItemIndex;
+    $('.tblItemBody').on('focus', '.txtItemNameL2,.txtItemNameL1,.txtItemOrder,.txtGroupCode,.txtCatAccountCode,.txtReOrder,.chkReProduction,.chkDetailGroup,.chkIsActive', function () {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblItemRow');
+        vCurrentItemIndex = vTableRow.index();
+    })
+
+
+
+    $('.tblContentBody').on('keypress', '.txtPrice,.txtQty', function (event) {
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+
+
+
+    $('#btnFirst').on('click', function () {
+        $('.tblItemBody tr:first .txtItemNameL2').focus()
+        $('.tblItemBody tr:first .txtItemNameL2').trigger('click');
+
+    })
+    $('#btnLast').on('click', function () {
+        $('.tblItemBody tr:last .txtItemNameL2').focus()
+        $('.tblItemBody tr:last .txtItemNameL2').trigger('click');
+    })
+    $('#btnPrev').on('click', function () {
+        var vprevindex = vCurrentItemIndex - 1
+        $('.tblItemBody tr:eq(' + vprevindex + ') .txtItemNameL2').focus()
+        $('.tblItemBody tr:eq(' + vprevindex + ') .txtItemNameL2').trigger('click');
+        //alert(vCurrentItemIndex - 1)
+    })
+    $('#btnNext').on('click', function () {
+        var vNextindex = vCurrentItemIndex + 1
+        $('.tblItemBody tr:eq(' + vNextindex + ') .txtItemNameL2').focus()
+        $('.tblItemBody tr:eq(' + vNextindex + ') .txtItemNameL2').trigger('click');
+        //alert(vCurrentItemIndex - 1)
+    })
+
+</script>
+<script>
+    // Row Select
+    $('.tblItemBody').on('click', '.tblItemRow', function () {
+
+        $('.tblItemRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+    // Print
+    $('.btnPrint').on('click', function () {
+      //  var url = '/ResItem/MealshtmlReport'
+    var ReportType = $('#reportType').val();
+    var url ='';
+    if(ReportType==1){
+         url = '/ResItem/MealCostReport'
+    }
+    else{
+    url = '/ResItem/MealshtmlReport'
+    }
+        var popupWindow = window.open(url);
+    });
+    //SimpleInSameWin()
+
+
+
+    // AccountCat
+
+        var CatAccount = $.parseJSON($.ajax({
+            url: '/api/APILookup/LookupGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: { pIsDetail: true, pLookupCode: '123,124,122', pQueryTypeId: '400' },
+            async: false
+        }).responseText);
+
+        var POS = $.parseJSON($.ajax({
+            url: '/api/APILookup/LookupGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: { pIsDetail: true, pLookupId: '120', pQueryTypeId: '400' },
+            async: false
+        }).responseText);
+
+
+
+
+
+
+
+//Modal For Plate
+    // Account Code, Name - F9 - Double Click
+    $('.tblPlateBody').on('keyup dblclick', '.txtPlateCode', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            var vItemId = vTableRow.find('.txtContentId').val()
+            // Search Account
+            var vURL = '/ResItem/PlateSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').html('')
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divPlateSelect', function () {
+
+                    // Get Values
+                    var vPlateId = $(this).attr('data-id');
+                    var vPlateNameValue = $(this).find('.divPlateNameSelect').text();
+                    var vPlateCodeValue = $(this).find('.divPlateCodeSelect').text();
+
+                    // Get Plate Data
+                    var vPlateIdElement = vTableRow.find('.txtPlateId');
+                    var vPlateNameElement = vTableRow.find('.txtPlateName');
+                    var vPlateCodeElement = vTableRow.find('.txtPlateCode');
+
+
+                    // Set Value
+                    vPlateIdElement.val(vPlateId);
+                    vPlateNameElement.val(vPlateNameValue);
+                    vPlateCodeElement.val(vPlateCodeValue);
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.attr('data-changed', '1')
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+     $('body').on('change', '.txtPlateCode', function (e) {
+        // Table Row - Closest Row
+      var  vTableRow = $(this).closest('tr');
+         vTableRow.attr('data-changed', '1')
+        // Get  Data
+        var vPlateIdElement = vTableRow.find('.txtPlateId');
+        var vPlateNameElement = vTableRow.find('.txtPlateName');
+        var vPlateCodeElement = vTableRow.find('.txtPlateCode');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+         $.get('/api/APIInvItem/InvItemGET',
+            {
+                pInvItemId: vCode,
+                Category:1490,
+                pQueryTypeId: '400',
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vPlateIdElement.val('');
+                        vPlateNameElement.val('');
+                        vPlateCodeElement.val('');
+                        funNotification('@appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Plate) {
+                            // Set Value
+                            vPlateIdElement.val(Plate.InvItemId);
+                            vPlateCodeElement.val(Plate.InvItemId);
+                            vPlateNameElement.val(Plate.InvItemNameL1);
+
+                        });
+                    }
+                });
+    })
+
+
+    function configPlate(pData) {
+        var Row = '<tr class="trBaseRow tblPlateRow" data-id="'+ pData.PlateItemId +'" data-changed="0">' +
+            '<td class="">' +
+            '<button class="btn btn-light btn-sm border btnPlateAddRow" type="submit">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            ' </button>' +
+            '</td>' +
+            '<td class="" width="">' +
+            '<div class="d-flex">' +
+            '<div class="col-sm-4 p-0">' +
+            '<input class="form-control  text-center  d-none txtPlateId" type="text" required />' +
+            '<input class="form-control  text-center  txtPlateCode" value="' + pData.PlateId+'" type="text" required />' +
+            '</div>' +
+            ' <div class="col-sm-8 p-0">' +
+            '<input class="form-control  text-center  txtPlateName" value="' + pData.PlateName+'" type="text" required disabled />' +
+            ' </div>' +
+            '</div>' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control  text-center font-weight-bold txtPlateQty" value="'+ pData.PlateQty+'" type="text" min=0 required />' +
+            '</td>' +
+            '<td class="" style=" padding-right:3rem !important;">' +
+            '<div class="custom-control custom-checkbox ">' +
+            '<input type="checkbox" class="PlateIsActive" '+ pData.IsActive+' id="PlateIsActive'+pData.PlateItemId+'">' +
+            //' <label class="custom-control-label small" for="PlateIsActive'+pData.PlateItemId+'"></label>' +
+            '</div>' +
+            '</td>' +
+            '<td><button class="btn btn-light btn-sm btnPlateDelete" data-id="'+pData.PlateItemId +'"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        return Row;
+    }
+    // Add Item Row
+    function funAddPlateRow(pCurrentRow) {
+        var RowContent = {
+            'PlateItemId':'0',
+            'PlateId': '',
+            'PlateName': '',
+            'PlateQty': '',
+        };
+
+        var vRowContent = configPlate(RowContent)
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+
+    }
+    $('body').on('click', '.btnPlateAddRow', function () {
+        var vRow = $(this).closest('tr')
+        // Add New Row
+        funAddPlateRow(vRow)
+        $('.tblItemRow[data-id="' + selectedItem + '"]').attr('has-new-data', 'true');
+    })
+
+    // Save ItemAdd
+    function SavePlateAdd(pItemId) {
+
+        $('.tblPlateRow').each(function () {
+
+            var vElement = $(this).closest('tr')
+            // Get Data
+            var vPlateItemId = vElement.attr('data-id')
+
+            var vPlateId = vElement.find('.txtplateId').val()
+            var vPlateCode= vElement.find('.txtPlateCode').val()
+            var vPlateName = vElement.find('.txtPlateName').val()
+            var vPlateQty = vElement.find('.txtPlateQty').val()
+            var IsActive = vElement.find('.PlateIsActive').prop('checked');
+            console.log(IsActive)
+            if (vElement.attr('data-changed') == '1') {
+                if (vPlateQty && vPlateCode) {
+                    vElement.attr('data-changed', '0')
+                    // Save
+                    $.get('/api/APIPlate/funPlateItemGET',
+                        {
+                            pPlateItemId: vPlateItemId,
+                            pItemId: pItemId,
+                            pPlateId: vPlateCode,
+                            pPlateQty: vPlateQty,
+                            pIsActive: IsActive,
+                            pQueryTypeId: '100'
+                        }, function (data) {
+                            vElement.attr('data-changed', '0')
+                            if (vPlateItemId == 0) {
+                                var vResultData = JSON.parse(data)
+                                vElement.attr('data-id', vResultData[0].PlateItemId)
+
+                            }
+                        })
+                }
+            }
+                //else {
+
+                //    if (vPlateQty == '' || vPlateQty == '0') {
+                //        vElement.find('.txtPlateQty').addClass('errorClass')
+                //    }
+                //    if (vPlateCode == '' || vPlateCode == '0') {
+                //        vElement.find('.txtPlateCode').addClass('txtPlateCode')
+                //    }
+
+                //}
+            //}
+        })
+
+
+    }
+
+        //New Delete
+    $('body').on('click', '.btnPlateDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-id');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIPlate/funPlateItemGET';
+                        // Delete
+                        $.get(vDeleteActionURL, { pPlateItemId: vDataId, pIsDeleted: true, pQueryTypeId: '300' }, function (data) {
+
+                            if ($.isNumeric(data)) {
+                                funNotification('@appResource.msgCannotDeleteProd', 2);
+                            }
+                            else {
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblPlateBody').find('tr').attr('data-id')
+
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    //funAddDTLEmptyRow($('.tblItemBody'))
+                                    funAddItemEmptyRow()
+                                }
+                                // Notification
+                                funNotification('@appResource.msgDelete', 1);
+                            }
+
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblPlateBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //funAddDTLEmptyRow($('.tblDtlBody'))
+                        funAddPlateEmptyRow()
+                    }
+                }
+            });
+    }); // End of Click Event [Delete Button]
+
+
+
+</script>
+
+

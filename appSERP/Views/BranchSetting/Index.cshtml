@@ -1,0 +1,3023 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.Setting.User
+<!-- Head -->
+@{
+    ViewBag.Title = "اعدادات الفرع";
+    
+        HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+        FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+        string name = ticket.Name;
+               int BranchId = 0;
+        if (Request.Cookies["BranchId"] != null)
+        { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+        string userType = "";
+    }
+    <div class="bg-white border rounded p-3">
+        <div class="row w-100 ">
+            <div class="col-lg-1">
+                <label class="font-weight-bold pt-3">
+                    اعدادات الفرع
+                    @clsBranch.vBranchName
+                </label>
+            </div>
+            <div class="d-flex justify-content-end col-lg-11">
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Save -->
+                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Copy -->
+                    <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                    <!-- Paste -->
+                    <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Print -->
+                    <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                    <!-- Sort Desc -->
+                    <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                    <!-- Edit -->
+                    <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- PDF -->
+                    <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <!-- Excel -->
+                    <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                    <!-- Word -->
+                    <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Close -->
+                    <button class="btn btnUtility btnDeleteHead" title="@appResource.btnDelete"><i class="fa fa-close"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Full Screen -->
+                    <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <div class="dropdown">
+                        <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-table"></i>
+                        </button>
+                        <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=" bg-white border rounded p-3 ">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.BranchNo</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control form-control-sm" id="txtCompanyId" data-id="0" />
+                        <input type="text" class="form-control form-control-sm d-none" id="txtBranchSettingId" data-id="0" value="0" />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.BranchNameAr </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtBranchDesc" data-id="0" />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.BranchNameEn </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtBranchDescL" data-id="0" />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">نسبة الضريبة </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtVatPerc" data-id="0" />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">الرقم الضريبي </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtVatCode" data-id="0" />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">ايبان</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtIBAN" data-id="0" />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.CalcAbsenceType </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm  txtEmpAtType" id="txtEmpAtType" data-id="0" data-val="16" readonly />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.FoodProcessorType </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtFoodPrepareCat" data-id="0" data-val="110" readonly />
+                    </div>
+                </div>
+
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.DefaultSite </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtDefaultLocation" data-id="0" readonly />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.BanquetType -@appResource.Products </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtSheepCatProduct" data-id="0" data-val="114" readonly />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.BanquetType  </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtSheepCat" data-id="0" data-val="123" readonly />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.BanquetTypeCustomer </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtSheepOutRes" data-id="0" data-val="123" readonly />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.RiceType </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtRiceCat" data-id="0" data-val="114" readonly />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.SellStore</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtSellStore" data-id="0" data-val="117" readonly />
+                    </div>
+                </div>
+
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.DishUnit</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtPlateUnit" data-id="0" data-val="108" readonly />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.DishStore </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtPlateStore" data-id="0" data-val="117" readonly />
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-sm-4">
+                        <label class="control-label">@appResource.DishType  </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm " id="txtPlateCode" data-id="0" data-val="122" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class=" col-sm-6">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.DishRiceAmount </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtQtyPlateRice" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.InsMaxDay</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtInsuranceLimit" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.QtyOffer </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtShowQty" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.DateFormat </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtFormatDate" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.SaleAccount</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtSellAcc" data-id="0" data-val="120" readonly />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.RentAccount</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtRentAcc" data-id="0" readonly />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.MachineNoMaxLimit </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtLimitInvId" data-id="0" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+
+
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.BranchTel </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtBranchPhone" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+
+                                <label class="control-label">@appResource.MaskAmount </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtMaskAmount" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.HoldingPeriod </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtHoldInvTimer" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.DeviceCheckingType </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtPcDetectionType" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.InsAccount</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtpInsurAcc" data-id="0" readonly />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.CommissionCalcType</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtCommAccount" data-id="0" readonly />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.LengthWorkTimeDay </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtLengthPeriodDay" data-id="0" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="row pt-1">
+                        <div class="col-sm-3">
+                            <label class="control-label">@appResource.Chef</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-sm" id="txtOrderEmp" data-id="0" />
+                        </div>
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-sm-3">
+                            <label class="control-label">@appResource.AddressCookingBill</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-sm" id="txtBranchAddress" data-id="0" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.ChefTel</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtOrderPhone" data-id="0" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <label class="control-label">@appResource.ResBranchTel</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="txtBranchPhoneOrder" data-id="0" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="row pt-1">
+                        <div class="col-sm-3">
+                            <label class="control-label">@appResource.DeliveryDefaultSite</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-sm" id="txtDefaultLocationDelivery" data-id="0" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="row pt-1">
+                        <div class="col-sm-3">
+                            <label class="control-label">رقم الحساب</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-sm" id="txtAccount_id" />
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="row pt-1">
+                        <div class="col-sm-3">
+                            <label class="control-label">رابط API مع الهيئة</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-sm" id="txtLinkProApi" data-id="0" />
+                        </div>
+                    </div>
+                </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row pt-1">
+                                    <div class="col-sm-6">
+                                        <label class="control-label">@appResource.NumberingCount</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-sm" id="txtCompanyId" data-id="0" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row pt-1">
+                                    <input type="button" class="btn btn-secondary" value="@appResource.NumberingReset" id="txtResetInv" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row pt-1">
+                                    <div class="col-sm-6">
+                                        <label class="control-label">@appResource.NumberingCountRes</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-sm" id="txtResetOrder" data-id="0" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row pt-1">
+                                    <input type="button" class="btn btn-secondary" value="@appResource.NumberingReset" />
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row ">
+
+                            <div class="col-sm-6">
+                                <label class="control-label">اختيار التقارير لصلاحية الايام المحدودة</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="container ">
+                                    <select class="selectpicker " data-dropup-auto="false" data-size="11" id="NumberReports" multiple aria-label="size 3 select example">
+                                        <option value="1">اجمالي المبيعات</option>
+                                        <option value="2">المصروفات</option>
+                                        <option value="3">صافي المبيعات</option>
+                                        <option value="4">المبيعات التفصيلي</option>
+                                        <option value="5">مبيعات تجميعي</option>
+                                        <option value="6">مبيعات تفصيلي كاشيرات</option>
+                                        <option value="7">مبيعات السائقين</option>
+                                        <option value="8">سندات قبض</option>
+                                        <option value="9">التأجير</option>
+                                        <option value="10">المبالغ المتبقية للفترة</option>
+                                        <option value="11">تفاصيل الخصومات</option>
+                                        <option value="12">التأمين</option>
+                                        <option value="13">الفواتير التي تم تعديلها</option>
+                                        <option value="14">مردودات التأمين</option>
+                                        <option value="15">الفواتير الملغية</option>
+                                        <option value="16">التقرير اليومي</option>
+                                        <option value="17">فواتير الكاشير</option>
+                                        <option value="18">تقرير الذبائح</option>
+                                        <option value="19">فواتير المرتجعات</option>
+                                        <option value="20">اجمالي مبيعات الوجبات</option>
+                                        <option value="21">اجمالي مبيعات الوجبات تجميعي</option>
+                                        <option value="22">فواتير العملاء</option>
+                                        <option value="23">مبيعات تجميعي كاشيرات</option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+    </div>
+    <div class="bg-white border rounded p-3">
+
+        <ul class="nav nav-pills" id="myTab" role="tablist">
+
+            <li class="nav-item divCash" id="divCash">
+                <a class="nav-link active clsCashDesk" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"> @appResource.GeneralData</a>
+            </li>
+
+            <li class="nav-item divCheck" id="divCheck">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">@appResource.OtherPermissions</a>
+            </li>
+            <li class="nav-item divCheck" id="divCheck">
+                <a class="nav-link" id="Mail-tab" data-toggle="tab" href="#Mail" role="tab" aria-controls="Mail" aria-selected="false">اعدادات البريد الالكتروني</a>
+            </li>
+            <li class="nav-item divCheck" id="divCheck">
+                <a class="nav-link" id="Mail-tab" data-toggle="tab" href="#Orcal" role="tab" aria-controls="Orcal" aria-selected="false">اعدادات المزامنه لبرنامج المحاسبة</a>
+            </li>
+
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade  divCash active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="bg-white border rounded p-3">
+                        <div class="row">
+                            <div class="col-sm-5">
+
+                                <div class="row pt-1">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">@appResource.EmpTypes </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm " id="txtBranchMgr" data-id="0" readonly />
+                                    </div>
+                                </div>
+                                <div class="row pt-1">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">@appResource.MealsTypes </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm " id="txtGrpAddPlate" data-id="0" readonly />
+                                    </div>
+                                </div>
+                                <div class="row pt-1">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">@appResource.SpoilageCalcType</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm " id="txtProductTypeOut" data-id="0" readonly />
+                                    </div>
+                                </div>
+                                <div class="row pt-1">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">@appResource.ReservationPermissions </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm " id="txtReservType" data-id="0" readonly />
+                                    </div>
+                                </div>
+
+                                <div class="row pt-1">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">@appResource.DeliveryDesc </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm " id="txtItemDelivery" data-id="0" readonly />
+                                    </div>
+                                </div>
+                                <div class="row pt-1">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">@appResource.Printers </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm " id="txtKitchenPrINTer" data-id="0" readonly />
+                                    </div>
+                                </div>
+                                <div class="row pt-1">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">@appResource.StoreEmployeeId  </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm " id="txtCashCode" data-id="0" readonly />
+                                    </div>
+                                </div>
+                                <div class="row pt-1">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">@appResource._Driver  </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm " id="txtDriverSeq" data-id="0" readonly />
+                                    </div>
+                                </div>
+
+                                <div class="row pt-1">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">@appResource.LinePath </label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm " id="txtFontPath" data-id="0" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.CurrentMonth</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtEmpDate" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.Attachbill</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtNewOrderTime" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.AttachBranchNo</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtCompIdPost" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.BranchCashBox </label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtBranchAccount" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.DeliveryCopiesNo</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtDeliveryTrans" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">الحد الاقصي للخصم </label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtDiscountMax" data-id="0" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.WarehouseBranch</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtStoreBasic" data-id="0" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+
+
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource._Part </label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtFraction" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.ShortNo </label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtShortNum" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource._CostCenter </label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtCostCenter" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.StoreCustomer</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtClientStoreId" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.CostCenterCustomer </label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtEmpCostId" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource.WithoutPrint </label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtAllowSwithoutcprINTers" data-id="0" />
+                                            </div>
+                                        </div>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">@appResource._Store </label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control form-control-sm" id="txtStoreProduction" data-id="0" readonly />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <div class="row pt-1">
+                                        <div class="col-sm-3">
+                                            <label class="control-label">@appResource.ImageURL</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control form-control-sm" id="txtImgPath" data-id="0" />
+                                            <input type='file' id="imgFile" />
+                                            <form id="form1" runat="server">
+                                                <img id="blah"
+                                                     src=""
+                                                     class="imagepreview" style="width: 10%;height: 10%">
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                    <div class="row pt-1">
+                                        <div class="col-sm-3">
+                                            <label class="control-label">@appResource.BillSignature</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control form-control-sm" id="txtInvoiceRemark" data-id="0" />
+                                        </div>
+                                    </div>
+                                    <div class="row pt-1">
+                                        <div class="col-sm-3">
+                                            <label class="control-label">تذييل الطلبات</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control form-control-sm" id="txtOrderRemark" data-id="0" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade divCheck container-fluid" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row bg-white border  rounded p-3">
+                        <div class="col-sm-4">
+
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkIsPOSPrinterNetwork" id="chkIsPOSPrinterNetwork" value="option3">
+                                        <label class="custom-control-label small" for="chkIsPOSPrinterNetwork">هل طابعة الكاشير شبكة؟</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkAssemblingPrINTer" id="chkAssemblingPrINTer" value="option3">
+                                        <label class="custom-control-label small" for="chkAssemblingPrINTer">@appResource.GroupBillsByResBill</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkModifyInvoice" id="chkModifyInvoice" value="option3">
+                                        <label class="custom-control-label small" for="chkModifyInvoice">@appResource.EditingBillsAbility </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkPrINTCancelInvoice" id="chkPrINTCancelInvoice" value="option3">
+                                        <label class="custom-control-label small" for="chkPrINTCancelInvoice">@appResource.CanceledBillsPrinting</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkPrINTUpdateInvoice" id="chkPrINTUpdateInvoice" value="option3">
+                                        <label class="custom-control-label small" for="chkPrINTUpdateInvoice">@appResource.EditedBillsPrinting</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkAutoOpenPeriod" id="chkAutoOpenPeriod" value="option3">
+                                        <label class="custom-control-label small" for="chkAutoOpenPeriod">@appResource.OpenWorkingPeriodAuto</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkEnterHelfoodAllowed" id="chkEnterHelfoodAllowed" value="option3">
+                                        <label class="custom-control-label small" for="chkEnterHelfoodAllowed">@appResource.PermissionAddCustomerHelFood</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkEnterPartbuildAllowed" id="chkEnterPartbuildAllowed" value="option3">
+                                        <label class="custom-control-label small" for="chkEnterPartbuildAllowed">@appResource.PermissionAddCustomerFurnished</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkManualProduction" id="chkManualProduction" value="option3">
+                                        <label class="custom-control-label small" for="chkManualProduction">@appResource.AddingProductsAmountsManual</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkAssemblingPost" id="chkAssemblingPost" value="option3">
+                                        <label class="custom-control-label small" for="chkAssemblingPost">@appResource.PostingBySumToCashiers</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkChoiceStoreProdAuto" id="chkChoiceStoreProdAuto" value="option3">
+                                        <label class="custom-control-label small" for="chkChoiceStoreProdAuto">@appResource.ChoosingSystemStoresAutomatic</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-sm-4">
+
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkDeliveryCashier" id="chkDeliveryCashier" value="option3">
+                                        <label class="custom-control-label small" for="chkDeliveryCashier">@appResource.SelectingDriverByCashier</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkPayCashierAmount" id="chkPayCashierAmount" value="option3">
+                                        <label class="custom-control-label small" for="chkPayCashierAmount">@appResource.ShowBillAmountPaid</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkDisplayDirverAccount" id="chkDisplayDirverAccount" value="option3">
+                                        <label class="custom-control-label small" for="chkDisplayDirverAccount">@appResource.ShowDriverBills</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkDisplayUpdateDirver" id="chkDisplayUpdateDirver" value="option3">
+                                        <label class="custom-control-label small" for="chkDisplayUpdateDirver">@appResource.ShowEditingDriversScreen</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkAutoClosePeriod" id="chkAutoClosePeriod" value="option3">
+                                        <label class="custom-control-label small" for="chkAutoClosePeriod">@appResource.CloseWorkingPeriodAuto</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkChangeUpdateCashier" id="chkChangeUpdateCashier" value="option3">
+                                        <label class="custom-control-label small" for="chkChangeUpdateCashier">@appResource.ChangeChashierByBillrate</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkChangeUpdateDate" id="chkChangeUpdateDate" value="option3">
+                                        <label class="custom-control-label small" for="chkChangeUpdateDate">@appResource.EditBillDateByEditingDate</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkConvertProductionFullQty" id="chkConvertProductionFullQty" value="option3">
+                                        <label class="custom-control-label small" for="chkConvertProductionFullQty">@appResource.ConversionToProductionNotRounded</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkCloseFormUpdateAuto" id="chkCloseFormUpdateAuto" value="option3">
+                                        <label class="custom-control-label small" for="chkCloseFormUpdateAuto">@appResource.ClosingscreenAutoAfterEditing</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkDecreaseProdAuto" id="chkDecreaseProdAuto" value="option3">
+                                        <label class="custom-control-label small" for="chkDecreaseProdAuto">@appResource.DeductingQtyAuto</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-4">
+
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkShowRefItem" id="chkShowRefItem" value="option3">
+                                        <label class="custom-control-label small" for="chkShowRefItem">@appResource.ShowRefTransItem</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkShowRefProduct" id="chkShowRefProduct" value="option3">
+                                        <label class="custom-control-label small" for="chkShowRefProduct">@appResource.ShowRefTransProd</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkAllowBlkList" id="chkAllowBlkList" value="option3">
+                                        <label class="custom-control-label small" for="chkAllowBlkList">@appResource.PermisionBuyBlackListCustomers</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkAllowCancelInvoice" id="chkAllowCancelInvoice" value="option3">
+                                        <label class="custom-control-label small" for="chkAllowCancelInvoice">@appResource.PermisionCancelHeldBillsAuto</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkPrINTBasicInvId" id="chkPrINTBasicInvId" value="option3">
+                                        <label class="custom-control-label small" for="chkPrINTBasicInvId">@appResource.PrintBasicBillNo</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkShowAllInvoiceForCancel" id="chkShowAllInvoiceForCancel" value="option3">
+                                        <label class="custom-control-label small" for="chkShowAllInvoiceForCancel">@appResource.ShowAllCashiersBillsCancel</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkShowAllInvoiceForUpdate" id="chkShowAllInvoiceForUpdate" value="option3">
+                                        <label class="custom-control-label small" for="chkShowAllInvoiceForUpdate">@appResource.ShowAllCashiersBillsEdit</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkAllowDiscount" id="chkAllowDiscount" value="option3">
+                                        <label class="custom-control-label small" for="chkAllowDiscount">@appResource.DiscPermission</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkAddQyProductbeforeSpend" id="chkAddQyProductbeforeSpend" value="option3">
+                                        <label class="custom-control-label small" for="chkAddQyProductbeforeSpend">@appResource.AddingUnderPrepQtyBeforeStoreTrans</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" PayTypeId ">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkUpdateInvoiceDriver" id="chkUpdateInvoiceDriver" value="option3">
+                                        <label class="custom-control-label small" for="chkUpdateInvoiceDriver">@appResource.EditingDriverbyCashier</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ShowQtyZero">
+                                <div class="row m-1">
+                                    <div class="form-check  custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input chkShowQtyZero" id="chkShowQtyZero" value="option3">
+                                        <label class="custom-control-label small" for="chkShowQtyZero">اظهار المبيعات الصفرية للكاشير </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade  divCash " id="Mail" role="tabpanel" aria-labelledby="Mail-tab">
+                    <div class="bg-white border rounded p-3">
+
+
+
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">MailHost </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtMailHost" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">MailPort</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtMailPort" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">MailFrom</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtMailFrom" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">MailPassword </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control form-control-sm " id="txtMailPassword" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">MailSubject</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtMailSubject" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">MailBody </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtMailBody" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">MailTo  </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtMailTo" data-id="0" />
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="tab-pane fade  divCash " id="Orcal" role="tabpanel" aria-labelledby="Orcal-tab">
+                    <div class="bg-white border rounded p-3">
+
+
+
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">الصندوق </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtBoxId" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">مركز التكلفة</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtCostId" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">حساب الضريبة</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtVatAccount" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">حساب الصندوق </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtTotalAccount" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">حساب التأمين</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtInsuranceAccount" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">حساب المرتجعات </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtReturnAccount" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">نسبة  مدى </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtMadaPerc" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-sm-4">
+                                <label class="control-label">نسبة  الفيزا </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-sm " id="txtVisaPerc" data-id="0" />
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @*</div>
+    </div>*@
+    <!-- AccountData Modal -->
+    <div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="AccountDataModalContent"></div>
+        </div>
+    </div>
+    <!-- BranchSettingData Modal -->
+    <div id="BranchSettingDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="BranchSettingDataModalContent"></div>
+        </div>
+    </div>
+
+    <!--Save-->
+    <script>
+
+
+    // Save Using button
+    $('.btnSave').on('click', function () {
+        // Save  ALL
+        funBranchSetting()
+
+    }) // End BtnSave
+
+    // Save Using F10
+    $('body').on('keyup', function (e) {
+        // Check F10
+        if (e.keyCode == 121) {
+            // Save  ALL
+            funBranchSetting()
+        }
+    })
+
+    function funBranchSetting() {
+
+        // Head
+        var pBranchSettingId = $('#txtBranchSettingId').val()
+        var pCompanyId = $('#txtCompanyId').val()
+        var vatPerc = $('#txtVatPerc').val()
+        var vatCode = $('#txtVatCode').val()
+        var IBAN = $('#txtIBAN').val()
+        var pBranchDesc = $('#txtBranchDesc').val()
+        var pBranchDescL = $('#txtBranchDescL').val()
+        var pEmpAtType = $('#txtEmpAtType').attr('data-id')
+        var pFoodPrepareCat = $('#txtFoodPrepareCat').attr('data-id')
+        var pDefaultLocation = $('#txtDefaultLocation').attr('data-id')
+        var pSheepCatProduct = $('#txtSheepCatProduct').attr('data-id')
+        var pSheepCat = $('#txtSheepCat').attr('data-id')
+        var pSheepOutRes = $('#txtSheepOutRes').attr('data-id')
+        var pRiceCat = $('#txtRiceCat').attr('data-id')
+        var pSellStore = $('#txtSellStore').attr('data-id')
+        var pPlateUnit = $('#txtPlateUnit').attr('data-id')
+        var pPlateStore = $('#txtPlateStore').attr('data-id')
+        var pPlateCode = $('#txtPlateCode').attr('data-id')
+        var pQtyPlateRice = $('#txtQtyPlateRice').val()
+        var pInsuranceLimit = $('#txtInsuranceLimit').val()
+        var pShowQty = $('#txtShowQty').val()
+        var pFormatDate = $('#txtFormatDate').val()
+        var pSellAcc = $('#txtSellAcc').attr('data-id')
+        var pRentAcc = $('#txtRentAcc').attr('data-id')
+        var pLimitInvId = $('#txtLimitInvId').val()
+        var pBranchPhone = $('#txtBranchPhone').val()
+        var pMaskAmount = $('#txtMaskAmount').val()
+        var pHoldInvTimer = $('#txtHoldInvTimer').val()
+        var pPcDetectionType = $('#txtPcDetectionType').val()
+        var pInsurAcc = $('#txtpInsurAcc').val()
+        var pCommAccount = $('#txtCommAccount').attr('data-id')
+        var pLengthPeriodDay = $('#txtLengthPeriodDay').val()
+        var pOrderEmp = $('#txtOrderEmp').val()
+        var pBranchAddress = $('#txtBranchAddress').val()
+        var pAccountId = $('#txtAccount_id').val()
+        var pLinkProApi = $('#txtLinkProApi').val()
+        var pOrderPhone = $('#txtOrderPhone').val()
+        var pBranchPhoneOrder = $('#txtBranchPhoneOrder').val()
+        var pDefaultLocationDelivery = $('#txtDefaultLocationDelivery').attr('data-id')
+        var pDefaultLocationDelivery = $('#txtDefaultLocationDelivery').attr('data-id')
+
+        //Orcal
+        var BOX_ID = $('#txtBoxId').val()
+        var CostID = $('#txtCostId').val()
+        var VatAccount = $('#txtVatAccount').val()
+        var TotalAccount = $('#txtTotalAccount').val()
+        var InsuranceAccount = $('#txtInsuranceAccount').val()
+        var ReturnAccount = $('#txtReturnAccount').val()
+        var NumberReports = $('#NumberReports').val()
+        var MadaPerc = $('#txtMadaPerc').val()
+        var VisaPerc = $('#txtVisaPerc').val()
+        // Details
+        var pBranchMgr = $('#txtBranchMgr').attr('data-id')
+        var pGrpAddPlate = $('#txtGrpAddPlate').attr('data-id')
+        var pProductTypeOut = $('#txtProductTypeOut').attr('data-id')
+        var pReservType = $('#txtReservType').attr('data-id')
+        var pItemDelivery = $('#txtItemDelivery').attr('data-id')
+        var pKitchenPrINTer = $('#txtKitchenPrINTer').attr('data-id')
+        var pCashCode = $('#txtCashCode').attr('data-id')
+        var pDriverSeq = $('#txtDriverSeq').attr('data-id')
+        var pSheepOutRes = $('#txtSheepOutRes').attr('data-id')
+        var pFontPath = $('#txtFontPath').val()
+        var pEmpDate = $('#txtEmpDate').val()
+        var pNewOrderTime = $('#txtNewOrderTime').val()
+        var pCompIdPost = $('#txtCompIdPost').val()
+        var pBranchAccount = $('#txtBranchAccount').val()
+        var pDeliveryTrans = $('#txtDeliveryTrans').val()
+        var pDiscountMax = $('#txtDiscountMax').val()
+        var pStoreBasic = $('#txtStoreBasic').attr('data-id')
+        var pFraction = $('#txtFraction').val()
+        var pShortNum = $('#txtShortNum').val()
+        var pCostCenter = $('#txtCostCenter').val()
+        var pClientStoreId = $('#txtClientStoreId').attr('data-id')
+        var pEmpCostId = $('#txtEmpCostId').val()
+        var pAllowSwithoutcprINTers = $('#txtAllowSwithoutcprINTers').val()
+        var pStoreProduction = $('#txtStoreProduction').attr('data-id')
+       // var pImgPath = $('#txtImgPath').val()
+        var pInvoiceRemark = $('#txtInvoiceRemark').val()
+        var pOrderRemark = $('#txtOrderRemark').val()
+
+
+
+
+        //Checkboxes
+        var pAssemblingPrINTer = $('#chkAssemblingPrINTer').prop('checked')
+        var IsPOSPrinterNetwork = $('#chkIsPOSPrinterNetwork').prop('checked')
+        var pModifyInvoice = $('#chkModifyInvoice').prop('checked')
+        var pPrINTCancelInvoice = $('#chkPrINTCancelInvoice').prop('checked')
+        var pPrINTUpdateInvoice = $('#chkPrINTUpdateInvoice').prop('checked')
+        var pAutoOpenPeriod = $('#chkAutoOpenPeriod').prop('checked')
+        var pEnterHelfoodAllowed = $('#chkEnterHelfoodAllowed').prop('checked')
+        var pEnterPartbuildAllowed = $('#chkEnterPartbuildAllowed').prop('checked')
+        var pManualProduction = $('#chkManualProduction').prop('checked')
+        var pAssemblingPost = $('#chkAssemblingPost').prop('checked')
+        var pChoiceStoreProdAuto = $('#chkChoiceStoreProdAuto').prop('checked')
+        var pDeliveryCashier = $('#chkDeliveryCashier').prop('checked')
+        var pPayCashierAmount = $('#chkPayCashierAmount').prop('checked')
+        var pDisplayDirverAccount = $('#chkDisplayDirverAccount').prop('checked')
+        var pDisplayUpdateDirver = $('#chkDisplayUpdateDirver').prop('checked')
+        var pAutoClosePeriod = $('#chkAutoClosePeriod').prop('checked')
+        var pChangeUpdateCashier = $('#chkChangeUpdateCashier').prop('checked')
+        var pChangeUpdateDate = $('#chkChangeUpdateDate').prop('checked')
+        var pConvertProductionFullQty = $('#chkConvertProductionFullQty').prop('checked')
+        var pCloseFormUpdateAuto = $('#chkCloseFormUpdateAuto').prop('checked')
+        var pDecreaseProdAuto = $('#chkDecreaseProdAuto').prop('checked')
+        var pShowRefItem = $('#chkShowRefItem').prop('checked')
+        var pShowRefProduct = $('#chkShowRefProduct').prop('checked')
+        var pAllowBlkList = $('#chkAllowBlkList').prop('checked')
+        var pAllowCancelInvoice = $('#chkAllowCancelInvoice').prop('checked')
+        var pPrINTBasicInvId = $('#chkPrINTBasicInvId').prop('checked')
+        var pShowAllInvoiceForCancel = $('#chkShowAllInvoiceForCancel').prop('checked')
+        var pShowAllInvoiceForUpdate = $('#chkShowAllInvoiceForUpdate').prop('checked')
+        var pAllowDiscount = $('#chkAllowDiscount').prop('checked')
+        var pAddQyProductbeforeSpend = $('#chkAddQyProductbeforeSpend').prop('checked')
+        var pUpdateInvoiceDriver = $('#chkUpdateInvoiceDriver').prop('checked')
+        var pShowQtyZero = $('#chkShowQtyZero').prop('checked')
+        changeimage()
+        var pImgPath = $('#blah').attr('data');
+        var pLocationImgPath = $('#blah').attr('locationImg');
+
+        //Save
+        $.get('/api/APIBranchSetting/BranchSettingGet',
+            {
+                // Head
+                pBranchSettingId: pBranchSettingId,
+                pCompanyId: 1,
+                pBranchId: pCompanyId,
+                pBranchDesc: pBranchDesc,
+                pBranchDescL: pBranchDescL,
+                pVatPerc: vatPerc,
+                pVatCode: vatCode,
+                IBAN: IBAN,
+                pEmpAtType: pEmpAtType,
+                pFoodPrepareCat: pFoodPrepareCat,
+                pDefaultLocation: pDefaultLocation,
+                pSheepCatProduct: pSheepCatProduct,
+                pSheepCat: pSheepCat,
+                pSheepOutRes: pSheepOutRes,
+                pRiceCat: pRiceCat,
+                pSellStore: pSellStore,
+                pPlateUnit: pPlateUnit,
+                pPlateStore: pPlateStore,
+                pPlateCode: pPlateCode,
+                pQtyPlateRice: pQtyPlateRice,
+                pInsuranceLimit: pInsuranceLimit,
+                pShowQty: pShowQty,
+                pFormatDate: pFormatDate,
+                pSellAcc: pSellAcc,
+                pRentAcc: pRentAcc,
+                pLimitInvId: pLimitInvId,
+                pBranchPhone: pBranchPhone,
+                pMaskAmount: pMaskAmount,
+                pHoldInvTimer: pHoldInvTimer,
+                pPcDetectionType: pPcDetectionType,
+                pInsurAcc: pInsurAcc,
+                pCommAccount: pCommAccount,
+                pLengthPeriodDay: pLengthPeriodDay,
+                pOrderEmp: pOrderEmp,
+                pBranchAddress: pBranchAddress,
+                pOrderPhone: pOrderPhone,
+                pBranchPhoneOrder: pBranchPhoneOrder,
+                pDefaultLocationDelivery: pDefaultLocationDelivery,
+                pDefaultLocationDelivery: pDefaultLocationDelivery,
+                pAccountId:pAccountId,
+                pLinkProApi: pLinkProApi,
+                // Details
+                pBranchMgr: pBranchMgr,
+                pGrpAddPlate: pGrpAddPlate,
+                pProductTypeOut: pProductTypeOut,
+                pReservType: pReservType,
+                pItemDelivery: pItemDelivery,
+                pKitchenPrINTer: pKitchenPrINTer,
+                pCashCode: pCashCode,
+                pDriverSeq: pDriverSeq,
+                pSheepOutRes: pSheepOutRes,
+                pFontPath: pFontPath,
+                pEmpDate: pEmpDate,
+                pNewOrderTime: pNewOrderTime,
+                pCompIdPost: pCompIdPost,
+                pBranchAccount: pBranchAccount,
+                pDeliveryTrans: pDeliveryTrans,
+                pDiscountMax: pDiscountMax,
+                pStoreBasic: pStoreBasic,
+                pFraction: pFraction,
+                pShortNum: pShortNum,
+                pCostCenter: pCostCenter,
+                pClientStoreId: pClientStoreId,
+                pEmpCostId: pEmpCostId,
+                pAllowSwithoutcprINTers: pAllowSwithoutcprINTers,
+                pStoreProduction: pStoreProduction,
+                pImgPath: pImgPath,
+                pLocationImgPath: pLocationImgPath,
+                pInvoiceRemark: pInvoiceRemark,
+                pOrderRemark: pOrderRemark,
+                //Checkboxes
+                pAssemblingPrINTer: pAssemblingPrINTer,
+                IsPOSPrinterNetwork: IsPOSPrinterNetwork,
+                pModifyInvoice: pModifyInvoice,
+                pPrINTCancelInvoice: pPrINTCancelInvoice,
+                pPrINTUpdateInvoice: pPrINTUpdateInvoice,
+                pAutoOpenPeriod: pAutoOpenPeriod,
+                pEnterHelfoodAllowed: pEnterHelfoodAllowed,
+                pEnterPartbuildAllowed: pEnterPartbuildAllowed,
+                pManualProduction: pManualProduction,
+                pAssemblingPost: pAssemblingPost,
+                pChoiceStoreProdAuto: pChoiceStoreProdAuto,
+                pDeliveryCashier: pDeliveryCashier,
+                pPayCashierAmount: pPayCashierAmount,
+                pDisplayDirverAccount: pDisplayDirverAccount,
+                pDisplayUpdateDirver: pDisplayUpdateDirver,
+                pAutoClosePeriod: pAutoClosePeriod,
+                pChangeUpdateCashier: pChangeUpdateCashier,
+                pChangeUpdateDate: pChangeUpdateDate,
+                pConvertProductionFullQty: pConvertProductionFullQty,
+                pCloseFormUpdateAuto: pCloseFormUpdateAuto,
+                pDecreaseProdAuto: pDecreaseProdAuto,
+                pShowRefItem: pShowRefItem,
+                pShowRefProduct: pShowRefProduct,
+                pAllowBlkList: pAllowBlkList,
+                pAllowCancelInvoice: pAllowCancelInvoice,
+                pPrINTBasicInvId: pPrINTBasicInvId,
+                pShowAllInvoiceForCancel: pShowAllInvoiceForCancel,
+                pShowAllInvoiceForUpdate: pShowAllInvoiceForUpdate,
+                pAllowDiscount: pAllowDiscount,
+                pAddQyProductbeforeSpend: pAddQyProductbeforeSpend,
+                pUpdateInvoiceDriver: pUpdateInvoiceDriver,
+                pShowQtyZero: pShowQtyZero,
+                MailHost : $('#txtMailHost').val(),
+                MailPassword : $('#txtMailPassword').val(),
+                MailPort : $('#txtMailPort').val(),
+                MailSubject : $('#txtMailSubject').val(),
+                MailBody : $('#txtMailBody').val(),
+               MailFrom : $('#txtMailFrom').val(),
+               MailTo : $('#txtMailTo').val(),
+                pIsDeleted: false,
+              BOX_ID: BOX_ID,
+                CostID: CostID,
+                VatAccount: VatAccount,
+                TotalAccount: TotalAccount,
+                InsuranceAccount: InsuranceAccount,
+                ReturnAccount: ReturnAccount,
+                MadaPerc: MadaPerc,
+                VisaPerc: VisaPerc,
+                NumberReports: NumberReports.toString(),
+                pQueryTypeId: '100'
+
+            }
+            ,
+            function () {
+
+                // Msg Save
+                funNotification('@appResource.msgSave', '1')
+
+            })
+
+
+    }
+    </script>
+
+    <!--Load Data-->
+    <script>
+
+    function funLoadHead(pBranchSetting) {
+
+
+
+        // the First Row
+        pBranchSetting = pBranchSetting[0]
+        // Appenn Data To Controls
+        $('#txtBranchSettingId').val(pBranchSetting.BranchSettingId)
+        $('#txtCompanyId').val(pBranchSetting.BranchId)
+        $('#txtBranchDesc').val(pBranchSetting.BranchDesc)
+        $('#txtBranchDescL').val(pBranchSetting.BranchDescL)
+        $('#txtEmpAtType').attr('data-id', pBranchSetting.EmpAtType)
+        $('#txtFoodPrepareCat').attr('data-id', pBranchSetting.FoodPrepareCat)
+        $('#txtDefaultLocation').attr('data-id', pBranchSetting.DefaultLocation)
+        $('#txtSheepCatProduct').attr('data-id', pBranchSetting.SheepCatProduct)
+        $('#txtSheepCat').attr('data-id', pBranchSetting.SheepCat)
+        $('#txtSheepOutRes').attr('data-id', pBranchSetting.SheepOutRes)
+        $('#txtRiceCat').attr('data-id', pBranchSetting.RiceCat)
+        $('#txtSellStore').attr('data-id', pBranchSetting.SellStore)
+        $('#txtPlateUnit').attr('data-id', pBranchSetting.PlateUnit)
+        $('#txtPlateStore').attr('data-id', pBranchSetting.PlateStore)
+        $('#txtPlateCode').attr('data-id', pBranchSetting.PlateCode)
+        $('#txtVatPerc').val(pBranchSetting.VatPerc)
+        $('#txtVatCode').val(pBranchSetting.VatCode)
+        $('#txtIBAN').val(pBranchSetting.IBAN)
+        $('#txtQtyPlateRice').val(pBranchSetting.QtyPlateRice)
+        $('#txtInsuranceLimit').val(pBranchSetting.InsuranceLimit)
+        $('#txtShowQty').val(pBranchSetting.ShowQty)
+        $('#txtFormatDate').val(pBranchSetting.FormatDate)
+        $('#txtSellAcc').attr('data-id', pBranchSetting.SellAcc)
+        $('#txtRentAcc').attr('data-id', pBranchSetting.RentAcc)
+        $('#txtLimitInvId').val(pBranchSetting.LimitInvId)
+        $('#txtBranchPhone').val(pBranchSetting.BranchPhone)
+        $('#txtMaskAmount').val(pBranchSetting.MaskAmount)
+
+        $('#txtHoldInvTimer').val(pBranchSetting.HoldInvTimer)
+        $('#txtPcDetectionType').val(pBranchSetting.PcDetectionType)
+        $('#txtpInsurAcc').attr('data-id', pBranchSetting.InsurAcc)
+        $('#txtCommAccount').attr('data-id', pBranchSetting.CommAccount)
+        $('#txtLengthPeriodDay').val(pBranchSetting.LengthPeriodDay)
+        $('#txtOrderEmp').val(pBranchSetting.OrderEmp)
+        $('#txtBranchAddress').val(pBranchSetting.BranchAddress)
+        $('#txtOrderPhone').val(pBranchSetting.OrderPhone)
+        $('#txtBranchPhoneOrder').val(pBranchSetting.BranchPhoneOrder)
+        $('#txtDefaultLocationDelivery').attr('data-id', pBranchSetting.DefaultLocationDelivery)
+
+        $('#txtAccount_id').val(pBranchSetting.account_id)
+        $('#txtLinkProApi').val(pBranchSetting.LinkProApi)
+
+        
+        // Detail
+        $('#txtBranchMgr').attr('data-id', pBranchSetting.BranchMgr)
+        $('#txtGrpAddPlate').attr('data-id', pBranchSetting.GrpAddPlate)
+        $('#txtProductTypeOut').attr('data-id', pBranchSetting.ProductTypeOut)
+        $('#txtReservType').attr('data-id', pBranchSetting.ReservType)
+        $('#txtItemDelivery').attr('data-id', pBranchSetting.ItemDelivery)
+        $('#txtKitchenPrINTer').attr('data-id', pBranchSetting.KitchenPrINTer)
+        $('#txtCashCode').attr('data-id', pBranchSetting.CashCode)
+        $('#txtDriverSeq').attr('data-id', pBranchSetting.DriverSeq)
+        $('#txtSheepOutRes').attr('data-id', pBranchSetting.SheepOutRes)
+        $('#txtFontPath').val(pBranchSetting.FontPath)
+        $('#txtEmpDate').val(pBranchSetting.EmpDate)
+        $('#txtNewOrderTime').val(pBranchSetting.NewOrderTime)
+        $('#txtCompIdPost').val(pBranchSetting.CompIdPost)
+        $('#txtBranchAccount').val(pBranchSetting.BranchAccount)
+        $('#txtDeliveryTrans').val(pBranchSetting.DeliveryTrans)
+        $('#txtDiscountMax').val(pBranchSetting.DiscountMax)
+        $('#txtStoreBasic').attr('data-id', pBranchSetting.StoreBasic)
+        $('#txtFraction').val(pBranchSetting.Fraction)
+        $('#txtShortNum').val(pBranchSetting.ShortNum)
+        $('#txtCostCenter').val(pBranchSetting.CostCenter)
+        $('#txtClientStoreId').val(pBranchSetting.ClientStoreId)
+        $('#txtEmpCostId').val(pBranchSetting.EmpCostId)
+        $('#txtAllowSwithoutcprINTers').val(pBranchSetting.AllowSwithoutcprINTers)
+        $('#txtStoreProduction').attr('data-id', pBranchSetting.StoreProduction)
+        $('#txtImgPath').val(pBranchSetting.ImgPath)
+        $('#txtInvoiceRemark').val(pBranchSetting.InvoiceRemark)
+        $('#txtOrderRemark').val(pBranchSetting.OrderRemark)
+         $('#txtMailHost').val(pBranchSetting.MailHost)
+         $('#txtMailPassword').val(pBranchSetting.MailPassword)
+         $('#txtMailPort').val(pBranchSetting.MailPort)
+         $('#txtMailSubject').val(pBranchSetting.MailSubject)
+         $('#txtMailBody').val(pBranchSetting.MailBody)
+         $('#txtMailFrom').val(pBranchSetting.MailFrom)
+        $('#txtMailTo').val(pBranchSetting.MailTo)
+
+
+        $('#txtBoxId').val(pBranchSetting.BOX_ID)
+        $('#txtCostId').val(pBranchSetting.CostID)
+        $('#txtVatAccount').val(pBranchSetting.VatAccount)
+        $('#txtTotalAccount').val(pBranchSetting.TotalAccount)
+        $('#txtInsuranceAccount').val(pBranchSetting.InsuranceAccount)
+        $('#txtReturnAccount').val(pBranchSetting.ReturnAccount)
+        $('#txtMadaPerc').val(pBranchSetting.MadaPerc)
+        $('#txtVisaPerc').val(pBranchSetting.VisaPerc)
+        $('#NumberReports').val(JSON.parse("[" + pBranchSetting.NumberReports + "]"))
+        //Checkboxes
+
+
+        $('#chkAssemblingPrINTer').prop('checked', pBranchSetting.AssemblingPrINTer)
+        $('#chkModifyInvoice').prop('checked', pBranchSetting.ModifyInvoice)
+        $('#chkPrINTCancelInvoice').prop('checked', pBranchSetting.PrINTCancelInvoice)
+        $('#chkPrINTUpdateInvoice').prop('checked', pBranchSetting.PrINTUpdateInvoice)
+        $('#chkAutoOpenPeriod').prop('checked', pBranchSetting.AutoOpenPeriod)
+        $('#chkEnterHelfoodAllowed').prop('checked', pBranchSetting.EnterHelfoodAllowed)
+        $('#chkEnterPartbuildAllowed').prop('checked', pBranchSetting.EnterPartbuildAllowed)
+        $('#chkManualProduction').prop('checked', pBranchSetting.ManualProduction)
+        $('#chkAssemblingPost').prop('checked', pBranchSetting.AssemblingPost)
+        $('#chkChoiceStoreProdAuto').prop('checked', pBranchSetting.ChoiceStoreProdAuto)
+        $('#chkDeliveryCashier').prop('checked', pBranchSetting.DeliveryCashier)
+        $('#chkPayCashierAmount').prop('checked', pBranchSetting.PayCashierAmount)
+        $('#chkDisplayDirverAccount').prop('checked', pBranchSetting.DisplayDirverAccount)
+        $('#chkDisplayUpdateDirver').prop('checked', pBranchSetting.DisplayUpdateDirver)
+        $('#chkAutoClosePeriod').prop('checked', pBranchSetting.AutoClosePeriod)
+        $('#chkChangeUpdateCashier').prop('checked', pBranchSetting.ChangeUpdateCashier)
+        $('#chkChangeUpdateDate').prop('checked', pBranchSetting.ChangeUpdateDate)
+        $('#chkConvertProductionFullQty').prop('checked', pBranchSetting.ConvertProductionFullQty)
+        $('#chkCloseFormUpdateAuto').prop('checked', pBranchSetting.CloseFormUpdateAuto)
+        $('#chkDecreaseProdAuto').prop('checked', pBranchSetting.DecreaseProdAuto)
+        $('#chkShowRefItem').prop('checked', pBranchSetting.ShowRefItem)
+        $('#chkShowRefProduct').prop('checked', pBranchSetting.ShowRefProduct)
+        $('#chkAllowBlkList').prop('checked', pBranchSetting.AllowBlkList)
+        $('#chkAllowCancelInvoice').prop('checked', pBranchSetting.AllowCancelInvoice)
+        $('#chkPrINTBasicInvId').prop('checked', pBranchSetting.PrINTBasicInvId)
+        $('#chkShowAllInvoiceForCancel').prop('checked', pBranchSetting.ShowAllInvoiceForCancel)
+        $('#chkShowAllInvoiceForUpdate').prop('checked', pBranchSetting.ShowAllInvoiceForUpdate)
+        $('#chkAllowDiscount').prop('checked', pBranchSetting.AllowDiscount)
+        $('#chkAddQyProductbeforeSpend').prop('checked', pBranchSetting.AddQyProductbeforeSpend)
+        $('#chkUpdateInvoiceDriver').prop('checked', pBranchSetting.UpdateInvoiceDriver)
+        $('#chkShowQtyZero').prop('checked', pBranchSetting.ShowQtyZero)
+    }
+
+    </script>
+    <!--First Last Next Prevuse-->
+    <script>
+    var vDataSearch;
+    function funGetData() {
+        $.get('/BranchSetting/funBranchSetting',
+            {
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+            function (data, status) {
+                vDataSearch = data;
+            })
+    }
+
+    // Next - Previous - First - Last
+
+    var index = 0;
+
+    $('#btnFirst').click(function () {
+         $.get('/BranchSetting/funBranchSetting',
+            {
+                //pQueryTypeId: '401'
+                pQueryTypeId: '@clsQueryType.qSelect'
+            },
+             function (data, status) {
+                 vDataResult = JSON.parse(data)
+
+                 displayData(vDataResult)
+            })
+    });
+    $('#btnLast').click(function () {
+         $.get('/BranchSetting/funBranchSetting',
+            {
+                pQueryTypeId: '402'
+            },
+             function (data, status) {
+                 vDataSearch = JSON.parse(data);
+                 displayData(vDataSearch)
+            })
+    });
+
+    $('#btnNext').click(function () {
+        var vBranchSettingId = $('#txtBranchSettingId').val();
+        
+        console.log(vBranchSettingId)
+
+         $.get('/BranchSetting/funBranchSetting',
+            {
+                pQueryTypeId: '403',
+                pBranchSettingId: vBranchSettingId
+            },
+             function (data, status) {
+
+                 vDataSearch = JSON.parse(data);
+                 console.log(vDataSearch[0])
+                 if (vDataSearch[0] != undefined) {
+                     displayData(vDataSearch)
+                 }
+            })
+    });
+
+    $('#btnPrev').click(function () {
+        //var vBranchSettingId = $('.txtBranchSettingId').val();
+        var vBranchSettingId = $('#txtBranchSettingId').val();
+        console.log(vBranchSettingId)
+
+         $.get('/BranchSetting/funBranchSetting',
+            {
+                pQueryTypeId: '404',
+                pBranchSettingId: vBranchSettingId
+            },
+             function (data, status) {
+                 vDataSearch = JSON.parse(data);
+
+                 if (vDataSearch[0] != undefined) {
+                     displayData(vDataSearch)
+                 }
+            })
+    });
+
+
+    // Get Data
+    function displayData(pData) {
+        vDataResult = pData
+        if (vDataResult) {
+            funLoadHead(pData)
+        }
+
+    }
+    </script>
+    <script>
+    // Open Customer Supplier Modal
+    $('#txtEmpAtType').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/EmpAtTypeSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divEmpAtTypeSelect', function () {
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divEmpAtTypeName').text();
+                    // Get Lookup Data
+                    var vLookupIdElement = $('.txtEmpAtType');
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+
+
+    // Open Customer Supplier Modal
+    $('#txtFoodPrepareCat').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/FoodPrepareCatSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divFoodPrepareCatSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divFoodPrepareCatName').text();
+
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtFoodPrepareCat')
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+    // Open Customer Supplier Modal
+    $('#txtSheepCatProduct').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/SheepCatProductSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divSheepCatProductSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divSheepCatProductName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtSheepCatProduct')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+    // Open Customer Supplier Modal
+    $('#txtSheepCat').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/SheepCatSearch';
+           // var vURL = '/ResItem/CatAccountSearch_124';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divSheepCatSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divSheepCatName').text();
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtSheepCat')
+
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+
+
+
+
+    // Open Customer Supplier Modal
+    $('#txtRiceCat').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/RiceCatSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divRiceCatSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divRiceCatName').text();
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtRiceCat')
+
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                })
+            })
+        }
+    })
+
+    // Open Customer Supplier Modal
+    $('#txtSheepOutRes').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/SheepOutResSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divSheepOutResSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divSheepOutResName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtSheepOutRes')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+
+    // Open Customer Supplier Modal
+    $('#txtSellStore').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/SellStoreSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divSellStoreSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divSellStoreName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtSellStore')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+
+
+    // Open Customer Supplier Modal
+    $('#txtPlateCode').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/PlatCodeSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divPlateCodeSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divPlateCodeName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtPlateCode')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    /////////////////////////
+    // Open Customer Supplier Modal
+    $('#txtSellAcc').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/SellAccSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divSellAccSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divSellAccName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtSellAcc')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    //////////////////////
+    // Open Customer Supplier Modal
+    $('#txtRentAcc').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/RentAccSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divRentAccSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divRentAccName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtRentAcc')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    /////////////////////////////
+    // Open Customer Supplier Modal
+    $('#txtPlateUnit').on('keyup dblclick', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/PlatUnitSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divPlateUnitSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divPlateUnitName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtPlateUnit')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    ////////////////////////////////////////
+    // Open Customer Supplier Modal
+    $('#txtPlateStore').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/PlatestoreSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divPlateStoreSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divPlateStoreName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtPlateStore')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    ///////////////////////////////////////
+    // Open Customer Supplier Modal
+    $('#txtpInsurAcc').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/InsurAccSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divInsurAccSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divInsurAccName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtpInsurAcc')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    ///////////////////////////////////////////
+    // Open Customer Supplier Modal
+    $('#txtCommAccount').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/CommAccountSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divCommAccountSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divCommAccountName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtCommAccount')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+    //////////////////////////////////////
+    ///////////////////////////////////////////
+    // Open Customer Supplier Modal
+    $('#txtDefaultLocation').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/DefaultLocationSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divDefaultLocationSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divDefaultLocationName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtDefaultLocation')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+    ///////////////////////////////////////////
+    // Open Customer Supplier Modal
+    $('#txtDefaultLocationDelivery').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/DefaultLocationDeliverySearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divDefaultLocationDeliverySelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divDefaultLocationDeliveryName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtDefaultLocationDelivery')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    ///////////////////////////////////////////
+    $('#txtBranchMgr').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/BranchMgrSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divBranchMgrSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divBranchMgrName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtBranchMgr')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    //////////////////////////////////////
+
+    $('#txtGrpAddPlate').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/GrpAddPlateSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divGrpAddPlateSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divGrpAddPlateName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtGrpAddPlate')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    //////////////////////////////////////
+
+    $('#txtProductTypeOut').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/ProductTypeOutSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divProductTypeOutSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divProductTypeOutName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtProductTypeOut')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    //////////////////////////////////////
+
+    $('#txtReservType').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/ReservTypeSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divReservTypeSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divReservTypeName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtReservType')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    //////////////////////////////////////
+
+    $('#txtKitchenPrINTer').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/KitchenPrinterSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divKitchenPrinterSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divKitchenPrinterName').text();
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtKitchenPrINTer')
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+
+    //////////////////////////////////////
+
+    $('#txtCashCode').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/CashCodeSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divCashCodeSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divCashCodeName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtCashCode')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    //////////////////////////////////////
+
+    $('#txtDriverSeq').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/BranchSetting/DriverSeqSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divDriverSeqSelect', function () {
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divDriverSeqName').text();
+
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtDriverSeq')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    //////////////////////////////////////
+
+
+
+    $('#txtStoreBasic').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/StoreSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divStoreSelect', function () {
+
+                    // Get Values
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divStoreName').text();
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtStoreBasic')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    //////////////////////////////////////
+    //////////////////////////////////////
+
+
+
+    $('#txtStoreProduction').on('keyup dblclick', function (e) {
+        var vValue = $(this).attr('data-val')
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/PRoduction/DestStoreSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divDestStoreSelect', function () {
+
+
+                    // Get Values
+                    var vLookupId = $(this).attr('data-id');
+                    var vLookupNameValue = $(this).find('.divDestStoreName').text();
+                    var vStoreCodeValue = $(this).find('.divDestStoreCode').text();
+
+                    // Get Lookup Data
+                    var vLookupIdElement = $('#txtStoreProduction')
+
+
+                    // Set Value
+                    vLookupIdElement.val(vLookupNameValue);
+                    vLookupIdElement.attr('data-id', vLookupId)
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+    //////////////////////////////////////
+
+    $('.btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/BranchSetting/SearchBranchSetting';
+        // Load Content of CostCenter Search
+        $('#BranchSettingDataModalContent').load(vURL);
+        // Modal Full
+        $('#BranchSettingDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#BranchSettingDataModal').modal('show');
+    })
+    //////////////////////////////////////////////////
+    // SElECT
+   /* $('body').on('click', '.btnSelect', function () {
+        var count = $("input[name='chkIsValid']:checked").length;
+        if (count == 0) {
+
+            // alert("No rows selected to Print");
+            return false;
+        }
+        else if (count == 1) {
+
+            // Selected Permissions
+            var vSelected = '';
+            // Check If All True Or False
+            var vBranchSettingId;
+            $('table > tbody > tr ').each(function () {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Check
+                if (vSelectedChk) {
+                    // Get Id
+                     vBranchSettingId = vElement.attr('data-id');
+                    // Add Selected Action
+                    vSelected += vBranchSettingId + ',';
+                    //vCount += $(this).length
+                }
+            });
+
+            //var vBody = $('.tblItemBody')
+            // close The Modal
+            $('#BranchSettingDataModal').modal('hide');
+
+            // Get Data From Gl Voucher After Select
+            $.get('/api/APIBranchSetting/BranchSettingGet',
+                {
+                    // Head Parameters
+                    pBranchSettingId: vBranchSettingId,
+                    // Query Type Id
+                    pQueryTypeId: '405'
+                },
+                function (data, status) {
+
+                    if (data != undefined && data != '') {
+                        // JSON Parse
+                        var vDataJSON = JSON.parse(data);
+                        console.log(vDataJSON[0])
+
+                        Object.keys(vDataJSON[0]).forEach(function (key, index) {
+
+                            if ($('#chk' + key).attr('type') == 'checkbox') {
+                                if (vDataJSON[0][key] == true)
+                                    $('#chk' + key).prop('checked', 'checked');
+                                else
+                                    $('#chk' + key).removeProp('checked');
+                            } else
+                                $('#txt' + key).val(vDataJSON[0][key]);
+                        });
+
+                        //$('#txtBranchSettingId').val(vDataJSON[0].BranchSettingId);
+                        //$('#txtCompanyId').val(vDataJSON[0].CompanyId);
+                        //$('#txtBranchDesc').val(vDataJSON[0].BranchDesc);
+                        //$('#txtBranchDescL').val(vDataJSON[0].BranchDescL);
+                        //$('#txtQtyPlateRice').val(vDataJSON[0].QtyPlateRice);
+                        //$('#txtBranchPhone').val(vDataJSON[0].BranchPhone);
+                        //$('#txtShowQty').val(vDataJSON[0].ShowQty);
+                        //$('#txtMaskAmount').val(vDataJSON[0].MaskAmount);
+                        //$('#txtInsuranceLimit').val(vDataJSON[0].InsuranceLimit);
+                        //$('#txtHoldInvTimer').val(vDataJSON[0].HoldInvTimer);
+                        //$('#txtPcDetectionType').val(vDataJSON[0].PcDetectionType);
+                        //$('#txtFormatDate').val(vDataJSON[0].FormatDate);
+                        //$('#txtEmpAtType').val(vDataJSON[0].EmpAtType);
+                        //$('#txtFoodPrepareCat').val(vDataJSON[0].FoodPrepareCat);
+                        //$('#txtSellAcc').val(vDataJSON[0].SellAcc);
+                        //$('#txtSellAcc').val(vDataJSON[0].SellAcc);
+
+                        //$('#txtBranchMgr').val(vDataJSON[0].txtBranchMgr);
+                        //$('#txtEmpDate').val(vDataJSON[0].EmpDate);
+                        //$('#txtFraction').val(vDataJSON[0].Fraction);
+                        //$('#txtGrpAddPlate').val(vDataJSON[0].GrpAddPlate);
+                        //$('#txtNewOrderTime').val(vDataJSON[0].NewOrderTime);
+                        //$('#txtShortNum').val(vDataJSON[0].ShortNum);
+                        //$('#txtProductTypeOut').val(vDataJSON[0].ProductTypeOut);
+                        //$('#txtCompIdPost').val(vDataJSON[0].CompIdPost);
+                        //$('#txtCostCenter').val(vDataJSON[0].CostCenter);
+                        //$('#txtReservType').val(vDataJSON[0].ReservType);
+                        //$('#txtBranchAccount').val(vDataJSON[0].BranchAccount);
+                        //$('#txtClientStoreId').val(vDataJSON[0].ClientStoreId);
+                        //$('#txtEmpCostId').val(vDataJSON[0].EmpCostId);
+                        //$('#txtDiscountMax').val(vDataJSON[0].DiscountMax);
+                        //$('#txtKitchenPrINTer').val(vDataJSON[0].KitchenPrINTer);
+                        //$('#txtCashCode').val(vDataJSON[0].CashCode);
+                        //$('#txtDiscountMax').val(vDataJSON[0].DiscountMax);
+                        //$('#txtAllowSwithoutcprINTers').val(vDataJSON[0].AllowSwithoutcprINTers);
+                        //$('#txtStoreProduction').val(vDataJSON[0].StoreProduction);
+                        //$('#txtStoreBasic').val(vDataJSON[0].StoreBasic);
+                        //$('#txtCashCode').val(vDataJSON[0].CashCode);
+                        //$('#txtDriverSeq').val(vDataJSON[0].DriverSeq);
+                        //$('#txtImgPath').val(vDataJSON[0].ImgPath);
+                        //$('#txtFontPath').val(vDataJSON[0].FontPath);
+                        //$('#txtInvoiceRemark').val(vDataJSON[0].InvoiceRemark);
+                    }
+                })
+        }
+    });*/
+    $(document).ready(function () {
+
+        // Get Data From Gl Voucher After Select
+        $.get('/api/APIBranchSetting/BranchSettingGet',
+            {
+                // Head Parameters
+               // pCompanyId: '@clsUser.vUserCompanyId',
+               //pBranchId: '@clsUser.vUserBranchId',
+               pBranchId: '@BranchId',
+                // Query Type Id
+                pQueryTypeId: '406'
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+        console.log(data)
+                    // JSON Parse
+                    var vDataJSON = JSON.parse(data);
+                    Object.keys(vDataJSON[0]).forEach(function (key, index) {
+                        if ($('#chk' + key).attr('type') == 'checkbox') {
+                        if (vDataJSON[0][key] == true)
+                        $('#chk' + key).prop('checked', 'checked');
+                        else $('#chk' + key).removeProp('checked');
+                        }
+                        // else  $('#txt' + key).val(vDataJSON[0][key]);
+                    });
+
+                    console.log(vDataJSON)
+
+
+                          $('#txtBranchSettingId').val(vDataJSON[0].BranchSettingId);
+                    $('#txtDeliveryTrans').val(vDataJSON[0].DeliveryTrans);
+                        $('#txtCompanyId').val(vDataJSON[0].BranchId);
+                        $('#txtBranchDesc').val(vDataJSON[0].BranchDesc);
+                        $('#txtBranchDescL').val(vDataJSON[0].BranchDescL);
+                    $('#txtQtyPlateRice').val(vDataJSON[0].QtyPlateRice);
+                    $('#txtPlateCode').val(vDataJSON[0].CatPlate);
+                    $('#txtPlateCode').attr('data-id', vDataJSON[0].PlateCode);
+                    $('#txtKitchenPrINTer').attr('data-id', vDataJSON[0].KitchenPrINTer);
+                        $('#txtBranchPhone').val(vDataJSON[0].BranchPhone);
+                        $('#txtShowQty').val(vDataJSON[0].ShowQty);
+                        $('#txtMaskAmount').val(vDataJSON[0].MaskAmount);
+                        $('#txtInsuranceLimit').val(vDataJSON[0].InsuranceLimit);
+                        $('#txtHoldInvTimer').val(vDataJSON[0].HoldInvTimer);
+                        $('#txtPcDetectionType').val(vDataJSON[0].PcDetectionType);
+                        $('#txtFormatDate').val(vDataJSON[0].FormatDate);
+                        $('#txtEmpAtType').val(vDataJSON[0].EmpAtType);
+                        $('#txtFoodPrepareCat').val(vDataJSON[0].FoodPrepareCat);
+                        $('#txtSellAcc').val(vDataJSON[0].SellAcc);
+                    $('#txtSellAcc').val(vDataJSON[0].SellAcc);
+                    $('#txtVatPerc').val(vDataJSON[0].VatPerc);
+                    $('#txtVatCode').val(vDataJSON[0].VatCode);
+                    $('#txtIBAN').val(vDataJSON[0].IBAN);
+
+                        $('#txtBranchMgr').val(vDataJSON[0].txtBranchMgr);
+                        $('#txtEmpDate').val(vDataJSON[0].EmpDate);
+                        $('#txtFraction').val(vDataJSON[0].Fraction);
+                        $('#txtGrpAddPlate').val(vDataJSON[0].GrpAddPlate);
+                        $('#txtNewOrderTime').val(vDataJSON[0].NewOrderTime);
+                        $('#txtShortNum').val(vDataJSON[0].ShortNum);
+                        $('#txtProductTypeOut').val(vDataJSON[0].ProductTypeOut);
+                        $('#txtCompIdPost').val(vDataJSON[0].CompIdPost);
+                        $('#txtCostCenter').val(vDataJSON[0].CostCenter);
+                        $('#txtReservType').val(vDataJSON[0].ReservType);
+                        $('#txtBranchAccount').val(vDataJSON[0].BranchAccount);
+                        $('#txtClientStoreId').val(vDataJSON[0].ClientStoreId);
+                        $('#txtEmpCostId').val(vDataJSON[0].EmpCostId);
+                        $('#txtDiscountMax').val(vDataJSON[0].DiscountMax);
+                        $('#txtKitchenPrINTer').val(vDataJSON[0].KPrinter);
+                    $('#txtCashCode').val(vDataJSON[0].CashCode);
+                    $('#txtDiscountMax').val(vDataJSON[0].DiscountMax);
+                    $('#txtAllowSwithoutcprINTers').val(vDataJSON[0].AllowSwithoutcprINTers);
+                    $('#txtStoreProduction').val(vDataJSON[0].storeProdname);
+                    $('#txtStoreBasic').attr('data-id', vDataJSON[0].StoreBasic);
+                    $('#txtStoreBasic').val(vDataJSON[0].storebasicname);
+                    $('#txtCashCode').val(vDataJSON[0].CashCode);
+                    $('#txtDriverSeq').val(vDataJSON[0].DriverSeq);
+                    $('#txtImgPath').val(vDataJSON[0].ImgPath);
+           $('#blah').attr('src',  vDataJSON[0].LocationImgPath);
+             $('#blah').attr('data', vDataJSON[0].ImgPath)
+                $('#blah').attr('locationImg', vDataJSON[0].LocationImgPath)
+
+                    $('#txtFontPath').val(vDataJSON[0].FontPath);
+                    $('#txtInvoiceRemark').val(vDataJSON[0].InvoiceRemark);
+                    $('#txtOrderRemark').val(vDataJSON[0].OrderRemark);
+                    $('#txtMailHost').val(vDataJSON[0].MailHost)
+                    $('#txtMailPassword').val(vDataJSON[0].MailPassword)
+                    $('#txtMailPort').val(vDataJSON[0].MailPort)
+                    $('#txtMailSubject').val(vDataJSON[0].MailSubject)
+                    $('#txtMailBody').val(vDataJSON[0].MailBody)
+                    $('#txtMailFrom').val(vDataJSON[0].MailFrom)
+                    $('#txtMailTo').val(vDataJSON[0].MailTo)
+                    $('#txtBoxId').val(vDataJSON[0].BOX_ID)
+                    $('#txtCostId').val(vDataJSON[0].CostID)
+                    $('#txtVatAccount').val(vDataJSON[0].VatAccount)
+                    $('#txtTotalAccount').val(vDataJSON[0].TotalAccount)
+                    $('#txtInsuranceAccount').val(vDataJSON[0].InsuranceAccount)
+                    $('#txtMadaPerc').val(vDataJSON[0].MadaPerc)
+                    $('#txtVisaPerc').val(vDataJSON[0].VisaPerc)
+                    $('#NumberReports').val(JSON.parse("[" + vDataJSON[0].NumberReports + "]"))
+
+                    $('#txtSheepCat').attr('data-id', vDataJSON[0].SheepCat)
+                    $('#txtSheepCat').val(vDataJSON[0].SheepCatName)
+                    $('#txtSheepOutRes').attr('data-id', vDataJSON[0].SheepOutRes)
+                    $('#txtSheepOutRes').val(vDataJSON[0].SheepOutResName)
+                }
+            });
+    });
+
+
+
+    //Image
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#blah').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+            $('#blah').attr('data', $('input[type=file]').val().split('\\').pop())
+        $('#blah').attr('locationImg', '/Image/'+$('input[type=file]').val().split('\\').pop())
+
+        }
+    }
+
+    $("#imgFile").change(function () {
+        readURL(this);
+
+
+    });
+    function changeimage() {
+        var formdata = new FormData(); //FormData object
+        var fileInput = document.getElementById('imgFile');
+        //Iterating through each files selected in fileInput
+        for (i = 0; i < fileInput.files.length; i++) {
+            //Appending each file to FormData object
+            formdata.append(fileInput.files[i].name, fileInput.files[i]);
+        }
+        //Creating an XMLHttpRequest and sending
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/BranchSetting/Upload');
+        xhr.send(formdata);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                //alert(xhr.responseText);
+            }
+        }
+        return false;
+    }
+
+    </script>
+

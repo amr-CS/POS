@@ -1,0 +1,305 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    //Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+    Layout = null;
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblStoreConversionBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>رقم التحويل<input type="text" class="form-control txtCode" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                التاريخ
+                                <input type="date" class="form-control txtConvDate" />
+                            </div>
+                            <div class="col-md-6">
+                                تحويل من  مخزن
+                                <select id="selectStore" multiple class="selectStore form-control" name="StoreId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                               الي مخزن
+                                <select id="selectStoreSource" multiple class="selectStoreSource form-control" name="StoreSourceId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-6">
+                              
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearch">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblStoreConversionSearch">
+            <thead>
+                <tr>
+                    <th align="center" class="btnCheckAll" data-checked="false">تحديد الكل</th>
+                    <th align="center">رقم البيان</th>
+                    <th align="center">التاريخ</th>
+                    <th align="center">المخزن</th>
+                    <th align="center">المخزن المصدر</th>
+                    <th align="center">ملاحظات</th>
+                </tr>
+            </thead>
+
+            <tbody class="tblStoreConversionSearchBody"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+<script>
+
+
+    // Actione Load
+    $(document).ready(function () {
+
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        $('.txtConvDate').val(today);
+
+        $('#selectStore').append('<option data-id="" value="" sort-id="">-</option>');
+        $('#selectStoreSource').append('<option data-id="" value="" sort-id="">-</option>');
+        funGetLists();
+
+
+
+        var vCode = $('.txtCode').val();
+        //var vDate = $('.txtConvDate').val();
+        var vDate = $('.txtConvDate').val();;
+        var vstore = $('#selectStore').val();
+        var vSource = $('#selectStoreSource').val();
+
+        // Get Row
+        funGetStoreConversionData(vCode, today, vstore, vSource)
+    });
+
+    function funGetLists() {
+        //$.get('/api/APIVehicle/VehicleGET',
+        $.post('/StoreConversion/GetStoreList',
+            {
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    var vSelectListStore = '';
+                    var vSelectListSource = '';
+                   
+                    for (var m = 0; m < vDataResult[0].tblStore.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListStore += '<option  value = "' + vDataResult[0].tblStore[m].StoreId + '"  sort-id="' + m + '" > ' + vDataResult[0].tblStore[m].StoreNameL1 + '</option >'
+
+                    }
+                    for (var m = 0; m < vDataResult[0].tblSourceStore.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListSource += '<option  value = "' + vDataResult[0].tblSourceStore[m].StoreId + '"  sort-id="' + m + '" > ' + vDataResult[0].tblSourceStore[m].StoreNameL1 + '</option >'
+
+                    }
+               
+
+
+
+                    $('#selectStore').append(vSelectListStore);
+                    $('#selectStore').selectpicker('refresh');
+
+                    $('#selectStoreSource').append(vSelectListSource);
+                    $('#selectStoreSource').selectpicker('refresh');
+                }
+            })
+
+    }
+
+
+
+
+
+
+
+
+    //function Append
+    function funStoreConversionRowConfig(pStoreConversionRow) {
+        // Content
+        var RowContent = '<tr data-id="' + pStoreConversionRow.StoreConversionId + '">' +
+            '<td align="center"><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pStoreConversionRow.StoreConversionId + '"/></td> ' +
+            '<td align="center">' + pStoreConversionRow.StoreConversionCode + '</td>' +
+            '<td align="center">' + pStoreConversionRow.StoreConversionDate + '</td>' +
+            '<td align="center">' + pStoreConversionRow.StoreName + '</td>' +
+            '<td align="center">' + pStoreConversionRow.SourceStoreName + '</td>' +
+
+            '<td align="center">' + pStoreConversionRow.Notes + '</td>' +
+            +'</tr > '
+        return RowContent
+    }
+    function funGetStoreConversionData(pCode,pDate,pStore,pSource) {
+
+ 
+        console.log('pDate' + pDate)
+        console.log('pSource' + pSource)
+
+        var vLstStore = [];
+        var vLstSource = [];
+    
+        if (pStore == null) {
+
+
+        }
+        else if (pStore.indexOf(',')) {
+            for (i = 0; i < pStore.length; i++) {
+                vLstStore.push(pStore[i]);
+            }
+            pStore = vLstStore.toString();
+
+        }
+        else {
+
+        }
+        if (pSource == null) {
+
+
+        }
+        else if (pSource.indexOf(',')) {
+            for (i = 0; i < pSource.length; i++) {
+                vLstSource.push(pSource[i]);
+            }
+            pSource = vLstSource.toString();
+
+        }
+        else {
+
+        }
+
+
+
+        var vDataResult;
+        if (pStore == "") {
+            pStore = null
+        }
+        if (pSource == "") {
+            pSource = null
+        }
+        //$.get('/api/APIStoreConversion/StoreConversionGET',
+        $.post('/StoreConversion/FilterStoreConversion',
+            {
+                // Head Parameters
+                pStoreConversionCode: pCode,
+                pSearchDate: pDate,
+                pQueryTypeId: '409',
+                pLstStores: pStore,
+                pLstSource: pSource
+            },
+            function (data, status) {
+                $('.tblStoreConversionSearchBody').html('');
+
+                if (data != undefined && data != '' ) {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+
+                    $.each(vDataResult, function (m, StoreConversionData) {
+                        // GET Cash Desk Row Content
+
+                        var vStoreConversionRowContent = funStoreConversionRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblStoreConversionSearchBody').append(vStoreConversionRowContent);
+                    });
+                }
+               
+
+            })
+
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearch').on('click', function () {
+        var vCode = $('.txtCode').val();
+        //var vDate = $('.txtConvDate').val();
+        var vDate;
+        var vstore = $('#selectStore').val();
+        var vSource = $('#selectStoreSource').val();
+        if ($('.txtConvDate').val().trim() != '') {
+            vDate = $('.txtConvDate').val();
+        }
+        else {
+            vDate = null
+        }
+
+
+        // Get Row
+        funGetStoreConversionData(vCode, vDate, vstore, vSource)
+    })
+
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+</script>

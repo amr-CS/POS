@@ -1,0 +1,17 @@
+﻿@model IEnumerable<appSERP.Models.Invoice>
+@{
+    Layout = null;
+}
+
+@foreach (var pGLVoucherRow in Model)
+{
+    <tr class="tblGlVoucherRow" data-id="@pGLVoucherRow.InvId">
+        <td><input type="checkbox" class="clsChk" name="chkIsValid" data-id=" @pGLVoucherRow.InvId" /></td>
+        <td class="code"> @pGLVoucherRow.InvCode </td>
+        <td> @pGLVoucherRow.InvDate </td>
+        <td>@pGLVoucherRow.Total </td>
+        <td>@pGLVoucherRow.CustomerName</td>
+        <td>@pGLVoucherRow.InvPhoneNo</td>
+
+    </tr>
+}

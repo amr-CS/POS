@@ -1,0 +1,163 @@
+﻿
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "StoreSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divDestStore {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divDestStoreSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divDestStoreSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divDestStoreNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">المخازن</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divDestStore">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyStore"></tbody>
+    </table>
+
+</div>
+
+
+<!-- Store GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Store GET
+        funStoreGET();
+    })
+    // Store GET
+    function funStoreGET() {
+
+        $.get('/api/APIStore/StoreGET',
+            {
+                pIsAccountDetail: true,
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            }, function (data, status) {
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyStore');
+
+                console.log(vDataResult)
+                // Stores
+                $.each(vDataResult, function (i, StoreData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].StoreAccountId + '">';
+
+                    var vStoreName = vDataResult[i].StoreNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vStoreName = vDataResult[i].StoreNameL2;
+                        }
+                    vRowContent += '<td data-id="' + vDataResult[i].StoreId + '">';
+                    vRowContent += '<div class="divDestStoreSelect d-flex p-2" data-id="' + vDataResult[i].StoreId + '">';
+                    vRowContent += '<div class="divDestStoreCode px-4">' + vDataResult[i].StoreCode + '</div>';
+                    vRowContent += '<div class="divDestStoreName  px-4">' + vDataResult[i].StoreNameL1 + '</div>';
+
+
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+
+
+
+
+    }
+
+</script>
+
+<!-- Search Store -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divDestStoreSelect').each(function () {
+
+                // Get Store Code
+                var vStoreCode = $(this).find('.divDestStoreId').text();
+                var vStoreName = $(this).find('.divDestStoreName').text();
+
+                // Check Result
+                if (vStoreCode.search(vSearchInput) != -1 || vStoreName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+        }
+    })
+</script>

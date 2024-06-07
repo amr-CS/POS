@@ -1,0 +1,449 @@
+﻿@using appSERP.Views.Shared.appResource
+
+<!-- Data -->
+<div class="header bg-gradient-primary pb-8 pt-md-8 mt-1" id="divStat">
+    <div class="container-fluid">
+        <div class="header-body">
+            <!-- Card stats -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">@appResource.lblAsset</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-white h3 text-success rounded-circle">
+                                                <i class="fa fa-check"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">@appResource.AssetContract</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetContractCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-white h3  text-warning rounded-circle">
+                                                <i class="fa fa-exclamation-triangle"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">@appResource.AssetContractDetail</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetContractDetailCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-danger rounded-circle">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">@appResource.lblAssetContractPayType</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetContractPayTypeCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-danger rounded-circle">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblAssetDep</h6>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetDepCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-success rounded-circle">
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">@appResource.lblAssetReasonType</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetReasonTypeCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-success rounded-circle">
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col" style="width:100px">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblAssetRelease</h6>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetReleaseCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-danger rounded-circle">
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblAssetReleaseDetail</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetReleaseDetailCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!--Second Row-->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblAssetTrans</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetTransCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblAssetUnDep</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbAssetUnDepCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblBuyGroup</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbBuyGroupCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblFixedAssetCompany</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbFixedAssetCompanyCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblFixedAssetCompanyType</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbFixedAssetCompanyTypeCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblFixedAssetUnit</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbFixedAssetUnitCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblGroup</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbGroupCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblMainGroups</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbMainGroupCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+       
+
+
+            <!--Third Row-->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblSite</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbSite</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblSiteDetail</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbSiteDetail</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblSiteDonor</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbSiteDonor</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">@appResource.lblTrust</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@ViewBag.vbTrust</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

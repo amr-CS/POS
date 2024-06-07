@@ -1,0 +1,167 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "CountrySearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divCountry {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divcountrySelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divcountrySelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divCountryNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Country</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divCountry">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyCountry"></tbody>
+    </table>
+</div>
+
+
+<!-- Country GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Country GET
+        funCountryGET();
+    })
+
+    // Country GET
+    function funCountryGET() {
+
+        $.get('/api/APICountry/CountryGET',
+            {
+
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyCountry');
+
+
+                // Countrys
+                $.each(vDataResult, function (i, CountryData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].CountryId + '">';
+
+                        var vCountryName = vDataResult[i].CountryNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCountryName = vDataResult[i].CountryNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].CountryId + '">';
+                            vRowContent += '<div class="divcountrySelect d-flex p-2" data-id="' + vDataResult[i].CountryId + '">';
+                                vRowContent += '<div class="divCountryNo px-4">' + vDataResult[i].CountryCode + '</div>';
+                                vRowContent += '<div class="divCountryName px-4">' + vCountryName + '</div>';
+                                //vRowContent += '<div class="divCountryCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search Country -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divcountrySelect').each(function () {
+
+                // Get Country Code
+                var vCountryCode = $(this).find('.divCountryNo').text();
+                var vCountryName = $(this).find('.divCountryName').text();
+
+                if (vCountryCode.search(vSearchInput) != -1 || vCountryName.search(vSearchInput) != -1) {
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                    console.log('found')
+                }
+                else {
+                    //$(this).removeClass('table-success');
+                    //$(this).show();
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            //$('.divcountrySelect').removeClass('table-success');
+            //$(this).show();
+            $('.divcountrySelect').each(function () {
+
+              
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+             
+              
+
+            })
+
+        }
+    })
+</script>
+

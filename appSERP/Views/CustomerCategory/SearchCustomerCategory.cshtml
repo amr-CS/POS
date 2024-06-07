@@ -1,0 +1,169 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "CustomerCategorySearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divCustomerCategory {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divCustomerCategorySelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divCustomerCategorySelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divCustomerCategoryNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Type</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divCustomerCategory">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyCustomerCategory"></tbody>
+    </table>
+</div>
+
+
+<!-- CustomerCategory GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // CustomerCategory GET
+        funCustomerCategoryGET();
+    })
+
+    // CustomerCategory GET
+    function funCustomerCategoryGET() {
+
+        $.get('/api/APICustomerCategory/CustomerCategoryGET',
+            {
+             
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyCustomerCategory');
+
+
+                // CustomerCategorys
+                $.each(vDataResult, function (i, CustomerCategoryData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].CustomerCategoryId + '">';
+
+                        var vCustomerCategoryName = vDataResult[i].CustomerCategoryNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCustomerCategoryName = vDataResult[i].CustomerCategoryNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].CustomerCategoryId + '">';
+                            vRowContent += '<div class="divCustomerCategorySelect d-flex p-2" data-id="' + vDataResult[i].CustomerCategoryId + '">';
+                    vRowContent += '<div class="divCustomerCategoryNo px-4">' + vDataResult[i].CustomerCategoryCode + '</div>';
+                                vRowContent += '<div class="divCustomerCategoryName px-4">' + vCustomerCategoryName + '</div>';
+                                //vRowContent += '<div class="divCustomerCategoryCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search CustomerCategory -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divCustomerCategorySelect').each(function () {
+
+                // Get CustomerCategory Code
+                var vCustomerCategoryCode = $(this).find('.divCustomerCategoryNo').text();
+                var vCustomerCategoryName = $(this).find('.divCustomerCategoryName').text();
+
+                if (vCustomerCategoryCode.search(vSearchInput) != -1 || vCustomerCategoryName.search(vSearchInput) != -1) {
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                    console.log('found')
+                }
+                else {
+                    //$(this).removeClass('table-success');
+                    //$(this).show();
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            //$('.divCustomerCategorySelect').removeClass('table-success');
+            //$(this).show();
+            $('.divCustomerCategorySelect').each(function () {
+
+           
+
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                
+
+            })
+        }
+    })
+</script>
+

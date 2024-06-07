@@ -1,0 +1,175 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "AccountSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divAccount {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divAccountSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divAccountSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divAccountNo{
+        width:60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource.lblAccountDirectory</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divAccount">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyAccount"></tbody>
+    </table>
+
+</div>
+
+
+<!-- Account GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Account GET
+        funAccountGET();
+    })
+
+    // Account GET
+    function funAccountGET() {
+ 
+        $.get('/api/APIGLVoucher/AccountLastChildGET',
+            {
+
+                pParentId : null,
+                AccountIsActive: true,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            }, function (data, status) {
+                
+                // JSON
+                var vDataResult = JSON.parse(data);
+                console.log(vDataResult)
+                // Table Body
+                var vTableBody = $('.tblBodyAccount');
+
+
+                // Accounts
+                $.each(vDataResult, function (i, accountData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].AccountId + '">';
+     
+                        var vAccountName = vDataResult[i].AccountNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vAccountName = vDataResult[i].AccountNameL2;
+                        }
+                            vRowContent += '<td data-id="' + vDataResult[i].AccountId + '">';
+                            vRowContent += '<div class="divAccountSelect d-flex p-2" data-id="' + vDataResult[i].AccountId + '">';
+                            vRowContent += '<div class="divAccountNo px-4">' + vDataResult[i].AccountNo + '</div>';
+                            vRowContent += '<div class="divAccountName px-4">' + vAccountName + '</div>';
+                            vRowContent += '<div class="divAccountCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '<div class="divAccountIsCostCenter d-none px-4">' + vDataResult[i].AccountIsCostCenter + '</div>';
+                            vRowContent += '<div class="divAccountCurrency d-none px-4">' + vDataResult[i].CurrencyId + '</div>';
+                            vRowContent += '<div class="divAccountCurrencyName d-none px-4">' + vDataResult[i].CurrencyNameL1 + '</div>';
+                            vRowContent += '<div class="divCostCenterId d-none px-4">' + vDataResult[i].CostCenterId + '</div>';
+                            vRowContent += '<div class="divCostCenterName d-none px-4">' + vDataResult[i].CostCenterNameL1 + '</div>';
+                            vRowContent += '<div class="divCostCenterCode d-none px-4">' + vDataResult[i].CostCenterCode + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+
+
+    }
+
+</script>
+
+<!-- Search Account -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divAccountSelect').each(function () {
+
+                // Get Account Code
+                var vAccountCode = $(this).find('.divAccountNo').text();
+                var vAccountName = $(this).find('.divAccountName').text();
+
+                // Check Result
+                if (vAccountCode.search(vSearchInput) != -1 || vAccountName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+            $('.divAccountSelect').each(function () {
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+            })
+        }
+    })
+</script>

@@ -1,0 +1,129 @@
+﻿@using appSERP.Views.Shared.appResource;
+@using appSERP.appCode.Setting.TimeSetting;
+@using appSERP.appCode.Setting.User;
+@using System.Data
+@{
+    ViewBag.Title = "GLVoucher";
+}
+<!-- Master -->
+@{ DataTable vDtReportData = ViewBag.vbData; }
+<!-- Detail -->
+@{ DataTable vDtReportDataDetail = ViewBag.vbDataDetail; }
+
+
+<!-- Header -->
+<div class="divRptViewTitle">
+    @Html.Action("Index", "ViewHeader", new { pHeaderTitle = appResource.lblEstimatedBudget, pIsNew = false })
+</div>
+
+@Html.Action("ReportTemplate", "ReportSetting")
+
+<!-- Report Options -->
+<div class="container-fluid divReportOptions">
+
+
+    <div class="w-100 bg-white divReportOptionsData">
+        <div class="row">
+            <!-- Account -->
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="contol-label">@appResource._Account</label>
+                    <select class="form-control selAccount">
+                        @*<option>الحساب رقم 1</option>*@
+                    </select>
+                </div>
+            </div>
+
+            <!-- Date From -->
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="contol-label">@appResource.dtFrom</label>
+                    <input class="form-control dtpFrom" type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" />
+                </div>
+            </div>
+
+            <!-- Date To -->
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="contol-label">@appResource.dtTo</label>
+                    <input class="form-control dtpTo" type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<div class="container-fluid table-responsive rptDtblReportData tblReportDataata">
+   
+</div>
+
+<script>
+      // Report Title
+    $('.divRptTitle').append('@appResource.lblEstimatedBudget');
+    $('.divRptTitle').append('<br>');
+
+    // Report Options
+    var vRptOptions = $('.divReportOptions').html();
+    $('.divRptOptions').html(vRptOptions);
+    $('.divReportOptions').remove();
+
+    // Table Data Body
+    var vRptData = $('.rptData').html();
+    $('.tblReportData').html(vRptData);
+    $('.rptData').remove();
+
+
+    // Report Run
+    $('.dtpFrom, .dtpTo').change(function () {
+
+        // Remove Data
+        $('.rptDtblReportData').html('');
+        // Get Date
+        var vDateFrom = $('.dtpFrom').val();
+        var vDateTo = $('.dtpTo').val();
+        var vAccountId = $('.selAccount option:selected').val();
+
+        // Data Model URL
+        var vDataURL = '/Report/EstimatedBudgetAccountPartialReport?pAccountId=' + vAccountId + '&pDateFrom=' + vDateFrom + '&pDateTo=' + vDateTo
+
+        // Load Content
+        $('.tblReportData').load(vDataURL);
+
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+
+        setTimeout(function () {
+
+          
+            var vAccountURL = '/Report/funGetAccount'
+            $.post(vAccountURL, {}, function (data,status) {
+
+                var vJSONRESULT = JSON.parse(data);
+                $.each(vJSONRESULT, function (i, Account) {
+                    if (i =0) {
+                        $('.selAccount').append('<option selected data-id="' + Account.AccountId + '" value = "' + Account.AccountId + '">' + Account.AccountNameL1 + '</option>')
+                    }
+                    else {
+                        $('.selAccount').append('<option data-id="' + Account.AccountId + '" value = "' + Account.AccountId + '">' + Account.AccountNameL1 + '</option>')
+                    }
+
+                })
+
+            }
+            )
+         
+        }, 1500)
+    })
+</script>
+
+
+
+
+
+

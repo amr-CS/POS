@@ -1,0 +1,206 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "StoreSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divStore {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divStoreSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divStoreSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divStoreNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Store</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divStore">
+    <table class="table table-bordered tblData border">
+        <thead>
+            <tr>
+                @*<th> رقم المخزن</th>
+
+                <th>اسم المخزن - عربي</th>
+                <th>اسم المخزن - انجليزي</th>
+                <th>الاسم المختصر</th>
+                <th>النوع</th>
+                <th>البلد</th>
+                <th>ملاحظات</th>
+                <th>التليفون</th>
+                <th>العنوان</th>
+                <th>المدينة</th>*@
+
+                <th>
+                    <div class=" d-flex p-2">
+                        <div class="divStoreNohead px-4"> رقم المخزن</div>
+                        <div class="divStoreNamehead px-4">اسم المخزن - عربي</div>
+                        <div class="divStoreNameL2head px-4">اسم المخزن - انجليزي </div>
+                        <div class="divStoreShortNamehead px-4">الاسم المختصر</div>
+                        <div class="divStoreTypeNamehead px-4">النوع</div>
+                        <div class="divCountryNamehead px-4"> البلد</div>
+                        <div class="divStoreNoteshead px-4">ملاحظات</div>
+                        <div class="divStorePhonehead px-4">التليفون</div>
+                        <div class="divStoreAddresshead px-4">العنوان</div>
+                        <div class="divCityNamehead px-4">المدينة</div>
+
+
+                    </div>
+                </th>
+
+
+            </tr>
+        </thead>
+        <tbody class="tblBodyStore"></tbody>
+    </table>
+</div>
+
+
+<!-- Store GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Store GET
+        funStoreGET();
+    })
+
+    // Store GET
+    function funStoreGET() {
+
+        $.get('/api/APIStore/StoreGET',
+            {
+
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyStore');
+
+
+                // Stores
+                $.each(vDataResult, function (i, StoreData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].StoreId + '">';
+
+                        var vStoreName = vDataResult[i].StoreNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vStoreName = vDataResult[i].StoreNameL2;
+                             }
+                    var vStoreTypeName = vDataResult[i].StoreTypeNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vStoreTypeName = vDataResult[i].StoreTypeNameL2;
+                    }
+                    var vCountryName = vDataResult[i].CountryNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCountryName = vDataResult[i].CountryNameL2;
+                    }
+                    var vCityName = vDataResult[i].CityNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCityName = vDataResult[i].CityNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].StoreId + '">';
+                            vRowContent += '<div class="divStoreSelect d-flex p-2" data-id="' + vDataResult[i].StoreId + '">';
+                                vRowContent += '<div class="divStoreNo px-4">' + vDataResult[i].StoreCode + '</div>';
+                               vRowContent += '<div class="divStoreName px-4">' + vDataResult[i].StoreNameL1 + '</div>';
+                              vRowContent += '<div class="divStoreNameL2 px-4">' + vDataResult[i].StoreNameL2 + '</div>';
+                               vRowContent += '<div class="divStoreShortName px-4">' + vDataResult[i].StoreShortName + '</div>';
+                              vRowContent += '<div class="divStoreTypeName px-4" data-id="' + vDataResult[i].StoreTypeId + '">' + vStoreTypeName + '</div>';
+                             vRowContent += '<div class="divCountryName px-4" data-id="' + vDataResult[i].CountryId + '">' + vCountryName + '</div>';
+                    vRowContent += '<div class="divStoreNotes px-4" >' + vDataResult[i].StoreNotes + '</div>';
+                    vRowContent += '<div class="divStorePhone px-4" >' + vDataResult[i].StorePhone + '</div>';
+                    vRowContent += '<div class="divStoreAddress px-4" >' + vDataResult[i].StoreAddress + '</div>';
+                    vRowContent += '<div class="divCityName px-4" data-id="' + vDataResult[i].CityId + '">' + vCityName + '</div>';
+
+                    vRowContent += '<div visibil class="divStoreIsActive d-none px-4" ><input type="checkbox" class="chkStoreIsActive"  id=chkStoreIsActive'+i+'"  checked="' + vDataResult[i].StoreIsActive + '" /></div>';
+                                //vRowContent += '<div class="divStoreCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search Store -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divStoreSelect').each(function () {
+
+                // Get Store Code
+                var vStoreCode = $(this).find('.divStoreNo').text();
+                var vStoreName = $(this).find('.divStoreName').text();
+
+                if (vStoreCode.search(vSearchInput) != -1 || vStoreName.search(vSearchInput) != -1) {
+
+                    $(this).addClass('table-success');
+                    $(this).hide();
+
+                    console.log('found')
+                }
+                else {
+                    $(this).removeClass('table-success');
+                    $(this).show();
+                }
+
+            })
+
+        }
+        else {
+            $('.divStoreSelect').removeClass('table-success');
+            $(this).show();
+        }
+    })
+</script>
+

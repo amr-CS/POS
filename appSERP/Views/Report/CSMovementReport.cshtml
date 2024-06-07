@@ -1,0 +1,261 @@
+﻿@using appSERP.Views.Shared.appResource;
+@using appSERP.appCode.Setting.TimeSetting;
+@using appSERP.appCode.Setting.User;
+@using System.Data
+@{
+    ViewBag.Title = "GLVoucher";
+}
+<!-- Master -->
+@{ DataTable vDtReportData = ViewBag.vbData; }
+<!-- Detail -->
+@{ DataTable vDtReportDataDetail = ViewBag.vbDataDetail; }
+
+
+<!-- Header -->
+<div class="divRptViewTitle">
+    @Html.Action("Index", "ViewHeader", new { pHeaderTitle = appResource.CSMovement, pIsNew = false })
+</div>
+
+@Html.Action("ReportTemplate", "ReportSetting")
+
+<!-- Report Options -->
+<div class="container-fluid divReportOptions">
+
+
+    <div class="w-100 bg-white divReportOptionsData">
+        <div class="row">
+
+            <!-- Customer -->
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="contol-label">@appResource._Customer</label>
+                    <select class="form-control selCS">
+                        @*<option>العميل رقم 1</option>*@
+                    </select>
+                </div>
+            </div>
+
+            <!-- Account -->
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="contol-label">@appResource._Account</label>
+                    <select class="form-control selAccount">
+                        @*<option>الحساب رقم 1</option>*@
+                    </select>
+                </div>
+            </div>
+
+            <!-- Date From -->
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="contol-label">@appResource.dtFrom</label>
+                    <input class="form-control dtpFrom" type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" />
+                </div>
+            </div>
+
+            <!-- Date To -->
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="contol-label">@appResource.dtTo</label>
+                    <input class="form-control dtpTo" type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" />
+                </div>
+            </div>
+
+            <!-- Cost Center -->
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label class="contol-label">@appResource._CostCenter</label>
+                    <select class="form-control selCostCenter">
+                        @*<option>مركز رقم 1</option>*@
+                    </select>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<div class="container-fluid table-responsive rptDtblReportData tblReportDataata">
+    @*<table class="table table-bordered table-hover tblData">
+        <thead>
+            <tr>
+                <th>@appResource._Account</th>
+                <th>@appResource._CostCenter</th>
+                <th>@appResource.GLVoucherDtlDebit</th>
+                <th>@appResource.GLVoucherDtlCredit</th>
+                <th>@appResource._DebitBase</th>
+                <th>@appResource._CreditBase</th>
+                <th>@appResource.BaseCurrencyValue</th>
+                <th>@appResource.GLVoucherDtlPayDebit</th>
+                <th>@appResource.GLVoucherDtlPayCredit</th>
+                <th>@appResource._Note</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (vDtReportData != null)
+            {
+                foreach (DataRow vDrwData in vDtReportData.Rows)
+                {
+                    <tr>
+                        @if (clsUser.vUserLanguageId == 1)
+                        {
+                            <td width="10%" align="center">@vDrwData["AccountNameL1"]</td>
+                        }
+                        else
+                        {
+                            <td width="10%" align="center">@vDrwData["AccountNameL2"]</td>
+                        }
+                        @if (clsUser.vUserLanguageId == 1)
+                        {
+                            <td width="10%" align="center">@vDrwData["CostCenterNameL1"]</td>
+                        }
+                        else
+                        {
+                            <td width="10%" align="center">@vDrwData["CostCenterNameL2"]</td>
+                        }
+
+                        <td width="10%" align="center">@vDrwData["GLVoucherDtlDebit"]</td>
+                        <td width="10%" align="center">@vDrwData["GLVoucherDtlCredit"]</td>
+                        <td width="10%" align="center">@vDrwData["GLVoucherDtlDebitBase"]</td>
+                        <td width="10%" align="center">@vDrwData["GLVoucherDtlCreditBase"]</td>
+                        <td width="10%" align="center">@vDrwData["BaseCurrencyValue"]</td>
+                        <td width="10%" align="center">@vDrwData["GLVoucherDtlPayDebit"]</td>
+                        <td width="10%" align="center">@vDrwData["GLVoucherDtlPayCredit"]</td>
+                        <td width="10%" align="center">@vDrwData["GLVoucherDtlNote"]</td>
+                    </tr>
+
+                }
+            }
+            else
+            {
+                    
+            }
+
+        </tbody>
+    </table>*@
+</div>
+
+<script>
+      // Report Title
+    $('.divRptTitle').append('@appResource.CSMovement');
+    $('.divRptTitle').append('<br>');
+
+    // Report Options
+    var vRptOptions = $('.divReportOptions').html();
+    $('.divRptOptions').html(vRptOptions);
+    $('.divReportOptions').remove();
+
+    // Table Data Body
+    var vRptData = $('.rptData').html();
+    $('.tblReportData').html(vRptData);
+    $('.rptData').remove();
+
+
+    // Report Run
+    $('.dtpFrom, .dtpTo').change(function () {
+
+        // Remove Data
+        $('.rptDtblReportData').html('');
+        // Get Date
+        var vDateFrom = $('.dtpFrom').val();
+        var vDateTo = $('.dtpTo').val();
+        var vCSId = $('.selCS option:selected').val();
+        var vAccountId = $('.selAccount option:selected').val();
+        var vCostCenterId = $('.selCostCenter option:selected').val();
+
+        // Data Model URL
+        var vDataURL = '/Report/CSMovementPartialReport?pCSId=' + vCSId + '&pDateFrom=' + vDateFrom + '&pDateTo=' + vDateTo  + '&pAccountId=' + vAccountId + '&pCostCenterId=' + vCostCenterId
+
+        // Load Content
+        $('.tblReportData').load(vDataURL);
+
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+
+        setTimeout(function () {
+
+            //// Account Path
+            //var vAccountPath = '/api/APIAccount/AccountGET';
+            //// Get Data
+            //$.get(vAccountPath, {}, function (data, status) {
+            //    var vJSONRESULT = JSON.parse(data);
+            //    $.each(vJSONRESULT, function (i, Account) {
+            //        $('.selAccount').append('<option data-id="' + Account.AccountId + '" value = "' + Account.AccountId + '">' + Account.AccountNameL1 + '</option>')
+            //    })
+            //});
+            var vAccountURL = '/Report/funGetAccount'
+            $.post(vAccountURL, {}, function (data,status) {
+              
+                var vJSONRESULT = JSON.parse(data);
+                $.each(vJSONRESULT, function (i, Account) {
+                    if (i =0) {
+                        $('.selAccount').append('<option selected data-id="' + Account.AccountId + '" value = "' + Account.AccountId + '">' + Account.AccountNameL1 + '</option>')
+                    }
+                    else {
+                        $('.selAccount').append('<option data-id="' + Account.AccountId + '" value = "' + Account.AccountId + '">' + Account.AccountNameL1 + '</option>')
+                    }
+                
+                })
+     
+            }
+            )
+            var vCustomerURL = '/Report/funGetCustomerSupplier'
+            $.post(vCustomerURL, {}, function (data, status) {
+            
+                    var vJSONRESULT = JSON.parse(data);
+                $.each(vJSONRESULT, function (i, Customer) {
+                    if (i = 0) {
+                        $('.selCS').append('<option selected data-id="' + Customer.CSId + '" value = "' + Customer.CSId + '">' + Customer.CSNameL1 + '</option>')
+                    }
+                    else {
+                        $('.selCS').append('<option data-id="' + Customer.CSId + '" value = "' + Customer.CSId + '">' + Customer.CSNameL1 + '</option>')
+                    }
+                      
+                    })
+           
+            }
+            )
+            var vCostCenterURL = '/Report/funGetCostCenter'
+            $.post(vCostCenterURL, {}, function (data, status) {
+            
+                    var vJSONRESULT = JSON.parse(data);
+                $.each(vJSONRESULT, function (i, CostCenter) {
+                    if (i = 0) {
+                        $('.selCostCenter').append('<option selected data-id="' + CostCenter.CostCenterId + '" value = "' + CostCenter.CostCenterId + '">' + CostCenter.CostCenterNameL1 + '</option>')
+                    }
+                    else {
+                        $('.selCostCenter').append('<option data-id="' + CostCenter.CostCenterId + '" value = "' + CostCenter.CostCenterId + '">' + CostCenter.CostCenterNameL1 + '</option>')
+
+                    }
+                     
+                    })
+            
+            }
+            )
+
+
+            //// Customer Supplier Path
+            //var vCSPath = '/api/APICustomerSupplier/CustomerSupplierGET';
+            //$.get(vCSPath, {}, function (data, status) {
+            //    var vJSONRESULT = JSON.parse(data);
+            //    $.each(vJSONRESULT, function (i, Customer) {
+            //        $('.selCS').append('<option data-id="' + Customer.CSId + '" value = "' + Customer.CSId + '">' + Customer.CSNameL1 + '</option>')
+            //    })
+
+            //});
+        }, 1500)
+    })
+</script>
+
+
+
+
+
+

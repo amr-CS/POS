@@ -1,0 +1,57 @@
+﻿@model appSERP.Models.FA.BuyGroupModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <!-- Header -->
+    <div class="container-fluid">
+        @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.BuyGroup, pId = Model.BuyGroupId })
+    </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.HiddenFor(model => model.BuyGroupId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.HiddenFor(model => model.BuyGroupId, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.BuyGroupId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.BuyGroupNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.BuyGroupNameL1, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.BuyGroupNameL1, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.BuyGroupNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.BuyGroupNameL2, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.BuyGroupNameL2, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group m-3">
+        <div class="custom-control custom-checkbox col-md-12">
+            @Html.EditorFor(model => model.BuyGroupIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "BuyGroupIsActive" } })
+            @Html.LabelFor(model => model.BuyGroupIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "BuyGroupIsActive" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+</div>
+}
+

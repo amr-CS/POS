@@ -1,0 +1,64 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+@if (Model.Rows.Count > 0)
+{
+    foreach (DataRow pData in Model.Rows)
+    {
+        <tr class="trBaseRow tblItemAddRow" data-changed="0" data-id="@pData["ItemAddId"]">
+            <td class="" width="5%">
+                <button class="btn btn-light btn-sm border btnItemAddAddRow" type="submit">
+                    <i class="fa fa-plus-circle"></i>
+                </button>
+            </td>
+            <td class="">
+                <div class="d-flex txtItemContent">
+                    <div class="col-sm-4 p-0">
+                        <input class="form-control form-control-sm text-center   txtItemContentId d-none" value="@pData["AddOrder"]" type="text" required />
+                        <input class="form-control form-control-sm text-center  txtItemContentCode" value="@pData["InvItemCode"]" type="text" required />
+                    </div>
+                    <div class="col-sm-8 p-0">
+                        <input class="form-control form-control-sm text-center  txtItemContentName" value="@pData["InvItemNameL1"]" type="text" required disabled />
+                    </div>
+                </div>
+            </td>
+            <td class="">
+                <input class="form-control form-control-sm text-center font-weight-bold txtItemQty" value="@pData["ItemAddQty"]" type="text" min=0 />
+            </td>
+            <td class="">
+                <input class="form-control form-control-sm text-center font-weight-bold txtItemPrice" value="@pData["ItemAddPrice"]" type="text" min=0 />
+            </td>
+            <td class="" width="5%"><button class="btn btn-light btn-sm btnItemAddDelete" data-id="@pData["ItemAddId"]"><i class="fa fa-trash"></i></button></td>
+        </tr>
+    }
+}
+else
+{
+    <tr class="trBaseRow tblItemAddRow" data-changed="0" data-id="">
+        <td class="" width="5%">
+            <button class="btn btn-light btn-sm border btnItemAddAddRow" type="submit">
+                <i class="fa fa-plus-circle"></i>
+            </button>
+        </td>
+        <td class="">
+            <div class="d-flex txtItemContent">
+                <div class="col-sm-4 p-0">
+                    <input class="form-control form-control-sm text-center   txtItemContentId d-none" value="" type="text" required />
+                    <input class="form-control form-control-sm text-center  txtItemContentCode" value="" type="text" required />
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control form-control-sm text-center  txtItemContentName" value="" type="text" required disabled />
+                </div>
+            </div>
+        </td>
+        <td class="">
+            <input class="form-control form-control-sm text-center font-weight-bold txtItemQty" value="" type="text" min=0 />
+        </td>
+        <td class="">
+            <input class="form-control form-control-sm text-center font-weight-bold txtItemPrice" value="" type="text" min=0 />
+        </td>
+        <td class="" width="5%"><button class="btn btn-light btn-sm btnItemAddDelete" data-id=""><i class="fa fa-trash"></i></button></td>
+    </tr>
+}
+<script>
+    $(".tblItemAddBody tr:first").addClass('selectedAdd');
+</script>

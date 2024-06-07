@@ -1,0 +1,310 @@
+﻿@{
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    string username = ticket.Name;
+    string Img = string.Empty;
+    if (Request.Cookies["Img"] != null)
+    { Img = Request.Cookies["Img"].Value; };
+    string CompanyName = string.Empty;
+    if (Request.Cookies["CompanyName"] != null)
+    { CompanyName = Request.Cookies["CompanyName"].Value; };
+
+    string BranchName = string.Empty;
+    if (Request.Cookies["BranchName"] != null)
+    { BranchName = Request.Cookies["BranchName"].Value; };
+
+    string BranchPhone = string.Empty;
+    if (Request.Cookies["BranchPhone"] != null)
+    { BranchPhone = Request.Cookies["BranchPhone"].Value; };
+}
+<title>@ViewBag.Title</title>
+<!--jquery -->
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/githack.js"></script>
+<script src="~/Scripts/script.js"></script>
+<link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+
+<style>
+    .tblitem, th, td {
+        border-top: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 0.2px solid black;
+    }
+
+    th {
+        background-color: #0ca0e4;
+    }
+
+    .total {
+        background-color: #e1e1e1;
+    }
+
+    img {
+        font-size: 0;
+        line-height: 0;
+        position: absolute;
+        top: 10%;
+        left: 40%;
+        display: block;
+        width: 140px;
+        height: 80px;
+        padding: 0;
+        -webkit-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        cursor: pointer;
+        color: #000000;
+        border: none;
+        outline: none;
+        background: #000000;
+    }
+
+    .divRptTemplate {
+        background-color: #FFF;
+        padding: 1rem;
+        border: 1px solid #e1e1e1;
+    }
+
+    .divRptData {
+        padding: 1rem;
+    }
+
+    .divRptSchoolImage {
+        height: 100px;
+        width: 100px;
+    }
+
+    .divRptSchoolName {
+        margin-top: 37px;
+        font-size: 20px !important;
+    }
+
+    .divRptTitle {
+        font-size: 17px !important;
+        font-weight: 600;
+        padding-right: 2rem;
+        padding-left: 2rem;
+        text-align: center;
+    }
+
+    /*** Print Style ***/
+    @@media print {
+        .navbar {
+            display: none;
+        }
+
+        #sidebar-wrapper {
+            display: none;
+        }
+
+        .divViewHeader {
+            display: none;
+        }
+
+        #container {
+            display: none;
+        }
+
+        .divRptFooter {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .btnRptPrint {
+            display: none;
+        }
+
+        .divReportOptions {
+            display: none;
+        }
+
+        .divCompanyHeader {
+            display: none;
+        }
+
+        #chartCanvas {
+            width: 50% !important;
+            height: 50% !important;
+        }
+    }
+
+    .divleft {
+        float: left !important;
+        /* padding-left: 10rem;*/
+        text-align: center;
+        width: 40%;
+    }
+
+    .divRight {
+        /* width: 45%;
+            display: inline-block;*/
+        float: right !important;
+        /* padding-right: 20rem;*/
+        text-align: center;
+        width: 40%;
+    }
+
+    @@page {
+        size: auto;
+        margin: 5mm 5mm 5mm 5mm;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div class="d-flex p-2">
+        <div class="w-100">
+
+        </div>
+        <div class="flex-shrink-1">
+            <button class="btn btn-sm btn-success btnRptPrint">
+                طباعة
+                <span class="mx-2">
+                    <i class="fa fa-print"></i>
+                </span>
+            </button>
+            <button class="btn btn-sm btn-success btnPrintPDF" onclick="generatePDF()">
+                <span class="mx-2">
+                    <i class="fa fa-download"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Report Template -->
+<div id="invoice">
+    <div class="container-fluid">
+
+        <!-- Report Template Body -->
+        <div class="divRptTemplate">
+
+            <!-- School Data -->
+            <div class="divRptData d-flex">
+                <div class="divleft">
+                    <span> @CompanyName</span>
+                    <br />
+                    <span> @ViewBag.CompanyBranchNameL1</span>
+                    <br />
+                    <span>
+                        الجوال
+                        :
+                    </span>
+                    <br />
+                    <span>
+                        @BranchPhone
+                    </span>
+                </div>
+
+                <div class="divRight">
+                    <span> @CompanyName</span>
+                    <br />
+                    <span> @ViewBag.CompanyBranchNameL1</span>
+                    <br />
+                    <span>
+                        الجوال
+                        :
+
+                    </span>
+                    <br />
+                    <span>
+                        @BranchPhone
+                    </span>
+                </div>
+                <div class="divRptSchoolImage mx-2">
+                    <img src="@Img" width="100" />
+                </div>
+
+            </div> <!-- End of School Data -->
+            <!-- Divder -->
+            <div class="divider">
+                <hr width="97%" />
+            </div>
+            <!-- Report Title -->
+            <div class="divRptTitle my-3">
+                '@ViewBag.ReportName'
+                من الفترة
+                '@ViewBag.DateFrom'
+                الى الفترة
+                '@ViewBag.DateTo'
+
+            </div>
+
+            <!-- Divder -->
+            <div class="divider">
+                <hr width="97%" />
+            </div>
+
+            <!-- Data -->
+            <div class="divRptData w-100">
+
+                <!--  <table class="table w-100 tblRpt">
+
+                      <thead>
+
+                          <tr class="tblReportHead">
+                          </tr>
+
+                      </thead>
+                      <tbody class="tblReportData">
+                      </tbody>
+
+                  </table>-->
+                @RenderBody()
+                <!-- Chart -->
+                <div class="divRptChart">
+                    <div class="d-flex">
+                        <canvas id="chartCanvas" class="col-sm-12" style="font-family:Cairo !important;"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+        </div> <!-- End of Report Template -->
+
+    </div> <!-- End of Container Fluid -->
+
+    <div class="divRptFooter divViewFooter">
+
+        <table width="100%">
+            <tr>
+                <td width="33%">
+                    التاريخ
+                    :
+                    @DateTime.Now.ToShortDateString()
+                </td>
+                <td width="33%">
+                    الوقت
+                    :
+                    @DateTime.Now.ToShortTimeString()
+                </td>
+                <td width="33%">
+                    المستخدم
+                    :
+                    @username
+                </td>
+            </tr>
+        </table>
+
+
+        <!-- Footer Content -->
+        <div class="row text-center">
+
+            <!--
+            <div class="divRptFooterUser">المستخدم</div>
+                User -->
+        </div> <!-- End of Footer Content -->
+
+    </div> <!-- End of Footer -->
+</div>
+<script>
+    $('.btnRptPrint').on('click', function () {
+        window.print();
+    })
+    //$('.btnPrintPDF').on('click', function () {
+    //    window.location.href = '/POS/SimplePOSInsuranceReturnHtmlReportPDF';
+    //})
+</script>

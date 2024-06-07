@@ -1,0 +1,63 @@
+﻿@using appSERP.Views.Shared.appResource;
+@using appSERP.appCode.Setting.TimeSetting;
+@using appSERP.appCode.Setting.User;
+@using System.Data
+@{
+    Layout = null;
+}
+<table class="table table-bordered table-hover tblData">
+    <thead>
+        <tr>
+            <th>@appResource._Account</th>
+            <th>@appResource._CostCenter</th>
+            <th>@appResource.GLVoucherDtlDebit</th>
+            <th>@appResource.GLVoucherDtlCredit</th>
+            <th>@appResource._DebitBase</th>
+            <th>@appResource._CreditBase</th>
+            <th>@appResource.BaseCurrencyValue</th>
+            <th>@appResource.GLVoucherDtlPayDebit</th>
+            <th>@appResource.GLVoucherDtlPayCredit</th>
+            <th>@appResource._Note</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (DataRow vDrwData in Model.Rows)
+            {
+                <tr>
+                    @if (clsUser.vUserLanguageId == 1)
+                    {
+                        <td width="10%" align="center">@vDrwData["AccountNameL1"]</td>
+                    }
+                    else
+                    {
+                        <td width="10%" align="center">@vDrwData["AccountNameL2"]</td>
+                    }
+                    @if (clsUser.vUserLanguageId == 1)
+                    {
+                        <td width="10%" align="center">@vDrwData["CostCenterNameL1"]</td>
+                    }
+                    else
+                    {
+                        <td width="10%" align="center">@vDrwData["CostCenterNameL2"]</td>
+                    }
+
+                    <td width="10%" align="center">@vDrwData["GLVoucherDtlDebit"]</td>
+                    <td width="10%" align="center">@vDrwData["GLVoucherDtlCredit"]</td>
+                    <td width="10%" align="center">@vDrwData["GLVoucherDtlDebitBase"]</td>
+                    <td width="10%" align="center">@vDrwData["GLVoucherDtlCreditBase"]</td>
+                    <td width="10%" align="center">@vDrwData["BaseCurrencyValue"]</td>
+                    <td width="10%" align="center">@vDrwData["GLVoucherDtlPayDebit"]</td>
+                    <td width="10%" align="center">@vDrwData["GLVoucherDtlPayCredit"]</td>
+                    <td width="10%" align="center">@vDrwData["GLVoucherDtlNote"]</td>
+
+
+
+                </tr>
+
+            }
+        }
+        </tbody>
+</table>

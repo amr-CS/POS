@@ -1,0 +1,378 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+@if (Model.Rows.Count > 0)
+{
+    //string vIsDefault = null;
+    //string vIsActive = null;
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>-->
+                    @*<img src="" class="imagepreview" style="width: 100%;">*@
+                  <form id="form1" runat="server">
+                        <img id="blah" src="" class="imagepreview" style="width: 100%;height: 100%">
+                    </form>
+
+                    <input type='button' id="imgInp" class="btn btn-light btnOk" value="تأكيد" />
+                    <input type='file' id="imgFile" />
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    int i = 0;
+    foreach (DataRow pData in Model.Rows)
+    {
+<tr class="tblItemRow" data-changed="0" data-id="@pData["InvItemId"]">
+    <td class="">
+        <button class="btn btn-light btn-sm border btnAddItemRow" type="submit">
+            <i class="fa fa-plus-circle"></i>
+        </button>
+    </td>
+
+    <td class="" width="7%">
+
+        <textarea class="d-none clsData"> @*@pData["Content"]*@ </textarea>
+        <textarea class="d-none clsDataUnit"> @*@pData["Unit"]*@  </textarea>
+        <textarea class="d-none clsDataItemAdd"> @*@pData["ItemAdd"]*@  </textarea>
+        <textarea class="d-none clsPlate"> @*@pData["Plate"]*@  </textarea>
+        <input class="form-control  text-center  txtItemId d-none" value="@pData["InvItemId"]" type="text" required />
+        <input class="form-control  text-center   txtItemCode" value="@pData["InvItemCode"]" type="text"  required />
+
+    </td>
+
+    <td class="" width="15%">
+        <input class="form-control  text-center fullHeightInput txtItemNameL1" value="@pData["InvItemNameL1"]" type="text" min=0 required />
+
+    </td>
+    <td class="" width="15%">
+        <input class="form-control  text-center fullHeightInput txtItemNameL2" value="@pData["InvItemNameL2"]" type="text" min=0 required />
+    </td>
+    <!--  <td>
+          <a href="#" class="pop btn btn-light">
+              ..
+              <img src="@pData["ItemImage"]" data-ng-src="@pData["ItemImage"]" style="width: 400px; height: 264px;" data-src="@pData["ItemImage"]" class="d-none img">
+          </a>
+      </td>-->
+    <td class="" width="">
+        <div class="">
+
+            <input class="form-control  text-center  txtItemOrder" value="@pData["SequenceByCategory"]" type="text" min=0 required />
+
+        </div>
+    </td>
+    @if (ViewBag.ItemType == 3 || ViewBag.ItemType == 2)
+    {
+        <td>
+            <div class="d-flex txtGroup">
+                <div class="col-sm-4 p-0">
+                    <input class="form-control  text-center  d-none txtGroupId" value="@pData["GRPId"]" type="text" required />
+                    <input class="form-control  text-center fullHeightInput txtGroupCode" value="@pData["GroupCode"]" type="text" min=0 required />
+
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control  text-center  txtGroupName" value="@pData["GroupName"]" type="text" required disabled />
+                </div>
+            </div>
+
+        </td>
+    }
+    else
+    {
+        @*<td>
+                <div class="d-flex txtGroup">
+                    <div class="col-sm-4 p-0">
+                        <input class="form-control  text-center  d-none txtGroupId" value="@pData["CatProduct"]" type="text" required />
+                        <input class="form-control  text-center fullHeightInput txtGroupCode" value="@pData["CatProductCode"]" type="text" min=0 required />
+
+                    </div>
+                    <div class="col-sm-8 p-0">
+                        <input class="form-control  text-center  txtGroupName" value="@pData["CatProductName"]" type="text" required disabled />
+                    </div>
+                </div>
+
+            </td>*@
+    }
+
+    <td>
+        <div class="d-flex txtCatAccount">
+            <div class="col-sm-4 p-0 ">
+                <input class="form-control  text-center  d-none txtCatAccountId " value="@pData["CategoryId"]" type="text" required />
+                <input class="form-control  text-center fullHeightInput txtCatAccountCode " value="@pData["CategoryCode"]" type="text" min=0 required />
+            </div>
+            <div class="col-sm-8 p-0">
+                <input class="form-control  text-center  txtCatAccountName " value="@pData["CategoryName"]" type="text" required disabled />
+            </div>
+        </div>
+    </td>
+    @*<td class="">
+            <div class="">
+                <input class="form-control  text-center d-none   txtStoreDefaultId" value="@pData["StoreId"]" type="text" required disabled />
+                <input class="form-control  text-center d-none  txtStoreDefaultCode" value="@pData["StoreCode"]" type="text" required disabled />
+
+                <input class="form-control  text-center fullHeightInput txtStoreDefaultDesc" value="@pData["StoreName"]" readonly type="text" min=0 required />
+
+            </div>
+        </td>*@
+    @*@if (ViewBag.ItemType == 3)
+        {
+            <td class="">
+                <div class="">
+                    <input class="form-control  text-center  txtPoints" type="text" required value="0" />
+                </div>
+            </td>
+        }*@
+    @*<td class="" width="5%">
+            <div class="">
+                <input class="form-control  text-center fullHeightInput txtReOrder" value="@pData["OrderLimit"]" type="text" min=0 required />
+
+            </div>
+        </td>*@
+    @if (ViewBag.ItemType == 3 || ViewBag.ItemType == 2)
+    {
+        <td width="15%">
+            <div class="d-flex txtPrinter">
+                <div class="col-sm-4 p-0">
+                    <input class="form-control  text-center fullHeightInput txtPrinterId" value="@pData["PrinterCode"]" data-id="@pData["PrinterId"]" type="text" min=0 required />
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control  text-center  txtPrinterName" value="@pData["PrinterName"]" type="text" required disabled />
+                </div>
+            </div>
+        </td>
+        <td width="15%">
+            <div class="d-flex Account">
+                    <input class="form-control  text-center fullHeightInput txtAccount" value="@pData["account"]" data-id="" type="text" min=0 required />
+            </div>
+        </td>
+    }
+
+    <td class="" style="padding-right:3rem !important;">
+        <div class="custom-control custom-checkbox ">
+            @if (ViewBag.ItemType == 1)
+            {
+                <input type="checkbox" class="chkExternalProduct" @pData["ExternalProduct"] id="chkExternalProduct @pData["InvItemId"]">
+                @*<label class="custom-control-label small" for="chkExternalProduct "></label>*@
+            }
+            else
+            {
+                <input type="checkbox" class="chkReProduction" @pData["ItemSales"] id="chkReProduction @pData["InvItemId"]">
+            }
+        </div>
+    </td>
+    <td class="" style="padding-right:3rem !important;">
+        <div class="custom-control custom-checkbox ">
+            <input type="checkbox" class="chkDetailGroup" @pData["DetailGroup"] id="chkDetailGroup @pData["InvItemId"]">
+            @*<label class="custom-control-label small" for="chkDetailGroup @pData["InvItemId"]"></label>*@
+        </div>
+    </td>
+    <td width="3%" class="" style="padding-right:1rem !important;">
+        <div class="custom-control custom-checkbox ">
+            <input type="checkbox" class="chkIsActive" @pData["InvItemIsActive"] id="chkIsActive @pData["InvItemId"]">
+            @*<label class="custom-control-label small" for="chkIsActive @pData["InvItemId"]"></label>*@
+        </div>
+    </td>
+    <td><button class="btn btn-light btn-sm btnItemDelete" data-id="@pData["InvItemId"]"><i class="fa fa-trash"></i></button></td>
+</tr>;
+
+        i++;
+    }
+}
+else
+{
+<tr class="tblItemRow" data-changed="0" data-id="">
+    <td class="">
+        <button class="btn btn-light btn-sm border btnAddItemRow" type="submit">
+            <i class="fa fa-plus-circle"></i>
+        </button>
+    </td>
+
+    <td class="">
+
+        @*<textarea class="d-none clsData"> @pData["Content"] </textarea>
+            <textarea class="d-none clsDataUnit"> @pData["Unit"]  </textarea>
+            <textarea class="d-none clsDataItemAdd"> @pData["ItemAdd"]  </textarea>*@
+
+        <input class="form-control  text-center  txtItemId d-none" value="" type="text" required />
+        <input class="form-control  text-center   txtItemCode" value="" type="text" disabled required />
+
+    </td>
+
+    <td class="" width="">
+        <input class="form-control  text-center fullHeightInput txtItemNameL2" value="" type="text" min=0 required />
+
+    </td>
+    <td class="" width="">
+        <input class="form-control  text-center fullHeightInput txtItemNameL1" value="" type="text" min=0 required />
+    </td>
+    <td class="" width="">
+        <div class="">
+
+            <input class="form-control  text-center fullHeightInput txtItemOrder" value="" type="text" min=0 required />
+
+        </div>
+    </td>
+    <td>
+        <div class="d-flex txtGroup">
+            <div class="col-sm-4 p-0">
+                <input class="form-control  text-center  d-none txtGroupId" value="" type="text" required />
+                <input class="form-control  text-center fullHeightInput txtGroupCode" value="" type="text" min=0 required />
+
+            </div>
+            <div class="col-sm-8 p-0">
+                <input class="form-control  text-center  txtGroupName" value="" type="text" required disabled />
+            </div>
+        </div>
+
+    </td>
+    <td>
+        <div class="d-flex txtCatAccount">
+            <div class="col-sm-4 p-0 ">
+                <input class="form-control  text-center  d-none txtCatAccountId" value="" type="text" required />
+                <input class="form-control  text-center fullHeightInput txtCatAccountCode" value="" type="text" min=0 required />
+            </div>
+            <div class="col-sm-8 p-0">
+                <input class="form-control  text-center  txtCatAccountName" value="" type="text" required disabled />
+            </div>
+        </div>
+
+    </td>
+
+    <td class="">
+        <div class="">
+            <input class="form-control  text-center d-none   txtStoreDefaultId" value="" type="text" required disabled />
+            <input class="form-control  text-center d-none  txtStoreDefaultCode" value="" type="text" required disabled />
+
+            <input class="form-control  text-center fullHeightInput txtStoreDefaultDesc" value="" readonly type="text" min=0 required />
+
+        </div>
+    </td>
+    @if (ViewBag.ItemType == 3)
+    {
+        <td class="">
+            <div class="">
+                <input class="form-control  text-center  txtPoints" type="text" required value="0" />
+            </div>
+        </td>
+    }
+    <td class="" width="5%">
+        <div class="">
+            <input class="form-control  text-center fullHeightInput txtReOrder" value="" type="text" min=0 required />
+
+        </div>
+    </td>
+    @if (ViewBag.ItemType == 3)
+    {
+        <td>
+            <div class="d-flex txtPrinter">
+                <div class="col-sm-4 p-0">
+
+                    <input class="form-control  text-center fullHeightInput txtPrinterId" data-id="0" type="text" min=0 required />
+
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control  text-center  txtPrinterName" type="text" required disabled />
+                </div>
+            </div>
+
+        </td>
+    }
+    <td class="" style="padding-right:3rem !important;">
+        <div class="custom-control custom-checkbox ">
+            @if (ViewBag.ItemType == 1)
+            {
+                <input type="checkbox" class="chkExternalProduct" id="chkExternalProduct">
+                @*<label class="custom-control-label small" for="chkExternalProduct "></label>*@
+            }
+            else
+            {
+                <input type="checkbox" class="chkReProduction" id="chkReProduction">
+                @*<label class="custom-control-label small" for="chkReProduction "></label>*@
+            }
+
+        </div>
+    </td>
+    <td class="" style="padding-right:3rem !important;">
+        <div class="custom-control custom-checkbox ">
+            <input type="checkbox" class="chkDetailGroup" id="chkDetailGroup">
+            @*<label class="custom-control-label small" for="chkDetailGroup "></label>*@
+            
+        </div>
+    </td>
+    
+    <td width="3%" class="" style="padding-right:1rem !important;">
+        <div class="custom-control custom-checkbox ">
+            <input type="checkbox" class="chkIsActive" vIsActive id="chkIsActive">
+            @*<label class="custom-control-label small" for="chkIsActive"></label>*@
+        </div>
+    </td>
+    <td><button class="btn btn-light btn-sm btnItemDelete" data-id=""><i class="fa fa-trash"></i></button></td>
+</tr>;
+}
+
+<script>
+    $(".tblItemBody tr:first").addClass('selected');
+    $(function () {
+        $('table').on('click', '.pop', function () {
+           
+            $('.imagepreview').attr('src', $(this).find('img').attr('src'));
+            var vTableRow = $(this)
+
+           
+            $('#imagemodal').modal('show');
+
+            $(".btnOk").click(function () {
+                var TableRow = $('.selected').closest('.tblItemRow')
+                    //vTableRow.closest('.tblItemRow');
+                TableRow.attr('data-changed', '1')
+                var result = $('.imagepreview').attr('src');
+                TableRow.find('.img').attr('src', result)
+                var filename = $('input[type=file]').val().split('\\').pop();
+                TableRow.find('.img').attr('data-src', filename)
+                TableRow.attr('data-changed', '1');
+
+                changeimage();
+                // $('modal').hide();
+                $('#imagemodal').modal('hide');
+            //    vTableRow.remove();
+            });
+        });
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#blah').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#imgFile").change(function () {
+        readURL(this);
+    });
+
+    function changeimage() {
+        var formdata = new FormData(); //FormData object
+        var fileInput = document.getElementById('imgFile');
+        //Iterating through each files selected in fileInput
+        for (i = 0; i < fileInput.files.length; i++) {
+            //Appending each file to FormData object
+            formdata.append(fileInput.files[i].name, fileInput.files[i]);
+        }
+        //Creating an XMLHttpRequest and sending
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/BranchSetting/Upload');
+        xhr.send(formdata);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+            }
+        }
+        return false;
+    }
+   
+</script>

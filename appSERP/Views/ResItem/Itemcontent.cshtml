@@ -1,0 +1,102 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+@if (Model.Rows.Count > 0)
+{
+    foreach (DataRow pData in Model.Rows)
+    {
+        <tr class="trBaseRow tblContentRow" data-id="@pData["ItemContentId"]" data-changed="0">
+            <td class="">
+                <button class="btn btn-light btn-sm border btnAddContentRow" type="submit">
+                    <i class="fa fa-plus-circle"></i>
+                </button>
+            </td>
+            <td class="" width="">
+                <div class="d-flex">
+                    <div class="col-sm-4 p-0">
+                        <input class="form-control form-control-sm text-center  txtContentItemId d-none" value="@pData["ItemContentId"]" type="text" required />
+                        <input class="form-control form-control-sm text-center  d-none txtContentId" value="@pData["Cont_id"]" type="text" required />
+                        <input class="form-control form-control-sm text-center  txtContentCode" value="@pData["InvItemCode"]" type="text" required />
+                    </div>
+                    <div class="col-sm-8 p-0">
+                        <input class="form-control form-control-sm text-center  txtContentName" value="@pData["InvItemNameL1"]" type="text" required disabled />
+                    </div>
+                </div>
+            </td>
+
+            <td class="">
+                <input class="form-control form-control-sm text-center font-weight-bold txtUnitName" value="@pData["UnitNameL1"]" type="text" min=0 disabled />
+                <input class="form-control form-control-sm text-center font-weight-bold txtUnitId d-none" value="@pData["Unit_id"]" type="text" min=0 disabled />
+            </td>
+            <td class="">
+                <input class="form-control form-control-sm text-center font-weight-bold txtQty" value="@pData["Qty"]" type="text" min=0 required />
+            </td>
+            <td class="">
+                <input class="form-control form-control-sm text-center font-weight-bold txtPrice" value="@pData["Price"]" type="text" min=0 />
+            </td>
+            <td class="" style=" padding-right:3rem !important;">
+                <div class="custom-control custom-checkbox ">
+                    <input type="checkbox" class="custom-control-input  chkIsActive" vIsActive id="chkIsActive @pData["ItemContentId"]">
+                    <label class="custom-control-label small" for="chkIsActive@pData[" ItemContentId"></label>
+                </div>
+            </td>
+            <td class="" style=" padding-right:3rem !important;">
+                <div class="custom-control custom-checkbox ">
+                    <input type="checkbox" class="custom-control-input  chkIsExp" vIsExp id="chkIsExp @pData["ItemContentId"]">
+                    <input type="checkbox" class="custom-control-input  chkIsExp" vIsExp id="chkIsExp @pData["ItemContentId"]">
+                    <label class="custom-control-label small" for="chkIsExp @pData["ItemContentId"]"></label>
+                </div>
+            </td>
+            <td><button class="btn btn-light btn-sm btnContentDelete" data-id="@pData["ItemContentId"]"><i class="fa fa-trash"></i></button></td>
+        </tr>
+    }
+}
+else
+{
+    <tr class="trBaseRow tblContentRow" data-id="" data-changed="0">
+        <td class="">
+            <button class="btn btn-light btn-sm border btnAddContentRow" type="submit">
+                <i class="fa fa-plus-circle"></i>
+            </button>
+        </td>
+        <td class="" width="">
+            <div class="d-flex">
+                <div class="col-sm-4 p-0">
+                    <input class="form-control form-control-sm text-center  txtContentItemId d-none" value="" type="text" required />
+                    <input class="form-control form-control-sm text-center  d-none txtContentId" value="" type="text" required />
+                    <input class="form-control form-control-sm text-center  txtContentCode" value="" type="text" required />
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control form-control-sm text-center  txtContentName" value="" type="text" required disabled />
+                </div>
+            </div>
+        </td>
+
+        <td class="">
+            <input class="form-control form-control-sm text-center font-weight-bold txtUnitName" value="" type="text" min=0 disabled />
+            <input class="form-control form-control-sm text-center font-weight-bold txtUnitId d-none" value="" type="text" min=0 disabled />
+        </td>
+        <td class="">
+            <input class="form-control form-control-sm text-center font-weight-bold txtQty" value="" type="text" min=0 required />
+        </td>
+        <td class="">
+            <input class="form-control form-control-sm text-center font-weight-bold txtPrice" value="" type="text" min=0 />
+        </td>
+        <td class="" style=" padding-right:3rem !important;">
+            <div class="custom-control custom-checkbox ">
+                <input type="checkbox" class="custom-control-input  chkIsActive" vIsActive id="chkIsActive ">
+                <label class="custom-control-label small" for="chkIsActive@pData[" ItemContentId"></label>
+            </div>
+        </td>
+        <td class="" style=" padding-right:3rem !important;">
+            <div class="custom-control custom-checkbox ">
+                <input type="checkbox" class="custom-control-input  chkIsExp" vIsExp id="chkIsExp ">
+                <input type="checkbox" class="custom-control-input  chkIsExp" vIsExp id="chkIsExp ">
+                <label class="custom-control-label small" for="chkIsExp "></label>
+            </div>
+        </td>
+        <td><button class="btn btn-light btn-sm btnContentDelete" data-id=""><i class="fa fa-trash"></i></button></td>
+    </tr>
+}
+<script>
+            $(".tblContentBody tr:first").addClass('selectedContent');
+</script>

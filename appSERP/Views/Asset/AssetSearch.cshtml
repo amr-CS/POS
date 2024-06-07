@@ -1,0 +1,413 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblInvItemBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <div>رقم المنتج<input type="text" class="form-control txtCode text-center" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                الاسم عربي
+                                <input type="text" class="form-control txtNameL1 text-center" />
+                            </div>
+                            <div class="col-sm-6">
+                                الاسم انجليزي
+                                <input type="text" class="form-control txtNameL2 text-center" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                المجموعة  الرئيسية
+                                <div>
+                                    <select id="selectMainGroupSearch" class="selectMainGroupSearch form-control" name="GroupId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" ></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                المجموعة الفرعية
+                                <div>
+                                    <select id="selectGroupSearch" class="selectGroupSearch form-control" name="CatAccountId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" multiple></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+                        طريقة الاهلاك
+                        <div>
+                            <select id="selectFixedAssetMethodSearch" class="selectFixedAssetMethodSearch form-control" name="StoreId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" multiple></select>
+                        </div>
+                    </div>
+                    <div class=" col-sm-2">
+                        المورد
+                        <div>
+                            <select id="selectSupplierSearch" class="selectSupplierSearch form-control" name="StoreId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" multiple></select>
+                        </div>
+                    </div>
+                    <div class=" col-sm-2">
+                        مجموعة الشراء
+                        <div>
+                            <select id="selectBuyGroupSearch" class="selectBuyGroupSearch form-control" name="StoreId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" multiple></select>
+                        </div>
+                    </div>
+                    <div class=" col-sm-1">
+                        البحث
+                        <div>
+                            <button type="button" class="btn btn-secondary  btnSearchh">@appResource.btnSearch</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+   
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblAssetSearch">
+            <thead>
+                <tr>
+                    <th class=" " data-checked="false">
+                        <input type="checkbox" class="btnCheckAll">
+                        تحديد الكل
+                    </th>
+                    <th>رقم الأصل</th>
+                    <th>الاسم عربي</th>
+                    <th> الاسم انجليزي</th>
+                    <th> مجموعة رئيسية</th>
+                    <th> مجموعة فرعية</th>
+                    <th>طريقة الاهلاك</th>
+                    <th>المورد</th>
+                    <th>مجموعة الشراء</th>
+                </tr>
+            </thead>
+
+            <tbody class="tblAssetBodySearch"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    funSelectListBindSearch()
+
+    function funSelectListBindSearch() {
+        $('#selectGroupSearch').html('');
+        $('#selectGroupSearch').append('<option data-id="" value="" sort-id="">-</option>')
+
+        $('#selectGroupSearch').selectpicker('refresh');
+            // List GetFixedAssetMethod
+            $.post('/Home/GetFixedAssetMethod',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $('#selectFixedAssetMethodSearch').append('<option data-id="" value="" sort-id="">-</option>')
+
+                    $.each(vDataJSON, function (i, FixedAssetMethod) {
+
+                        $('#selectFixedAssetMethodSearch').append('<option data-id="' + FixedAssetMethod.FixedAssetMethodId + '" value="' + FixedAssetMethod.FixedAssetMethodId + '" sort-id="' + i + '">' + FixedAssetMethod.FixedAssetMethodNameL1 + '</option>')
+
+                    })
+                  
+                    // Refresh Select Picker
+                    $('.selectFixedAssetMethodSearch').selectpicker('refresh');
+                })
+
+         
+
+
+
+            // List GetFixedAssetMethod
+            $.post('/Home/GetSupplier',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $('#selectSupplierSearch').append('<option data-id="" value="" sort-id="">-</option>')
+                    $.each(vDataJSON, function (i, CS) {
+                        $('#selectSupplierSearch').append('<option data-id="' + CS.CSId + '" value="' + CS.CSId + '" sort-id="' + i + '">' + CS.CSNameL1 + '</option>')
+
+                    })
+                    
+                    // Refresh Select Picker
+                    $('.selectSupplierSearch').selectpicker('refresh');
+                })
+
+            // List GetBuyGroup
+            $.post('/Home/GetBuyGroup',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $('#selectBuyGroupSearch').append('<option data-id="" value="" sort-id="">-</option>')
+                    $.each(vDataJSON, function (i, BuyGroup) {
+                        $('#selectBuyGroupSearch').append('<option data-id="' + BuyGroup.BuyGroupId + '" value="' + BuyGroup.BuyGroupId + '" sort-id="' + i + '">' + BuyGroup.BuyGroupNameL1 + '</option>')
+                    })
+                
+                    // Refresh Select Picker
+                    $('.selectBuyGroupSearch').selectpicker('refresh');
+                })
+    }
+    // List GetMainGroup
+   $.post('/Home/GetMainGroup',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $('#selectMainGroupSearch').append('<option data-id="" value="" sort-id="">-</option>')
+           $.each(vDataJSON, function (i, MainGroup) {
+               $('#selectMainGroupSearch').append('<option data-id="' + MainGroup.MainGroupId + '" value="' + MainGroup.MainGroupId + '" sort-id="' + i + '" >' + MainGroup.MainGroupNameL1 + '</option>')
+
+           })
+        
+           // Refresh Select Picker
+           $('#selectMainGroupSearch').selectpicker('refresh');
+       }
+    )
+        $('#selectMainGroupSearch').on('change', function () {
+        var vMainGroupId = $(this).val();
+            if (vMainGroupId.trim() == "") {
+                $('#selectGroupSearch').html('');
+                $('#selectGroupSearch').append('<option data-id="" value="" sort-id="">-</option>')
+            }
+            else {
+                // List GetGroup
+                $.post('/Home/GetGroup',
+                    { pMainGroupId: vMainGroupId },
+                    function (data, status) {
+                        var vDataJSON = JSON.parse(data);
+                        $('#selectGroupSearch').html('');
+                        $('#selectGroupSearch').append('<option data-id="" value="" sort-id="">-</option>')
+                        $.each(vDataJSON, function (i, Group) {
+                            $('#selectGroupSearch').append('<option data-id="' + Group.GroupId + '" value="' + Group.GroupId + '" sort-id="' + i + '" data-FixedAssetMethodId="' + Group.FixedAssetMethodId + '" data-FixedAssetMethodNameL1 = "' + Group.FixedAssetMethodNameL1 + '" data-GroupAssetAccount = "' + Group.GroupAssetAccount + '" data-GroupAssetAccount = "' + Group.GroupAssetAccount + '"  data-GroupDebitAccount = "' + Group.GroupDebitAccount + '" data-GroupCreditAccount = "' + Group.GroupCreditAccount + '" data-GroupPurchaseAccount = "' + Group.GroupPurchaseAccount + '" data-GroupSalesAccount = "' + Group.GroupSalesAccount + '">' + Group.GroupNameL1 + '</option>')
+
+                        })
+
+                        // Refresh Select Picker
+                        $('#selectGroupSearch').selectpicker('refresh');
+
+                    })
+            }
+    })
+
+
+
+      //function Append
+    function funAssetRowConfig(pAssetRow) {
+
+        // Content
+        var RowContent = '<tr data-id="' + pAssetRow.AssetId + '">' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pAssetRow.AssetId + '"/></td> ' +
+            '<td align="center">' + pAssetRow.AssetCode + '</td>' +
+            '<td align="center">' + pAssetRow.AssetNameL1 + '</td>' +
+            '<td align="center">' + pAssetRow.AssetNameL2 + '</td>' +
+            '<td align="center">' + pAssetRow.MainGroupNameL1 + '</td>' +
+            '<td align="center">' + pAssetRow.GroupNameL1 + '</td>' +
+            '<td align="center">' + pAssetRow.FixedAssetMethodNameL1 + '</td>' +
+            '<td align="center">' + pAssetRow.SupplierName + '</td>' +
+            '<td align="center">' + pAssetRow.BuyGroupNameL1 + '</td>' +
+            +'</tr > '
+
+
+
+        return RowContent
+    }
+    // Action Search
+    $('.btnSearchh').on('click', function () {
+
+ 
+          
+
+        var vCode = $('.txtCode').val().trim();
+        var NameL1 = $('.txtNameL1').val();
+        var Namel2 = $('.txtNameL2').val();
+        var MainGroup = $('#selectMainGroupSearch').val();
+        var Group = $('#selectGroupSearch').val();
+        var Method = $('#selectFixedAssetMethodSearch').val();
+        var Supplier = $('#selectSupplierSearch').val();
+        var BuyGroup = $('#selectBuyGroupSearch').val();
+
+  
+        // Get Row
+        funGetAssetsBySearch(vCode, NameL1, Namel2, MainGroup, Group, Method, Supplier, BuyGroup)
+    })
+    function funGetAssetsBySearch(pCode, pNameL1, pNameL2 , pMainGroup,pGroup,pMethod,pSupplier,pBuyGroup) {
+        var vLstGroup = [];
+        var vLstMethod = [];
+        var vLstSupplier = [];
+        var vLstBuyGroup = [];
+        if (pGroup == null) {
+
+
+        }
+        else if (pGroup.indexOf(',')) {
+            for (i = 0; i < pGroup.length; i++) {
+                vLstGroup.push(pGroup[i]);
+            }
+            pGroup = vLstGroup.toString();
+
+        }
+        else {
+
+        }
+        if (pMethod == null) {
+
+
+        }
+        else if (pMethod.indexOf(',')) {
+            for (i = 0; i < pMethod.length; i++) {
+                vLstMethod.push(pMethod[i]);
+            }
+            pMethod = vLstMethod.toString();
+
+        }
+        else {
+
+        }
+        if (pSupplier == null) {
+
+
+        }
+        else if (pSupplier.indexOf(',')) {
+            for (i = 0; i < pSupplier.length; i++) {
+                vLstSupplier.push(pSupplier[i]);
+            }
+            pSupplier = vLstSupplier.toString();
+
+        }
+        else {
+
+        }
+        if (pBuyGroup == null) {
+
+
+        }
+        else if (pBuyGroup.indexOf(',')) {
+            for (i = 0; i < pBuyGroup.length; i++) {
+                vLstBuyGroup.push(pBuyGroup[i]);
+            }
+            pBuyGroup = vLstBuyGroup.toString();
+
+        }
+        else {
+
+        }
+        $.post('/Asset/FilterAsset',
+            {
+                pAssetCode: pCode,
+                pAssetNameL1: pNameL1,
+                pAssetNameL2: pNameL2,
+                pLstGroup: pGroup,
+                pLstMethod: pMethod,
+                pLstSupplier: pSupplier,
+                pLstBuyGroup: pBuyGroup
+
+            }
+            , function (data, status) {
+                $('.tblAssetBodySearch').html('');
+                if (data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, AssetData) {
+                        // GET Cash Desk Row Content
+
+                        var vAssetRowContent = funAssetRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblAssetBodySearch').append(vAssetRowContent);
+                    });
+
+
+
+                }
+            })
+
+    }
+    // Actione Load
+    $(document).ready(function () {
+        //var vItemTypeId = $('.txtItemType').val();
+        //// Get Row
+        //funGetInvItemData(null, null, null, null, null, null, null, vItemTypeId)
+
+    });
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+    //var vGroupId=0
+    // // List GetGroup
+    //$.get('/api/APILookup/LookupGET',
+    //         {
+    //            pIsDetail: true,
+    //            pLookupId: 124,
+    //            pQueryTypeId: '400',
+    //        },
+    //        function (data, status) {
+    //            var vDataJSON = JSON.parse(data);
+    //            $('#selectGroup').append('<option data-id="" value="" sort-id="">-</option>')
+    //            $.each(vDataJSON, function (i, Group) {
+    //                $('#selectGroup').append('<option data-id="' + Group.LookupDtlId + '" value="' + Group.LookupDtlId + '" sort-id="' + i + '">' + Group.LookupDtlDesc + '</option>')
+
+    //                if (i == 0) {
+    //                    vGroupId = Group.LookupDtlId;
+    //                }
+    //            })
+    //            $('#selectGroup').val(vGroupId);
+    //            // Refresh Select Picker
+    //            $('.selectGroup').selectpicker('refresh');
+    //        })
+    
+</script>

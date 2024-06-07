@@ -1,0 +1,762 @@
+﻿@model System.Data.DataTable
+@using System.Data
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.ACC
+@using appSERP.appCode.Setting.User;
+<style>
+    .divDataContainer {
+        width: 80%;
+        max-height: 75vh;
+        height: 75vh;
+        overflow-y: scroll;
+        background-color: #FFF;
+        /*border: 1px solid #eaeaea;*/
+        padding: 1.5rem;
+    }
+    .divTreeContainer {
+        width: 20%;
+        max-height: 75vh;
+        height: 75vh;
+        overflow-y: scroll;
+        background-color: #FFF;
+        border: 1px solid #eaeaea;
+        padding: 1.5rem;
+    }
+</style>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<link href="~/Content/TreeView/style.min.css" rel="stylesheet" />
+<div class="row ">
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-6">
+        <div class="row bg-light" style="text-align:center">
+
+
+        </div>
+    </div>
+</div>
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblAccountDirectory, pIsNew = false })
+</div>
+<!-- Utlity -->
+<div class="divUtilityBar d-flex ">
+    @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+</div>
+<div class="">
+
+    <div class="bg-white border rounded d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-3">
+            <div class="btn-group">
+                <button type="button" class="btn btn-success btnSave">@appResource.btnSave</button>
+                <button type="button" class="btn btn-secondary btnAccountAddLastRow">@appResource.btnNew</button>
+                <button type="button" class="btn btn-danger btnDelete" style="display:none">@appResource.btnDelete</button>
+                <button type="button" class="btn btn-primary btnPrint" style="display:none">@appResource.btnPrint</button>
+                <button type="button" class="btn btn-info btnSearch" style="display:none">@appResource.btnSearch</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Ajax Link -->
+@Ajax.ActionLink("Load More Posts", "Account", "Account", new { pAccountId = "1" }, new AjaxOptions()
+{
+    HttpMethod = "GET",
+    AllowCache = true,
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "tblAccount"
+}, new { @class = "btn btn-success btn P_1 d-none", @id = "ajaxLinkAccount" })
+
+<div class="">
+    <div class="d-flex bg-white border">
+        <div class="border-right  p-2" style="width:20%"></div>
+
+        <div class="form-inline  p-2" style="width:80%">
+            <label>@appResource.Account</label>
+            <button type="button" class="btnMainLevel btn btn-light ml-2" id="btnMainLevel"><i class="fa fa-arrow-right"></i></button>
+            <input type="text" class="form-control txtMainNo" style="width:75px">
+            <input type="text" disabled class="form-control txtMainName" />
+            <input type="text" disabled class="form-control txtAccountId d-none" />
+            <input type="text" disabled class="form-control txtAccountLevel d-none" />
+            <input type="text" disabled class="form-control txtAccountId d-none" />
+            <input type="text" disabled class="form-control txtCompanyCodeH d-none" />
+            <input type="text" disabled class="form-control txtCompanyCurrency d-none" />
+        </div>
+    </div>
+</div>
+<div class="d-flex">
+    <div class="divTreeContainer">
+        <div id="jstree" class="">
+        </div>
+    </div>
+
+
+    <div class="divDataContainer">
+        <div class="">
+            <!-- Data Container -->
+            <div id="" class="container-fluid">
+                <table id="table" class="table table-hover tblAccount">
+                    <!-- DataTable Header -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>@appResource.AccountNo</th>
+                            <th>@appResource._Account</th>
+                            <th>@appResource._Currency</th>
+                            <th>@appResource.SecurityGradeId</th>
+                            <th>@appResource.AccountTypeId</th>
+                            <th>@appResource.AccountingReportId</th>
+                            <th>@appResource._IsAccumulative</th>
+                            <th>@appResource._CostCenter</th>
+                            <th></th>
+                        </tr>
+                    </thead> <!-- End of DataTable Header -->
+                    <!-- DataTable Body -->
+                    <tbody class="tblAccountBody"></tbody>
+                </table>
+            </div> <!-- End of Data Container -->
+
+        </div>
+    </div>
+</div>
+
+<!-- AccountData Modal -->
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/TreeView/jsTree.js"></script>
+<script>
+    let accountsTree = [];
+    // Fill Tree View
+    function fillTreeView() {
+        return $.get('/api/APIAccount/AccountGET', {}, function (data, status) {
+            var vDataResult = JSON.parse(data);
+            accountsTree = vDataResult;
+            $('.divTreeContainer').html('<div id="jstree" class=""></div>');
+            $('#jstree').jstree({
+                'core': {
+                    'data': vDataResult
+                }
+            });
+
+            $('#jstree').on("changed.jstree", function (e, data) {
+                var vId = data.selected;
+                localStorage.setItem('AccountId', vId);
+                let acc = accountsTree.filter(function (a) { return a.AccountId == vId })[0];
+
+                // Get Main Account
+                // GetMainAccount(vId)
+                // Load Table
+                funGETAccount(vId, null)
+
+            });
+        });
+    }
+    $(document).ready(function () {
+        fillTreeView();
+    })
+    $(document).ready(function () {
+        // Get The First Level On Load
+        funGETAccount('0', null)
+    })
+</script>
+<script>
+    // Main Account
+    function GetMainAccount(pId, pAccountNo) {
+        // List GetAccount
+        $.get('/api/APIAccount/AccountGET',
+            {
+                pAccountId: pId,
+                pAccountNo: pAccountNo,
+                pQueryTypeId: 400
+            },
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, Account) {
+                    // Set Main Account
+                    funSetMainValue(pId, Account.text, Account.AccountNo, Account.AccountLevel, Account.AccountId, Account.AccountCodeHierarchy, Account.DefaultCurrencyId)
+                })
+            });
+    }
+</script>
+<script>
+    // Set Main Value
+    function funSetMainValue(AccountId, AccountName, AccountNo, AccountLevel, AccountId, CompanyCodeH, CompanyCurrency) {
+        // Account Name
+        $('.txtMainName').val(AccountName);
+        // AccountId
+        $('.txtAccountId').val(AccountId);
+        $('.txtMainNo').val(AccountNo);
+        $('.txtAccountLevel').val(AccountLevel);
+        $('.txtAccountId').val(AccountId);
+        $('.txtCompanyCodeH').val(CompanyCodeH);
+        $('.txtCompanyCurrency').val(CompanyCurrency);
+        GetCompanyData();
+    }
+</script>
+<script>
+    // Delete
+    $('body').on('click', '.btnDelete', function () {
+        // Get Account Id
+        var vAccountId = $(this).attr('data-id');
+        var vCurrentRow = $(this).closest('tr');
+        // Save
+        $.get('/api/APIAccount/AccountGET',
+            {
+                pAccountId: vAccountId,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+                var vResultData = JSON.parse(data)
+                // Notification
+                funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                //vCurrentRow.remove();
+                var vId = localStorage.getItem('AccountId')
+                fillTreeView();
+                // Load Table
+                funGETAccount(vId, null)
+            });
+    })
+</script>
+<script>
+    // GET Prev Main Level
+    $('#btnMainLevel').click(function () {
+        var vAccount = $('.txtMainNo').val();
+        var vAccountId = $('.txtAccountId').val();
+
+        var res = vAccount.split(".");
+        var lastEl = (res[res.length - 1]).length + 1;
+        var id = (vAccount.slice(0, -lastEl));
+
+        // List GetAccount
+        // GetMainAccount(id)
+        funGETAccount(null, id)
+
+    })
+    // GET Prev  Level
+    $('body').on('click', '.btnLevel', function () {
+        var vAccountId = $('.AccountId').val();
+        funGETAccount(vAccountId, null)
+    })
+</script>
+
+
+<script>
+    // Function Save Head Voucher
+    $('.btnSave').on('click', function () {
+        //funAccountContent();
+        // Is Valid
+        var vIsValid = true;
+        // Check All Rows
+        //$(".tblAccountBody > tr").each(function () {
+        //    // Row Data
+        //    var vRowData = $(this);
+        //    // Get Account Id
+        //    var vAccountId = vRowData.find('.AccountId').val();
+        //    // Get Account No
+        //    var vAccountNo = vRowData.find('.AccountNo').val();
+        //    //  Id
+        //    var vAccountId = $('.txtAccountId').val();
+        //    // vAccountLevel Id
+        //    var vAccountLevel = $('.txtMainNo').val().split('.').length + 1
+
+        //    // Code
+        //    var vAccountNameL1 = vRowData.find('.AccountNameL1').val();
+        //    // vCurrencyId
+        //    var vCurrencyId = vRowData.find('.CurrencyId').children("option:selected").val();
+        //    // vSecurityGradeId
+        //    var vSecurityGradeId = vRowData.find('.SecurityGradeId').children("option:selected").val();
+        //    // Type
+        //    var vAccountingReportId = vRowData.find('.AccountReportId').children("option:selected").val();
+        //    // Type
+        //    var vAccountTypeId = vRowData.find('.AccountTypeId').children("option:selected").val();
+
+        //    // Is Active
+        //    var vAccountIsCumulative = vRowData.find('.AccountIsCumulative').prop('checked');
+        //    // IsCostCenter
+        //    var vIsCostCenter = vRowData.find('.IsCostCenter').prop('checked');
+
+        //    // Check Cash Desk If Empty
+        //    if (vAccountNameL1) {
+        //        GetCompanyData();
+        //        // Save
+        //        $.get('/api/APIAccount/AccountGET',
+        //            {
+        //                pAccountId: vAccountId,
+        //                pAccountNo: vAccountNo,
+        //                pAccountId: vAccountId,
+        //                pAccountLevel: vAccountLevel,
+        //                pAccountNameL1: vAccountNameL1,
+        //                pCurrencyId: vCurrencyId,
+        //                pSecurityGradeId: vSecurityGradeId,
+        //                pAccountingReportId: vAccountingReportId,
+        //                pAccountTypeId: vAccountTypeId,
+        //                pAccountIsCumulative: vAccountIsCumulative,
+        //                pIsCostCenter: vIsCostCenter,
+        //                pQueryTypeId: 100
+        //            },
+        //            function (data, status) {
+        //                // AccountId
+        //               var vAccountId= localStorage.getItem('AccountId')
+        //                // Drop Down Main Cash Desk
+        //                funGETAccount(vAccountId, null);
+        //                if (vRowData.closest('tbody').find('tr').index(vRowData) == vRowData.closest('tbody').find('tr').length - 1) {
+        //                    fillTreeView();
+        //                }
+        //            });
+        //    }
+        //    else {
+
+        //        // Not Valid
+        //        vIsValid = false;
+
+        //    } // End Check Cash Desk Data
+        //})
+
+        saveChanges().fail(function () { vIsValid = false });
+
+        if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+            // Notification
+            funNotification('@appResource.msgSave', 1);
+        }
+    }); // End of Save Click
+</script>
+
+<!--Fill Chart Account Table -->
+<script>
+    // Load Api And Set Values In Local Storage
+    $(document).ready(function () {
+        // Account
+
+        // List GetCurrency
+        $.post('/Home/GetCurrency', {},
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+
+                localStorage.setItem('Currency', JSON.stringify(vDataJSON))
+            })
+
+        // List GetSecurityGrade
+        $.post('/Home/GetSecurityGrade', {},
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                localStorage.setItem('SecurityGrade', JSON.stringify(vDataJSON))
+            })
+
+        // List GetAccountType
+        $.post('/Home/GetAccountType', {},
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                localStorage.setItem('AccountType', JSON.stringify(vDataJSON))
+            })
+
+        // List GetAccountReport
+        $.post('/Home/GetAccount', { pQueryTypeId: 450 },
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                localStorage.setItem('AccountReport', JSON.stringify(vDataJSON))
+            })
+
+
+    })
+
+    // Load Select List
+    function funLoadSelectList() {
+        //Currency
+        var vDataCurrency = localStorage.getItem('Currency')
+
+        var vDataCurrencyJSON = JSON.parse(vDataCurrency)
+        var CurrencyId = $('.CurrencyId');
+        CurrencyId.html('')
+        $.each(vDataCurrencyJSON, function (i, vDataCurrency) {
+            CurrencyId.append('<option value="' + vDataCurrencyJSON[i].CurrencyId + '">' + vDataCurrencyJSON[i].CurrencyNameL1 + '</option>');
+        });
+        // SecurityGrade
+        var vDataSecurityGrade = localStorage.getItem('SecurityGrade')
+        var vDataSecurityGradeJSON = JSON.parse(vDataSecurityGrade)
+        var SecurityGradeId = $('.SecurityGradeId');
+        SecurityGradeId.html('')
+        $.each(vDataSecurityGradeJSON, function (i, vDataSecurityGrade) {
+            SecurityGradeId.append('<option value="' + vDataSecurityGradeJSON[i].SecurityGradeId + '">' + vDataSecurityGradeJSON[i].SecurityGradeNameL1 + '</option>');
+        });
+        // AccountType
+        var vDataAccountType = localStorage.getItem('AccountType')
+        var vDataAccountTypeJSON = JSON.parse(vDataAccountType)
+        var AccountTypeId = $('.AccountTypeId');
+        AccountTypeId.html('')
+        $.each(vDataAccountTypeJSON, function (i, vDataAccountType) {
+            AccountTypeId.append('<option value="' + vDataAccountTypeJSON[i].AccountTypeId + '">' + vDataAccountTypeJSON[i].AccountTypeNameL1 + '</option>');
+        });
+
+
+        // AccountReport
+        var vDataAccountReport = localStorage.getItem('AccountReport')
+        var vDataAccountReportJSON = JSON.parse(vDataAccountReport)
+        var AccountReportId = $('.AccountReportId');
+        AccountReportId.html('')
+        $.each(vDataAccountReportJSON, function (i, vDataAccountReport) {
+            AccountReportId.append('<option value="' + vDataAccountReportJSON[i].AccountReportId + '">' + vDataAccountReportJSON[i].AccountReportNameL1 + '</option>');
+        });
+        SetValueSelectList();
+
+    }
+    function funAccountRowConfig(pAccountRow) {
+        // Checked
+        var vIsCumulative = null;
+        var vIsCostCenter = null;
+
+        if (pAccountRow.AccountIsCumulative) {
+            vIsCumulative = 'checked';
+        }
+        if (pAccountRow.IsCostCenter) {
+            vIsCostCenter = 'checked';
+        }
+        // List Currency
+        var vCureency = '<select ' + (vIsCumulative == 'checked' ? 'disabled' : '') + ' value="3" data-val="' + pAccountRow.CurrencyId + '"  class="CurrencyId form-control select" id="CurrencyId" name="CurrencyId"></select>';
+
+        // List SecurityGrade
+        var vSecurityGrade = '<select ' + (vIsCumulative == 'checked' ? 'disabled' : '') + '  data-val="' + pAccountRow.SecurityGradeId + '" class="SecurityGradeId form-control" id="SecurityGradeId" name="SecurityGradeId"></select> ';
+        // List AccountType
+        var vAccountType = '  <select disabled data-val="' + pAccountRow.AccountTypeId + '" class="AccountTypeId form-control" id="AccountTypeId" name="AccountTypeId"></select> ';
+        // List AccountReport
+        var vAccountReport = '<select disabled data-val="' + pAccountRow.AccountReportId + '" class="AccountReportId form-control" id="AccountReportId" name="AccountReportId"></select>';
+        // Content
+        var RowContent = ' <tr data-company="' + pAccountRow.AccountCodeHierarchy + '" data-Currency="' + pAccountRow.DefaultCurrencyId + '" data-id="' + pAccountRow.AccountId + '">' +
+            '<td><button type="button" data-id=" " class="btn btn-light btnLevel">' +
+            '<i class="fa fa-arrow-left"></i>' +
+            ' </button>' +
+
+            '</td>' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+
+            '<td  style="display:none"><input type="text" value="' + pAccountRow.AccountId + '" class="AccountId" class="form-control" name="AccountNo" id="AccountNo"></td>' +
+            '<td width="7%" ><input type="text" value="' + pAccountRow.AccountNo + '" class="AccountNo form-control" class="form-control" name="AccountNo" id="AccountNo" disabled></td>' +
+            /**/
+            '<td  ><input type="text" autocomplete="off" class="AccountNameL1 form-control" data-id="' + pAccountRow.AccountId + '" data-level="' + pAccountRow.AccountLevel + '" data--name="' + pAccountRow.Account + '' +
+            '" data-branch-id="' + pAccountRow.CompanyId + '" data-Branch-Name="' + pAccountRow.CompanyBranchNameL1 + '" data-="' + pAccountRow.Name + '" data--Id="' + pAccountRow.Id + '" value="' + pAccountRow.AccountNameL1 + '" class="form - control" name="AccountNameL1" id="AccountNameL1"></td>' +
+            /**/
+            '<td  style="width:130px">' +
+            '<div class="1">' +
+            vCureency +
+            '</div>' +
+            '</td>' +
+            '  <td  style="width:130px">' +
+            ' <div class="1">' +
+            vSecurityGrade +
+            ' </div>' +
+            ' </td>' +
+            ' <td  style="width:130px">' +
+            '<div class="1">' +
+            vAccountType +
+            '</div>' +
+            '</td>' +
+            '<td  style="width:160px">' +
+            '<div class="1">' +
+            vAccountReport +
+            '</div>' +
+            ' </td>' +
+            ' <td width="7%"><div class="custom-control custom-checkbox">' +
+            ' <input type="checkbox" class="custom-control-input disabled AccountIsCumulative" ' + vIsCumulative + ' id="AccountIsCumulative' + pAccountRow.AccountId + '">' +
+            ' <label class="custom-control-label small" for="AccountIsCumulative' + pAccountRow.AccountId + '""></label>' +
+            '</div></td>' +
+            ' <td width="7%"><div class="custom-control custom-checkbox">' +
+            ' <input type="checkbox" class="custom-control-input disabled IsCostCenter" ' + vIsCostCenter + ' id="IsCostCenter' + pAccountRow.AccountId + '">' +
+            ' <label class="custom-control-label small" for="IsCostCenter' + pAccountRow.AccountId + '""></label>' +
+            '</div></td>' +
+
+            ' <td><button class="btn btn-light btn-sm btnDelete" data-toggle="tooltip" data-placement="top"  title="حذف"  data-id="' + pAccountRow.AccountId + '"> <i class="fa fa-trash"></i> </button></td>' +
+            ' </tr>'
+
+        return RowContent
+    }
+
+    // Account Add Row
+    function funAccountAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+        {
+            "AccountLevel": $(pCurrentRow).find('.AccountNameL1').attr('data-level'),
+            "AccountIsCumulative": true,
+            "IsCostCenter": true,
+            "AccountNo": '',
+            "AccountId": 0,
+            "AccountCode": '',
+            "AccountNameL1": '',
+            "AccountNameL2": '',
+            "": '',
+            "CompanyId": '',
+            "CompanyBranchNameL1": 0,
+            "Id": ''
+        }
+        var vRowContent = funAccountRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+        //   $('.tblAccountBody').append(vRowContent)
+
+        funLoadSelectList();
+
+    }
+    // Add New Row
+    $('body').on('click', '.btnAccountAddLastRow', function () {
+        var vCurrentRow = $('.tblAccountBody').find("tr").last();
+
+        // Cash Desk Add Row
+        funAccountAddRow(vCurrentRow);
+        GetCompanyData();
+    })
+    // Add New Row
+    $('body').on('click', '.btnAccountAddRow', function () {
+        var vCurrentRow = $(this).closest("tr");
+
+        // Cash Desk Add Row
+        funAccountAddRow(vCurrentRow);
+        GetCompanyData();
+    })
+    // GET Cash Desk By Selected List
+    function funGETAccount(pAccountId, pAccountNo) {
+        var vAccountId;
+        var vAccountNo;
+        var vAccountName;
+        var vAccountLevel;
+        var vAccountId;
+        var vCompanyCodeH
+        var vCompanyCurrency
+        // GET Data
+        $.get('/api/APIAccount/AccountGet',
+            {
+                pAccountId: pAccountId,
+                pAccountNo: pAccountNo,
+                pQueryTypeId: 408
+            },
+            //$.post('/Home/GetAccount',
+            //    {
+            //        AccountId: pAccountId,
+            //        AccountNo: pAccountNo,
+            //        pQueryTypeId: 408
+            //    },
+            function (AccountData, status) {
+                // Table Body
+                var vAccountTableBody = $('.tblAccountBody');
+                // HTML CLEAR
+                vAccountTableBody.html('');
+                if (AccountData) {
+                    // JSON
+                    var vAccountDataResult = JSON.parse(AccountData);
+                    // For Each Cash Desk - Main
+                    vAccountDataResult = vAccountDataResult.sort(function (a, b) { return sortAccountsCallBack(a.AccountNo, b.AccountNo) });
+
+                    $.each(vAccountDataResult, function (m, cashDeskSubData) {
+                        // GET Cash Desk Row Content
+                        var vAccountRowContent = funAccountRowConfig(vAccountDataResult[m]);
+
+                        // Append Row Content
+                        vAccountTableBody.append(vAccountRowContent);
+                        // ToolTip
+                        $('[data-toggle="tooltip"]').tooltip()
+
+                        // AccountData
+                        vAccountNo = vAccountDataResult[m].AccountNo
+                        vAccountId = vAccountDataResult[m].Id
+
+                        vAccountLevel = vAccountDataResult[m].AccountLevel
+                        vAccountName = vAccountDataResult[m].AccountName
+
+                        // Get Company Data
+                        vCompanyCodeH = vAccountDataResult[m].AccountCodeHierarchy
+                        vCompanyCurrency = vAccountDataResult[m].DefaultCurrencyId
+
+
+                    })
+                    GetMainAccount(pAccountId, pAccountNo);
+                    if (vAccountNo) {
+
+                        //funSetMainValue(vAccountId, vAccountName, vAccountNo, vAccountLevel, vAccountId, vCompanyCodeH, vCompanyCurrency)
+
+                    } else {
+
+                        $('.tblAccountBody').append('<tr class="d-none"><td></td></tr>')
+
+                        GetCompanyData()
+                    }
+                }
+
+                // List
+                funLoadSelectList();
+
+            })
+    }
+
+    function sortAccountsCallBack(a, b) {
+        let aLastNo = a.split('.').reverse()[0];
+        let bLastNo = b.split('.').reverse()[0];
+        return aLastNo - bLastNo;
+    }
+
+    function SetValueSelectList() {
+        // Select List Value From DataBase
+        $('table > tbody > tr > td > div > select').each(function () {
+            var vSelectValue = $(this).attr('data-val')
+            for (i = 0; i < $(this).children().length; i++) {
+                var vOptionValue = $(this).children()[i].value
+                if (vOptionValue == vSelectValue) {
+                    $(this).children()[i].selected = true
+                }
+            }
+        })
+    }
+</script>
+
+<!-- Get Account -->
+<script>
+    // Account Code, Name - F9
+    $('.txtMainName,.txtMainNo').on('keydown dblclick', function (e) {
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Search Account
+            var vURL = '/Account/SearchAccount';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Select Account
+            $('body').on('click', '.divAccountSelect', function () {
+
+                // Account Id
+                var vAccountId = $(this).attr('data-id');
+
+                // Get Values
+                var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                var vAccountNameValue = $(this).find('.divAccountName').text();
+
+                // Set Value
+                $('.txtAccountId').val(vAccountId);
+                $('.txtMainNo').val(vAccountCodeValue);
+                $('.txtMainName').val(vAccountNameValue);
+
+                // Load Table
+                funGETAccount(null, vAccountId)
+
+                // Modal Show
+                $('#AccountDataModal').modal('hide');
+
+            })
+        }
+    })
+    // When Change Value Of Id
+    $('.txtMainNo').on('change', function () {
+        var vAccountNo = $('.txtMainNo').val();
+        var vAccountId;
+        if (vAccountNo == '') {
+            vAccountId = '0';
+            // AccountId
+            $('.txtMainName').val('');
+            $('.txtAccountId').val('0');
+            $('.txtAccountLevel').val('');
+            $('.txtAccountId').val('0');
+        }
+
+        var vId = $('.txtMainNo').val();
+        funGETAccount(vAccountId, vId)
+
+    });
+    //});
+</script>
+<script>
+    function GetCompanyData() {
+        // Valid Currency
+        var vValidCurrency = true;
+        // Company Hierarchy
+        var vCompanyCodeHierarchy = $('.txtCompanyCodeH').val();
+        var vCompanyLength = vCompanyCodeHierarchy.length + 1
+        // AccountLevel
+        var vAccountLevel = parseInt($('.txtAccountLevel').val(), 10) + 1
+        // vAccountNameL1
+        var vAccountNameL1 = $('.AccountNameL1').val()
+        $('table > tbody >tr').each(function () {
+
+            // IS Cumulative
+            if (vAccountLevel > vCompanyLength) {
+
+                //$('.AccountIsCumulative').prop('disabled', true)
+                //$('.AccountIsCumulative').prop('checked', false)
+                //$('.CurrencyId').prop('disabled', false)
+
+                vValidCurrency = false;
+
+            }
+        })
+        //Company Currency
+        var vCompanyCurrency = $('.txtCompanyCurrency').val();
+        if (vCompanyCurrency && vValidCurrency) {
+            $('.CurrencyId').val(vCompanyCurrency)
+        }
+        $(document).ready(function () {
+
+            // Get Level
+            var vAccountNo = $('.txtMainNo').val();
+            if (vAccountNo == '') {
+                $('select').not('.CurrencyId').prop('disabled', false)
+            }
+        })
+    }
+</script>
+<script>
+    // Print
+    $('.btnPrint').on('click', function () {
+        @*location.href = '/Account/ChartAccountReport?pCompanyId=' + '@clsUser.vUserCompanyId'*@
+        var url = '/Account/ChartAccountReport?pCompanyId=' + '@clsUser.vUserCompanyId'
+        var popupWindow = window.open(url);
+    });
+    //SimpleInSameWin()
+
+    $(document).on('change', '.AccountNameL1, .CurrencyId, .IsCostCenter, .SecurityGradeId, .AccountTypeId, .AccountReportId, .AccountIsCumulative', function () {
+        $(this).closest('tr').attr('data-changed', 'true');
+    });
+
+    function saveChanges() {
+        let accountsArr = [];
+        $('.tblAccountBody').find('tr[data-changed="true"]').each(function () {
+            let account = {
+                AccountId: $(this).find('.AccountId').val(),
+                AccountNo: $(this).find('.AccountNo').val(),
+                AccountNameL1: $(this).find('.AccountNameL1').val(),
+                AccountId: $('.txtAccountId').val(),
+                AccountLevel: $(this).find('.AccountNameL1').attr('data-level'),
+                CurrencyId: $(this).find('.CurrencyId').val(),
+                IsCostCenter: $(this).find('.IsCostCenter').prop('checked'),
+                SecurityGradeId: $(this).find('.SecurityGradeId').val(),
+                AccountTypeId: $(this).find('.AccountTypeId').val(),
+                AccountingReportId: $(this).find('.AccountReportId').val(),
+                AccountIsCumulative: $(this).find('.AccountIsCumulative').prop('checked'),
+                AccountIsActive: true,
+                CurrencyFactorId: 0,
+                AccountIsDebit: false
+            }
+            accountsArr.push(account);
+        });
+        //console.log(accountsArr);
+        return $.ajax({
+            url: '/api/APIAccount/SaveChanges', method: 'POST', contentType: 'application/json',
+            data: JSON.stringify(accountsArr),
+            success: function (r) {
+                console.log(JSON.parse(r));
+                let vId = localStorage.getItem('AccountId');
+
+                funGETAccount(vId, null);
+            }
+        });
+    }
+</script>

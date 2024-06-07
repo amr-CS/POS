@@ -1,0 +1,168 @@
+﻿@model appSERP.Models.GD.DevCompanyModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<!-- Header -->
+<div class="container-fluid">
+    @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._Company, pId = Model.DevCompanyId  })
+</div>
+
+@using (Html.BeginForm("DevCompanyDataModel", "CPanel", FormMethod.Post, new { enctype = "multipart/form-data", @data_ajax = "false" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.DevCompanyId)
+
+        <!-- 1st Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.DevCompanyNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DevCompanyNameL1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.DevCompanyNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DevCompanyNameL2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyPhone, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.DevCompanyPhone, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DevCompanyPhone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyPhone2, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.DevCompanyPhone2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DevCompanyPhone2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyEmail, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.DevCompanyEmail, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DevCompanyEmail, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyWebsite, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.DevCompanyWebsite, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DevCompanyWebsite, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyAddress, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.DevCompanyAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DevCompanyAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyImage, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <input name="pDevCompanyImage" id="pDevCompanyImage" type="file" multiple="multiple" accept="image/*" onchange="funShowImage1(this)" />
+                        <img id="imgData1" src="data:image/gif;base64,@Model.DevCompanyImage" width="75" />
+                        @Html.ValidationMessageFor(model => model.DevCompanyImage, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyImageFull, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <input name="pDevCompanyImageFull" id="pDevCompanyImageFull" type="file" multiple="multiple" accept="image/*" onchange="funShowImage2(this)" />
+                        <img id="imgData2" src="data:image/gif;base64,@Model.DevCompanyImageFull" width="75" />
+                        @Html.ValidationMessageFor(model => model.DevCompanyImageFull, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevAppImage, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <input name="pDevAppImage" id="pDevAppImage" type="file" multiple="multiple" accept="image/*" onchange="funShowImage3(this)" />
+                        <img id="imgData3" src="data:image/gif;base64,@Model.DevAppImage" width="75" />
+                        @Html.ValidationMessageFor(model => model.DevAppImage, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DevCompanyIsActive, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.DevCompanyIsActive)
+                            @Html.ValidationMessageFor(model => model.DevCompanyIsActive, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      
+
+      
+    </div>
+
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+}
+
+
+<script>
+
+    // Show Image [on Change]
+    function funShowImage1(pElement) {
+        if (pElement.files && pElement.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#imgData1').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(pElement.files[0]);
+        }
+    }
+    // Show Image [on Change]
+    function funShowImage2(pElement) {
+        if (pElement.files && pElement.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#imgData2').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(pElement.files[0]);
+        }
+    }
+
+    // Show Image [on Change]
+    function funShowImage3(pElement) {
+        if (pElement.files && pElement.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#imgData3').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(pElement.files[0]);
+        }
+    }
+
+
+</script>

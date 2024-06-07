@@ -1,0 +1,128 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "LookupSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divUnit {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divUnitSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divUnitSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divUnitNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">الوحدات</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divUnit">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyLookup"></tbody>
+    </table>
+
+</div>
+
+
+<!-- Lookup GET -->
+<script>
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Lookup GET
+        funLookupGET();
+    })
+
+    // Lookup GET
+    function funLookupGET() {
+
+        $.get('/api/APIInvItemUnit/InvItemUnitGET',
+            {
+                pItemId: @ViewBag.vbItemId,
+                pQueryTypeId: '401',
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyLookup');
+
+                console.log(vDataResult)
+                // Lookups
+                $.each(vDataResult, function (i, LookupData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].LookupId + '">';
+
+                    var vLookupName = vDataResult[i].LookupNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vLookupName = vDataResult[i].LookupNameL2;
+                    }
+                    console.log(vDataResult[i].AccountIsCostCenter)
+                    vRowContent += '<td data-id="' + vDataResult[i].LookupId + '">';
+                    vRowContent += '<div class="divUnitSelect d-flex p-2" data-id="' + vDataResult[i].UnitId + '">';
+                    vRowContent += '<div class="divUnitId d-none px-4">' + vDataResult[i].UnitId + '</div>';
+                    vRowContent += '<div class="divAccountId px-4 d-none">' + vDataResult[i].UnitNameL1 + '</div>';
+                    vRowContent += '<div class="divUnitPrice px-4 d-none">' + vDataResult[i].UnitPrice + '</div>';
+                    vRowContent += '<div class="divUnitName  px-4">' + vDataResult[i].UnitNameL1 + '</div>';
+
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+
+
+
+
+    }
+
+</script>
+
+<!-- Search Lookup -->
+<script>
+
+</script>

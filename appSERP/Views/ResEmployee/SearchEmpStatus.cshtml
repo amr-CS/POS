@@ -1,0 +1,161 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "EmpStatusSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divEmpStatus {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divEmpStatusSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divEmpStatusSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divEmpStatusNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource.lblEmpStatusDirectory</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divEmpStatus">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyEmpStatus"></tbody>
+    </table>
+</div>
+
+
+<!-- EmpStatus GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // EmpStatus GET
+        funEmpStatusGET();
+    })
+
+    // EmpStatus GET
+    function funEmpStatusGET() {
+
+        $.get('/api/APIEmpStatus/EmpStatusGET',
+            {
+
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyEmpStatus');
+
+
+                // EmpStatuss
+                $.each(vDataResult, function (i, EmpStatusData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].LookupDtlId + '">';
+
+                    var vEmpStatusName = vDataResult[i].LookupDtlDesc;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vEmpStatusName = vDataResult[i].LookupDtlDesc;
+                        }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].LookupDtlId + '">';
+                    vRowContent += '<div class="divEmpStatusSelect d-flex p-2" data-id="' + vDataResult[i].LookupDtlId + '">';
+                    vRowContent += '<div class="divEmpStatusNo px-4">' + vDataResult[i].CodeId  + '</div>';
+                                vRowContent += '<div class="divEmpStatusName px-4">' + vEmpStatusName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search EmpStatus -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divEmpStatusSelect').each(function () {
+
+                // Get EmpStatus Code
+                var vEmpStatusCode = $(this).find('.divEmpStatusNo').text();
+                var vEmpStatusName = $(this).find('.divEmpStatusName').text();
+
+                if (vEmpStatusCode.search(vSearchInput) != -1 || vEmpStatusName.search(vSearchInput) != -1) {
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                    console.log('found')
+                }
+                else {
+                    //$(this).removeClass('table-success');
+                    //$(this).show();
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            //$('.divEmpStatusSelect').removeClass('table-success');
+            //$(this).show();
+            $('.divEmpStatusSelect').each(function () {
+                
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+               
+
+            })
+        }
+    })
+</script>

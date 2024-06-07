@@ -1,0 +1,155 @@
+﻿<!-- User -->
+@model System.Data.DataTable
+@using System.Data
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.SEC
+@using appSERP.appCode.Setting.User
+@{ DataTable vDtData = @Model;}
+@{
+    ViewBag.Title = "المستخدمين";
+}
+<!-- Header -->
+<div>
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblUser })
+</div>
+<!-- Utlity -->
+<div class="divUtilityBar d-flex ">
+    @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+</div>
+
+<!-- Data Container -->
+<div id="divContainer">
+    <!-- DataTable -->
+    <table class="table table-hover tblData" id="tblData">
+        <!-- DataTable Header -->
+        <thead>
+            <tr>
+                <th>@appResource._UserFullName</th>
+                <th>@appResource._Address</th>
+                <th>@appResource._Phone1</th>
+                <th>@appResource._Email</th>
+                <th>@appResource.IsUserLock</th>
+                <th>@appResource.SecurityGradeId</th>
+                <th>@appResource.SecurityGradeId</th>
+                <th>@appResource._Language</th>
+                <th>@appResource._Language</th>
+                <th>@appResource._Country</th>
+                <th>@appResource._Country</th>
+                <th>@appResource.FontSizeTypeId</th>
+                <th>@appResource.FontSizeTypeId</th>
+                <th>@appResource._IsActive</th>
+                <th class="thActions">@appResource._Actions</th>
+            </tr>
+        </thead> <!-- End of DataTable Header -->
+        <!-- DataTable Body -->
+        <tbody>
+            @foreach (DataRow vDrwData in vDtData.Rows)
+            {
+                <tr data-active="@vDrwData["UserIsActive"]" data-id="@vDrwData["UserId"]">
+                    <!-- Data -->
+                    <td title="@vDrwData["UserFullName"]">@vDrwData["UserFullName"]</td>
+                    <td title="@vDrwData["UserAddress"]">@vDrwData["UserAddress"]</td>
+                    <td title="@vDrwData["UserPhone"]">@vDrwData["UserPhone"]</td>
+                    <td title="@vDrwData["UserEmail"]">@vDrwData["UserEmail"]</td>
+                    <td title="@vDrwData["IsUserLock"]">@vDrwData["IsUserLock"]</td>
+
+                    <td title="@vDrwData["SecurityGradeNameL1"]">@vDrwData["SecurityGradeNameL1"]</td>
+                    <td title="@vDrwData["SecurityGradeNameL2"]">@vDrwData["SecurityGradeNameL2"]</td>
+                    <td title="@vDrwData["LanguageNameL1"]">@vDrwData["LanguageNameL1"]</td>
+                    <td title="@vDrwData["LanguageNameL2"]">@vDrwData["LanguageNameL2"]</td>
+                    <td title="@vDrwData["CountryNameL1"]">@vDrwData["CountryNameL1"]</td>
+                    <td title="@vDrwData["CountryNameL2"]">@vDrwData["CountryNameL2"]</td>
+                    <td title="@vDrwData["FontSizeTypeNameL1"]">@vDrwData["FontSizeTypeNameL1"]</td>
+                    <td title="@vDrwData["FontSizeTypeNameL2"]">@vDrwData["FontSizeTypeNameL2"]</td>
+
+
+
+                    <td class="dataIsActive"></td>
+                    <!-- Actions -->
+                    <td>
+                        <!-- Edit -->
+                        <button type="button" class="btn btnEdit" data-id="@vDrwData["UserId"]">
+                            <i class="icoEdit"></i>
+                        </button>
+                        <!-- Delete -->
+                        <button type="button" class="btn btnDelete" data-id="@vDrwData["UserId"]" data-name="@vDrwData["UserFullName"]">
+                            <i class="icoDelete"></i>
+                        </button>
+                    </td> <!-- End of Actions Cell -->
+                </tr>
+            }
+        </tbody><!-- End of DataTable Body -->
+    </table> <!-- End of DataTable -->
+</div> <!-- End of Data Container -->
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<!-- Script Create / Edit / Delete -->
+<script>
+    // Data Model URL
+    var vDataURL = '/User/DataModel/';
+    // Data Model Elements [Create / Edit]
+    var vDataModelElements = $('.btnCreate, .btnEdit');
+    // Click Event
+    vDataModelElements.on('click', function () {
+        // Id
+        var vDataId = $(this).attr('data-id');
+        // Modal
+        $('#dataModalContent').load(vDataURL + vDataId);
+        // Check Modal Input
+        funCheckModalInput();
+        // Modal Show
+        $('#dataModal').modal('show');
+    });</script>
+<script>
+    $('.btnDelete').on('click', function () {
+        // Id - NameAr - NameEn
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                // Modal
+                $('#confirmDeleteModalContent').html(data);
+                $('#confirmDeleteModal').modal('show');
+                // Click Event [Delete Confirm]
+                $("body").on("click", "#btnDeleteConfirm", function () {
+                    // Delete Action URL
+                    var vDeleteActionURL = '/User/DataModel/';
+                    // Delete
+                    $.post(vDeleteActionURL, { id: vDataId, pIsDelete: true }, function () {
+                        window.location.href = '/User';
+                    });
+                });
+            });
+    }); // End of Click Event [Delete Button]</script>
+<!-- Notification -->
+<script src="~/Scripts/Notification/jquery.toast.js"></script>
+<script src="~/Scripts/Notification/jsNotifications.js" type="text/javascript"></script>
+<script>
+    funNotification('@ViewBag.dbUser.vSQLResult', '@ViewBag.dbUser.vSQLResultTypeId');
+    @{ ViewBag.dbUser.vSQLResult = string.Empty;}
+    $('.btnPrint').on('click', function () {
+        var url = '/User/UserReport'
+        var popupWindow = window.open(url);
+    });
+</script>

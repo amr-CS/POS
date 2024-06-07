@@ -1,0 +1,1211 @@
+﻿
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+
+@{
+    DateTime dateTimeFrom = ViewBag.DateFrom;
+    DateTime dateTimeTo = ViewBag.DateTo;
+
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    clsUser.vUserFullName = ticket.Name; ;
+    int UserId = 0;
+    if (Request.Cookies["UserId"] != null)
+    { UserId = Convert.ToInt32(Request.Cookies["UserId"].Value); };
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+}
+@{
+    ViewBag.Title = "التقارير العامة";
+}
+<style>
+    #divElement {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        margin-left: -50px;
+        width: 100px;
+        height: 100px;
+    }
+
+
+    body {
+        font-family: Cairo;
+        background-color: #FFF;
+    }
+
+    .fullHeightInput {
+        height: 50px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table {
+        padding: 0rem;
+    }
+    /*.table td {
+        margin-top: 0.5rem;
+        padding: 0rem !important;
+    }*/
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[disabled] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .txtDiscount {
+        height: 27px !important;
+        padding: 1px;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+</style>
+<!-- Utility Bar -->
+@*@Html.Action("Index", "DocUtilityBar")*@
+
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+</style>
+<!-- Head -->
+<div class="">
+    <div class="bg-white border rounded p-3">
+        <div class="w-100">
+            <div class="d-flex justify-content-end">
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Save -->
+                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Copy -->
+                    <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                    <!-- Paste -->
+                    <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Print -->
+                    <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnClear" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                    <!-- Edit -->
+                    <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- PDF -->
+                    <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <!-- Excel -->
+                    <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                    <!-- Word -->
+                    <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Close -->
+                    <button class="btn btnUtility btnDelete" title="@appResource.btnDelete"><i class="fa fa-close"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Full Screen -->
+                    <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <div class="dropdown">
+                        <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-table"></i>
+                        </button>
+                        <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Details Main -->
+
+<div class="">
+
+    <!-- Title -->
+    <div class="bg-white border rounded p-3 mb-3">تقارير عامة</div>
+    <div class="bg-white border rounded p-3  row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+
+            <div class="row ">
+                <div class="col-sm-3">
+                    <label class="small  pt-2">الكاشير</label>
+                </div>
+                <div class="col-sm-9">
+                    <div class="d-flex txtProdLine">
+                        <input type="text" class="form-control form-control-sm w-25  txtProdLineId txtCasherId d-none" />
+                        <input type="text" class="form-control form-control-sm w-25 txtProdLineCode txtCasherCode" />
+                        <input type="text" id="start" class="form-control form-control-sm txtProdLineName txtCasherName" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-sm-3">
+                    <label class="small  pt-2">العميل</label>
+                </div>
+                <div class="col-sm-9">
+                    <div class="d-flex txtProdLine">
+                        <input type="text" class="form-control form-control-sm w-25  txtProdLineId txtCustomerId d-none" />
+                        <input type="text" class="form-control form-control-sm w-25 txtProdLineCode txtCustomerCode" />
+                        <input type="text" id="start" class="form-control form-control-sm txtProdLineName txtCustomerName" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-sm-3">
+                    <label class="small  pt-2">الوجبات</label>
+                </div>
+                <div class="col-sm-9">
+                    <div class="d-flex ">
+                        <input type="text" class="form-control form-control-sm w-25   txtItemId d-none" />
+                        <input type="text" class="form-control form-control-sm w-25  txtItemCode" />
+                        <input type="text" id="start" class="form-control form-control-sm  txtItemName" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+        </div>
+    </div>
+    <div class="bg-white border rounded p-3 row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4 row">
+            <!-- Default unchecked -->
+            <div class="custom-control custom-radio mr-5 ml-5 d-none">
+                <input type="radio" class="custom-control-input" id="defaultUnchecked" name="periodRadios">
+                <label class="custom-control-label" for="defaultUnchecked">حسب فترة اليوم</label>
+            </div>
+
+            <!-- Default checked -->
+            <div class="custom-control custom-radio mr-5 ml-5">
+                <input type="radio" class="custom-control-input" id="defaultChecked1" name="periodRadios" checked>
+                <label class="custom-control-label" for="defaultChecked1">خلال الفترة</label>
+            </div>
+            <!-- Default checked -->
+            <div class="custom-control custom-radio mr-5 ml-5">
+                <input type="radio" class="custom-control-input" id="defaultChecked" name="periodRadios" checked>
+                <label class="custom-control-label" for="defaultChecked">الفترة الحالية</label>
+            </div>
+        </div>
+        <div class="col-sm-4">
+        </div>
+    </div>
+    <div class="bg-white border rounded p-3 ">
+
+        <div class="row">
+
+            <div class="row col-sm-12">
+                @*<div class="row col-sm-2">
+                        <div class="col-sm-2">
+                            <label class="small  pt-2">الفترة</label>
+
+                        </div>
+
+                        <div class="col-sm-10">
+
+                            <div class="d-flex ">
+                                <input type="text" class="form-control form-control-sm" style="visibility:hidden; width:1%"  />
+                                <select id="selectPeriod" class="selectPeriod form-control mb-5" name="PeriodId"></select>
+
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="row col-sm-5">
+                    <div class="col-sm-3">
+                        <label class="  pt-2">من تاريخ</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="d-flex txtProdLine">
+                            <input class="timeFrom" type="time" name="appt-time" value="04:00">
+
+                            <input type="date" class="form-control dtpDateFrom" value="@dateTimeFrom.ToString("yyyy-MM-dd")" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-sm-5">
+                    <div class="col-sm-3">
+                        <label class="  pt-2">الي تاريخ</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="d-flex ">
+                            <input class="timeTo" type="time" value="04:00" />
+
+                            <input type="date" class="form-control dtpDateTo" value="@dateTimeTo.ToString("yyyy-MM-dd")" />
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-5 row pt-5">
+                <div class="col-sm-3">
+                    <label>نوع فواتير السائقين </label>
+                </div>
+                <div class="col-sm-9">
+
+                    <div class="d-flex">
+                        <div class="w-25">
+                            <input type="text" class="form-control  InvTypeId" />
+                        </div>
+                        <div class="w-100">
+                            <input type="text" class="form-control InvTypeNameL1" disabled />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5 row pt-5">
+                <div class="col-sm-3">
+                    <label>اختر الفرع</label>
+                </div>
+                <div class="col-sm-9">
+
+                    <div class="d-flex">
+                        @*@Html.DropDownList("Branches", null, "الفروع", new { @class = "form-control" })*@
+
+                        <select class="form-control d-none" id="Branches" >
+                            <option value="5">السلطان</option>
+                            <option value="3">السلام</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-0">
+            </div>
+        </div>
+
+    </div>
+    <div class="bg-white border rounded p-3 ">
+
+        <div class=" row">
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-2">
+                <!-- Default unchecked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkExp" name="defaultExampleRadios">
+            <label class="custom-control-label" for="chkExp">المصروفات</label>*@
+                    <input type="radio" class="custom-control-input" value="1" id="chkTotal" name="defaultExampleRadios" checked>
+                    <label class="custom-control-label" for="chkTotal">اجمالي المبيعات</label>
+                </div>
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkExp" name="defaultExampleRadios">
+            <label class="custom-control-label" for="chkExp">المصروفات</label>*@
+                    <input type="radio" class="custom-control-input" value="3" id="chkReturnTotal" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkReturnTotal"> صافي المبيعات</label>
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkSellDtl" name="defaultExampleRadios" checked>
+            <label class="custom-control-label" for="chkSellDtl">المبيعات التفصيلي</label>*@
+                    <input type="radio" class="custom-control-input" value="5" id="chkComm" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkComm">مبيعات تجميعي</label>
+
+                </div>
+                <div class="custom-control custom-radio m-3">
+                    <input type="radio" class="custom-control-input" value="7" id="chkDriver" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkDriver">مبيعات السائقين</label>
+
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkCashSell" name="defaultExampleRadios" checked>
+            <label class="custom-control-label" for="chkCashSell">مبيعات تفصيلي كاشيرات</label>*@
+                    <input type="radio" value="23" class="custom-control-input" id="chkCashComm" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkCashComm">مبيعات تجميعي كاشيرات</label>
+
+                </div>
+                <!-- Default unchecked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkReceipt" name="defaultExampleRadios">
+            <label class="custom-control-label" for="chkReceipt">سندات قبض</label>*@
+                    <input type="radio" value="10" class="custom-control-input" id="chkCash" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkCash">المبالغ المتبقية للفترة</label>
+
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkRent" name="defaultExampleRadios" checked>
+            <label class="custom-control-label" for="chkRent">التأجير</label>*@
+                    <input type="radio" value="12" class="custom-control-input" id="chkIns" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkIns">التأمين</label>
+
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkdis" name="defaultExampleRadios" checked>
+            <label class="custom-control-label" for="chkdis">تفاصيل الخصومات</label>*@
+                    <input type="radio" value="14" class="custom-control-input" id="chkInsRent" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkInsRent"> مردودات التأمين</label>
+                </div>
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkVouch" name="defaultExampleRadios" checked>
+            <label class="custom-control-label" for="chkVouch">الفواتير التي تم تعديلها</label>*@
+                    <input type="radio" value="16" class="custom-control-input" id="chkDailyRpt" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkDailyRpt">التقرير اليومي</label>
+
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkCancel" name="defaultExampleRadios" checked>
+            <label class="custom-control-label" for="chkCancel">الفواتير الملغية</label>*@
+                    <input type="radio" value="18" class="custom-control-input" id="chkCarcassRpt" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkCarcassRpt">تقرير الذبائح</label>
+
+                </div>
+                <div class="custom-control custom-radio m-3">
+                    <input type="radio" value="20" class="custom-control-input" id="chkMeal" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkMeal">اجمالي مبيعات الوجبات </label>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <!-- Default unchecked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkTotal" name="defaultExampleRadios">
+                        <label class="custom-control-label" for="chkTotal">اجمالي المبيعات</label>*@
+                    <input type="radio" value="2" class="custom-control-input" id="chkExp" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkExp">المصروفات</label>
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkComm" name="defaultExampleRadios" checked>
+                        <label class="custom-control-label" for="chkComm">مبيعات تجميعي</label>*@
+                    <input type="radio" value="4" class="custom-control-input" id="chkSellDtl" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkSellDtl">المبيعات التفصيلي</label>
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkCashComm" name="defaultExampleRadios" checked>
+                        <label class="custom-control-label" for="chkCashComm">مبيعات تجميعي كاشيرات</label>*@
+                    <input type="radio" value="6" class="custom-control-input" id="chkCashSell" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkCashSell">مبيعات تفصيلي كاشيرات</label>
+                </div>
+                <!-- Default unchecked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkCash" name="defaultExampleRadios">
+                        <label class="custom-control-label" for="chkCash">المبالغ المتبقية للفترة</label>*@
+                    <input type="radio" value="8" class="custom-control-input" id="chkReceipt" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkReceipt">سندات قبض</label>
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkIns" name="defaultExampleRadios" checked>
+                        <label class="custom-control-label" for="chkIns">التأمين</label>*@
+                    <input type="radio" value="9" class="custom-control-input" id="chkRent" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkRent">التأجير</label>
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkInsRent" name="defaultExampleRadios" checked>
+                        <label class="custom-control-label" for="chkInsRent">تأمين التأجير</label>*@
+                    <input type="radio" value="11" class="custom-control-input" id="chkdis" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkdis">تفاصيل الخصومات</label>
+                </div>
+                <div class="custom-control custom-radio m-3">
+                    @*<input type="radio" class="custom-control-input" id="chkDailyRpt" name="defaultExampleRadios" checked>
+                        <label class="custom-control-label" for="chkDailyRpt">التقرير اليومي</label>*@
+                    <input type="radio" value="13" class="custom-control-input" id="chkVouch" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkVouch">الفواتير التي تم تعديلها</label>
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio m-3">
+
+                    <input type="radio" value="15" class="custom-control-input" id="chkCancel" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkCancel">الفواتير الملغية</label>
+                </div>
+                <div class="custom-control custom-radio m-3">
+                    <input type="radio" value="17" class="custom-control-input" id="chkallCashier" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkallCashier">فواتير الكاشير</label>
+                </div>
+                <div class="custom-control custom-radio m-3">
+                    <input type="radio"  value="19" class="custom-control-input" id="chkReturn" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkReturn">فواتير المرتجعات</label>
+                </div>
+                <div class="custom-control custom-radio m-3">
+                    <input type="radio" value="21" class="custom-control-input" id="chkMealGroup" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkMealGroup">اجمالي مبيعات الوجبات تجميعي</label>
+                </div>  
+                @*<div class="custom-control custom-radio m-3">
+                    <input type="radio" value="21" class="custom-control-input" id="chkItemCostMinMaxReport" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkItemCostMinMaxReport">تقرير  حساب متوسط تكلفة اصناف مواد خام </label>
+                </div>*@
+                <div class="custom-control custom-radio m-3">
+                    <input type="radio" value="22" class="custom-control-input" id="chkallCustomer" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkallCustomer">فواتير العملاء</label>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div id="CashierDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="CashierDataModalContent"></div>
+        </div>
+    </div>
+
+    <!-- AccountData Modal -->
+    <div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="AccountDataModalContent"></div>
+        </div>
+    </div>
+    <div id="InvTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="InvTypeDataModalContent"></div>
+        </div>
+    </div>
+    <div id="CustomerDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="CustomerDataModalContent"></div>
+        </div>
+    </div>
+  
+
+
+
+  
+
+  
+    
+    
+    <script>
+        var NumberReports;
+         $(document).ready(function () {
+        // Get Data From Gl Voucher After Select
+        $.get('/api/APIBranchSetting/BranchSettingGet',
+            {
+              
+                pQueryTypeId: '406'
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    // JSON Parse
+                    var vDataJSON = JSON.parse(data);
+                    NumberReports = JSON.parse("[" + vDataJSON[0].NumberReports + "]")
+                    console.log(NumberReports)
+                }
+            });
+    });
+
+
+        funGetEmpById()
+        var Item = $.parseJSON($.ajax({
+            url: '/api/APIInvItem/InvItemGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: { phNumbers: '2,3', pQueryTypeId: '409', },
+            async: false
+        }).responseText);
+        var ReportPeriod = 0;
+        var  days  = 0;
+        var  MaxDatePeriod  = 0;
+        function funGetEmpById()
+        {
+            var timeFrom = $('.timeFrom').val()
+            var timeTo = $('.timeTo').val()
+            var DateFrom = $('.dtpDateFrom').val() + ' ' + timeFrom
+            var DateTo = $('.dtpDateTo').val() + ' ' + timeTo
+            $.get('/api/APIUserCashier/UserCashierGET',{
+                pUserId: @UserId,
+                pQueryTypeId: '400'
+            },function (data, status) {
+                //console.log(data)
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    ReportPeriod = vDataResult[0].ReportPeriod }
+            })
+            // end - start returns difference in milliseconds
+            var from = new Date(DateFrom);
+            var to = new Date(DateTo);
+            var diff = new Date(to - from);
+            // get days
+            days = diff / 1000 / 60 / 60 / 24;
+            var d = new Date();
+            d.setDate(d.getDate() - ReportPeriod);
+            MaxDatePeriod = new Date(d.toLocaleString());
+        }
+        localStorage.setItem("Item", Item)
+        $('body').on('keyup dblclick', '.txtCustomerCode', function (e) {
+            // Table Row - Closest Row
+           var vTableRow = $(this).closest('tr');
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                // Search Account
+                var vURL = '/GLCustomer/SearchCustomerModal';
+                // Load Content of Account Search
+                $('#CustomerDataModalContent').load(vURL);
+                // Modal Show
+                $('#CustomerDataModal').modal('show');
+                // Focus
+                $('#CustomerDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divCSSelect', function () {
+                        // Get Values
+                        var vCSId = $(this).closest('tr').attr('data-id');
+                        var vCSNameValue = $(this).closest('tr').find('.divCustomerName').text();
+                        var vCSNameL2Value = $(this).closest('tr').find('.divCustomerNameL2').text();
+                        var vCSCodeValue = $(this).closest('tr').find('.divCustomerNo').text();
+                        var vCSphoneValue = $(this).closest('tr').find('.divCustomerPhoneNumber').text();
+
+                        // Get CS Data
+                        var vCSIdElement = $('.txtCustomerCode');
+                        var vCSCodeElement = $('.txtCustomerCode');
+                        var vCSNameElement = $('.txtCustomerName');
+                        var vCSNameL2Element = $('.txtCustomerNameL2');
+
+                        // Set Value
+                        vCSIdElement.val(vCSId);
+                        vCSCodeElement.attr('data-id', vCSCodeValue);
+                        vCSCodeElement.attr('data-phone', vCSphoneValue);
+                        vCSNameElement.val(vCSNameValue);
+                        vCSNameL2Element.val(vCSNameL2Value);
+                        // Modal Show
+                        $('#CustomerDataModal').modal('hide');
+
+                    })
+                })
+            }
+        })
+
+
+        $('body').on('change', '.txtCustomerCode', function (e) {
+        // Table Row - Closest Row
+       var vTableRow = $(this).closest('tr');
+        // Get  Data
+        var vCustomerIdElement = $('.txtCustomerCode').val();
+        var vCustomerNameElement =$('.txtCustomerName');
+        var vCustomerCodeElement = $('.txtCustomerCode');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APIGLCustomer/GLCustomerGET',
+            {
+                pIsCustomer: true,
+                pCustomerId: vCustomerIdElement,
+                pQueryTypeId: '413',
+            },
+            function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vCustomerNameElement.val('');
+                        vCustomerCodeElement.val('');
+                        funNotification('@appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Customer) {
+                            // Set Value
+                            vCustomerNameElement.val(Customer.CustomerNameL1);
+                            vCustomerCodeElement.attr('data-id',Customer.CustomerId);
+                            vCustomerCodeElement.attr('data-phone', Customer.CustomerPhoneNumber);
+                            FillSite(Customer.CustomerId)
+                            $('#chkDelivery').prop('checked', true);
+                        });
+                    }
+                });
+    })
+        // InvType Code, Name - F9
+        $('body').on('keydown dblclick', '.InvTypeId', function (e) {
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+            // Check F9
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                localStorage.setItem('lstcurrentInvTypetxt', '0')
+                localStorage.setItem('lstInvTypecurrentindex', vTableRow.index)
+
+
+                // Get InvType Data
+                var vInvTypeIdElement = vTableRow.find('.InvTypeId');
+                var vInvTypeNameElement = vTableRow.find('.InvTypeNameL1');
+
+
+                // Search InvType
+                var vURL = '/InvType/SearchInvType';
+                // Load Content of InvType Search
+                $('#InvTypeDataModalContent').load(vURL);
+                // Modal Show
+                $('#InvTypeDataModal').modal('show');
+                // Focus
+                $('#InvTypeDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+                    // Select InvType
+                    $('body').on('click', '.divInvTypeSelect', function () {
+                        if (localStorage.getItem('lstInvTypecurrentindex') == vTableRow.index) {
+                            $('.txtSearch').focus();
+
+                            // InvType Id
+                            var vInvTypeId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vInvTypeCodeValue = $(this).find('.divInvTypeNo').text();
+                            var vInvTypeNameValue = $(this).find('.divInvTypeName').text();
+
+                            // Set Value
+                            $('.InvTypeId').val(vInvTypeCodeValue);
+                            $('.InvTypeId').attr('data-id', vInvTypeId);
+                            $('.InvTypeNameL1').val(vInvTypeNameValue);
+                            //  vTableRow.attr('data-changed', '1')
+                            // Modal Show
+                            $('#InvTypeDataModal').modal('hide');
+                            //   vTableRow = '';
+                        }
+
+
+
+                    })
+                })
+            }
+        })
+
+        $('.dtpDateFrom').prop('disabled', true)
+        $('input[type="time"]').prop("disabled", true);
+        $('.dtpDateTo').prop('disabled', true)
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+
+        $('.txtCasherCode').on('keydown dblclick', function (e) {
+            // Check F9
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                localStorage.setItem('lstcurrentCashertxt', 'txtCasherId')
+                // Get Casher Data
+                var vCasherIdElement = $('.txtCasherId');
+                var vCasherCodeElement = $('.txtCasherCode');
+                var vCasherNameElement = $('.txtCasherName');
+                //vCasherIdElement.val('');
+                //vCasherNameElement.val('');
+
+                // Search Casher
+                var vURL = '/UserCashier/CashierSearch'
+                // Load Content of Casher Search
+                $('#CashierDataModalContent').load(vURL);
+                // Modal Show
+                $('#CashierDataModal').modal('show');
+                // Focus
+                $('#CashierDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+                    // Select Casher
+                    $('body').on('click', '.divCashSelect', function () {
+                        if (localStorage.getItem('lstcurrentCashertxt') == 'txtCasherId') {
+                            $('.txtSearch').focus();
+
+                            // Casher Id
+                            var vCasherId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vCasherCodeValue = $(this).find('.divCashCode').text();
+                            var vCasherNameValue = $(this).find('.divCashName').text();
+
+                            console.log('vCasherNameValue' + vCasherNameValue);
+                            // Set Value
+                            vCasherIdElement.val(vCasherId);
+                            vCasherCodeElement.val(vCasherCodeValue);
+
+                            vCasherNameElement.val(vCasherNameValue);
+
+                            // Modal Show
+                            $('#CashierDataModal').modal('hide');
+                            localStorage.setItem('lstcurrentCashertxt2', '')
+                            localStorage.setItem('lstcurrentCashertxt', '')
+                        }
+
+                    })
+                })
+            }
+
+        })
+        $('.txtCasherCode').on('blur', function () {
+            if ($('.txtCasherCode').val() != '') {
+                $.get('/api/APICashier/CashierGET'
+                    , { pCashCode: $('.txtCasherCode').val() },
+                    function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            $.each(vDataResult, function (i, Cashier) {
+
+                                $('.txtCasherId').val(Cashier.CashId);
+                                $('.txtCasherName').val(Cashier.CashNameL1);
+
+                            });
+                        }
+                        else {
+
+                            $('.txtCasherId').val('0');
+                            $('.txtCasherName').val('');
+                            funNotification('هذا الرقم غير موجود', 2);
+                        }
+                    })
+
+            }
+            else {
+                $('.txtCasherId').val('0');
+                $('.txtCasherName').val('');
+            }
+        })
+        var valid = true;
+
+        // Print
+        $('.btnPrint').on('click', function () {
+            valid = true;
+            funGetEmpById()
+            var timeFrom = $('.timeFrom').val()
+            var timeTo = $('.timeTo').val()
+            var DateFrom = $('.dtpDateFrom').val() + ' ' + timeFrom
+            var DateTo = $('.dtpDateTo').val() + ' ' + timeTo
+            var DateFrom_D = new Date(DateFrom)
+            var defaultExampleRadios = $('input[name="defaultExampleRadios"]:checked').val();
+            for (var i = 0; i < NumberReports.length; i++) {
+                if (NumberReports[i] == defaultExampleRadios) {
+                    valid = false;
+                }
+            }
+            if (ReportPeriod < days && valid == false) {
+                funNotification(' اقصي مده لهذا المستخدم هي ' + ReportPeriod, 3)
+                return;
+            } else if (MaxDatePeriod > DateFrom_D && valid == false) {
+                funNotification(' اقصي تاريخ لهذا المستخدم هي ' + MaxDatePeriod, 3)
+                return;
+            }
+            else {
+                var branch = @BranchId;
+                var vCasherId = null;
+                //var timeFrom = $('.timeFrom').val()
+                //var timeTo = $('.timeTo').val()
+                //var DateFrom = $('.dtpDateFrom').val() + ' ' + timeFrom
+                //var DateTo = $('.dtpDateTo').val() + ' ' + timeTo
+                var InvTypeId = $('.InvTypeId').attr('data-id');
+
+                var Driv = $('#chkDriver').prop('checked')
+                if (Driv === true) {
+
+                    var url = '/POS/ShowDriverhtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&InvTypeId=' + InvTypeId+ '&&branchId=' + branch
+                    var popupWindow = window.open(url);
+                }
+                if ($('.txtCasherCode').val().trim == '') {
+
+                }
+                else {
+                    vCasherId = $('.txtCasherId').val();
+                }
+                if ($('#defaultChecked1').prop('checked') || $('#defaultChecked').prop('checked')) {
+                    if ($('#chkSellDtl').prop('checked')) {
+                        //var url = '/ResItem/MealsReport'
+                        var url = '/POS/SimplePOSDTLHtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId+ '&&branchId=' + branch
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkComm').prop('checked')) {
+                        var url = '/POS/SimplePOSGroupinghtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId+ '&&branchId=' + branch
+                        var popupWindow = window.open(url);
+                    }
+                    //else if ($('#chkDriver').prop('checked')) {
+
+                    //    var url = '/POS/ShowDriverReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo
+                    //    var popupWindow = window.open(url);
+                    //}
+                    else if ($('#chkTotal').prop('checked')) {
+                        var url = '/POS/SimplePOSHtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId + '&&branchId=' + branch
+                        var popupWindow = window.open(url);
+                        $.get('/POS/SimplePOSHtmlReportForMail?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + ' && pCashierId=' + vCasherId + '&&branchId=' + branch)
+                    }
+                    else if ($('#chkReturnTotal').prop('checked')) {
+                        var url = '/POS/SimplePOSWithReturnHtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId + '&&branchId=' + branch
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkCashComm').prop('checked')) {
+                        var url = '/POS/SimplePOSGroupingCashReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkCashSell').prop('checked')) {
+                        var url = '/POS/SimplePOSDTLCashReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkCarcassRpt').prop('checked')) {
+                        var url = '/POS/SimpleSheephtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkIns').prop('checked')) {
+                        var url = '/POS/SimplePOSInsurancehtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    }
+
+                    else if ($('#chkInsRent').prop('checked')) {
+                        var url = '/POS/SimplePOSInsuranceReturnHtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkCancel').prop('checked')) {
+                        var url = '/POS/SimplePOSDeletedHtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId + '&&IsCancel=' + true
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkallCashier').prop('checked')) {
+
+                        var url = '/POS/SimplePOSDeletedHtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId + '&&IsCancel=' + false
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkReturn').prop('checked')) {
+                        var url = '/POS/SimplePOSReturnhtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId + '&&IsCancel=' + false
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkallCustomer').prop('checked')) {
+                        var CustomerId = $('.txtCustomerCode').val();
+                        var url = '/POS/SimplePOSDeletedHtmlReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&pCashierId=' + vCasherId + '&&IsCancel=' + false + '&&CustomerId=' + CustomerId
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkReceipt').prop('checked')) {
+                        var url = '/POS/SimplePOSReceiptVoucherReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo
+                        var popupWindow = window.open(url);
+                    }
+                }
+                else if ($('#defaultUnchecked').prop('checked')) {
+                    if ($('#chkSellDtl').prop('checked')) {
+                        //var url = '/ResItem/MealsReport'
+                        var url = '/POS/SimplePOSDTLHtmlReport?pTodayDate=' + DateFrom + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkComm').prop('checked')) {
+                        var url = '/POS/SimplePOSGroupinghtmlReport?pTodayDate=' + DateFrom + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    } else if ($('#chkTotal').prop('checked')) {
+                        var url = '/POS/SimplePOSHtmlReport?pTodayDate=' + DateFrom + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                        $.get('/POS/SimplePOSHtmlReportForMail?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + ' && pCashierId=' + vCasherId + '&&branchId=' + branch)
+                    }
+                    else if ($('#chkCashComm').prop('checked')) {
+                        var url = '/POS/SimplePOSGroupingCashReport?pTodayDate=' + DateFrom + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    }
+                    else if ($('#chkCashSell').prop('checked')) {
+                        var url = '/POS/SimplePOSDTLCashReport?pTodayDate=' + DateFrom + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    }
+
+                    else if ($('#chkIns').prop('checked')) {
+                        var url = '/POS/SimplePOSInsurancehtmlReport?pTodayDate=' + DateFrom + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+                    }
+
+                    else if ($('#chkCancel').prop('checked')) {
+                        var url = '/POS/SimplePOSDeletedReport?pTodayDate=' + DateFrom + '&&pCashierId=' + vCasherId
+                        var popupWindow = window.open(url);
+
+                    }
+                    else if ($('#chkReceipt').prop('checked')) {
+                        var url = '/POS/SimplePOSReceiptVoucherReport?pTodayDate=' + DateFrom
+                        var popupWindow = window.open(url);
+                    }
+                }
+                var item = $('.txtItemId').val()
+                if ($('#chkMeal').prop('checked')) {
+                    var url = '/POS/MealReport?DateFrom=' + DateFrom + '&&DateTo=' + DateTo + '&&CashId=' + vCasherId + '&&IsGrouping=false' + '&&ItemId=' + item
+                    window.open(url);
+                } else if ($('#chkMealGroup').prop('checked')) {
+                    var url = '/POS/MealReport?DateFrom=' + DateFrom + '&&DateTo=' + DateTo + '&&CashId=' + vCasherId + '&&IsGrouping=true' + '&&ItemId=' + item;
+                    window.open(url);
+                }else if ($('#chkItemCostMinMaxReport').prop('checked')) {
+                    var url = '/POS/ItemCostMinMaxReport?DateFrom=' + DateFrom + '&&DateTo=' + DateTo  + '&&ItemId=' + item;
+                    window.open(url);
+                }
+                //else if ($('#defaultChecked').prop('checked')) {
+                //    // Date From
+                //    var vDateFrom = $('.selectPeriod option:selected', $('.selectPeriod')).attr("data-fromdate")
+                //    // Date To
+                //    var vDateTo = $('.selectPeriod option:selected', $('.selectPeriod')).attr("data-todate")
+                //    //alert(vDateFrom)
+                //    //console.log(vDateFrom);
+
+                //    if ($('#chkSellDtl').prop('checked')) {
+                //        //var url = '/ResItem/MealsReport'
+                //        var url = '/POS/SimplePOSDTLReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + '&&pCashierId=' + vCasherId
+                //        var popupWindow = window.open(url);
+                //    }
+                //    else if ($('#chkComm').prop('checked')) {
+                //        var url = '/POS/SimplePOSGroupingReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + '&&pCashierId=' + vCasherId
+                //        var popupWindow = window.open(url);
+                //    }
+                //    else if ($('#chkTotal').prop('checked')) {
+                //        var url = '/POS/SimplePOSReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + '&&pCashierId=' + vCasherId
+                //        var popupWindow = window.open(url);
+                //    }
+                //    else if ($('#chkCashComm').prop('checked')) {
+                //        var url = '/POS/SimplePOSGroupingCashReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + '&&pCashierId=' + vCasherId
+                //        var popupWindow = window.open(url);
+                //    }
+                //    else if ($('#chkCashSell').prop('checked')) {
+                //        var url = '/POS/SimplePOSDTLCashReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + '&&pCashierId=' + vCasherId
+                //        var popupWindow = window.open(url);
+                //    }
+
+                //    else if ($('#chkIns').prop('checked')) {
+                //        var url = '/POS/SimplePOSInsuranceReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + '&&pCashierId=' + vCasherId
+                //        var popupWindow = window.open(url);
+                //    }
+
+                //    else if ($('#chkCancel').prop('checked')) {
+                //        var url = '/POS/SimplePOSDeletedReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + '&&pCashierId=' + vCasherId
+                //        var popupWindow = window.open(url);
+                //    }
+                //    else if ($('#chkReceipt').prop('checked')) {
+                //        var url = '/POS/SimplePOSReceiptVoucherReport?pDateFrom=' + $('.dtpDateFrom').val() + '&&pDateTo=' + $('.dtpDateTo').val()
+                //        var popupWindow = window.open(url);
+                //    }
+
+
+                //}
+            }
+        });
+        $('.dtpDateFrom').on('change', function () {
+            var vDateFrom = $('.dtpDateFrom').val();
+            var vDateTo = $('.dtpDateTo').val();
+            //if (vDateFrom > vDateTo) {
+            //    funNotification('تاريخ البداية لا يجب ان يكون اكبر من تاريخ النهاية', 2);
+            //    $('.dtpDateFrom').val(vDateTo)
+            //}
+        })
+        $('.dtpDateTo').on('change', function () {
+            var vDateFrom = $('.dtpDateFrom').val();
+            var vDateTo = $('.dtpDateTo').val();
+            //if (vDateFrom > vDateTo) {
+            //    funNotification('تاريخ البداية لا يجب ان يكون اكبر من تاريخ النهاية', 2);
+            //    $('.dtpDateTo').val(vDateFrom)
+            //}
+
+        })
+        $('#defaultChecked1').on('change', function () {
+            if ($(this).prop('checked')) {
+                $('.dtpDateFrom').prop('disabled', false)
+                $('.dtpDateTo').prop('disabled', false)
+                $('input[type="time"]').prop("disabled", false);
+            }
+        })
+
+        $('#defaultChecked').on('change', function () {
+            if ($(this).prop('checked')) {
+                // Date From
+                var vDateFrom = $('.selectPeriod option:selected', $('.selectPeriod')).attr("data-fromdate")
+                // Date To
+                var vDateTo = $('.selectPeriod option:selected', $('.selectPeriod')).attr("data-todate")
+                //$('.dtpDateFrom').val(vDateFrom)
+                //$('.dtpDateTo').val(vDateTo)
+
+                $('.dtpDateFrom').prop('disabled', true)
+                $('.dtpDateTo').prop('disabled', true)
+                $('input[type="time"]').prop("disabled", true);
+
+            }
+        })
+        $('#defaultUnchecked').on('change', function () {
+
+            if ($(this).prop('checked')) {
+                $('.dtpDateFrom').prop('disabled', true)
+                $('.dtpDateTo').prop('disabled', true)
+                $('.dtpDateFrom').val(today)
+                $('.dtpDateTo').val(today)
+            }
+            else {
+
+            }
+        })
+    </script>
+    <script>
+                         // List GetFixedAssetMethod
+    $.post('/Home/GetPeriod',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, Period) {
+               if (i== 0) {
+                   $('#selectPeriod').append('<option  class="selected" data-id="' + Period.PeriodId + '" value="' + Period.PeriodId + '" sort-id="' + i + '" data-fromdate="' + Period.FromDate + '"  data-todate="' + Period.ToDate + '">' + Period.PeriodId + '</option>')
+               }
+               else {
+                   $('#selectPeriod').append('<option data-id="' + Period.PeriodId + '" value="' + Period.PeriodId + '" sort-id="' + i + '" data-fromdate="' + Period.FromDate + '"  data-todate="' + Period.ToDate + '">' + Period.PeriodId + '</option>')
+               }
+
+
+           })
+
+           @*var vData = '@Model.PeriodId'
+
+           if (vData != "0") {
+               $('#selectPayType').val(@Model.PeriodId);
+           }*@
+           // Refresh Select Picker
+           $('#selectPeriod').selectpicker('refresh');
+
+
+       }
+        )
+
+        $('.selectPeriod').on('change', function () {
+
+            var vDateFrom = $('.selectPeriod option:selected', $('.selectPeriod')).attr("data-fromdate")
+            // Date To
+            var vDateTo = $('.selectPeriod option:selected', $('.selectPeriod')).attr("data-todate")
+            $('.dtpDateFrom').val(vDateFrom)
+            $('.dtpDateTo').val(vDateTo)
+
+        });
+        // Account Code, Name - F9 - Double Click
+        $('.txtItemCode').on('blur keyup', function () {
+            if ($('.txtItemCode').val() != '') {
+
+            }
+            else {
+                $('.txtItemId').val('');
+                $('.txtItemName').val('');
+            }
+        })
+        $('body').on('keyup dblclick', '.txtItemCode', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+                vcurrentindex = vTableRow.index();
+
+                // Search Account
+                var vURL = '/InvoicePaymentOrder/UnitSearch';
+
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divItemSelect', function () {
+                        // Get Values
+                        var vItemIdValue = $(this).find('.divItemId').text();
+                        var vItemNameValue = $(this).find('.divItemName').text();
+                        var vItemCodeValue = $(this).find('.divItemCode').text();
+                        var vItemIdElement = $('.txtItemId');
+                        var vItemNameElement = $('.txtItemName');
+                        var vItemCodeElement = $('.txtItemCode');
+
+                        // Set Value
+                        vItemIdElement.val(vItemIdValue);
+                        vItemNameElement.val(vItemNameValue);
+                        vItemCodeElement.val(vItemCodeValue);
+
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                        // Add New Row
+                        //  funAddDTLEmptyRow($('.tblDtlBody'))
+                        vTableRow = ''
+
+                    });
+                })
+            }
+        })
+
+    </script>
+

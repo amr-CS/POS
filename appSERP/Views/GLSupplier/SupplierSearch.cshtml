@@ -1,0 +1,94 @@
+﻿
+@{
+    Layout = null;
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="divFormDtl">
+        <table class="table table-bordered table-hover tblGLSupplier">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>SupplierCode</th>
+                    <th>SupplierName</th>
+
+                </tr>
+            </thead>
+
+            <tbody class="tblGLSupplierBody"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+    <script>
+        // Actione Load
+        $(document).ready(function () {
+
+            // Get Row
+            funGetSuppliers();
+        });
+
+
+        //function Append
+        function funSupplierRowConfig(pGLSupplierRow) {
+            // Content
+            var RowContent = '<tr data-id="' + pGLSupplierRow.CustomerId+ '">' +
+                '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pGLSupplierRow.CustomerId+ '"/></td> ' +
+                '<td align="center">' + pGLSupplierRow.CustomerCode + '</td>' +
+                '<td align="center">' + pGLSupplierRow.CustomerNameL1 + '</td>' +
+                +'</tr > '
+            return RowContent
+        }
+        function funGetSuppliers() {
+            $.get('/api/APIGLCustomer/GLCustomerGET',
+                {
+                    pIsCustomer: false,
+                    // Query Type Id
+                    pQueryTypeId: '400',
+
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        // JSON Parse
+                        vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (m, SupplierData) {
+                            // GET Cash Desk Row Content
+
+                            var vSupplierRowContent = funSupplierRowConfig(vDataResult[m]);
+
+                            // Append Row Content
+                            $('.tblGLSupplierBody').append(vSupplierRowContent);
+                        });
+
+                    }
+                })
+
+        }
+
+
+    </script>
+

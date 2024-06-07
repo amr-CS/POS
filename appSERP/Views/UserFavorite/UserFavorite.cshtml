@@ -1,0 +1,62 @@
+﻿@model System.Data.DataTable
+@using System.Data
+@{
+    ViewBag.Title = "UserFavorite";
+    Layout = null;
+}
+
+<div class="list-group">
+    @foreach (DataRow item in Model.Rows)
+    {
+        <div class="d-flex">
+            <div class=" w-100">
+                <a href=" @item["ObjectURL"]" class="list-group-item list-group-item-action ">
+                    @item["ObjectNameL1"]
+                </a>
+            </div>
+            <div class="flex-shrink-1">
+                <button type="button" style="height:100%" class="btn btn-danger btnDel" data-id="@item["UserFavoriteId"]" data-name="@item["ObjectNameL1"]"><span class="fa fa-close" /></button>
+            </div>
+        </div>
+    }
+
+
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<script>
+    $('.btnDel').on('click', function () {
+        // Id - NameAr - NameEn
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                // Modal
+                $('#confirmDeleteModalContent').html(data);
+                $('#confirmDeleteModal').modal('show');
+                // Click Event [Delete Confirm]
+                $("body").on("click", "#btnDeleteConfirm", function () {
+                    // Delete Action URL
+                    var vDeleteActionURL = '/UserFavorite/DataModel/';
+                    // Delete
+                    $.post(vDeleteActionURL, { id: vDataId, pIsDelete: true }, function () {
+                        window.location.href = '/UserFavorite';
+                    });
+                });
+            });
+    }); // End of Click Event [Delete Button]</script>

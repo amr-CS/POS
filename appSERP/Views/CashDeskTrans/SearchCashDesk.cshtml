@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "SearchCashDesk";
+    Layout = "~/Views/Shared/appLayout/_SearchLayout.cshtml";
+}
+
+
+<div class="divSchool container-fluid">
+    <table class="table table-bordered table-hover " id="tblDataSchool">
+        <thead>
+            <tr>
+        <th>رقم المستند</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @ViewBag.vbCashDeskTrans)
+            {
+
+                <tr>
+                    <td><button class="btn btn-light btn-block btnSelect" data-id="@item["CashDeskTransId"]">@item["CashDeskTransNo"]</button> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $('.btnSelect').on('click', function () {
+        vId = $(this).attr('data-id');
+        $.get('/CashDeskTrans/DataModel',
+            { id: vId }
+            ,
+            function () {
+                window.location.href = '/CashDeskTrans/DataModel?id=' + vId;
+            }
+        )
+    });
+    </script>

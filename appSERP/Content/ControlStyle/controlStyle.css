@@ -1,0 +1,52 @@
+﻿
+/*.form-control {
+    display: block;
+    width: 100%;
+    height: calc(2.81875rem + 0rem);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: #666;
+    background-color: transparent;
+    background-clip: padding-box;
+    /*border: 0rem solid transparent;
+    border-radius: 0;
+    -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}*/
+
+
+/****** Report ********/
+/*.divRptViewTitle {
+    font-size: 16px !important;
+    font-weight: 600;
+}*/
+
+
+.ItemSide {
+    border-bottom: 2px solid #2980b9;
+}
+
+#table-wrapper {
+    position: relative;
+}
+
+#table-scroll {
+    height: 400px;
+    overflow: auto;
+    
+}
+
+#table-scroll-unit {
+    height: 100px;
+    overflow: auto;
+    margin-top: 20px;
+}
+#table-wrapper table thead th {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #D3EDFF;
+}

@@ -1,0 +1,308 @@
+﻿@using System.Data;
+@{
+    Layout = null;
+    DataTable InvData = ViewBag.Data;
+    DataRow RowData = InvData.Rows[0];
+    string CompanyName = RowData["CompanyName"].ToString();
+    string BranchName = RowData["CompanyBranchNameL1"].ToString();
+    string BranchTel = RowData["CompanyBranchTel"].ToString();
+    string VatCode = RowData["VatCode"].ToString();
+    string Number = RowData["Number"].ToString();
+    DateTime InvDate = Convert.ToDateTime(RowData["InvDate"]);
+    int InvId = Convert.ToInt32(RowData["InvId"].ToString());
+    string CustomerName = RowData["CustomerName"].ToString();
+    string CashierName =RowData["UserFullName"].ToString();
+    string CustomerPhone =RowData["InvPhoneNo"].ToString();
+    string CustomerAddress =RowData["LocAddressInvoice"].ToString();
+    string DeliveryName = RowData["DeliveryName"].ToString();
+    string Notes = RowData["Notes"].ToString();
+    // Decimal Total = Convert.ToDecimal(RowData["InvCurValue"].ToString());
+    decimal Insurance = Convert.ToDecimal(RowData["Insurance"].ToString());
+    decimal Vat = Convert.ToDecimal(RowData["Tax"].ToString());
+    decimal Service = Convert.ToDecimal(RowData["Service"].ToString());
+    decimal Discount = Convert.ToDecimal(RowData["Discount"].ToString());
+    string DeliveryInvoice = RowData["DeliveryInvoice"].ToString();
+
+    decimal Total = 0;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .NoteBox {
+            border: 1px solid black;
+            width: 100px !important;
+            height: 100px !important;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        img {
+            font-size: 0;
+            line-height: 0;
+            position: absolute;
+            top: 40px;
+            left: 1%;
+            display: block;
+            width: 80px;
+            height: 80px;
+            padding: 0;
+            -webkit-transform: translate(0, -50%);
+            -ms-transform: translate(0, -50%);
+            transform: translate(0, -50%);
+            cursor: pointer;
+            color: #000000;
+            border: none;
+            outline: none;
+            background: #000000;
+        }
+
+
+        .tblitem, th, td {
+            border-top: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .table, .td {
+            border-top: 0px !important;
+            border-collapse: collapse;
+        }
+
+        .center {
+            margin: auto;
+            width: 60%;
+            padding: 10px;
+        }
+
+        .box {
+            border: 3px solid black;
+            width: 70%;
+            height: 30px !important;
+            text-align: center;
+            margin: auto;
+        }
+
+        p span {
+            display: block;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        div span {
+            display: block;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .divleft {
+            width: 55%;
+            display: inline-block;
+            float: right;
+        }
+
+        .divRight {
+            width: 45%;
+            display: inline-block;
+        }
+
+        .divleft20 {
+            width: 30%;
+            display: inline-block;
+            float: right;
+        }
+
+        .divRight80 {
+            width: 70%;
+            display: inline-block;
+            float: right;
+        }
+
+        hr.line {
+            border: 1px solid black;
+        }
+        @@import url('../../fonts/appFont/Dubai.ttf');
+        @@font-face {
+            font-family: 'Dubai';
+            src: url('../../fonts/appFont/Dubai.ttf') format('truetype');
+        }
+     
+      
+    </style>
+</head>
+<body style="font-family:Dubai;line-height: 90%;">
+    <div>
+
+        <div style="padding-bottom:4px;margin-left:70px">
+            <div class="divRight">
+                <img src="~/Image/Walema.jpg" />
+            </div>
+            <span style="">
+                <label> @CompanyName</label>
+            </span>
+            <span>@BranchName</span>
+            <span><label>@BranchTel:</label><label>هاتف</label></span>
+            <span><label>@VatCode:</label><label>الرقم الضريبي</label></span>
+            <span>فاتورة بيع</span>
+            @*@if (RePrint == true)
+            {
+            <p>اعادة طباعة الفاتورة</p>
+            }*@
+        </div>
+
+        <div class="divleft20"><span style=" font-weight: bold;font-size:20px;padding-right:20px;line-height:25px">@DeliveryInvoice</span> </div>
+        <div class="divRight80">
+            <div class="box" style="font-weight: bold;font-size:25px;line-height:30px">
+                <label>طلب</label>
+                <label>@Number</label>
+            </div>
+        </div>
+
+
+
+
+        <div>
+            <span>
+                <label>تمت الطباعة في </label>
+                <label>:</label>
+                <label>@InvDate</label>
+            </span>
+        </div>
+        <hr class="line" />
+    </div>
+    <div>
+        <div class="divleft">
+            <span>
+                <label>رقم الفاتورة</label>
+                <label>:</label>
+                <label>@InvId</label>
+            </span>
+        </div>
+
+
+        <div class="divRight">
+
+            <span>
+                <label>كاشير</label>
+                <label>:</label>
+                <label>@CashierName </label>
+            </span>
+        </div>
+        <br />
+        @if (CustomerName != "")
+        {
+            <div class="divleft">
+
+                <span>
+
+                    <label>عميل</label>
+                    <label>:</label>
+                    <label>@CustomerName</label>
+                </span>
+            </div>
+        }
+        @if (CustomerPhone != "")
+        {
+            <div class="divRight">
+
+                <span>
+                    <label>جوال</label>
+                    <label>:</label>
+                    <label>@CustomerPhone</label>
+                </span>
+
+            </div>
+        }
+        <br />
+        <div>
+            @if (CustomerAddress != "")
+            {
+                <div class="divleft">
+                    <span>
+
+                        <label>عنوان</label>
+                        <label>:</label>
+                        <label>@CustomerAddress </label>
+                    </span>
+                </div>
+            }
+
+            @if (DeliveryName != "")
+            {
+                <div class="divRight">
+
+                    <span>
+                        <label>سائق</label>
+                        <label>:</label>
+                        <label>@DeliveryName </label>
+                    </span>
+                    
+                </div>
+            }
+            </div>
+    </div>
+    <hr class="line" />
+
+    <table class="tblitem" dir="rtl" style="line-height:20px;font-size:13px;margin-right:10px;width:100%">
+        <thead>
+            <tr>
+                <th>الكمية</th>
+                <th>الصنف</th>
+                <th>السعر</th>
+                <th style="padding-right:5px">الاجمالي </th>
+            </tr>
+        </thead>
+        @foreach (DataRow item in InvData.Rows)
+        {
+            <tr>
+                <td style="padding-right:7px">@item["Qty"]</td>
+                <td>
+                    @item["InvItemNameL1"]
+                    <br />
+                    @item["ItemAdd"]
+                </td>
+                <td>@item["Price"]</td>
+                <td style="text-align:center">@item["Total"]</td>
+            </tr>
+            Total = Total + Convert.ToDecimal(item["Total"].ToString());
+        }
+    </table>
+    <hr class="line" />
+    @if (Notes != "")
+    {
+    <div class=" divRight80 NoteBox">
+        @Notes
+    </div>
+    }
+    <div class="divLeft20">
+        <table class="table" dir="rtl" style="line-height:20px;font-size:13px">
+            <tr class="tr">
+                <td class="td">المجموع</td>
+                <td class="td">@Total</td>
+            </tr>
+            <tr class="tr">
+                <td class="td">التأمين</td>
+                <td class="td">@Insurance</td>
+            </tr>
+            <tr>
+                <td class="td">التأجير</td>
+                <td class="td">@Service</td>
+            </tr>
+            <tr>
+
+                <td class="td">يشمل 15% ضريبة القيمة المضافة</td>
+                <td class="td">@Vat</td>
+            </tr>
+            <tr style="border-top:1px solid">
+                <td class="td">الاجمالي</td>
+                <td class="td">@Total</td>
+            </tr>
+        </table>
+    </div>
+
+    <hr class="line">
+    <div><span>تسعدنا زيارتكم</span></div>
+    <div><span>الاسعار شاملة (15%)ضريبة القيمة المضافة </span></div>
+    <div><span>twitter.com/alwaleemah تابعنا علي تويتر </span></div>
+
+</body>
+</html>

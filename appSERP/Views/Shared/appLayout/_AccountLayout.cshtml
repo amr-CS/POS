@@ -1,0 +1,56 @@
+﻿@using appSERP.Views.Shared.appResource;
+@using appSERP.appCode.Setting.Company;
+@{ 
+    Layout = null;
+}
+<!doctype html>
+<html dir="@(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft? "rtl" : "ltr")">
+<head class="">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+
+    <script src="~/Scripts/appScript/jsAppScript.js"></script>
+
+</head>
+<body class="">
+    @*<!-- Loading -->
+    <div class="divLoading">
+        <div class="divLoadingPreloader">
+            <!-- Company -->
+            <div class="d-block ">
+                <img src="@clsCompany.vCompanyLogo" />
+
+            </div>
+            <!-- Pre Loader -->
+            <div class="d-block">
+                <img src="~/Image/Loader/tenor.gif" width="100" />
+            </div>
+        </div>
+    </div> <!-- End of Div Loading -->*@
+    <!-- Navbar -->
+    @*@Html.Partial("~/Views/Shared/NavbarPartial/NavbarPartial.cshtml")*@
+    <!-- App Container -->
+    <div class="">
+        <!-- Side Bar -->
+
+        <!-- App Body - Dynamic Content -->
+        <div class="">
+            @RenderBody()
+        </div>
+
+    </div>
+    @*@Scripts.Render("~/bundles/jquery")*@
+    <!--SELECT LIST -->
+    @*<script src="https://unpkg.com/popper.js@1.14.6/dist/umd/popper.js"></script>*@
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+    <!--SELECT LIST -->
+    @*<script src="~/Scripts/SelectList/bootstrap-select.min.js"></script>
+    <script src="~/Scripts/SelectList/defaults-ar_AR.js"></script>*@
+    @*@RenderSection("scripts", required: false)*@
+</body>
+</html>
+<!-- DataTable Scripts Include -->
+
+
+<!-- Load Pages -->

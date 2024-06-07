@@ -1,0 +1,103 @@
+﻿@model appSERP.Models.SETT.CityModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<h2>DataModel</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._City, pId = Model.CityId })
+        </div>
+       
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.CityId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CityNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CityNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CityNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CityNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CityNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CityNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CountryId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectCountry" class="selectpicker form-control form-control" name="CountryId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CityCenterLat, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CityCenterLat, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CityCenterLat, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CityCenterLng, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CityCenterLng, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CityCenterLng, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CityIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.CityIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+}
+<script>
+    var vCountryId = 0;
+    // List GetCountry
+    $.post('/Home/GetCountry',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Country) {
+                $('#selectCountry').append('<option data-id="' + Country.CountryId + '" value="' + Country.CountryId + '" sort-id="' + i + '">' + Country.CountryNameL1 + '</option>')
+                if (i == 0) {
+                    vCountryId = Country.CountryId;
+                }
+            })
+             if (parseInt('@ViewBag.vbcCountryId') >0 ) {
+                 vCountryId = parseInt('@ViewBag.vbcCountryId');
+            }
+            $('#selectCountry').val(vCountryId);
+            // Refresh Select Picker
+            $('.selectpicker form-control').selectpicker form-control('refresh');
+        }
+    )
+</script>

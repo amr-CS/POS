@@ -1,0 +1,400 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.INV;
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.EPaymentType, pIsNew = false })
+</div>
+
+<style>
+    .divTableContainer {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .divEPaymentType, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }
+
+    .divSectionTitle {
+        background-color: rgba(41, 128, 185, 0.04);
+        font-weight: bold;
+        color: #2980b9;
+    }
+</style>
+<!-- Size Type -->
+<div class="divTableContainer">
+
+    <!-- Cash Desk Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">
+        @*@appResource.lblEPaymentType*@
+    </div>
+
+    <!-- Cash Desks Data -->
+    <div class="divEPaymentType bg-white border p-2">
+        <table class="table tblEPaymentType">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th width="20px"></th>
+                    <th>@appResource._Code</th>
+                    <th> @appResource.PaymentTypeId</th>
+                    <th> @appResource.EPaymentTypeId</th>
+                    <th> @appResource.EPaymentTypeId</th>
+                    <th>@appResource._IsActive</th>
+                    <th class="thActions">@appResource._Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblEPaymentTypeBody"></tbody>
+        </table>
+
+    </div>
+
+    <!--Size Type Save -->
+    <div class=" bg-white border p-2 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1"><button class="btn btn-success btnEPaymentTypeSave">@appResource.btnSave</button></div>
+    </div>
+</div>
+
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+
+
+<!-- Cash Desk Scripts -->
+<!-- Cash Desk -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Drop Down  Font Size
+
+
+        // Wait 2 Seconds
+        setTimeout( function () {
+            // GET Font Size By Selected List
+            funGETEPaymentTypeBySelectedList();
+        },1000);
+    })
+
+
+
+
+        // Save - Click
+
+    $('.btnEPaymentTypeSave').on('click', function () {
+
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblEPaymentTypeBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get EPaymentType Id
+            var vEPaymentTypeId = vRowData.attr('data-id');
+            // Code
+            var vEPaymentTypeCode = vRowData.find('.EPaymentTypeCode').val();
+            // PaymentType Id
+            var vPaymentTypeId = vRowData.find('.PaymentTypeId').val();
+            // Name L1
+            var vEPaymentTypeNameL1 = vRowData.find('.EPaymentTypeNameL1').val();
+            // Name L2
+            var vEPaymentTypeNameL2 = vRowData.find('.EPaymentTypeNameL2').val();
+            // Is Active
+            var vEPaymentTypeIsActive = vRowData.find('.EPaymentTypeIsActive').prop('checked');
+
+            // Check Cash Desk If Empty
+            if (vEPaymentTypeNameL1 != '') {
+                // Save
+                $.post('/EPaymentType/EPaymentTypeGET',
+                    {
+                        pEPaymentTypeId: vEPaymentTypeId,
+                        pPaymentTypeId: vPaymentTypeId,
+                        pEPaymentTypeCode: vEPaymentTypeCode,
+                        pEPaymentTypeNameL1: vEPaymentTypeNameL1,
+                        pEPaymentTypeNameL2: vEPaymentTypeNameL2,
+                        pEPaymentTypeIsActive: vEPaymentTypeIsActive,
+                        pIsDeleted: false,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+
+
+
+
+                        // GET Cash Desk By Selected List
+                        funGETEPaymentTypeBySelectedList();
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+             funNotification('تم الحفظ بنجاح', '1');
+        }
+
+    }); // End of Save Click
+
+
+
+
+
+    $('body').on('click', '.btnEPaymentTypeDelete', function () {
+        // Get EPaymentType Id
+        var vEPaymentTypeIdDelete = $(this).attr('data-id');
+        // Save
+        $.post('/EPaymentType/EPaymentTypeGET',
+            {
+                pEPaymentTypeId: vEPaymentTypeIdDelete,
+                pPaymentTypeId: null,
+                pEPaymentTypeCode: null,
+                pEPaymentTypeNameL1: null,
+                pEPaymentTypeNameL2: null,
+                pEPaymentTypeIsActive: null,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+
+                //// Drop Down Main Cash Desk
+                //funFillEPaymentType(null, 0, null, null, null, null, 1, null, null, false);
+
+                // GET Cash Desk By Selected List
+                funGETEPaymentTypeBySelectedList();
+                //funGETEPaymentTypeDTl(0);
+
+            });
+
+        // Notification
+        funNotification('تم الحذف بنجاح', 1);
+
+    })
+
+    // Add New Row
+    $('body').on('click', '.btnEPaymentTypeAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funEPaymentTypeAddRow(vCurrentRow);
+    })
+
+    // GET Cash Desk By Selected List
+    function funGETEPaymentTypeBySelectedList() {
+
+        // Get Value [Id]
+        var vSelectedEPaymentType = $('#selectEPaymentTypeMain').val();
+
+        // GET Data
+        $.get('/EPaymentType/EPaymentTypeGET',
+            {
+                pEPaymentTypeId: null,
+                pPaymentTypeId: null,
+                pEPaymentTypeCode: '',
+                pEPaymentTypeNameL1: '',
+                pEPaymentTypeNameL2: '',
+                pEPaymentTypeIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (EPaymentTypeData, status) {
+
+                // Table Body
+                var vEPaymentTypeTableBody = $('.tblEPaymentTypeBody');
+                // HTML CLEAR
+                vEPaymentTypeTableBody.html('');
+
+                // JSON
+                var vEPaymentTypeDataResult = JSON.parse(EPaymentTypeData);
+
+                // For Each Cash Desk - Main
+                $.each(vEPaymentTypeDataResult, function (m, EPaymentTypeSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vEPaymentTypeRowContent = funEPaymentTypeRowConfig(vEPaymentTypeDataResult[m]);
+                    // Append Row Content
+                    vEPaymentTypeTableBody.append(vEPaymentTypeRowContent);
+
+                })
+                //funEPaymentTypeRow();
+            }) }
+    // Cash Desk Add Row
+    function funEPaymentTypeAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+            {
+            "EPaymentTypeIsActive": true,
+            "EPaymentTypeId": 0,
+            "PaymentTypeId": 0,
+            "EPaymentTypeCode": '',
+            "EPaymentTypeNameL1": '',
+            "EPaymentTypeNameL2": '',
+        }
+
+        var vRowContent = funEPaymentTypeRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+
+    // Cash Desk Row Config
+    function funEPaymentTypeRowConfig(pEPaymentTypeDataResult) {
+
+        // Checked
+        var vChecked = null;
+        if (pEPaymentTypeDataResult.EPaymentTypeIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vEPaymentTypeId = pEPaymentTypeDataResult.EPaymentTypeId;
+        if (vEPaymentTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        var vRowContent = '<tr class="tblRow" data-id="' + pEPaymentTypeDataResult.EPaymentTypeId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnEPaymentTypeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control EPaymentTypeCode" disabled value="' + pEPaymentTypeDataResult.EPaymentTypeCode + '" /></td>' +
+            '<td><input type="number" class="form-control PaymentTypeId" value="' + pEPaymentTypeDataResult.PaymentTypeId + '" /></td>' +
+            '<td><input type="text" class="form-control EPaymentTypeNameL1" value="' + pEPaymentTypeDataResult.EPaymentTypeNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control EPaymentTypeNameL2" value="' + pEPaymentTypeDataResult.EPaymentTypeNameL2 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  EPaymentTypeIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnEPaymentTypeDelete" data-id="' + pEPaymentTypeDataResult.EPaymentTypeId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+
+        
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+
+    // Row Select
+    $('.tblEPaymentTypeBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divEPaymentType').on('click', 'table tr', function () {
+        var vEPaymentTypeId = $(this).attr('data-id')
+        localStorage.setItem('vEPaymentTypeId', vEPaymentTypeId);
+        //funGETEPaymentTypeDTl(vEPaymentTypeId)
+    });
+
+
+</script>
+<!-- Account Scripts -->
+<!-- Add Row -->
+<script>
+
+
+    // Add Row
+    $('.btnSizeAddRow').on('click', function () {
+        // Cash Desk Add Row
+        funAccountAddRow();
+        // Cash Desk Scroll
+        funAccountScroll();
+    })
+
+    // Account Scroll
+    function funAccountScroll() {
+        // Scroll To Bottom
+        $('.divSize').animate({ scrollTop: $('.divSize').prop("scrollHeight") }, 1000);
+    }
+</script>
+
+<script>
+
+
+
+
+
+
+    // Add Row On Load Page
+    function funBankRow() {
+
+        // Table Body
+        var vEPaymentTypeTableBody = $('.tblEPaymentTypeBody');
+        // Append
+        vEPaymentTypeTableBody.append('<tr class="tblRow" data-id="0">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnEPaymentTypeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control EPaymentTypeCode" disabled  /></td>' +
+            '<td><input type="number" class="form-control PaymentTypeId"  /></td>' +
+            '<td><input type="text" class="form-control EPaymentTypeNameL1"  /></td>' +
+            '<td><input type="text" class="form-control EPaymentTypeNameL2"  /></td>' +
+            '<td><input type="checkbox" class="form-control  EPaymentTypeIsActive"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnEPaymentTypeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>');
+    }
+
+
+</script>
+
+<!-- SizeData Modal -->
+<div id="SizeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="SizeDataModalContent"></div>
+    </div>
+</div>
+<!--Above Checked-->
+<script>
+    $('body').on('keydown', 'input', function (e) {
+        $('input').on('blur', function () {
+            if ($(this).attr('class').indexOf('NameL1') > -1) {
+                // Get The Current Row
+                var row = $(this).closest('tr');
+                // substring the first part of the element class name
+                var vElementNameL1Partial = $(this).attr('class').substring($(this).attr('class').indexOf(' '), $(this).attr('class').indexOf('NameL1'))
+                // get the class name of the element that contains NameL2
+                var vElementNameL2 = vElementNameL1Partial + 'NameL2'
+                // check if the value of NameL2 Element Is not Empty
+                if (row.find('.' + vElementNameL2.trim()).val() == undefined || row.find('.' + vElementNameL2.trim()).val() == '') {
+                    // change of the element Name
+                    row.find('.' + vElementNameL2.trim()).val($(this).val());
+                }
+
+            }
+
+        });
+
+    });
+</script>

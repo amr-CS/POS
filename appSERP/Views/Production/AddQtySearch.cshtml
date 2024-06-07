@@ -1,0 +1,430 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    Layout = null;
+}
+<style>
+    /*body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }*/
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblBodyAddQty {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+@*<div class="divContainer bg-light">
+        <div class="divFormDtl">
+            <table class="table table-bordered table-hover tblVehicleSearch">
+                <thead>
+                    <tr>
+                        <th></th>
+            <th>VehicleCode</th>
+            <th>VehicleName</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody class="tblVehicleBodySearch"></tbody>
+            </table>
+
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+            </div>
+        </div>
+    </div>*@
+
+<div class="divContainer bg-light">
+    <div class="w-100 bg-white border font-weight-bold p-4">الكميات</div>
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        @*<div>@appResource._Code<input type="text" class="form-control txtCode" /></div>*@
+
+                        الاسم
+                        <input type="text" class="form-control txtName" />
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @*الاسم
+        <input type="text" class="form-control txtName" />*@
+                                الوحدة
+                                <select id="selectUnit" multiple class="selectType form-control" name="UnitId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-3">
+                               @*الوحدة
+                                <select id="selectUnit" multiple class="selectType form-control" name="UnitId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>*@
+                            </div>
+                            <div class="col-md-3">
+                               
+                            </div>
+                            <div class="col-md-3">
+                               
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                               
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearch btnSearchh">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblAddQtySearch">
+            <thead>
+                <tr>
+                    <th class="btnCheckAll" data-checked="false">
+                        تحديد الكل
+                        <input type="checkbox" class="btnCheckAll">
+
+                    </th>
+                    @*<th class=""></th>*@
+                    <th class="" width="15%">
+                        <div class="text">اسم الصنف</div>
+                    </th>
+                    <th class="">
+                        <div class="text">الوحدة</div>
+                    </th>
+                    <th class="">
+                        <div class="text">تحت التجهيز</div>
+                    </th>
+                    <th class="">
+                        <div class="text">الكمية المتبقة </div>
+                    </th>
+                    <th class="">
+                        <div class="text">اضافة كمية</div>
+                    </th>
+                    <th class="">
+                        <div class="text">سحب كمية</div>
+                    </th>
+                    <th class="">
+                        <div class="text">الزياده</div>
+                    </th>
+                    <th class="">
+                        <div class="text">العجز</div>
+                    </th>
+                    <th class="">
+                        <div class="text">العمال</div>
+                    </th>
+                    <th class="">
+                        <div class="text">المديونية</div>
+                    </th>
+                    <th class="">
+                        <div class="text">الضيافة</div>
+                    </th>
+                    <th class="">
+                        <div class="text">حجز مطعم</div>
+                    </th>
+                    <th class="">
+                        <div class="text">حجز مطبخ</div>
+                    </th>
+                    <th class=""></th>
+
+                </tr>
+            </thead>
+
+            <tbody class="tblAddQtyBodySearch"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Actione Load
+    $(document).ready(function () {
+        $('#selectUnit').append('<option data-id="" value="" sort-id="">-</option>');
+
+        //// Get Row
+        //funGetVehicles();
+        funGetLists();
+    });
+
+
+    ////function Append
+    //function funVehicleRowConfig(pVehicleRow) {
+    //    // Content
+    //    var RowContent = '<tr data-id="' + pVehicleRow. + '">' +
+    //        '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pVehicleRow. + '"/></td> ' +
+    //        '<td align="center">' + pVehicleRow. + '</td>' +
+    //        '<td align="center">' + pVehicleRow. + '</td>' +
+    //        '<td align="center">' + pVehicleRow. + '</td>' +
+    //        +'</tr > '
+      
+
+    //    return RowContent
+    //}
+
+    function funGetVehicles() {
+        //$.post('/Vehicle/FilterVehicles',
+        $.get('/api/APIINVInvoice/INVInvoiceGet',
+            {
+                pQueryTypeId: '403',
+
+            }
+            , function (data, status) {
+                $('.tblAddQtyBodySearch').html('');
+                if (data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, AddQtyData) {
+                        // GET Cash Desk Row Content
+
+                        var vAddQtyRowContent = funAddQtyRowConfig(AddQtyData[m]);
+
+                        // Append Row Content
+                        $('.tblAddQtyBodySearch').append(vAddQtyRowContent);
+                    });
+
+
+
+                }
+            })
+
+    }
+
+    function funGetLists() {
+        $.get('/api/APIVUnit/VUnitGET',
+        //$.post('/Vehicle/GetSelectLists',
+            {
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    var vSelectListUnit = '';
+                  
+                    for (var m = 0; m < vDataResult.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListUnit += '<option  value = "' + vDataResult[m].LookupDtlId + '"  sort-id="' + m + '" > ' + vDataResult[m].LookupDtlDesc + '</option >'
+
+                    }
+                 
+
+
+
+                    $('#selectUnit').append(vSelectListUnit);
+                    $('#selectUnit').selectpicker('refresh');
+
+                   
+                }
+            })
+
+    }
+    //function Append
+    function funAddQtyRowConfig(pData) {
+        // Content
+        var vRowContent =
+            '<tr class="tblAddQtyRow" data-value="' + pData.RemainQty + '" data-changed="0"  data-id="' + pData.InvItemId + '" >' +
+           
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pData.InvItemId + '"/></td> ' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtItemName"  value="' + pData.InvItemNameL1 + '"  data-id="' + pData.ItemId + '" type="text" min=0 required disabled />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtUnitName" value="' + pData.UnitName + '" data-id="' + pData.UnitId + '" value="0" type="text" min=0 required disabled/>' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtUnderPreparing" data-value="' + pData.PreparQty + '" value="' + pData.PreparQty + '" type="text" min=0 required disabled/>' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtReamin" data-value="' + pData.RemainQty + '" value="' + pData.RemainQty + '" type="text" min=0 required  disabled/>' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtAddQty" value="0" type="text" min=0 required />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtMinusQty" value="0" type="text" min=0 required />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtOver" value="0" type="text" min=0 required />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold  txtDeficit" value="0" type="text" min=0 required />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtEmpQty" value="0" type="text" min=0 required />' +
+            '</td>' +
+            ' <td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtDebitQty" value="0" type="text" min=0 required />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtGuestQty" value="0" type="text" min=0 required />' +
+            ' </td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtReservRes" value="0" type="text" min=0 required disabled/>' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control form-control-sm text-center font-weight-bold txtReservKitchen" value="0" type="text" min=0 required disabled/>' +
+            '</td>' +
+            '<td><button class="btn btn-light btn-sm btnAddQtyDelete" data-id="' + pData.InvStoreItemQtyId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr >';
+
+        return vRowContent;
+    
+
+        //return RowContent
+    }
+
+
+
+
+
+    $('.btnSearchh').on('click', function () {
+
+
+        var vName = null;
+        var vUnit = null;
+     
+
+        if ($('.txtName').val().trim() != '') {
+            vName = $('.txtName').val().trim()
+        }
+        else {
+            vName = null
+        }
+
+        if ($('#selectUnit').prop('selectedIndex') > 0) {
+            vUnit = $('#selectUnit').val()
+        }
+        else {
+            vUnit = null
+        }
+     
+
+
+        funGetQtyBySearch(vName, vUnit)
+
+    })
+    function funGetQtyBySearch(pName, pUnit) {
+        //alert(pName)
+        var vLstUnit = [];
+
+        if (pUnit == null) {
+
+
+        }
+        else if (pUnit.indexOf(',')) {
+            for (i = 0; i < pUnit.length; i++) {
+                vLstUnit.push(pUnit[i]);
+            }
+            pUnit = vLstUnit.toString();
+
+        }
+        else {
+
+        }
+
+        //$.post('/Vehicle/FilterVehicles',
+            $.get('/api/APIINVInvoice/INVInvoiceGet',
+            {
+                pInvItemNameL1: pName,
+                //pdUnitId: pUnit,
+                pQueryTypeId: '404',
+                pLstUnit: pUnit
+
+            }
+            , function (data, status) {
+                $('.tblAddQtyBodySearch').html('');
+                if (data != '' && data != undefined ) {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, AddQtyData) {
+                        // GET Cash Desk Row Content
+
+                        var vAddQtyRowContent = funAddQtyRowConfig(AddQtyData);
+
+                        // Append Row Content
+                        $('.tblAddQtyBodySearch').append(vAddQtyRowContent);
+                    });
+
+
+
+                }
+            })
+    }
+
+
+
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+</script>
+
+
+

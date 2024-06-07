@@ -1,0 +1,1092 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="lblSecurityPolicyId" xml:space="preserve">
+    <value>Politiche di sicurezza</value>
+  </data>
+  <data name="SecurityPolicyId" xml:space="preserve">
+    <value>Politica di sicurezza</value>
+  </data>
+  <data name="SecurityPolicySeq" xml:space="preserve">
+    <value>Sequenza della politica di sicurezza</value>
+  </data>
+  <data name="lblSecurityLog" xml:space="preserve">
+    <value>Registri di sicurezza</value>
+  </data>
+  <data name="lblSecurityRole" xml:space="preserve">
+    <value>Ruoli di sicurezza</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>nuova password</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>vecchia password</value>
+  </data>
+  <data name="SecurityLogDate" xml:space="preserve">
+    <value>Data del registro di sicurezza</value>
+  </data>
+  <data name="SecurityLogDevice" xml:space="preserve">
+    <value>Dispositivo di registro di sicurezza</value>
+  </data>
+  <data name="SecurityLogDeviceIsMobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="SecurityLogId" xml:space="preserve">
+    <value>Registro di sicurezza</value>
+  </data>
+  <data name="SecurityLogLat" xml:space="preserve">
+    <value>Latitudine</value>
+  </data>
+  <data name="SecurityLogLng" xml:space="preserve">
+    <value>Registro di sicurezza Longitudine</value>
+  </data>
+  <data name="SecurityLogLocation" xml:space="preserve">
+    <value>Posizione del registro di sicurezza</value>
+  </data>
+  <data name="SecurityLogTime" xml:space="preserve">
+    <value>Tempo del registro di sicurezza</value>
+  </data>
+  <data name="SecurityRoleId" xml:space="preserve">
+    <value>Ruolo di sicurezza</value>
+  </data>
+  <data name="AccountCodeHierarchy" xml:space="preserve">
+    <value>Gerarchia del codice account</value>
+  </data>
+  <data name="AccountTypeId" xml:space="preserve">
+    <value>Tipo di account</value>
+  </data>
+  <data name="BaseCurrencyValue" xml:space="preserve">
+    <value>Valore di valuta base</value>
+  </data>
+  <data name="btnBrowse" xml:space="preserve">
+    <value>Navigare</value>
+  </data>
+  <data name="btnClose" xml:space="preserve">
+    <value>Vicino</value>
+  </data>
+  <data name="btnDelete" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="btnDetails" xml:space="preserve">
+    <value>Dettagli</value>
+  </data>
+  <data name="btnEdit" xml:space="preserve">
+    <value>modificare</value>
+  </data>
+  <data name="btnExcel" xml:space="preserve">
+    <value>Eccellere</value>
+  </data>
+  <data name="btnExportExcel" xml:space="preserve">
+    <value>Esporta Excel</value>
+  </data>
+  <data name="btnExportPDF" xml:space="preserve">
+    <value>Esporta PDF</value>
+  </data>
+  <data name="btnFirst" xml:space="preserve">
+    <value>Primo</value>
+  </data>
+  <data name="btnHold" xml:space="preserve">
+    <value>tenere</value>
+  </data>
+  <data name="btnImage" xml:space="preserve">
+    <value>Immagine</value>
+  </data>
+  <data name="btnImport" xml:space="preserve">
+    <value>Importare</value>
+  </data>
+  <data name="btnIssue" xml:space="preserve">
+    <value>Salvare</value>
+  </data>
+  <data name="btnLast" xml:space="preserve">
+    <value>Scorso</value>
+  </data>
+  <data name="btnLogin" xml:space="preserve">
+    <value>Accesso</value>
+  </data>
+  <data name="btnLogout" xml:space="preserve">
+    <value>Disconnettersi</value>
+  </data>
+  <data name="btnNew" xml:space="preserve">
+    <value>Nuovo</value>
+  </data>
+  <data name="btnNext" xml:space="preserve">
+    <value>Il prossimo</value>
+  </data>
+  <data name="btnPermission" xml:space="preserve">
+    <value>Autorizzazione</value>
+  </data>
+  <data name="btnPost" xml:space="preserve">
+    <value>Inviare</value>
+  </data>
+  <data name="btnPrev" xml:space="preserve">
+    <value>Precedente</value>
+  </data>
+  <data name="btnPrint" xml:space="preserve">
+    <value>Stampare</value>
+  </data>
+  <data name="btnReport" xml:space="preserve">
+    <value>rapporto</value>
+  </data>
+  <data name="btnSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="btnSearch" xml:space="preserve">
+    <value>Ricerca</value>
+  </data>
+  <data name="btnSpec" xml:space="preserve">
+    <value>specificazioni</value>
+  </data>
+  <data name="btnView" xml:space="preserve">
+    <value>vista</value>
+  </data>
+  <data name="CashFlowTypeId" xml:space="preserve">
+    <value>Tipo di flusso di cassa</value>
+  </data>
+  <data name="CityCenterLat" xml:space="preserve">
+    <value>Centro Latitudine</value>
+  </data>
+  <data name="CityCenterLng" xml:space="preserve">
+    <value>Centro città Longitudine</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>conferma password</value>
+  </data>
+  <data name="ContactPerson" xml:space="preserve">
+    <value>Referente</value>
+  </data>
+  <data name="CostCenterIsRequired" xml:space="preserve">
+    <value>Il centro di costo è obbligatorio</value>
+  </data>
+  <data name="CountryTypeId" xml:space="preserve">
+    <value>Tipo di paese</value>
+  </data>
+  <data name="CultureName" xml:space="preserve">
+    <value>Nome della cultura</value>
+  </data>
+  <data name="CurrencyDecimal" xml:space="preserve">
+    <value>Valuta decimale</value>
+  </data>
+  <data name="CurrencyExchange" xml:space="preserve">
+    <value>Cambio di valuta</value>
+  </data>
+  <data name="CurrencyFactorId" xml:space="preserve">
+    <value>Fattore di valuta</value>
+  </data>
+  <data name="DefaultCurrencyId" xml:space="preserve">
+    <value>Valuta predefinita</value>
+  </data>
+  <data name="DefaultFontId" xml:space="preserve">
+    <value>Carattere predefinito</value>
+  </data>
+  <data name="DepositIsSentDirectToBank" xml:space="preserve">
+    <value>Il deposito viene inviato direttamente alla banca</value>
+  </data>
+  <data name="DocStatusId" xml:space="preserve">
+    <value>Stato del documento</value>
+  </data>
+  <data name="dtDisplay" xml:space="preserve">
+    <value>mostrare</value>
+  </data>
+  <data name="dtFilteredFrom" xml:space="preserve">
+    <value>Filtrato da</value>
+  </data>
+  <data name="dtFirst" xml:space="preserve">
+    <value>Primo</value>
+  </data>
+  <data name="dtFrom" xml:space="preserve">
+    <value>A partire dal</value>
+  </data>
+  <data name="dtLast" xml:space="preserve">
+    <value>Ultimo</value>
+  </data>
+  <data name="dtNext" xml:space="preserve">
+    <value>Il prossimo</value>
+  </data>
+  <data name="dtNoData" xml:space="preserve">
+    <value>Nessun dato</value>
+  </data>
+  <data name="dtPage" xml:space="preserve">
+    <value>Pagina</value>
+  </data>
+  <data name="dtPer" xml:space="preserve">
+    <value>Per</value>
+  </data>
+  <data name="dtPrevious" xml:space="preserve">
+    <value>Precedente</value>
+  </data>
+  <data name="dtRecord" xml:space="preserve">
+    <value>glirecord</value>
+  </data>
+  <data name="dtSearch" xml:space="preserve">
+    <value>Ricerca</value>
+  </data>
+  <data name="dtShowing" xml:space="preserve">
+    <value>Mostrare</value>
+  </data>
+  <data name="dtTo" xml:space="preserve">
+    <value>A</value>
+  </data>
+  <data name="dtTotal" xml:space="preserve">
+    <value>Totale</value>
+  </data>
+  <data name="FinancialYearEnd" xml:space="preserve">
+    <value>Anno finanziario</value>
+  </data>
+  <data name="FinancialYearStart" xml:space="preserve">
+    <value>Anno finanziario Inizio</value>
+  </data>
+  <data name="FinancialYearStatusId" xml:space="preserve">
+    <value>Anno finanziario</value>
+  </data>
+  <data name="FixedAssetCompanyId" xml:space="preserve">
+    <value> Azienda di Assetto stabile </value>
+  </data>
+  <data name="FixedAssetCompanyTypeId" xml:space="preserve">
+    <value>genere di Azienda Assetto stabile</value>
+  </data>
+  <data name="FontId" xml:space="preserve">
+    <value>Caratteri</value>
+  </data>
+  <data name="FontName" xml:space="preserve">
+    <value>Nome del carattere</value>
+  </data>
+  <data name="FontPath" xml:space="preserve">
+    <value>Percorso dei caratteri</value>
+  </data>
+  <data name="FontSizeTypeId" xml:space="preserve">
+    <value>Tipo di dimensione del carattere</value>
+  </data>
+  <data name="GLVoucherCategoryId" xml:space="preserve">
+    <value>Categoria del buono</value>
+  </data>
+  <data name="GLVoucherDtlId" xml:space="preserve">
+    <value>Dettagli del voucher</value>
+  </data>
+  <data name="GLVoucherId" xml:space="preserve">
+    <value>Buono</value>
+  </data>
+  <data name="GLVoucherNo" xml:space="preserve">
+    <value>Numero del buono</value>
+  </data>
+  <data name="GLVoucherTypeId" xml:space="preserve">
+    <value>tipo di buono</value>
+  </data>
+  <data name="GracePeriodDays" xml:space="preserve">
+    <value>giorni di Periodo di grazia</value>
+  </data>
+  <data name="GroupAssetAccount" xml:space="preserve">
+    <value>Gruppo di conto delle risorse</value>
+  </data>
+  <data name="GroupCreditAccount" xml:space="preserve">
+    <value>Gruppo di conto di credito</value>
+  </data>
+  <data name="GroupDebitAccount" xml:space="preserve">
+    <value>Gruppo di conto di debito</value>
+  </data>
+  <data name="GroupId" xml:space="preserve">
+    <value>Gruppo</value>
+  </data>
+  <data name="GroupPercent" xml:space="preserve">
+    <value>Percentuale di gruppo</value>
+  </data>
+  <data name="GroupPurchaseAccount" xml:space="preserve">
+    <value>Gruppo di account di acquisto</value>
+  </data>
+  <data name="GroupSalesAccount" xml:space="preserve">
+    <value>Gruppo di conto vendite</value>
+  </data>
+  <data name="IconB" xml:space="preserve">
+    <value>Icona nera</value>
+  </data>
+  <data name="IconW" xml:space="preserve">
+    <value>Icona bianca</value>
+  </data>
+  <data name="IdPayType" xml:space="preserve">
+    <value>Tipo di pagamento</value>
+  </data>
+  <data name="InvTransactionTypeId" xml:space="preserve">
+    <value>Tipo di transazione</value>
+  </data>
+  <data name="IsHolding" xml:space="preserve">
+    <value>è una holding</value>
+  </data>
+  <data name="IsPostZeroEntry" xml:space="preserve">
+    <value>Staffetta Iscrizione Zero </value>
+  </data>
+  <data name="IsUserLock" xml:space="preserve">
+    <value>È bloccato dall'utente</value>
+  </data>
+  <data name="LastClosedMonth" xml:space="preserve">
+    <value>Ultimo mese chiuso</value>
+  </data>
+  <data name="LastClosedYear" xml:space="preserve">
+    <value>Ultimo anno chiuso</value>
+  </data>
+  <data name="lblAccountType" xml:space="preserve">
+    <value>Tipi di conto</value>
+  </data>
+  <data name="lblCashFlowType" xml:space="preserve">
+    <value>Tipo di flusso di cassa</value>
+  </data>
+  <data name="lblCountryType" xml:space="preserve">
+    <value>Tipi di paese</value>
+  </data>
+  <data name="lblCurrencyFactor" xml:space="preserve">
+    <value>Fattori valutari</value>
+  </data>
+  <data name="lblDocStatus" xml:space="preserve">
+    <value>Stato del documento</value>
+  </data>
+  <data name="lblFinancialYearStatus" xml:space="preserve">
+    <value>Stati dell'anno finanziario</value>
+  </data>
+  <data name="lblFixedAssetCompany" xml:space="preserve">
+    <value>Società di beni fissi</value>
+  </data>
+  <data name="lblFixedAssetCompanyType" xml:space="preserve">
+    <value>genere di Azienda Assetto stabile</value>
+  </data>
+  <data name="lblFont" xml:space="preserve">
+    <value>Caratteri</value>
+  </data>
+  <data name="lblFontSizeType" xml:space="preserve">
+    <value>Tipi di dimensione del carattere</value>
+  </data>
+  <data name="lblGLVoucher" xml:space="preserve">
+    <value>Buone</value>
+  </data>
+  <data name="lblGLVoucherDtl" xml:space="preserve">
+    <value>Voucher Details</value>
+  </data>
+  <data name="lblGLVoucherType" xml:space="preserve">
+    <value>Dettagli del voucher</value>
+  </data>
+  <data name="lblGroup" xml:space="preserve">
+    <value>gruppi</value>
+  </data>
+  <data name="lblMainGroups" xml:space="preserve">
+    <value>Gruppi principali</value>
+  </data>
+  <data name="lblPaymentTypeId" xml:space="preserve">
+    <value>Modalità di pagamento</value>
+  </data>
+  <data name="lblSecurityGrade" xml:space="preserve">
+    <value>Gradi di sicurezza</value>
+  </data>
+  <data name="lblSystemMessage" xml:space="preserve">
+    <value>Messaggi di sistema</value>
+  </data>
+  <data name="lblTransactionSource" xml:space="preserve">
+    <value>Sorgenti di transazione</value>
+  </data>
+  <data name="lblTransactionType" xml:space="preserve">
+    <value>Tipi di transazione</value>
+  </data>
+  <data name="lblUser" xml:space="preserve">
+    <value>utenti</value>
+  </data>
+  <data name="MainGroupId" xml:space="preserve">
+    <value>Gruppo principale</value>
+  </data>
+  <data name="msgRequired" xml:space="preserve">
+    <value>Si prega di inserire i dati</value>
+  </data>
+  <data name="ObjectAction" xml:space="preserve">
+    <value>Azione oggetto</value>
+  </data>
+  <data name="ObjectIsMainMenu" xml:space="preserve">
+    <value>Oggetto IsMainMenu</value>
+  </data>
+  <data name="OppsVoucherYearId" xml:space="preserve">
+    <value>Di fronte all'anno dei buoni</value>
+  </data>
+  <data name="PaymentTypeId" xml:space="preserve">
+    <value>Modalità di pagamento</value>
+  </data>
+  <data name="PLAccountId" xml:space="preserve">
+    <value>Conto profitti e perdite</value>
+  </data>
+  <data name="PostIsSerialized" xml:space="preserve">
+    <value>Post è serializzato</value>
+  </data>
+  <data name="ProName" xml:space="preserve">
+    <value>Nome del programma</value>
+  </data>
+  <data name="RDAccountId" xml:space="preserve">
+    <value>Conto di deposito ricorrente</value>
+  </data>
+  <data name="RefNumberIsVisible" xml:space="preserve">
+    <value>Il numero di riferimento è visibile</value>
+  </data>
+  <data name="SalesPurchasePerson" xml:space="preserve">
+    <value>Addetto alle vendite</value>
+  </data>
+  <data name="SecurityGradeId" xml:space="preserve">
+    <value>Grado di sicurezza</value>
+  </data>
+  <data name="SystemId" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="SystemLastUpdated" xml:space="preserve">
+    <value>Sistema Ultimo aggiornamento</value>
+  </data>
+  <data name="SystemMessageId" xml:space="preserve">
+    <value>Messaggio di sistema</value>
+  </data>
+  <data name="SystemMessageTypeId" xml:space="preserve">
+    <value>Tipo di messaggio di sistema</value>
+  </data>
+  <data name="SystemTransactionTypeId" xml:space="preserve">
+    <value>Tipo di transazione di sistema</value>
+  </data>
+  <data name="SystemVersion" xml:space="preserve">
+    <value>Versione di sistema</value>
+  </data>
+  <data name="TaxNumber" xml:space="preserve">
+    <value>Codice fiscale</value>
+  </data>
+  <data name="TransactionSourceId" xml:space="preserve">
+    <value>Fonte di transazione</value>
+  </data>
+  <data name="TransactionTypeId" xml:space="preserve">
+    <value>Tipo di transazione</value>
+  </data>
+  <data name="ttAdd" xml:space="preserve">
+    <value>addizionare</value>
+  </data>
+  <data name="ttClose" xml:space="preserve">
+    <value>fine</value>
+  </data>
+  <data name="ttCopy" xml:space="preserve">
+    <value>copia</value>
+  </data>
+  <data name="ttCut" xml:space="preserve">
+    <value>taglio</value>
+  </data>
+  <data name="ttEdit" xml:space="preserve">
+    <value>modificare</value>
+  </data>
+  <data name="ttExcel" xml:space="preserve">
+    <value>Excel</value>
+  </data>
+  <data name="ttFirst" xml:space="preserve">
+    <value>Primo</value>
+  </data>
+  <data name="ttFullScreen" xml:space="preserve">
+    <value>Full Screen</value>
+  </data>
+  <data name="ttLast" xml:space="preserve">
+    <value>Scorso</value>
+  </data>
+  <data name="ttNext" xml:space="preserve">
+    <value>Il prossimo</value>
+  </data>
+  <data name="ttPaste" xml:space="preserve">
+    <value>colla</value>
+  </data>
+  <data name="ttPDF" xml:space="preserve">
+    <value>PDF</value>
+  </data>
+  <data name="ttPrev" xml:space="preserve">
+    <value>Precedente</value>
+  </data>
+  <data name="ttPrint" xml:space="preserve">
+    <value>stampa</value>
+  </data>
+  <data name="ttSortAsc" xml:space="preserve">
+    <value>Ordine crescente</value>
+  </data>
+  <data name="ttSortDesc" xml:space="preserve">
+    <value>Ordine decrescente</value>
+  </data>
+  <data name="ttWord" xml:space="preserve">
+    <value>Word</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="UserSecurityTransactionTypeId" xml:space="preserve">
+    <value>Tipo di transazione di sicurezza utente</value>
+  </data>
+  <data name="UserType" xml:space="preserve">
+    <value>Tipologia di utente</value>
+  </data>
+  <data name="UserTypeMaxDis" xml:space="preserve">
+    <value>Tipo utente Decimale massimo</value>
+  </data>
+  <data name="VoucherSequence" xml:space="preserve">
+    <value>Utente</value>
+  </data>
+  <data name="_Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="_Address" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="_Area" xml:space="preserve">
+    <value>La zona</value>
+  </data>
+  <data name="_Branch" xml:space="preserve">
+    <value>Ramo</value>
+  </data>
+  <data name="_CashDesk" xml:space="preserve">
+    <value>Cassa</value>
+  </data>
+  <data name="_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="_Code" xml:space="preserve">
+    <value>Codice</value>
+  </data>
+  <data name="_Company" xml:space="preserve">
+    <value>Azienda</value>
+  </data>
+  <data name="_CostCenter" xml:space="preserve">
+    <value>Centro di costo</value>
+  </data>
+  <data name="_Country" xml:space="preserve">
+    <value>Nazione</value>
+  </data>
+  <data name="_Credit" xml:space="preserve">
+    <value>Credito</value>
+  </data>
+  <data name="_CreditBase" xml:space="preserve">
+    <value>Base di credito</value>
+  </data>
+  <data name="_CreditLimit" xml:space="preserve">
+    <value>Limite di credito</value>
+  </data>
+  <data name="_CSGroup" xml:space="preserve">
+    <value>Gruppo di fornitori clienti</value>
+  </data>
+  <data name="_Currency" xml:space="preserve">
+    <value>Moneta</value>
+  </data>
+  <data name="_Customer" xml:space="preserve">
+    <value>Cliente</value>
+  </data>
+  <data name="_Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="_Debit" xml:space="preserve">
+    <value>Addebito</value>
+  </data>
+  <data name="_DebitBase" xml:space="preserve">
+    <value>Base di addebito</value>
+  </data>
+  <data name="_DocStatus" xml:space="preserve">
+    <value>Stato del documento</value>
+  </data>
+  <data name="_Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="_FinancialYear" xml:space="preserve">
+    <value>Anno finanziario</value>
+  </data>
+  <data name="_FontSizeType" xml:space="preserve">
+    <value>Tipo di carattere</value>
+  </data>
+  <data name="_Gender" xml:space="preserve">
+    <value>Genere</value>
+  </data>
+  <data name="_Iamge" xml:space="preserve">
+    <value>Immagine</value>
+  </data>
+  <data name="_Image" xml:space="preserve">
+    <value>Immagine</value>
+  </data>
+  <data name="_IsAccumulative" xml:space="preserve">
+    <value>È accumulativo</value>
+  </data>
+  <data name="_IsActive" xml:space="preserve">
+    <value>È attivo</value>
+  </data>
+  <data name="_IsCancelled" xml:space="preserve">
+    <value>È cancellato</value>
+  </data>
+  <data name="_IsCredit" xml:space="preserve">
+    <value>È credito</value>
+  </data>
+  <data name="_IsCustomer" xml:space="preserve">
+    <value>È cliente</value>
+  </data>
+  <data name="_IsCustomerGroup" xml:space="preserve">
+    <value>È un gruppo di clienti</value>
+  </data>
+  <data name="_IsDebit" xml:space="preserve">
+    <value>È un debito</value>
+  </data>
+  <data name="_IsDefault" xml:space="preserve">
+    <value>È predefinito</value>
+  </data>
+  <data name="_IsDeleted" xml:space="preserve">
+    <value>Viene eliminato</value>
+  </data>
+  <data name="_IsPosted" xml:space="preserve">
+    <value>È staffetta</value>
+  </data>
+  <data name="_IsRepeat" xml:space="preserve">
+    <value>È ripetizione</value>
+  </data>
+  <data name="_IsRequired" xml:space="preserve">
+    <value>È obbligatorio</value>
+  </data>
+  <data name="_IsWait" xml:space="preserve">
+    <value>È attesa</value>
+  </data>
+  <data name="_Language" xml:space="preserve">
+    <value>linguaggio</value>
+  </data>
+  <data name="_Level" xml:space="preserve">
+    <value>Livello</value>
+  </data>
+  <data name="_MainCashDesk" xml:space="preserve">
+    <value>Cassa principale</value>
+  </data>
+  <data name="_Note" xml:space="preserve">
+    <value>Nota</value>
+  </data>
+  <data name="_Object" xml:space="preserve">
+    <value>Oggetto</value>
+  </data>
+  <data name="_Parent" xml:space="preserve">
+    <value>Genitore</value>
+  </data>
+  <data name="_Path" xml:space="preserve">
+    <value>Sentiero</value>
+  </data>
+  <data name="_Phone1" xml:space="preserve">
+    <value>Telefono1</value>
+  </data>
+  <data name="_Phone2" xml:space="preserve">
+    <value>Telefono2</value>
+  </data>
+  <data name="_SecurityGrade" xml:space="preserve">
+    <value>Grado di sicurezza</value>
+  </data>
+  <data name="_Store" xml:space="preserve">
+    <value>glinegozio</value>
+  </data>
+  <data name="_Supplier" xml:space="preserve">
+    <value>Fornitore</value>
+  </data>
+  <data name="_System" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="_Time" xml:space="preserve">
+    <value>Tempo</value>
+  </data>
+  <data name="_TransactionSource" xml:space="preserve">
+    <value>Fonte di transazione</value>
+  </data>
+  <data name="_TransactionType" xml:space="preserve">
+    <value>Tipo di transazione</value>
+  </data>
+  <data name="_Type" xml:space="preserve">
+    <value>genere</value>
+  </data>
+  <data name="_UserFullName" xml:space="preserve">
+    <value>Nome utente completo</value>
+  </data>
+  <data name="_UserSecurityTransactionType" xml:space="preserve">
+    <value>Tipo di transazione di sicurezza utente</value>
+  </data>
+  <data name="_Value" xml:space="preserve">
+    <value>Valore</value>
+  </data>
+  <data name="_VoucherType" xml:space="preserve">
+    <value>Tipo di giustificativo</value>
+  </data>
+  <data name="_Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="AssetContract" xml:space="preserve">
+    <value>Contratto del Bene</value>
+  </data>
+  <data name="AssetContractDetail" xml:space="preserve">
+    <value>Dettagli del contratto del Bene</value>
+  </data>
+  <data name="AssetContractNo" xml:space="preserve">
+    <value>Numero del contratto del Bene</value>
+  </data>
+  <data name="AssetContractNote" xml:space="preserve">
+    <value>Gli appunti</value>
+  </data>
+  <data name="AssetContractPayType" xml:space="preserve">
+    <value>Tipo di pagamento del contratto del Bene</value>
+  </data>
+  <data name="AssetContractPeriod" xml:space="preserve">
+    <value>Periodo del contratto di attività</value>
+  </data>
+  <data name="AssetContractRefNo" xml:space="preserve">
+    <value>Numero di riferimento del contratto di attività</value>
+  </data>
+  <data name="AssetContractValue" xml:space="preserve">
+    <value>Valore del contratto del Bene</value>
+  </data>
+  <data name="AssetDep" xml:space="preserve">
+    <value>Ammortamento delle attività</value>
+  </data>
+  <data name="AssetDepDate" xml:space="preserve">
+    <value>Data di ammortamento delle attività</value>
+  </data>
+  <data name="AssetId" xml:space="preserve">
+    <value>Bene</value>
+  </data>
+  <data name="AssetLastDepDate" xml:space="preserve">
+    <value>Ultima data di ammortamento delle attività</value>
+  </data>
+  <data name="AssetReasonType" xml:space="preserve">
+    <value>Tipo di motivo transazione  del Bene</value>
+  </data>
+  <data name="AssetReasonTypeNote" xml:space="preserve">
+    <value>Gli appunti</value>
+  </data>
+  <data name="AssetRelease" xml:space="preserve">
+    <value>Rilascio di Bene</value>
+  </data>
+  <data name="AssetReleaseDetail" xml:space="preserve">
+    <value>Dettagli del rilascio del Bene</value>
+  </data>
+  <data name="AssetTrans" xml:space="preserve">
+    <value>Transazione del bene</value>
+  </data>
+  <data name="AssetTransDate" xml:space="preserve">
+    <value>Data della transazione del bene</value>
+  </data>
+  <data name="AssetTransNote" xml:space="preserve">
+    <value>Gli appunti</value>
+  </data>
+  <data name="AssetTransValue" xml:space="preserve">
+    <value>Valore della transazione del bene</value>
+  </data>
+  <data name="AssetTransValueBase" xml:space="preserve">
+    <value>Valore base della transazione del bene</value>
+  </data>
+  <data name="AssetUnDep" xml:space="preserve">
+    <value>non rettificato Bene</value>
+  </data>
+  <data name="AssetUnDepDate" xml:space="preserve">
+    <value>Data del  Bene non rettificato</value>
+  </data>
+  <data name="BillNo" xml:space="preserve">
+    <value>Numero di Bill</value>
+  </data>
+  <data name="BuyGroup" xml:space="preserve">
+    <value>Gruppo d'acquisto</value>
+  </data>
+  <data name="CashDeskTransDate" xml:space="preserve">
+    <value>Data di transazione della cassa</value>
+  </data>
+  <data name="CashDeskTransNo" xml:space="preserve">
+    <value>Numero di cassa</value>
+  </data>
+  <data name="CashDeskTransRef" xml:space="preserve">
+    <value>Riferimento per le transazioni della cassa</value>
+  </data>
+  <data name="CashDeskTransRefDate" xml:space="preserve">
+    <value>Data di riferimento della cassa</value>
+  </data>
+  <data name="CashDeskTransTime" xml:space="preserve">
+    <value>Tempo di transazione della cassa</value>
+  </data>
+  <data name="CurrencyValue" xml:space="preserve">
+    <value>Valuta</value>
+  </data>
+  <data name="FixedAssetMethod" xml:space="preserve">
+    <value>Metodo di risorse fisse</value>
+  </data>
+  <data name="FixedAssetSite" xml:space="preserve">
+    <value>Sito di beni fissi</value>
+  </data>
+  <data name="FixedAssetSiteQty" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="FixedAssetSiteTransDate" xml:space="preserve">
+    <value>Data di transazione del sito di risorse fisse</value>
+  </data>
+  <data name="FixedAssetUnit" xml:space="preserve">
+    <value>Unità di immobilizzazioni</value>
+  </data>
+  <data name="GLOppsVoucherId" xml:space="preserve">
+    <value>Voucher opposto</value>
+  </data>
+  <data name="GLOppsVoucherValue" xml:space="preserve">
+    <value>Di fronte al valore del voucher</value>
+  </data>
+  <data name="GLVoucherDate" xml:space="preserve">
+    <value>Data del buono</value>
+  </data>
+  <data name="GLVoucherRef" xml:space="preserve">
+    <value>Riferimento del buono</value>
+  </data>
+  <data name="GLVoucherRefDate" xml:space="preserve">
+    <value>Data di riferimento del buono</value>
+  </data>
+  <data name="GLVoucherTime" xml:space="preserve">
+    <value>Tempo del buono</value>
+  </data>
+  <data name="InvItemId" xml:space="preserve">
+    <value>Oggetto di inventario</value>
+  </data>
+  <data name="IsAutoPost" xml:space="preserve">
+    <value>Viene pubblicato automaticamente</value>
+  </data>
+  <data name="IsIssued" xml:space="preserve">
+    <value>Rilasciato</value>
+  </data>
+  <data name="lblAsset" xml:space="preserve">
+    <value>Risorse</value>
+  </data>
+  <data name="lblAssetContract" xml:space="preserve">
+    <value>Contratti patrimoniali</value>
+  </data>
+  <data name="lblAssetContractPayType" xml:space="preserve">
+    <value>Paga tipi di contratti di beni</value>
+  </data>
+  <data name="lblAssetDep" xml:space="preserve">
+    <value>Ammortamenti delle attività</value>
+  </data>
+  <data name="lblAssetReasonType" xml:space="preserve">
+    <value>Tipi di motivo di transazione di beni</value>
+  </data>
+  <data name="lblAssetRelease" xml:space="preserve">
+    <value>Rilas delle risorse</value>
+  </data>
+  <data name="lblAssetReleaseDetail" xml:space="preserve">
+    <value>Dettagli sulle versioni delle risorse</value>
+  </data>
+  <data name="lblAssetTrans" xml:space="preserve">
+    <value>Transazioni di beni</value>
+  </data>
+  <data name="lblAssetUnDep" xml:space="preserve">
+    <value>Risorse non rettificate</value>
+  </data>
+  <data name="lblBuyGroup" xml:space="preserve">
+    <value>Gruppi di acquisto</value>
+  </data>
+  <data name="lblFixedAssetMethod" xml:space="preserve">
+    <value>Metodi di beni fissi</value>
+  </data>
+  <data name="lblFixedAssetSite" xml:space="preserve">
+    <value>Siti di beni fissi</value>
+  </data>
+  <data name="lblFixedAssetUnit" xml:space="preserve">
+    <value>Unità di beni fissi</value>
+  </data>
+  <data name="lblSite" xml:space="preserve">
+    <value>Sites</value>
+  </data>
+  <data name="lblSiteDetail" xml:space="preserve">
+    <value>Site Details</value>
+  </data>
+  <data name="lblSiteDonor" xml:space="preserve">
+    <value>Site Donors</value>
+  </data>
+  <data name="lblTrust" xml:space="preserve">
+    <value>Contractors</value>
+  </data>
+  <data name="PostDate" xml:space="preserve">
+    <value>Data di pubblicazione</value>
+  </data>
+  <data name="ProductPeriod" xml:space="preserve">
+    <value>Periodo del prodotto</value>
+  </data>
+  <data name="PurchaseDate" xml:space="preserve">
+    <value>Data di acquisto</value>
+  </data>
+  <data name="PurchaseNo" xml:space="preserve">
+    <value>Numero d'acquisto</value>
+  </data>
+  <data name="Site" xml:space="preserve">
+    <value>siti</value>
+  </data>
+  <data name="SiteDetail" xml:space="preserve">
+    <value>Dettagli del sito</value>
+  </data>
+  <data name="SiteDetailLat" xml:space="preserve">
+    <value>Latitudine</value>
+  </data>
+  <data name="SiteDetailLng" xml:space="preserve">
+    <value>Longitudine</value>
+  </data>
+  <data name="SiteDonor" xml:space="preserve">
+    <value>Sito donatore</value>
+  </data>
+  <data name="SiteLat" xml:space="preserve">
+    <value>Latitudine</value>
+  </data>
+  <data name="SiteLng" xml:space="preserve">
+    <value>Longitudine</value>
+  </data>
+  <data name="StoreId" xml:space="preserve">
+    <value>Memorizzare</value>
+  </data>
+  <data name="TransactionType" xml:space="preserve">
+    <value>Tipo di transazione</value>
+  </data>
+  <data name="Trust" xml:space="preserve">
+    <value>Contraente</value>
+  </data>
+  <data name="_BookValue" xml:space="preserve">
+    <value>Valore del libro</value>
+  </data>
+  <data name="_BookValueBase" xml:space="preserve">
+    <value>valore del libro di base</value>
+  </data>
+  <data name="_IsRepeated" xml:space="preserve">
+    <value>Ripetuti</value>
+  </data>
+  <data name="_MinPrice" xml:space="preserve">
+    <value>Prezzo minimo</value>
+  </data>
+  <data name="_MinPriceBase" xml:space="preserve">
+    <value>Prezzo minimo di base</value>
+  </data>
+  <data name="_Percent" xml:space="preserve">
+    <value>Per cento</value>
+  </data>
+  <data name="_PurchaseAccount" xml:space="preserve">
+    <value>conto di acquisto</value>
+  </data>
+  <data name="_PurchasePrice" xml:space="preserve">
+    <value>Prezzo d'acquisto</value>
+  </data>
+  <data name="_PurchasePriceBase" xml:space="preserve">
+    <value>Prezzo d'acquisto base</value>
+  </data>
+  <data name="_Qty" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="_SalesAccount" xml:space="preserve">
+    <value>Conto vendita</value>
+  </data>
+  <data name="_Seq" xml:space="preserve">
+    <value>Sequenza</value>
+  </data>
+  <data name="_TotalDep" xml:space="preserve">
+    <value>Ammortamento totale</value>
+  </data>
+  <data name="_TotalDepBase" xml:space="preserve">
+    <value>Base Ammortamento totale</value>
+  </data>
+</root>

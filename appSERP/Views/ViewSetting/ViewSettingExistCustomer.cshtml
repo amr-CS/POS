@@ -1,0 +1,23 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    Layout = null;
+}
+<style>
+    .clsDelete {
+        font-size: 15px !important;
+        color: black !important;
+    }
+</style>
+<div class="modal-content">
+    <div class="modal-header bold clsDelete">
+     تأكيد
+    </div>
+    <div class="modal-body bold clsDelete">
+        هذاالعميل موجود سابقا هل تريد التعديل ؟
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal" id="btnConfirm" data-id="@ViewBag.vbId">موافق</button>
+        <button type="button" class="btn btn-danger" id="btnCancel" data-dismiss="modal">الغاء</button>
+    </div>
+</div>

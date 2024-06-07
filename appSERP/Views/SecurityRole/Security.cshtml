@@ -1,0 +1,848 @@
+﻿
+@using appSERP.appCode.Setting.User
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType;
+
+<style>
+    body {
+        font-family: Cairo;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[disabled] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+
+    .divUnitPrice {
+        max-height: 18vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .divCashBox, .divChkStat {
+        background-color: #eef1f5;
+        padding: 5px;
+        border: 1px solid #d4d4d4;
+        border-radius: 3px;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+
+    .cardHeader {
+        background-color: #D3EDFF;
+    }
+
+    .divHead {
+        max-height: 29vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .selected {
+        background-color: red;
+        color: #fff;
+        font-weight: bold
+    }
+</style>
+<!--Scrolling Table-->
+<style>
+    #table-wrapper {
+        position: relative;
+    }
+
+    #table-scroll {
+        height: 250px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    #table-scroll-unit {
+        height: 56px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    #table-wrapper table thead th .text {
+        position: absolute;
+        top: -20px;
+    }
+
+    .clsDiv {
+        /*position: fixed;*/
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        position: absolute;
+        top: -20px;
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        background-color: #D3EDFF !important;
+        background-color: #D3EDFF !important;
+    }
+</style>
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "ادارة الصلاحيات" })
+</div>
+<!-- Utlity -->
+<div class="divUtilityBar d-flex">
+    @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+</div>
+<div class="bg-white  rounded m-3">
+    <div class="row pt-1">
+        <div class="col-sm-2">
+            <label>اسم المستخدم </label>
+        </div>
+        <div class="col-sm-5">
+            <div class="d-flex ">
+                <div class="col-sm-4 p-0">
+                    <input class="form-control form-control-sm text-center txtUserGroupCode" data-id="0" type="text" min=0 required />
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control form-control-sm text-center txtUserGroupName" type="text" required disabled />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pt-3 pb-3 border">
+
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-4">
+
+                </div>
+                <div class="col-sm-3">مجموعة الصلاحيات </div>
+
+            </div>
+            <div class="border clsPerm">
+                <div class="list-group clsGroup">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="btn-group " role="group" style="padding-top:100px !important" aria-label="First group">
+                <!-- Next -->
+                <button class="btn btnAddGroup" id=""><i class="fa  fa-angle-left"></i></button>
+                <!-- Prev -->
+                <button class="btn btnAddAllGroup" id=""><i class="fa  fa-angle-double-left "></i></button>
+                <!-- Prev -->
+                <button class="btn btnRemoveAllGroup" id=""><i class="fa  fa-angle-double-right "></i></button>
+                <!-- Next -->
+                <button class="btn btnRemoveGroup" id=""><i class="fa  fa-angle-right"></i></button>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-4">
+
+                </div>
+                <div class="col-sm-6">الصلاحيات الممنوحة للمستخدم </div>
+
+            </div>
+            <div class="border clsPerm">
+                <div class="list-group clsUserGroup">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="row ">
+                <div class="col-sm-4">
+
+                </div>
+                <div class="col-sm-8">المستخدمين تحت المجموعة المحددة </div>
+
+            </div>
+            <div class="border clsPerm ">
+                <div class="list-group clsUserSpecificGroup">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!--Content-->
+<div class=" bg-white border rounded  mt-3">
+
+    <ul class="nav nav-tabs  cardHeader" id="myTab" role="tablist">
+
+        <li class="nav-item divCash " id="divCash">
+            <a class="nav-link    show active" id="Cash-tab" data-toggle="tab" href="#Cash" role="tab" aria-controls="Cash" aria-selected="true">انشاء كاشير</a>
+        </li>
+
+
+        <li class="nav-item divEmployee" id="divEmployee">
+            <a class="nav-link" id="Employee-tab" data-toggle="tab" href="#Employee" role="tab" aria-controls="Employee" aria-selected="false">انشاء موظف</a>
+        </li>
+        <li class="nav-item divUser" id="divUser">
+            <a class="nav-link" id="User-tab" data-toggle="tab" href="#User" role="tab" aria-controls="User" aria-selected="false">انشاء مستخدم</a>
+        </li>
+        <li class="nav-item divUserCashier " id="divUserCashier">
+            <a class="nav-link    " id="UserCashier-tab" data-toggle="tab" href="#UserCashier" role="tab" aria-controls="UserCashier" aria-selected="false">صلاحيات المستخدم</a>
+        </li>
+        @*<li class="nav-item divUser" id="divUserCashier">
+                <a class="nav-link" id="divUserCashier-tab" data-toggle="tab" href="#divUserCashier" role="tab" aria-controls="UserCashier" aria-selected="false">  صلاحيات المستخدم</a>
+            </li>*@
+    </ul>
+    <div class="tab-content table-wrapper" id="myTabContent">
+
+        <div class="tab-pane fade  divCash active show table-scroll" id="Cash" role="tabpanel" aria-labelledby="Cash-tab">
+            <a class="nav-link" id="User-tab" data-toggle="tab" href="#User" role="tab" aria-controls="User" aria-selected="false">انشاء كاشير</a>
+            <!-- Details Main -->
+            <div class="bg-white border rounded p-3  divGlVoucher">
+
+                <!-- Details -->
+                <table class="table table-sm table-responsive-sm">
+                    <thead>
+                        <tr class="tblHead">
+                            <th class=""></th>
+                            <th class="" width="5%">
+                                <div>الرقم</div>
+                            </th>
+                            <th class="" width="15%">
+                                <div> اسم الكاشير-عربي</div>
+                            </th>
+                            <th class="" width="15%">
+                                <div> اسم الكاشير-انجليزي</div>
+                            </th>
+                            <th class="" width="15%">
+                                <div>الموظف</div>
+                            </th>
+
+                            <th class="">
+                                <div>حساب النقد</div>
+                            </th>
+                            <th class="">
+                                <div>حساب الشبكة</div>
+                            </th>
+                            <th class="">
+                                <div>ملاحظات</div>
+                            </th>
+                            <th class="">
+                                <div>صندوق الفرع</div>
+                            </th>
+
+
+                            <th class="">
+                                <div>حالة الكاشير</div>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="tblCashierBody">
+                        <tr class="tblCashierRow" data-id="0" data-changed="0">
+                            <td class="">
+                                <button class="btn btn-light btn-sm border btnAddCashRow" type="submit">
+                                    <i class="fa fa-plus-circle"></i>
+                                </button>
+                            </td>
+
+                            <td class="">
+                                <input class="form-control form-control-sm text-center txtCashierCode" data-id="0" type="text" required disabled />
+                            </td>
+                            <td class="">
+                                <input class="form-control form-control-sm text-center txtCashierNameL1" type="text" required />
+                            </td>
+                            <td class="">
+                                <input class="form-control form-control-sm text-center txtCashierNameL2" type="text" required />
+                            </td>
+                            <td class="">
+                                <div class="d-flex ">
+                                    <div class="col-sm-4 p-0">
+                                        <input class="form-control form-control-sm text-center txtEmpCode" data-id="0" type="text" min=0 required />
+                                    </div>
+                                    <div class="col-sm-8 p-0">
+                                        <input class="form-control form-control-sm text-center txtEmpName" type="text" required disabled />
+                                    </div>
+                                </div>
+
+                            </td>
+
+                            <td class="">
+                                <div class="">
+                                    <input class="form-control form-control-sm text-center  txtCashAcc" type="text" required />
+                                </div>
+                            </td>
+                            <td class="">
+                                <div class="">
+                                    <input class="form-control form-control-sm text-center  txtNetAcc" type="text" required />
+                                </div>
+                            </td>
+                            <td class="">
+                                <div class="">
+                                    <input class="form-control form-control-sm text-center txtNotes" type="text" required />
+                                </div>
+                            </td>
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ">
+                                    <input type="checkbox" class="custom-control-input  chkIsCashComp" id="chkIsActive" checked>
+                                    <label class="custom-control-label small" for="chkIsCashComp"></label>
+                                </div>
+                            </td>
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ">
+                                    <input type="checkbox" class="custom-control-input  chkIsActive" id="chkIsActive" checked>
+                                    <label class="custom-control-label small" for="chkIsActive"></label>
+                                </div>
+                            </td>
+
+                            <td><button class="btn btn-light btn-sm btnCashierDelete"><i class="fa fa-trash"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+        <div class="tab-pane fade divEmployee" id="Employee" role="tabpanel" aria-labelledby="Employee-tab">
+
+            <a class="nav-link" id="Employee-tab" data-toggle="tab" href="#Employee" role="tab" aria-controls="Employee" aria-selected="false">انشاء موظف</a>
+
+            <div class="container-fluid">
+                <div class="row bg-white border rounded p-3 divPrinter">
+                    <div class="col-md-6">
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الرقم</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" class="form-control " id="txtResEmployeeId" disabled data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الاسم عربي</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control " id="txtResEmployeeNameL1" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الاسم لاتيني</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control " id="txtResEmployeeNameL2" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الجنس</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="radio" id="rdMale" name="gender" value="male" checked> ذكر
+                                <input type="radio" id="rdFemale" name="gender" value="female"> انثى
+                            </div>
+                            <div class="col-2">
+                                <label>نوع البطاقة</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control w-25" id="txtIdentityTypeId" data-id="0" />
+                                    <input type="text" class="form-control w-75" id="txtIdentityTypeName" disabled data-id="0" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>رقم الهوية</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" class="form-control " id="txtIdentityNumber" data-id="0" />
+                            </div>
+                            <div class="col-2">
+                                <label>تاريخ الهوية</label>
+                            </div>
+                            <div class="col-4">
+
+                                <input type="date" class="form-control" id="txtIdentityDate" data-id="0" />
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الجنسية</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25" id="txtNationalityId" data-id="0" />
+                                    <input type="text" class="form-control  w-75" id="txtNationalityName" disabled data-id="0" />
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label>حالة الموظف</label>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25" id="txtEmpStatusId" data-id="0" />
+                                    <input type="text" class="form-control  w-75" id="txtEmpStatusName" disabled data-id="0" />
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>تاريخ الميلاد</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="date" class="form-control " id="txtBirthDate" data-id="0" />
+                            </div>
+                            <div class="col-2">
+                                <label>رقم التليفون</label>
+                            </div>
+                            <div class="col-4">
+
+                                <input type="text" class="form-control" id="txtMobile" data-id="0" />
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>العنوان</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control " id="txtAddress" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>نوع القيمة</label>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25" id="txtValueTypeId" data-id="0" />
+                                    <input type="text" class="form-control  w-75" id="txtValueTypeName" disabled data-id="0" />
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label>قيمة التوصيل</label>
+                            </div>
+                            <div class="col-4">
+
+                                <input type="text" class="form-control" id="txtDeliveryValue" data-id="0" />
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>حد الاحتساب</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" class="form-control" id="txtPercentageRange" data-id="0" />
+
+                            </div>
+                            <div class="col-2">
+                                <label>تاريخ الخروج</label>
+                            </div>
+                            <div class="col-4">
+
+                                <input type="date" class="form-control" id="txtExitDate" data-id="0" />
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>طريقة الخروج</label>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25" id="txtExitTypeId" data-id="0" />
+                                    <input type="text" class="form-control  w-75" id="txtExitTypeName" disabled data-id="0" />
+                                </div>
+
+                            </div>
+                            <div class="col-2">
+
+                            </div>
+                            <div class="col-4">
+
+
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>سبب الخروج</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control" id="txtExitReason" data-id="0" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="IdentityTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="IdentityTypeDataModalContent"></div>
+                    </div>
+                </div>
+                <div id="NationalityDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="NationalityDataModalContent"></div>
+                    </div>
+                </div>
+                <div id="EmpStatusDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="EmpStatusDataModalContent"></div>
+                    </div>
+                </div>
+                <div id="ValueTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="ValueTypeDataModalContent"></div>
+                    </div>
+                </div>
+                <div id="ExitTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="ExitTypeDataModalContent"></div>
+                    </div>
+                </div>
+                <!-- ResEmployeeData Modal -->
+                <div id="ResEmployeeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="ResEmployeeDataModalContent"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="tab-pane fade " id="User" role="tabpanel" aria-labelledby="User-tab">
+
+            <a class="nav-link" id="User-tab" data-toggle="tab" href="#User" role="tab" aria-controls="User" aria-selected="false">انشاء مستخدم</a>
+            <div class="container-fluid">
+                <div class="row bg-white border rounded p-3 ">
+                    <div class="col-md-6">
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الرقم</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" class="form-control " id="txtUserId" disabled data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>اسم المستخدم </label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control txtUserName" id="txtUserName" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الرقم السري</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="password" class="form-control txtUserPassword" id="txtUserPassword" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>  تأكيد الرقم السري   </label>
+                            </div>
+                            <div class="col-10">
+                                <input type="password" class="form-control txtUserConfirmPassword" id="txtUserConfirmPassword" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الموظف</label>
+                            </div>
+                            <div class="col-10">
+
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25 txtEmployeeCode" id="txtEmployeeCode" data-id="0" />
+                                    <input type="text" class="form-control  w-75 txtEmployeeName" id="txtEmployeeName" disabled data-id="0" />
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div id="IdentityTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="IdentityTypeDataModalContent"></div>
+                </div>
+            </div>
+            <div id="NationalityDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="NationalityDataModalContent"></div>
+                </div>
+            </div>
+            <div id="EmpStatusDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="EmpStatusDataModalContent"></div>
+                </div>
+            </div>
+            <div id="ValueTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="ValueTypeDataModalContent"></div>
+                </div>
+            </div>
+            <div id="ExitTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="ExitTypeDataModalContent"></div>
+                </div>
+            </div>
+            <!-- ResEmployeeData Modal -->
+            <div id="ResEmployeeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="ResEmployeeDataModalContent"></div>
+                </div>
+
+            </div>
+            <!-- Confirm Delete Modal -->
+            <div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="confirmDeleteModalContent"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade  divUserCashier  table-scroll" id="UserCashier" role="tabpanel" aria-labelledby="UserCashier-tab">
+            <a class="nav-link" id="UserCashier-tab" data-toggle="tab" href="#UserCashier" role="tab" aria-controls="User" aria-selected="false">صلاحيات المستخدم</a>
+            <!-- Details Main -->
+            <div class="bg-white border rounded p-3  divGlVoucher">
+
+                <!-- Details -->
+                <table class="table table-sm table-responsive-sm">
+                    <thead>
+                        <tr class="tblHead">
+                            <th class=""></th>
+                            <th class="" width="15%">
+                                <div>رقم المستخدم</div>
+                            </th>
+                            <th class="" width="15%">
+                                <div>  الكاشير</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>طول فترة التأمين</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div> السماح بتعديل الفاتورة</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>السماح بالغاء الفاتورة</div>
+                            </th>
+
+                            <th class="" width="7%">
+                                <div>السماح باعادة الطباعة</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>التوصيل افتراضي</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>ربط الجهاز بالمستخدم</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>امكانية اعادة التأمين</div>
+                            </th>
+
+
+                            <th class="" width="7%">
+                                <div>السماح بالبحث عن الفواتير</div>
+                            </th>
+
+                            <th class="" width="7%">
+                                <div>اظهار الفواتير المعلقة</div>
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="tblUserCashierBody">
+                        <tr class="tblUserCashierRow" data-id="0" data-changed="0">
+                            <td class="">
+                                <button class="btn btn-light btn-sm border btnAddUserCashierRow" type="submit">
+                                    <i class="fa fa-plus-circle"></i>
+                                </button>
+                            </td>
+
+                            <td class="">
+                                <div class="d-flex ">
+                                    <div class="col-sm-4 p-0">
+                                        <input class="form-control form-control-sm text-center txtUserCode" data-id="0" type="text" min=0 required />
+                                    </div>
+                                    <div class="col-sm-8 p-0">
+                                        <input class="form-control form-control-sm text-center txtUserName" type="text" required disabled />
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td class="">
+                                <div class="d-flex ">
+                                    <div class="col-sm-4 p-0">
+                                        <input class="form-control form-control-sm text-center txtCashierCode" data-id="0" type="text" min=0 required />
+                                    </div>
+                                    <div class="col-sm-8 p-0">
+                                        <input class="form-control form-control-sm text-center txtCashierName" type="text" required disabled />
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="" style=" padding-right:1rem !important;">
+                                <input type="text" value="0" class="form-control form-control-sm text-center">
+                            </td>
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkModifyInvoice " id="chkModifyInvoice" checked>
+                                    <label class="custom-control-label small" for="chkModifyInvoice"></label>
+                                </div>
+                            </td>
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkCancelInvoice " id="chkCancelInvoice" checked>
+                                    <label class="custom-control-label small" for="chkCancelInvoice"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkRePrintInvoice" id="chkRePrintInvoice" checked>
+                                    <label class="custom-control-label small" for="chkRePrintInvoice"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkIsCashierDelivery" id="chkIsCashierDelivery" checked>
+                                    <label class="custom-control-label small" for="chkIsCashierDelivery"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkPcVerfiy" id="chkPcVerfiy" checked>
+                                    <label class="custom-control-label small" for="chkPcVerfiy"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkReturnInsurance " id="chkReturnInsurance" checked>
+                                    <label class="custom-control-label small" for="chkReturnInsurance"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkSearchInvoice " id="chkSearchInvoice" checked>
+                                    <label class="custom-control-label small" for="chkSearchInvoice"></label>
+                                </div>
+                            </td>
+
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkInsuranceLimit" id="chkInsuranceLimit" checked>
+                                    <label class="custom-control-label small" for="chkInsuranceLimit"></label>
+                                </div>
+                            </td>
+
+                            <td><button class="btn btn-light btn-sm btnUserCashierDelete"><i class="fa fa-trash"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+

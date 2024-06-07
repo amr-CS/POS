@@ -1,0 +1,58 @@
+﻿@model appSERP.Models.FA.AssetDepModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.AssetDep, pId = Model.AssetDepId })
+        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.HiddenFor(model => model.AssetDepId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.AssetDepId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AssetDepId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetLastDepDate, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AssetLastDepDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = @Model.AssetLastDepDate.ToString("yyyy-MM-dd") } })
+                @Html.ValidationMessageFor(model => model.AssetLastDepDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetDepDate, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AssetDepDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = @Model.AssetDepDate.ToString("yyyy-MM-dd") } })
+                @Html.ValidationMessageFor(model => model.AssetDepDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.AssetDepIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "chk1" } })
+                @Html.LabelFor(model => model.AssetDepIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "chk1" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+    </div>
+}
+

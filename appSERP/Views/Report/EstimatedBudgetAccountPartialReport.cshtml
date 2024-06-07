@@ -1,0 +1,72 @@
+﻿@using appSERP.Views.Shared.appResource;
+@using appSERP.appCode.Setting.TimeSetting;
+@using appSERP.appCode.Setting.User;
+@using System.Data
+@{
+    Layout = null;
+}
+<table class="table table-bordered table-hover tblData">
+    <thead>
+        <tr>
+            <th>@appResource._Account</th>
+            <th>@appResource._FinancialYear</th>
+            <th>@appResource._Month</th>
+            <th>@appResource.EstimatedBudgetAccountValue</th>
+            <th>@appResource.ActualValue</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (DataRow vDrwData in Model.Rows)
+            {
+        <tr>
+            @if (clsUser.vUserLanguageId == 1)
+            {
+                <td width="10%" align="center">@vDrwData["AccountNameL1"]</td>
+            }
+            else
+            {
+                <td width="10%" align="center">@vDrwData["AccountNameL2"]</td>
+            }
+
+            <td width="10%" align="center">@vDrwData["FinancialYear"]</td>
+            <td width="10%" align="center">@vDrwData["MonthId"]</td>
+
+
+            <td width="20%" align="center">@vDrwData["EstimatedBudgetAccountValue"]</td>
+            <td width="20%" align="center">
+                @Convert.ToDecimal(vDrwData["ActualValue"]).ToString("n2")
+
+                @if (Convert.ToDecimal(vDrwData["EstimatedBudgetAccountValue"]) < Convert.ToDecimal(vDrwData["ActualValue"]))
+                {
+                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+
+                    @*<h1>Bigger</h1>*@
+                }
+                else if (Convert.ToDecimal(vDrwData["EstimatedBudgetAccountValue"]) == Convert.ToDecimal(vDrwData["ActualValue"]))
+                {
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                    @*<h1>Equal</h1>*@
+                }
+                else if (Convert.ToDecimal(vDrwData["EstimatedBudgetAccountValue"]) > Convert.ToDecimal(vDrwData["ActualValue"]))
+                {
+                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                    @*<h1>Smaller</h1>*@
+                }
+
+
+
+
+            </td>
+
+
+
+
+        </tr>
+
+            }
+        }
+    </tbody>
+</table>

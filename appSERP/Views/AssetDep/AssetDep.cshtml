@@ -1,0 +1,91 @@
+﻿
+<!-- Header -->
+<div class="divViewHeader">
+    <!-- Title -->
+    <div class="row d-flex">
+        <!-- Header Content -->
+        <div class="divViewHeaderTitle col-md-12">
+
+            <div class="p-2 w-100">
+
+                    <!-- Sidebar Collapse -->
+                    <button class="btn btn-ligt bg-white appMainColortext btnSidebarCollapse"><i class="fa fa-bars"></i></button>
+                
+                <!-- Favorite -->
+                <button type="button" class=" btn bg-light btnFav"></button>
+                <!-- View Title -->
+                <span > اهلاك الاصول</span>
+            </div>
+            <div class="p-2 mt-1 flex-shrink-1">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="card mx-auto co-md-6">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    الشهر
+                    <select id="selectMonth" class="selectpicker form-control" name="Month" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                </div>
+                <div class="col-md-6">
+                    السنه
+                    <select id="selectYear" class="selectpicker form-control" name="Year" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div>
+                        تاريخ اخر اهلاك
+                        <input type="date" disabled class="form-control" id="DepDate" value="@(DateTime.Now.ToString("yyyy-MM-dd"))">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div>
+                        تاريخ الاهلاك
+                        <input type="date" disabled class="form-control" id="DepDate" value="@(DateTime.Now.ToString("yyyy-MM-dd"))">
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center" class="m-2">
+                <button type="button" class="btn btn-outline-info" style="width:200px">تنفيذ الاهلاك</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    // List GetYear
+    $.post('/Home/GetYear',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            console.log(vDataJSON)
+            $.each(vDataJSON, function (i, Year) {
+                //console.log(data)
+                $('#selectYear').append('<option data-id="' + Year + '" value="' + Year + '" sort-id="' + i + '">' + Year + '</option>')
+
+            })
+
+            // Refresh Select Picker
+            $('#selectYear').selectpicker('refresh');
+        })
+
+    // List GetCity
+    $.post('/Home/GetMonth',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            console.log(vDataJSON)
+            $.each(vDataJSON, function (i, Month) {
+                //console.log(data)
+                $('#selectMonth').append('<option data-id="' + Month + '" value="' + Month + '" sort-id="' + i + '">' + Month + '</option>')
+
+            })
+
+            // Refresh Select Picker
+            $('#selectMonth').selectpicker('refresh');
+        })
+</script>

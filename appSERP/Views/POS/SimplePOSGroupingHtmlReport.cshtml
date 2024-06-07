@@ -1,0 +1,156 @@
+﻿@using System.Data;
+
+@{
+    ViewBag.Title = "المبيعات تجميعي";
+    Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
+    DataTable Data = ViewBag.vDT;
+
+    double Total = 0;
+    double TotalSales = 0;
+    double TotalCost = 0;
+    double TotalVatTotal = 0;
+    var GroupData = Data.AsEnumerable().Select(x => new { col1 = x["GrpId"], col2 = x["GroupName"] }
+    ).ToList().Distinct();
+}
+
+
+@foreach (var i in GroupData)
+{
+    double GroupTotal = 0;
+    double GroupTotalSales = 0;
+    double GroupTotalCost = 0;
+    double GroupTotalVat = 0;
+    <div style="float:right">
+        الفئة 
+        :
+        @i.col2.ToString()
+    </div>
+    <table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+        <thead style="">
+            <tr>
+                <th width="30%">اسم الصنف</th>
+                <th>الكمية</th>
+                <th>الوحدة</th>
+                <th>المبلغ </th>
+                <th>الضريبة</th>
+                <th>الاجمالي </th>
+                <th>التكلفة </th>
+            </tr>
+        </thead>
+        @if (Data != null)
+        {
+            foreach (DataRow item in Data.Rows)
+            {
+                if (i.col1.ToString() == item["GrpId"].ToString())
+                {
+                    double sales = (Convert.ToDouble(item["Price"]) / (1 + Convert.ToDouble(item["Vat"])));
+                    double Vat =
+                        (Convert.ToDouble(item["Price"]) - (Convert.ToDouble(item["Price"]) / (1 + Convert.ToDouble(item["Vat"]))));
+                    double TotalRow = Convert.ToDouble(item["Price"].ToString());
+                    double Cost = Convert.ToDouble(item["cost"].ToString());
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">
+                        @item["InvItemNameL1"]
+                        <br />
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                        @item["Qty"]
+                    </td>
+                    <td style="text-align:center; vertical-align: middle; ">
+                        @item["LookupDtlDesc"]
+
+                    </td>
+
+                    <td style="text-align:center; vertical-align: middle; ">
+                        @Math.Round(sales, 2, MidpointRounding.ToEven)
+                    </td>
+
+
+                    <td style="text-align: center; vertical-align: middle;">
+                        @Math.Round(Vat, 2, MidpointRounding.ToEven)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">@item["Price"]</td>
+                    <td style="text-align: center; vertical-align: middle;">@Cost</td>
+
+                </tr>
+                    TotalSales = TotalSales + sales;
+                    TotalVatTotal = TotalVatTotal + Vat;
+                    TotalCost = TotalCost + Cost;
+
+                    Total = Total + TotalRow;
+
+                    GroupTotalSales = GroupTotalSales + sales;
+                    GroupTotalVat = GroupTotalVat + Vat;
+                    GroupTotalCost = GroupTotalCost + Cost;
+                    GroupTotal = GroupTotal + TotalRow;
+                }
+            }
+        }
+        <tr class="total">
+            <td style="text-align: center;font:bold; vertical-align: middle;">
+                الاجمالي  :
+                <br />
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-right:20px">
+            </td>
+
+            <td style="text-align: center; vertical-align: middle;">
+            </td>
+
+            <td style="text-align:center;vertical-align: middle;">
+                @Math.Round(GroupTotalSales, 2, MidpointRounding.ToEven)
+
+            </td>
+            <td style="text-align: center; vertical-align: middle;">
+                @Math.Round(GroupTotalVat, 2, MidpointRounding.ToEven)
+            </td>
+
+            <td style="text-align: center; vertical-align: middle;">
+                @Math.Round(GroupTotal, 2, MidpointRounding.ToEven)
+
+            </td>
+            <td style="text-align: center; vertical-align: middle;">
+                @Math.Round(GroupTotalCost, 2, MidpointRounding.ToEven)
+
+            </td>
+        </tr>
+    </table>
+
+
+}
+<table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+    <thead>
+
+    </thead>
+    <tbody>
+        <tr class="total">
+            <td style="text-align: center;font:bold; vertical-align: middle;" width="30%">
+                
+                الكلي
+                :
+                <br />
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-right:20px">
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-right:20px">
+            </td>
+            <td style="text-align:center;vertical-align: middle;">
+                @Math.Round(TotalSales, 2, MidpointRounding.ToEven)
+
+            </td>
+            <td style="text-align: center; vertical-align: middle;">
+                @Math.Round(TotalVatTotal, 2, MidpointRounding.ToEven)
+            </td>
+
+            <td style="text-align: center; vertical-align: middle;">
+                @Math.Round(Total, 2, MidpointRounding.ToEven)
+
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-left:30px">
+                @Math.Round(TotalCost, 2, MidpointRounding.ToEven)
+
+            </td>
+        </tr>
+    </tbody>
+</table>
+

@@ -1,0 +1,169 @@
+﻿
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "SiteSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divSite {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divSiteSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divSiteSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divSiteNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">المواقع</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divSite">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodySite"></tbody>
+    </table>
+
+</div>
+
+
+<!-- Site GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Site GET
+        funSiteGET();
+    })
+    // Site GET
+    function funSiteGET() {
+
+        $.get('/api/APISite/SiteGET',
+            {
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            }, function (data, status) {
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodySite');
+
+                console.log(vDataResult)
+                // Sites
+                $.each(vDataResult, function (i, SiteData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].SiteId + '">';
+
+                    var vSiteName = vDataResult[i].SiteNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vSiteName = vDataResult[i].SiteNameL2;
+                        }
+                    vRowContent += '<td data-id="' + vDataResult[i].SiteId + '">';
+                    vRowContent += '<div class="divSiteSelect d-flex p-2" data-id="' + vDataResult[i].SiteId + '">';
+                    vRowContent += '<div class="divSiteCode px-4">' + vDataResult[i].SiteCode + '</div>';
+                    vRowContent += '<div class="divSiteName  px-4">' + vSiteName + '</div>';
+
+
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+
+
+
+
+    }
+
+</script>
+
+<!-- Search Site -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divSiteSelect').each(function () {
+
+                // Get Site Code
+                var vSiteCode = $(this).find('.divSiteId').text();
+                var vSiteName = $(this).find('.divSiteName').text();
+
+                // Check Result
+                if (vSiteCode.search(vSearchInput) != -1 || vSiteName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+
+            $('.divSiteSelect').each(function () {
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+            })
+        }
+    })
+</script>
+

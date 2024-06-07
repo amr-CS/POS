@@ -1,0 +1,1660 @@
+﻿
+@using appSERP.appCode.Setting.User
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType;
+@{
+    ViewBag.Title = "التحويل المخزني";
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+}
+<style>
+    body {
+        font-family: Cairo;
+    }
+
+    .fullHeightInput {
+        height: 50px;
+    }
+
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    /*.table td {
+        margin-top: 0.5rem;
+        padding: 0rem !important;
+    }*/
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+</style>
+<!-- Head -->
+<div class="container-fluid">
+    <div class="bg-white border rounded p-3">
+        <div class="w-100">
+            <div class="d-flex justify-content-end">
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Save -->
+                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Copy -->
+                    <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                    <!-- Paste -->
+                    <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Print -->
+                    <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                    <!-- Sort Desc -->
+                    <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                    <!-- Edit -->
+                    <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- PDF -->
+                    <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <!-- Excel -->
+                    <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                    <!-- Word -->
+                    <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Close -->
+                    <button class="btn btnUtility btnDeleteHead" title="@appResource.btnDelete"><i class="fa fa-close"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Full Screen -->
+                    <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <div class="dropdown">
+                        <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-table"></i>
+                        </button>
+                        <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+
+    <!-- Title -->
+    <div class="bg-light border rounded p-3 mb-3">@appResource.StoreConversion</div>
+
+    <!-- Head -->
+    <div class="bg-white border rounded p-3">
+        <div class="row">
+            <div class="col-sm-9">
+                <div class="row controlRow col-sm-12">
+                    <!-- Source -->
+                    <div class="row controlRow col-sm-12">
+                        <div class="col-sm-2">
+                            <label class="small float-right">من فرع</label>
+                        </div>
+                        <div class="col-sm-4 d-flex">
+
+                            <input type="number" class="form-control form-control-sm w-25 d-none txtBranchId" />
+                            <input type="number" class="form-control form-control-sm w-25 txtBranchCode" />
+                            <input type="text" class="form-control form-control-sm w-75 txtBranchName" disabled />
+                        </div>
+
+                        @*<div class="col-sm-1"> </div>*@
+                        <div class="col-sm-2">
+                            <label class="small float-right">من مخزن</label>
+                        </div>
+                        <div class="col-sm-4 d-flex">
+                            <input type="number" class="form-control form-control-sm w-25 d-none txtStoreId" />
+                            @*<input type="date" class="form-control form-control-sm w-25 txtCheckDate d-none" value="0" />*@
+                            <input type="number" class="form-control form-control-sm w-25 txtStoreCode" />
+                            <input type="text" class="form-control form-control-sm w-75 txtStoreName" disabled />
+                        </div>
+                    </div>
+
+                    <div class="row controlRow col-sm-12">
+                        <div class="col-sm-2">
+                            <label class="small float-right">الى فرع</label>
+                        </div>
+                        <div class="col-sm-4 d-flex">
+                            <input type="number" class="form-control form-control-sm w-25 d-none txtTargetBranchId" />
+                            <input type="number" class="form-control form-control-sm w-25 txtTargetBranchCode" />
+                            <input type="text" class="form-control form-control-sm w-75 txtTargetBranchName" disabled />
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label class="small float-right pt-2">الي مخزن</label>
+                        </div>
+                        <div class="col-sm-4 d-flex">
+                            <input type="number" class="form-control form-control-sm w-25 d-none txtSourceStoreId" onblur="" />
+                            <input type="number" class="form-control form-control-sm w-25 txtSourceStoreCode" onblur="" />
+                            <input type="text" class="form-control form-control-sm w-75 txtSourceStoreName" value="" disabled />
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row controlRow  col-sm-12">
+                    <div class="col-sm-1">
+                        <label class="small float-right ">@appResource._Note</label>
+                    </div>
+                    <div class="col-sm-9 ml-3">
+                        <input type="text" class="form-control form-control-sm txtNote" value="" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+
+                <div class="row controlRow ">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">@appResource.ConversionNo</label>
+                    </div>
+                    <div class="col-sm-8 ">
+                        <input type="text" class="form-control form-control-sm  txtStoreConversionId" value="0" onblur="" disabled />
+                    </div>
+                </div>
+                <div class="row controlRow ">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">@appResource._Date</label>
+                    </div>
+                    <div class="col-sm-8 ">
+                        <input type="date" class="form-control form-control-sm  txtDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" onblur="" />
+                    </div>
+                </div>
+
+                <div class="row controlRow">
+                    <div class="col-sm-4 "> </div>
+                    <div class="col-sm-8 ">
+                        <div class="custom-control custom-checkbox m-2">
+                            <input type="checkbox" class="custom-control-input chkIsActive" id="chkIsActive">
+                            <label class="custom-control-label small" for="chkIsActive">@appResource.OrderStatus</label>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div> <!-- End of Main Inputs -->
+    </div>
+    <!-- </div> -->
+    <!-- Details Main -->
+    <div class="bg-white border rounded p-3 mt-3 divGlVoucher">
+        <!-- Details -->
+        <table class="table table-sm table-responsive-sm">
+            <thead>
+                <tr class="tblHead">
+                    <th class=""></th>
+                    <th class="" width="">
+                        <div class="row">
+
+                            <div class="col-sm-6">@appResource.ProductNo</div>
+                            <div class="col-sm-6">@appResource.ProductName</div>
+                        </div>
+                    </th>
+                    <th>
+                        <div>@appResource.EndDate</div>
+                    </th>
+                    <th class="" width="">
+                        <div class="row">
+                            <div class="col-sm-6">@appResource.UnitNo</div>
+                            <div class="col-sm-6">@appResource.UnitName</div>
+                        </div>
+                    </th>
+
+                    <th class="">
+                        <div>@appResource._Qty</div>
+
+                    </th>
+
+                    <th class="">
+                        <div>التكلفة</div>
+
+                    </th>
+                    <th class="">
+                        <div> اجمالي التكلفة</div>
+
+                    </th>
+                    <th class="">
+                        <div>@appResource._Note</div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody class="tblStoreConversionBody">
+                <tr class="trBaseRow tblStoreConversionRow" data-id="0">
+                    <td class="">
+                        <button class="btn btn-light btn-sm border btnAddRow" type="submit">
+                            <i class="fa fa-plus-circle"></i>
+                        </button>
+                    </td>
+
+                    <td class="">
+
+                        <div class="d-flex">
+                            <div class="col-sm-4 p-0">
+                                <input class="form-control form-control-sm text-center d-none txtItemId" value="5" type="text" required />
+                                <input class="form-control form-control-sm text-center txtItemCode" type="text" required />
+                            </div>
+                            <div class="col-sm-8 p-0">
+                                <input class="form-control form-control-sm text-center  txtItemName" type="text" required readonly />
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <input class="form-control form-control-sm text-center   txtExpireDate" type="date" required />
+
+                    </td>
+                    <td class="">
+
+                        <div class="d-flex">
+                            <div class="col-sm-4 p-0">
+                                <input class="form-control form-control-sm text-center  d-none txtUnitId" type="text" required />
+                                <input class="form-control form-control-sm text-center  txtUnitCode" onblur="" title="@appResource.ChoseCostCenterTitle" type="text" required />
+                            </div>
+                            <div class="col-sm-8 p-0">
+                                <input class="form-control form-control-sm text-center  txtUnitName" type="text" required readonly />
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <input class="form-control form-control-sm text-center txtItemQty" type="text" required value="0" />
+
+                    </td>
+                    <td>
+                        <input class="form-control form-control-sm text-center txtItemPrice" type="text" required value="0" disabled />
+                    </td>
+                    <td>
+                        <input class="form-control form-control-sm text-center txtTotalItemPrice" type="text" required value="0" disabled />
+                    </td>
+                    <td class="">
+                        <textarea class="form-control form-control-sm text-center txtNote" style="" required></textarea>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+
+    </div>
+</div>
+
+
+<!-- AccountData Modal -->
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+
+<!-- CostCenterData Modal -->
+<div id="CostCenterDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CostCenterDataModalContent"></div>
+    </div>
+</div>
+<!-- StoreConversionData Modal -->
+<div id="StoreConversionDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="StoreConversionDataModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+
+<script>
+
+ var Item = $.parseJSON($.ajax({
+            url: '/api/APIInvItem/InvItemGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+     data: { phNumbers: '2', pQueryTypeId: '409', },        
+            async: false
+              }).responseText);
+
+    localStorage.setItem("Item", Item);
+
+    // Save
+    $('.btnSave').on('click', function () {
+        var StoreId = $('.txtStoreCode').val();
+
+        var ValidExist = true;
+        $('.tblStoreConversionRow').each(function () {
+                       var StoreQty =0;
+            var Element = $(this)
+            var Qty = parseFloat( $('.txtItemQty').val());
+            var ItemName =$(Element).closest('tr').find('.txtItemName').val();
+                if (StoreId === '1') { StoreQty =parseFloat( Element.attr('store1')) }
+                if (StoreId === '2') { StoreQty =parseFloat( Element.attr('store2') )}
+                if (StoreId === '3') { StoreQty =parseFloat( Element.attr('store3') )}
+
+           // alert("aty=" + Qty+"store=" + StoreQty);
+            if (Qty > StoreQty) {
+                funNotification('( ' + ItemName + ' )=( ' + StoreQty.toFixed(2) + ' )غير متوفرة في المخزن ', 3)
+                ValidExist = false;
+            }
+        })
+        if (ValidExist == true) {
+            funSaveAll();
+        }
+
+    }) // End BtnSave
+
+    // Save Using F10
+    $('body').on('keyup', function (e) {
+        // Check F10
+        if (e.keyCode == 121) {
+            // Save  ALL
+            funSaveAll()
+        }
+    })
+
+    // Delete
+
+
+    // Voucher Save
+    function funSaveAll() {
+            let StoreConversionDtls = [];
+        // Get Id
+        var vStoreConversionId = $('.txtStoreConversionId').val();
+        // Get Doc Id
+        var vSourceBranchId = $('.txtBranchId').val();
+        var vTargetBranchId = $('.txtTargetBranchId').val();
+        var vStoreId = $('.txtStoreId').val();
+        var UserId = $('.divUserId').text();
+
+        // Get Doc Date
+        var vStoreName = $('.txtStoreName').val();
+        // Get Vocher Type
+        var vSourceStoreId = $('.txtSourceStoreId').val();
+        // Doc Note
+        var vDate = $('.txtDate').val();
+        // Is Posted
+        var vchkIsActive = $('.chkIsActive').prop('checked');
+        // Doc Note
+        var vNote = $('.txtNote').val();
+
+        if (vStoreConversionId == '0' || vStoreConversionId == '') {
+            if (vStoreId.trim() != '' && vStoreId != '0' && vSourceStoreId.trim() != '' && vSourceStoreId != '') {
+                vIsValidData = true
+                $('.tblStoreConversionRow').each(function () {
+                    // Get Row Id
+                    var vStoreRow = $(this);
+                    // Account
+                    var vtxtStoreItemId = $(this).find('.txtItemId').val();
+                    var vtxtItemQty = $(this).find('.txtItemQty').val();
+                    //funNotification(vtxtStoreItemId + ' - ' + vtxtItemQty, '2');
+                    // Credit
+                    var vStoreUnitId = $(this).find('.txtUnitId').val();
+                    if (vtxtStoreItemId != '' && vStoreUnitId != '') {
+
+                        vIsValidData = true;
+                    }
+
+                    else {
+                        vIsValidData = false;
+                    }
+
+                    // فحص صحة وقيمة الكمية
+                    if (vtxtItemQty == '' || vtxtItemQty == null || $.isNumeric(vtxtItemQty) == false) {
+                        funNotification('قيمة الكمية غير صالحة', '2');
+                        vIsValidData = false;
+                        return;
+                    }
+                    if (parseInt(vtxtItemQty)<=0) {
+                        funNotification('الكمية المدخلة يجب ان تكون اكبر من الصفر', '2');
+                        vIsValidData = false;
+                        return;
+                    }
+
+                })
+                if (vIsValidData == true) {
+                    // Save Head
+                    /* $.post('/StoreConversion/funSaveStoreConversion',
+                         {
+                             // Head Parameters
+                             pStoreConversionId: vStoreConversionId,
+                             pStoreId: vStoreId,
+                             pStoreConversionDate: vDate,
+                             pSourceStoreId: vSourceStoreId,
+                             pNotes: vNote,
+                             pStoreConversionIsActive: vchkIsActive,
+                             phIsDeleted: false,
+                             pCreatedBy: UserId,
+                             pLastUpdatedBy: UserId,
+                             // Query Type Id
+                             pIsStoreConversionDetail: false,
+                             pQueryTypeId: '100'
+                         },
+                         function (data, status) {*/
+
+                    // JSON Parse
+                    // var vDataResult = JSON.parse(data);
+                    // Row Id
+                    //var vStoreConversionId = vDataResult[0].StoreConversionId
+                    /*  if (vStoreConversionId === '0') {
+                             vIsValidData = false;
+                          funNotification('الكمية غير متوفرة في المخزن المصدر',3)
+                      } else {*/
+                    $('.txtStoreConversionId').val(vStoreConversionId)
+                    // Check Rows
+                    $('.tblStoreConversionRow').each(function () {
+                        //// Detail Variables
+                        // Get Row Id
+                        var vRow = $(this);
+                        var vRowId = $(this).attr('data-id');
+                        // Account
+                        var vtxtItemId = $(this).find('.txtItemId').val();
+                        // Debit
+                        var vExpireDate = $(this).find('.txtExpireDate').val();
+
+                        // Credit
+                        var vUnitId = $(this).find('.txtUnitId').val();
+                        // Currency, Factor
+                        var vItemQty = $(this).find('.txtItemQty').val();
+                        // QTY
+                        var ItemPrice = $(this).find('.txtItemPrice').val();
+                        var TotalItemPrice = $(this).find('.txtTotalItemPrice').val();
+                        // Note
+                        var vNote = $(this).find('.txtNote').val();
+                        // Check Date
+                        //if (vDateCheck == 'true') {
+
+                        if (vtxtItemId != '' && vUnitId != '') {
+
+
+                            vIsValidData = true;
+                            let Item = {
+                                StoreId: vStoreId,
+                                StoreSectId: vSourceStoreId,
+                                StoreConversionDtlId: vRowId,
+                                StoreConversionId: vStoreConversionId,
+                                ItemId: vtxtItemId,
+                                UnitId: vUnitId,
+                                ExpireDate: vExpireDate,
+                                ItemQty: vItemQty,
+                                Notes: vNote,
+                                IsDeleted: false,
+                                IsStoreConversionDetail: true,
+                                Cost: ItemPrice,
+                                TotalCost: TotalItemPrice,
+                            }
+                            StoreConversionDtls.push(Item);
+                        }
+                        else {
+                            vIsValidData = false;
+                        }
+                        //  } // End Check Account
+                        // }// End Date Check
+                    })// ENd Check Rows
+
+                    $.ajax({
+                        url: '/StoreConversion/StoreConversionBulk',
+                        method: 'POST', contentType: 'application/json',
+                        data: JSON.stringify({
+                            StoreConversionDtls,
+                            StoreConversionId: vStoreConversionId,
+                            SourceBranchId:vSourceBranchId,
+                            TargetBranchId: vTargetBranchId,
+                            StoreId: vStoreId,
+                            StoreConversionDate: vDate,
+                            SourceStoreId: vSourceStoreId,
+                            Notes: vNote,
+                            StoreConversionIsActive: vchkIsActive,
+                            IsDeleted: false,
+                            CreatedBy: UserId,
+                            LastUpdatedBy: UserId,
+                            BranchId:@BranchId
+
+                        }),
+                        beforeSend: function () {
+                            $('#loading').show();
+                        },
+                        complete: function () {
+                            $('#loading').hide();
+                        },
+                        success: function (r) {
+
+                            console.table(r);
+                            var m = JSON.parse(r);
+                            $.each(m, function (i, a) {
+                                funNotification(a.msg, a.c)
+                            })
+                            if (m[0].c == 1) {
+                                var data = JSON.parse(r);
+                                console.log(data)
+                                console.log(data[0].StoreConversionId)
+                                $('.txtStoreConversionId').val(data[0].StoreConversionId);
+                                //    Clear()
+                            }
+
+                        }
+                        , error: function (xhr) {
+                            alert('Request Status: ' + xhr.status + ' Status Text: ' + xhr.statusText + ' ' + xhr.responseText);
+                        }
+                    });
+                    // }
+                    // })
+                    // End Save Head
+                }
+
+
+
+
+            }
+            else {
+                vIsValidData = false;
+            }
+        }  else {
+                funNotification('لا يوجد تعديل', 2)
+            }
+
+
+         // Notification - Field Required
+                if (vIsValidData) {
+                    //funNotification(vDataResult[0].SystemMessageText, vDataResult[0].SystemMessageTypeId);
+
+                }
+                else {
+                    funNotification('@appResource.msgCompleteData', '2');
+        }
+          console.log("-------");
+
+
+    }
+
+
+
+
+
+
+
+    $('body').on('click', '.btnDtlDelete', function () {
+        //Element
+        var vElement = $(this)
+        var vId = $(this).attr('data-id')
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+
+                        // Save Row
+                        $.get('/StoreConversion/funSaveStoreConversion',
+                            {
+                                // Detail Parameters
+                                pStoreConversionDtlId: vId,
+                                pdIsDeleted: true,
+                                pIsStoreConversionDetail: true,
+                                // Query Type Id
+                                pQueryTypeId: '300'
+                            },
+                            function (data, status) {
+                                var vResultData = JSON.parse(data)
+                                vElement.closest('tr').remove();
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    //// Add Row
+                                    funAddRow();
+                                }
+                                // Notification
+                                funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                            })
+
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblStoreConversionBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        // Add Row
+                        funAddRow();
+                    }
+                }
+            });
+    })
+
+    $('body').on('click', '.btnDeleteHead', function () {
+        //Element
+        var vElement = $(this)
+        var vId = $('.txtStoreConversionId').val();
+        var vDataId = vId;
+        var vDataName = vId;
+
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Save Row
+                        $.get('/StoreConversion/funSaveStoreConversion',
+                            {
+                                // Detail Parameters
+                                pStoreConversionId: vId,
+                                pIsDeleted: true,
+                                pIsStoreConversionDetail: false,
+                                // Query Type Id
+                                pQueryTypeId: '300'
+                            },
+                            function (data, status) {
+                                if ($.isNumeric(data)) {
+                                    funNotification('@appResource.msgCannotDelete', 2);
+                                }
+                                else {
+                                    var vResultData = JSON.parse(data)
+                                    // Notification
+                                    funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                                    funClearAll();
+                                }
+
+
+                            })
+
+                    });
+                }
+                else {
+
+                }
+            })
+
+    })
+
+    //function Append
+    function funStoreConversionConfig(pStoreConversionRow) {
+
+        if (pStoreConversionRow) {
+            pStoreConversionRow = pStoreConversionRow[0]
+            if (pStoreConversionRow) {
+                $('.txtStoreId').val(pStoreConversionRow.StoreId);
+                $('.txtStoreCode').val(pStoreConversionRow.StoreCode);
+                $('.txtStoreName').val(pStoreConversionRow.StoreNameL1);
+                $('.txtSourceStoreId').val(pStoreConversionRow.SourceStoreId);
+                $('.txtSourceStoreCode').val(pStoreConversionRow.SourceStoreCode);
+                $('.txtSourceStoreName').val(pStoreConversionRow.SourceStoreNameL1);
+                $('.txtNote').val(pStoreConversionRow.Notes);
+                //$('textarea.txtNote').text(pStoreConversionRow.Notes);
+                $('.txtStoreConversionId').val(pStoreConversionRow.StoreConversionId);
+
+                $('.chkIsActive').prop('checked', pStoreConversionRow.StoreConversionIsActive);
+
+                $('.txtDate').val(pStoreConversionRow.StoreConversionDate);
+            }
+        }
+    }
+
+    //function Append
+    function funStoreConversionDtlConfig(pStoreConversionRow) {
+        console.log(pStoreConversionRow);
+        // Content
+        var RowContent = '<tr class="trRow tblStoreConversionRow" data-id="' + pStoreConversionRow.StoreConversionDtlId + '">' +
+            '<td class="">' +
+            '<button class="btn btn-light btn-sm border btnAddRow" type="submit">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            '</button>' +
+            '</td>' +
+            '<td class="">' +
+            '<div class="d-flex">' +
+            '<div class="col-sm-4 p-0">' +
+            '<input class="form-control form-control-sm text-center d-none  txtItemId"   title="@appResource.ChoseCostCenterTitle" type="text" value="' + pStoreConversionRow.ItemId + '"  required />' +
+            '<input class="form-control form-control-sm text-center  txtItemCode" type="text" value="' + pStoreConversionRow.InvItemCode + '"  required />' +
+            '</div>' +
+            '<div class="col-sm-8 p-0">' +
+            '<input class="form-control form-control-sm text-center  txtItemName" type="text" value="' + pStoreConversionRow.InvItemNameL1 + '"  required readonly />' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '<td>' +
+            '<input class="form-control form-control-sm text-center   txtExpireDate" " type="date" value="' + pStoreConversionRow.ExpireDate + '"  required />' +
+            '</td>' +
+            '<td class="">' +
+            '<div class="d-flex">' +
+            '<div class="col-sm-4 p-0">' +
+            '<input class="form-control form-control-sm text-center  d-none txtUnitId" " type="text" value="' + pStoreConversionRow.UnitId + '"  required />' +
+            '<input class="form-control form-control-sm text-center  txtUnitCode" "   type="text" value="' + pStoreConversionRow.UnitCode + '" required />' +
+            '</div>' +
+            '<div class="col-sm-8 p-0">' +
+            '<input class="form-control form-control-sm text-center  txtUnitName" " type="text" required value="' + pStoreConversionRow.UnitNameL1 + '"  readonly />' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '<td>' +
+            '<input class="form-control form-control-sm text-center   txtItemQty" " type="text" value="' + pStoreConversionRow.ItemQty + '"  required />' +
+            '</td>' +
+            '<td>' +
+            '<input class="form-control form-control-sm text-center   txtItemPrice" type="text" value="' + pStoreConversionRow.Cost + '"  required Disabled />' +
+            '</td>' +
+            '<td>' +
+            '<input class="form-control form-control-sm text-center   txtTotalItemPrice" type="text" value="' + pStoreConversionRow.TotalCost + '"  required Disabled />' +
+            '</td>' +
+            '<td class="">' +
+            '<textarea class="form-control form-control-sm text-center txtNote" style="" value="' + pStoreConversionRow.Notes + '"  required>' + pStoreConversionRow.Notes +
+            '</textarea>' +
+            '</td>' +
+            '<td><button class="btn btn-light btn-sm btnDtlDelete" data-id="' + pStoreConversionRow.StoreConversionDtlId + '"><i class="fa fa-trash"></i></button></td>' +
+            ' </tr>';
+        // Return Value
+        return RowContent;
+    }
+
+    // Add New Row
+    function funAddRow() {
+        var vRowContent = {
+            "StoreConversionDtlId": 0,
+            "ItemId": 0,
+            "InvItemCode": "",
+            "InvItemNameL1": "",
+            "ExpireDate": "",
+            "UnitId": "",
+            "UnitCode": "",
+            "UnitNameL1": "",
+            "ItemQty": "0",
+            "Cost": "0",
+            "TotalCost": "0",
+            "Notes": "",
+        };
+        $('.tblStoreConversionBody').append(funStoreConversionDtlConfig(vRowContent));
+    }
+
+    // Add Row - Button Click
+    $('body').on('click', '.btnAddRow', function () {
+
+        // Add Row
+        funAddRow();
+
+        // Fill Note
+        var vValue = $('.txtDocNote').val();
+        $('.txtNote').val(vValue)
+
+    })
+
+    function funFoucus() {
+        $('.' + pElement).focus();
+    };
+</script>
+
+<script>
+
+
+    ////////////////////// start Branch //////////////////////////////////
+    // Open Voucher Branch Modal
+    $('body').on('keyup dblclick', '.txtBranchCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/BranchSearch';
+            localStorage.setItem('lstControl', 'txtBranchCode')
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divBranchSelect', function () {
+                    if (localStorage.getItem('lstControl') == 'txtBranchCode' ) {
+
+
+                    // Get Values
+                        var vBranchId = $(this).attr('data-id');
+                        var vBranchNameValue = $(this).find('.divBranchName').text();
+                        var vBranchCodeValue = $(this).find('.divBranchCode').text();
+                    // Get GLVoucherBranch Data
+                        var vBranchIdElement = $('.txtBranchId');
+                        var vBranchNameElement = $('.txtBranchName');
+                        var vBranchCodeElement = $('.txtBranchCode');
+                    // Set Value
+                        vBranchIdElement.val(vBranchId);
+                        vBranchNameElement.val(vBranchNameValue);
+                        vBranchCodeElement.val(vBranchCodeValue);
+                    // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                    }
+                })
+            })
+        }
+    })
+
+
+
+   // Open Voucher txtBranchCode Modal
+    $('body').on('change', '.txtBranchCode', function (e) {
+        // Get CS Data
+        var vBranchIdElement = $('.txtBranchId');
+        var vBranchCodeElement = $('.txtBranchCode');
+        var vBranchNameElement = $('.txtBranchName');
+
+        var vCode = $(this).val();
+        // List GetBranchs
+        $.get('/api/APIBranchSetting/BranchSettingGET',
+            {
+                pBranchSettingId: vCode,
+                //pBranchSettingCode: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+            function (data, status) {
+                if (data == '') {
+                    // Empty Fileds
+                    vBranchIdElement.val('');
+                    vBranchCodeElement.val('');
+                    vBranchNameElement.val('');
+                    funNotification('@appResource.msgChooseCorrectAccount', 2);
+                } else {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Branch) {
+                        // Set Value
+                        vBranchIdElement.val(Branch.BranchSettingId);
+                        vBranchCodeElement.val(Branch.BranchSettingCode);
+                        vBranchNameElement.val(Branch.BranchDesc);
+
+                    });
+                }
+            });
+    })
+
+    ////
+    // Open Voucher Target Branch Modal
+    $('body').on('keyup dblclick', '.txtTargetBranchCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/BranchSearch';
+            localStorage.setItem('lstControl', 'txtTargetBranchCode')
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divBranchSelect', function () {
+                    if (localStorage.getItem('lstControl') == 'txtTargetBranchCode' ) {
+
+
+                    // Get Values
+                        var vBranchId = $(this).attr('data-id');
+                        var vBranchNameValue = $(this).find('.divBranchName').text();
+                        var vBranchCodeValue = $(this).find('.divBranchCode').text();
+                    // Get GLVoucherBranch Data
+                        var vBranchIdElement = $('.txtTargetBranchId');
+                        var vBranchNameElement = $('.txtTargetBranchName');
+                        var vBranchCodeElement = $('.txtTargetBranchCode');
+                    // Set Value
+                        vBranchIdElement.val(vBranchId);
+                        vBranchNameElement.val(vBranchNameValue);
+                        vBranchCodeElement.val(vBranchCodeValue);
+                    // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                    }
+                })
+            })
+        }
+    })
+
+
+
+   // Open Voucher txtTargetBranchCode Modal
+    $('body').on('change', '.txtTargetBranchCode', function (e) {
+        // Get CS Data
+        var vBranchIdElement = $('.txtTargetBranchId');
+        var vBranchCodeElement = $('.txtTargetBranchCode');
+        var vBranchNameElement = $('.txtTargetBranchName');
+
+        var vCode = $(this).val();
+              // List GetBranchs
+        $.get('/api/APIBranchSetting/BranchSettingGET',
+            {
+                pBranchSettingId: vCode,
+                //pBranchSettingCode: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vBranchIdElement.val('');
+                        vBranchCodeElement.val('');
+                        vBranchNameElement.val('');
+                        funNotification('@appResource.msgChooseCorrectAccount', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Branch) {
+                            // Set Value
+                            vBranchIdElement.val(Branch.BranchSettingId);
+                            vBranchCodeElement.val(Branch.BranchSettingCode);
+                            vBranchNameElement.val(Branch.BranchDesc);
+
+                        });
+                    }
+                });
+    })
+
+    ///////////////////////// end Branch ////////////////////////////////
+
+
+    // Open Voucher Store Modal
+    $('body').on('keyup dblclick', '.txtStoreCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/StoreSearch';
+            localStorage.setItem('lstControl', 'txtStoreCode')
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divStoreSelect', function () {
+                    if (localStorage.getItem('lstControl') == 'txtStoreCode' ) {
+
+
+                    // Get Values
+                    var vStoreId = $(this).attr('data-id');
+                    var vStoreNameValue = $(this).find('.divStoreName').text();
+                    var vStoreCodeValue = $(this).find('.divStoreCode').text();
+                    // Get GLVoucherStore Data
+                    var vStoreIdElement = $('.txtStoreId');
+                    var vStoreNameElement = $('.txtStoreName');
+                    var vStoreCodeElement = $('.txtStoreCode');
+                    // Set Value
+                    vStoreIdElement.val(vStoreId);
+                    vStoreNameElement.val(vStoreNameValue);
+                    vStoreCodeElement.val(vStoreCodeValue);
+                    // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                    }
+                })
+            })
+        }
+    })
+
+
+
+   // Open Voucher txtStoreCode Modal
+    $('body').on('change', '.txtStoreCode', function (e) {
+        // Get CS Data
+        var vStoreIdElement = $('.txtStoreId');
+        var vStoreCodeElement = $('.txtStoreCode');
+        var vStoreNameElement = $('.txtStoreName');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APIStore/StoreGET',
+            {
+                pStoreCode: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vStoreIdElement.val('');
+                        vStoreCodeElement.val('');
+                        vStoreNameElement.val('');
+                        funNotification('@appResource.msgChooseCorrectAccount', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Store) {
+                            // Set Value
+                            vStoreIdElement.val(Store.StoreId);
+                            vStoreCodeElement.val(Store.StoreCode);
+                            vStoreNameElement.val(Store.StoreNameL1);
+
+                        });
+                    }
+                });
+    })
+
+
+
+    // Open Voucher Store Modal
+    $('body').on('keyup dblclick', '.txtSourceStoreCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/StoreSearch';
+            localStorage.setItem('lstControl', 'txtSourceStoreCode')
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divStoreSelect', function () {
+                    if (localStorage.getItem('lstControl') == 'txtSourceStoreCode') {
+                    // Get Values
+                    var vStoreId = $(this).attr('data-id');
+                    var vStoreNameValue = $(this).find('.divStoreName').text();
+                    var vStoreCodeValue = $(this).find('.divStoreCode').text();
+
+                    // Get GLVoucherStore Data
+                    var vStoreIdElement = $('.txtSourceStoreId');
+                    var vStoreNameElement = $('.txtSourceStoreName');
+                    var vStoreCodeElement = $('.txtSourceStoreCode');
+
+                    // Set Value
+                    vStoreIdElement.val(vStoreId);
+                    vStoreNameElement.val(vStoreNameValue);
+                    vStoreCodeElement.val(vStoreCodeValue);
+
+                    // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                    }
+
+                })
+            })
+        }
+    })
+
+    // Open Voucher txtSourceStoreCode Modal
+    $('body').on('change', '.txtSourceStoreCode', function (e) {
+        // Get CS Data
+        var vStoreIdElement = $('.txtSourceStoreId');
+        var vStoreCodeElement = $('.txtSourceStoreCode');
+        var vStoreNameElement = $('.txtSourceStoreName');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APIStore/StoreGET',
+            {
+                pStoreCode: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vStoreIdElement.val('');
+                        vStoreCodeElement.val('');
+                        vStoreNameElement.val('');
+                        funNotification('@appResource.msgChooseCorrectAccount', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Store) {
+                            // Set Value
+                            vStoreIdElement.val(Store.StoreId);
+                            vStoreCodeElement.val(Store.StoreCode);
+                            vStoreNameElement.val(Store.StoreNameL1);
+
+                        });
+                    }
+                });
+    })
+
+    // Modal For Item And Unit
+    $('table').on('keyup dblclick', '.txtItemCode', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            var vCurrentIndex = vTableRow.index();
+            localStorage.setItem('lsItemControl','txtItemCode')
+
+
+            // Get Account Data
+            var vAccountUnitIdElement = vTableRow.find('.txtUnitId');
+            var vAccountUnitCodeElement = vTableRow.find('.txtUnitCode');
+            var vAccountUnitElement = vTableRow.find('.txtUnitName');
+            var vItemIdElement = vTableRow.find('.txtItemId');
+            var vItemCodeElement = vTableRow.find('.txtItemCode');
+            var vItemNameElement = vTableRow.find('.txtItemName');
+            var vCurrencyFactorElement = vTableRow.find('.txtItemCurValue');
+            var vCurrencyNameElement = vTableRow.find('.txtCurrencyName');
+            // Search Account
+            var vURL = '/InvoicePaymentOrder/UnitSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                //funNotification('vTableRow.index : ' + vTableRow.index() + ' - \n vCurrentIndex = ' + vCurrentIndex, 2);
+                //funNotification('vTableRow.index : ' + vTableRow.index(), 2);
+                // Select Account
+                $('body').on('click', '.divItemSelect', function () {
+                    if (vTableRow.index() == vCurrentIndex) {
+
+
+                        // Get Values
+                        var vUnitId = $(this).attr('data-id');
+                        var vUnitCodeValue = $(this).find('.divUnitCode').text();
+                        var vUnitNameValue = $(this).find('.divUnitName').text();
+                        var vItemIdValue = $(this).find('.divItemId').text();
+                        var vItemCodeValue = $(this).find('.divItemCode').text();
+                        var vItemNameValue = $(this).find('.divItemName').text();
+                        var vCurrencyNameValue = $(this).find('.divCurrencyName').text();
+                        var vCurrencyFactorValue = $(this).find('.divCurrencyFactorValue').text();
+                        var LastCost = $(this).find('.divLastCost').text();
+
+
+                        // Set Value
+                        vAccountUnitIdElement.val(vUnitId);
+                        vAccountUnitCodeElement.val(vUnitId)
+                        vAccountUnitElement.val(vUnitNameValue);
+                        vItemIdElement.val(vItemIdValue);
+                        var store1 = $(this).find('.Store1').text();
+                        var store2 = $(this).find('.Store2').text();
+                        var store3 = $(this).find('.Store3').text();
+                        vTableRow.attr('store1', store1);
+                        vTableRow.attr('store2', store2);
+                        vTableRow.attr('store3', store3);
+                        var ItemPrice = vTableRow.find('.txtItemPrice');
+
+
+
+                        vItemCodeElement.val(vItemCodeValue)
+                        vCurrencyFactorElement.val(vCurrencyFactorValue);
+                        vCurrencyNameElement.val(vCurrencyNameValue)
+                        vItemNameElement.val(vItemNameValue);
+                        ItemPrice.val(LastCost);
+
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+
+                        // Add New Row
+                        var rowCount = $('.tblStoreConversionRow').length;
+                        if (rowCount == vCurrentIndex + 1) {
+                            funAddRow();
+                            vTableRow = '';
+                        }
+                 }
+
+                });
+
+
+            })
+        }
+    })
+     // Item Code, Name - - On Change
+    $('table').on('change', '.txtItemCode', function (e) {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+
+            // Get Account Data
+            var vAccountUnitIdElement = vTableRow.find('.txtUnitId');
+            var vAccountUnitCodeElement = vTableRow.find('.txtUnitCode');
+            var vAccountUnitElement = vTableRow.find('.txtUnitName');
+            var vItemIdElement = vTableRow.find('.txtItemId');
+            var vItemCodeElement = vTableRow.find('.txtItemCode');
+            var vItemNameElement = vTableRow.find('.txtItemName');
+            var vCurrencyFactorElement = vTableRow.find('.txtItemCurValue');
+            var vCurrencyNameElement = vTableRow.find('.txtCurrencyName');
+
+            var vCode = $(this).val();
+              // List GetCostCenter
+        @*$.get('/api/APIUnit/UnitGET',
+            {
+                pUnitCode: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+                function (data, status) {*@
+        $.get('/api/APIInvItem/InvItemGET',
+            {
+                // pItemType: 2,
+                pInvItemId: vCode,
+                pQueryTypeId: '409',
+
+            }, function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vAccountUnitIdElement.val('');
+                        vAccountUnitCodeElement.val('')
+                        vAccountUnitElement.val('');
+                        vItemIdElement.val('');
+                        vItemCodeElement.val('');
+                        vItemNameElement.val('');
+                        vCurrencyFactorElement.val('');
+                        vCurrencyNameElement.val('')
+                        funNotification('@appResource.msgChooseCorrectAccount', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        //$.each(vDataJSON, function (i, Unit) {
+
+                        //    // Set Value
+                        //    vAccountUnitIdElement.val(Unit.UnitId);
+                        //    vAccountUnitCodeElement.val(Unit.UnitCode)
+                        //    vAccountUnitElement.val(Unit.UnitNameL1);
+                        //    //vItemIdElement.val(Unit.ItemId);
+                        //    vItemIdElement.val(Unit.InvItemId);
+                        //    vItemCodeElement.val(Unit.InvItemCode);
+                        //    vItemNameElement.val(Unit.InvItemNameL1);
+                        //    vCurrencyFactorElement.val(Unit.CurrencyExchange);
+                        //    vCurrencyNameElement.val(Unit.CurrencyNameL1)
+
+                        //});
+                         //    // Set Value
+                        vAccountUnitIdElement.val(vDataJSON[0].UnitId);
+                        vAccountUnitCodeElement.val(vDataJSON[0].UnitCode)
+                        vAccountUnitElement.val(vDataJSON[0].UnitNameL1);
+                            //vItemIdElement.val(Unit.ItemId);
+                        vItemIdElement.val(vDataJSON[0].InvItemId);
+                        vItemCodeElement.val(vDataJSON[0].InvItemId);
+                        vItemNameElement.val(vDataJSON[0].InvItemNameL1);
+                        vCurrencyFactorElement.val(vDataJSON[0].CurrencyExchange);
+                        vCurrencyNameElement.val(vDataJSON[0].CurrencyNameL1)
+
+
+                    }
+                });
+
+    })
+
+
+</script>
+
+<!--First Last Next Prevuse-->
+<script>
+
+
+
+    var vDataSearch;
+
+    function funGetData() {
+        $.get('/StoreConversion/funSaveStoreConversion',
+            {
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+            function (data, status) {
+                vDataSearch = data;
+            })
+    }
+
+    // Next - Previous - First - Last
+
+    var index = 0;
+
+    $('#btnFirst').click(function () {
+        //$('.tblStoreConversionBody').html('');
+         $.get('/StoreConversion/funSaveStoreConversion',
+            {
+                pQueryTypeId: '401'
+            },
+             function (data, status) {
+               var  vDataResult = JSON.parse(data)
+                 displayData(vDataResult)
+            })
+    });
+    $('#btnLast').click(function () {
+        //$('.tblStoreConversionBody').html('');
+         $.get('/StoreConversion/funSaveStoreConversion',
+            {
+                pQueryTypeId: '402'
+            },
+             function (data, status) {
+                 vDataSearch = JSON.parse(data);
+                 displayData(vDataSearch)
+            })
+    });
+
+    $('#btnNext').click(function () {
+        var vStoreConvertionId = $('.txtStoreConversionId').val();
+
+         $.get('/StoreConversion/funSaveStoreConversion',
+            {
+                pQueryTypeId: '403',
+                pStoreConversionId: vStoreConvertionId
+            },
+             function (data, status) {
+
+                 vDataSearch = JSON.parse(data);
+                 if (vDataSearch[0] != undefined || vDataSearch[0].tblDtl != '') {
+                     $('.tblStoreConversionBody').html('');
+                     displayData(vDataSearch)
+                 }
+            })
+    });
+
+    $('#btnPrev').click(function () {
+        var vStoreConvertionId = $('.txtStoreConversionId').val();
+
+         $.get('/StoreConversion/funSaveStoreConversion',
+            {
+                pQueryTypeId: '404',
+                pStoreConversionId: vStoreConvertionId
+            },
+             function (data, status) {
+                 vDataSearch = JSON.parse(data);
+
+                 if (vDataSearch[0] != undefined) {
+                     $('.tblStoreConversionBody').html('');
+                     displayData(vDataSearch)
+                 }
+            })
+    });
+
+
+    // Get Data
+    function displayData(pData) {
+
+        var vDataResultConv = pData
+        if (vDataResultConv != undefined && vDataResultConv != '') {
+
+            //   $('.tblStoreConversionBody').html('')
+            if (vDataResultConv[0].tblDtl != undefined && vDataResultConv[0].tblDtl != '') {
+
+
+            $('.tblStoreConversionBody').html('')
+                $.each(vDataResultConv[0].tblDtl, function (i, Dtl) {
+                var vContent = funStoreConversionDtlConfig(Dtl);
+                // Append Row Content
+                $('.tblStoreConversionBody').append(vContent);
+
+            })
+            }
+            else {
+                $('.tblStoreConversionBody').html('')
+                funAddRow();
+            }
+            funStoreConversionConfig(pData)
+        }
+
+    }
+    $('.btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/StoreConversion/StoreConversionSearch';
+        // Load Content of CostCenter Search
+        $('#StoreConversionDataModalContent').load(vURL);
+        // Modal Full
+        $('#StoreConversionDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#StoreConversionDataModal').modal('show');
+    })
+
+
+    //var vDataSearch;
+    var vCount = 0;
+    // PRINT
+    $('body').on('click', '.btnSelect', function () {
+        var count = $("input[name='chkIsValid']:checked").length;
+        if (count == 0) {
+            // alert("No rows selected to Print");
+            return false;
+        }
+        else {
+            // Selected Permissions
+            var vSelected = '';
+
+            // Check If All True Or False
+            $('table > tbody > tr ').each(function () {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Check
+                if (vSelectedChk) {
+                    // Get Id
+                    var vGlVoucherId = vElement.attr('data-id');
+                    // Add Selected Action
+                    vSelected += vGlVoucherId + ',';
+                    vCount += $(this).length
+
+                }
+            });
+            //$('.txtTotalCount').text(vCount)
+            // close The Modal
+            $('#StoreConversionDataModal').modal('hide');
+
+            // Get Data From Gl Voucher After Select
+            $.get('/StoreConversion/funSaveStoreConversion',
+                {
+                    //Parametes
+                    pQueryTypeId: 410,
+                    pLstConversionId: vSelected
+
+                },
+                function (data, status) {
+
+                    if (data != undefined && data != '') {
+                        // JSON Parse
+                       vDataResult = JSON.parse(data);
+                        console.log(vDataResult)
+
+                        vDataSearch = vDataResult
+
+                        funStoreConversionConfig(vDataResult)
+                        displayDataSearch(vDataSearch[0])
+                    }
+
+
+                })
+        }
+    });
+    // Get Data
+    function displayDataSearch(pData) {
+
+        var vDataResultConv = pData
+        if (vDataResultConv != undefined && vDataResultConv != '') {
+
+            //   $('.tblStoreConversionBody').html('')
+            if (vDataResultConv.tblDtl != undefined && vDataResultConv.tblDtl != '') {
+
+
+                $('.tblStoreConversionBody').html('')
+                $.each(vDataResultConv.tblDtl, function (i, Dtl) {
+                    console.log(Dtl);
+                    var vContent = funStoreConversionDtlConfig(Dtl);
+                    // Append Row Content
+                    $('.tblStoreConversionBody').append(vContent);
+
+                })
+            }
+            else {
+                $('.tblStoreConversionBody').html('')
+                funAddRow();
+            }
+            funStoreConversionConfig(pData)
+        }
+
+    }
+    function funClearAll() {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        $('.txtConvDate').val(today);
+        $('.txtStoreConversionId').val('');
+        $('.txtBranchCode').val('');
+        $('.txtBranchId').val('');
+        $('.txtBranchName').val('');
+        $('.txtStoreCode').val('');
+        $('.txtStoreId').val('');
+        $('.txtStoreName').val('');
+        $('.txtCheckDate').val('0');
+        $('.txtDate').val(today);
+        $('.txtNote').val('');
+        $('.txtTargetBranchId').val('');
+        $('.txtTargetBranchCode').val('');
+        $('.txtTargetBranchName').val('');
+        $('.txtSourceStoreCode').val('');
+        $('.txtSourceStoreId').val('');
+        $('.txtSourceStoreName').val('');
+        $('.tblStoreConversionBody').html('');
+        funAddRow();
+
+
+    }
+    $('.btnPrint').on('click', function () {
+        var url = '/StoreConversion/StoreConversionhtmlReport?pStoreConversionId=' + $('.txtStoreConversionId').val()
+        var popupWindow = window.open(url);
+    });
+
+
+    $('body').on('blur', '.txtItemQty', function () {
+            // Table Row
+            var vTableRow = $(this).closest('.tblStoreConversionRow')
+            // GET Qty
+            var vQty = vTableRow.find('.txtItemQty').val();
+            // Get Price
+            var vPrice = vTableRow.find('.txtItemPrice').val();
+            // Factor
+
+
+                // Base Value
+        var vBaseValue = (vQty * vPrice).toFixed(2);
+
+            // SET Value to Base
+            //$(this).siblings('.txtBaseCredit').val(vBaseValue);
+            vTableRow.find('.txtTotalItemPrice').val(vBaseValue);
+
+
+        })
+</script>

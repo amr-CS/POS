@@ -1,0 +1,1762 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    body {
+        font-family: Cairo;
+    }
+
+    .fullHeightInput {
+        height: 50px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    /*input, select, textarea {
+        max-width: 100% !important;
+    }*/
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <!-- Container -->
+    <div class="container-fluid">
+
+        <!-- Row Container -->
+        @*<div class="row">
+
+            <!-- 1st Column -->
+            <div class="col-sm-6">
+                <label style="visibility:hidden" class="control-label" id="lblid" data_id="0">0</label>
+                <!-- Store Code -->
+                <div class="form-group col-sm-6">
+                    <label class="control-label">@appResource.StoreNo</label>
+                    <input type="text" class="form-control" readonly id="txtStoreCode" />
+                </div>
+                <!-- Store NameL1 -->
+                <div class="form-group col-sm-6">
+                    <label class="control-label">@appResource.StoreName - ع</label>
+                    <input type="text" class="form-control" id="txtStoreNameL1" />
+                </div>
+                <!-- Store Type -->
+                <div class="form-group col-sm-6">
+                    <label class="control-label">@appResource.StoreType</label>
+                    <select id="selectStoreType" class="selectpicker form-control" name="StoreTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                </div>
+                <!-- Notes -->
+                <div class="form-group col-sm-6">
+                    <label class="control-label">@appResource._Note</label>
+                    <textarea type="text" class="form-control" id="txtStoreNotes"></textarea>
+                </div>
+                <!-- Country -->
+                <div class="form-group col-sm-6">
+
+
+
+                    <label class="control-label">@appResource.CountryName</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control w-25" id="txtCountry" />
+                        <input type="text" class="form-control w-75" disabled id="txtCountryName" />
+                    </div>
+
+
+
+
+                </div>
+                <!-- Address -->
+                <div class="form-group col-sm-6">
+                    <label class="control-label">@appResource._Address</label>
+                    <input type="text" class="form-control" id="txtAddress" />
+                </div>
+
+            </div> <!-- End of 1st Column -->
+            <!-- 2nd Column -->
+            <div class="col-sm-6">
+
+                <!--  -->
+                <div class="" style="margin-top: 50px;"></div>
+                <!-- Store NameL2 -->
+                <div class="form-group col-md-12">
+                    <div class="custom-control custom-checkbox">
+                        <div class="custom-control custom-checkbox" style="width:85px; display: inline-block;">
+                            <input type="checkbox" class="form-control custom-control-input" id="chkbx1" />
+                            <label class="custom-control-label" for="chkbx1" style="font-size:small">@appResource.lblStoreKeeper</label>
+                        </div>
+                        <div class="custom-control custom-checkbox" style="width:85px;display: inline-block;">
+                            <input type="checkbox" class="form-control custom-control-input" id="chkbx2" />
+                            <label class="custom-control-label" for="chkbx2" style="font-size:small">@appResource.lblStoreSetting</label>
+                        </div>
+                        <div class="custom-control custom-checkbox" style="width:85px;display: inline-block;">
+                            <input type="checkbox" class="form-control custom-control-input" id="chkbx3" />
+                            <label class="custom-control-label" for="chkbx3" style="font-size:small">@appResource.StoreTypes</label>
+                        </div>
+                    </div>
+                    <!-- Store NameL2 -->
+                    <div class="form-group col-sm-6" style="margin-top:27px;">
+                        <label class="control-label">@appResource.StoreName - E</label>
+                        <input type="text" class="form-control" id="txtStoreNameL2" />
+                    </div>
+                    <!-- StoreIsActive -->
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">@appResource.StoreIsActive</label>
+                        <input type="checkbox" class="form-control" id="chkStoreIsActive" />
+                    </div>
+                    <!-- StoreShortName-->
+                    <div class="form-group col-sm-6" style="margin-top:27px">
+                        <label class="control-label">@appResource.ShortName</label>
+                        <input type="text" class="form-control" id="txtStoreShortName" />
+                    </div>
+                    <!-- StoreShortName-->
+                    <div class="form-group col-sm-6" style="margin-top:35px">
+                        <label class="control-label">@appResource.CityNo</label>
+                        <div class="d-flex">
+                            <input type="text" class="form-control w-25" id="txtCity" />
+                            <input type="text" class="form-control w-75" disabled id="txtCityName" />
+                        </div>
+                    </div>
+                    <!-- StoreShortName-->
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">@appResource._Phone</label>
+                        <input type="text" class="form-control" id="txtPhone" />
+                    </div>
+                </div> <!-- End of 2nd Column -->
+
+
+            </div> <!-- End of Row Container -->
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success btnSave" />
+        </div>*@ <!-- End of Container -->
+
+
+        <div class="bg-white border rounded p-3">
+            <div class="row">
+                <!--1st Column-->
+                <div class="col-sm-3">
+                    <label style="visibility:hidden;display:none" class="control-label" id="lblid" data_id="0">0</label>
+                    <!-- Store Code -->
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">@appResource.StoreNo</label>
+                        <input type="text" class="form-control" readonly id="txtStoreCode" />
+                    </div>
+                    <!-- Store NameL1 -->
+                    <div class="form-group ">
+                        <label class="control-label">@appResource.StoreName - ع</label>
+                        <input type="text" class="form-control" id="txtStoreNameL1" />
+                    </div>
+                    <!-- Store Type -->
+                    <div class="form-group ">
+                        <label class="control-label">@appResource.StoreType</label>
+                        <select id="selectStoreType" class="selectpicker form-control" name="StoreTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    </div>
+                </div>
+                <!--2nd Column-->
+                <div class="col-sm-3">
+                    <div class="custom-control custom-checkbox" style="margin-top:25px;">
+                        <div class="custom-control custom-checkbox" style="width:90px; display: inline-block;">
+                            <input type="checkbox" class="form-control custom-control-input" id="chkbx1" />
+                            <label class="custom-control-label" for="chkbx1" style="font-size:small">@appResource.lblStoreKeeper</label>
+                        </div>
+                        <div class="custom-control custom-checkbox" style="width:90px;display: inline-block;">
+                            <input type="checkbox" class="form-control custom-control-input" id="chkbx2" />
+                            <label class="custom-control-label" for="chkbx2" style="font-size:small">@appResource.lblStoreSetting</label>
+                        </div>
+                        <div class="custom-control custom-checkbox" style="width:90px;display: inline-block;">
+                            <input type="checkbox" class="form-control custom-control-input" id="chkbx3" />
+                            <label class="custom-control-label" for="chkbx3" style="font-size:small">@appResource.StoreTypes</label>
+                        </div>
+                    </div>
+                    <!-- Store NameL2 -->
+                    <div class="form-group" style="margin-top:25px;">
+                        <label class="control-label">@appResource.StoreName - E</label>
+                        <input type="text" class="form-control" id="txtStoreNameL2" />
+                    </div>
+                    <!-- StoreIsActive -->
+                    <div class="form-group " style="margin-top:39px;">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="form-control custom-control-input" id="chkStoreIsActive" />
+                            <label class="custom-control-label" for="chkStoreIsActive" style="font-size:small">@appResource.StoreIsActive</label>
+                        </div>
+                    </div>
+                </div>
+                <!--3rd Column-->
+                <div class="col-sm-3">
+                    <!-- Country -->
+                    <div class="form-group ">
+                        <label class="control-label">@appResource.CountryName</label>
+                        <div class="d-flex">
+                            <input type="text" class="form-control w-25" id="txtCountry" />
+                            <input type="text" class="form-control w-75" disabled id="txtCountryName" />
+                        </div>
+                    </div>
+                    <!-- CityName-->
+                    <div class="form-group " style="margin-top:35px">
+                        <label class="control-label">@appResource.CityNo</label>
+                        <div class="d-flex">
+                            <input type="text" class="form-control w-25" id="txtCity" />
+                            <input type="text" class="form-control w-75" disabled id="txtCityName" />
+                        </div>
+                    </div>
+                    <!-- StoreShortName-->
+                    <div class="form-group " style="margin-top:27px">
+                        <label class="control-label">@appResource.ShortName</label>
+                        <input type="text" class="form-control" id="txtStoreShortName" />
+                    </div>
+
+                </div>
+
+                <!--3rd Column-->
+                <div class="col-sm-3">
+                    <!-- Phone-->
+                    <div class="form-group ">
+                        <label class="control-label">@appResource._Phone</label>
+                        <input type="text" class="form-control" id="txtPhone" />
+                    </div>
+                    <!-- Address -->
+                    <div class="form-group ">
+                        <label class="control-label">@appResource._Address</label>
+                        <input type="text" class="form-control" id="txtAddress" />
+                    </div>
+                    <!-- Notes -->
+                    <div class="form-group ">
+                        <label class="control-label">@appResource._Note</label>
+                        <textarea type="text" class="form-control" id="txtStoreNotes"></textarea>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success btnSave" />
+        </div>
+    
+
+    </div>
+    <!---->
+    @*<div style="margin-right:155px">
+            <ul class="nav nav-tabs" id="myTab2" role="tablist" style="margin-right:150px">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">@appResource.lblStoreSecretary</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">@appResource.lblStoreSetting </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">@appResource.StoreTypes</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent" style="margin-right:155px">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <!-- StoreKeeper Data style="margin-right:100px" -->
+                    <div class="divStoreKeeper bg-white border p-2">
+                        <table class="table tblStoreKeeper">
+                            <!-- Head -->
+                            <thead>
+                                <tr>
+                                    <th width="20px"></th>
+                                    <th>@appResource._Code</th>
+                                    <th> @appResource.StoreKeeperId</th>
+                                    <th> @appResource.StoreKeeperId</th>
+                                    <th>@appResource._IsActive</th>
+                                    <th class="thActions">@appResource._Actions</th>
+                                </tr>
+                            </thead>
+                            <!-- Body -->
+                            <tbody class="tblStoreKeeperBody"></tbody>
+                        </table>
+                        <input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreKeeperSave" />
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <!-- Store Setting Data -->
+                    <div class="divStoreSetting bg-white border p-2">
+                        <table class="table tblStoreSetting">
+                            <!-- Head -->
+                            <thead>
+                                <tr>
+                                    <th width="20px"></th>
+                                    <th>@appResource._Code</th>
+                                    <th> @appResource.StoreSettingId</th>
+                                    <th> @appResource.StoreSettingId</th>
+                                    <th> @appResource._Note</th>
+                                    <th>@appResource._IsActive</th>
+                                    <th class="thActions">@appResource._Actions</th>
+                                </tr>
+                            </thead>
+                            <!-- Body -->
+                            <tbody class="tblStoreSettingBody"></tbody>
+                        </table>
+                        <input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreSettingSave" />
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                    <!-- Store Type Data -->
+                    <div class="divStoreType bg-white border p-2">
+                        <table class="table tblStoreType">
+                            <!-- Head -->
+                            <thead>
+                                <tr>
+                                    <th width="20px"></th>
+                                    <th>@appResource._Code</th>
+                                    <th> @appResource.StoreTypeId</th>
+                                    <th> @appResource.StoreTypeId</th>
+                                    <th>@appResource._IsActive</th>
+                                    <th class="thActions">@appResource._Actions</th>
+                                </tr>
+                            </thead>
+
+                            <!-- Body -->
+                            <tbody class="tblStoreTypeBody"></tbody>
+                        </table>
+                        <input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreTypeSave" />
+
+                    </div>
+
+                </div>
+            </div>
+        </div>*@
+
+    <div class="container-fluid">
+        <ul class="nav nav-tabs" id="myTab2" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">@appResource.lblStoreSecretary</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">@appResource.lblStoreSetting </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">@appResource.StoreTypes</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <!-- StoreKeeper Data style="margin-right:100px" -->
+                <div class="divStoreKeeper bg-white border p-2">
+                    <table class="table tblStoreKeeper">
+                        <!-- Head -->
+                        <thead>
+                            <tr>
+                                <th width="20px"></th>
+                                <th>@appResource._Code</th>
+                                <th> @appResource.StoreKeeperId</th>
+                                <th> @appResource.StoreKeeperId</th>
+                                <th>@appResource._IsActive</th>
+                                <th class="thActions">@appResource._Actions</th>
+                            </tr>
+                        </thead>
+                        <!-- Body -->
+                        <tbody class="tblStoreKeeperBody"></tbody>
+                    </table>
+                    @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreKeeperSave" />*@
+                </div>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <!-- Store Setting Data -->
+                <div class="divStoreSetting bg-white border p-2">
+                    <table class="table tblStoreSetting">
+                        <!-- Head -->
+                        <thead>
+                            <tr>
+                                <th width="20px"></th>
+                                <th>@appResource._Code</th>
+                                <th> @appResource.StoreSettingId</th>
+                                <th> @appResource.StoreSettingId</th>
+                                <th> @appResource._Note</th>
+                                <th>@appResource._IsActive</th>
+                                <th class="thActions">@appResource._Actions</th>
+                            </tr>
+                        </thead>
+                        <!-- Body -->
+                        <tbody class="tblStoreSettingBody"></tbody>
+                    </table>
+                    @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreSettingSave" />*@
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <!-- Store Type Data -->
+                <div class="divStoreType bg-white border p-2">
+                    <table class="table tblStoreType">
+                        <!-- Head -->
+                        <thead>
+                            <tr>
+                                <th width="20px"></th>
+                                <th>@appResource._Code</th>
+                                <th> @appResource.StoreTypeId</th>
+                                <th> @appResource.StoreTypeId</th>
+                                <th>@appResource._IsActive</th>
+                                <th class="thActions">@appResource._Actions</th>
+                            </tr>
+                        </thead>
+
+                        <!-- Body -->
+                        <tbody class="tblStoreTypeBody"></tbody>
+                    </table>
+                    @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreTypeSave" />*@
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div id="CountryDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="CountryDataModalContent"></div>
+        </div>
+    </div>
+    <div id="CityDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="CityDataModalContent"></div>
+        </div>
+    </div>
+    <div id="StoreDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="StoreDataModalContent"></div>
+        </div>
+    </div>
+</div>
+
+<!--Script For StoreKeeper-->
+<script>
+    $('#home-tab').on('click', function () {
+        $('#chkbx1').prop('checked', true)
+        $('#chkbx2').prop('checked', false)
+        $('#chkbx3').prop('checked', false)
+    })
+    $('#profile-tab').on('click', function () {
+        $('#chkbx1').prop('checked', false)
+        $('#chkbx2').prop('checked', true)
+        $('#chkbx3').prop('checked', false)
+    })
+    $('#contact-tab').on('click', function () {
+        $('#chkbx1').prop('checked', false)
+        $('#chkbx2').prop('checked', false)
+        $('#chkbx3').prop('checked', true)
+    })
+    $('#chkbx1').change(function () {
+        if (this.checked) {
+            $('#home-tab').trigger('click');
+            if ($('#chkbx2').prop('checked') == true) {
+                $('#chkbx2').prop("checked", false);
+            }
+            if ($('#chkbx3').prop('checked') == true) {
+                $('#chkbx3').prop("checked", false);
+            }
+        }
+    })
+    $('#chkbx2').change(function () {
+        if (this.checked) {
+            $('#profile-tab').trigger('click');
+            if ($('#chkbx1').prop('checked') == true) {
+                $('#chkbx1').prop("checked", false);
+
+            }
+            if ($('#chkbx3').prop('checked') == true) {
+                $('#chkbx3').prop("checked", false);
+
+            }
+        }
+    })
+    $('#chkbx3').change(function () {
+        if (this.checked) {
+            $('#contact-tab').trigger('click');
+            if ($('#chkbx1').prop('checked') == true) {
+                $('#chkbx1').prop("checked", false);
+            }
+            if ($('#chkbx2').prop('checked') == true) {
+                $('#chkbx2').prop("checked", false);
+
+            }
+        }
+    })
+    // Function Select Store Keepers Depend On Store Id
+    function funGetStoreKeepersByStoreId()
+    {
+        // GET Data
+        $.get('/StoreKeeper/StoreKeeperGET',
+            {
+                pStoreKeeperId: null,
+                pStoreKeeperCode: '',
+                pStoreKeeperNameL1: '',
+                pStoreKeeperNameL2: '',
+                pStoreId: $('#lblid').attr('data-id'),
+                pStoreKeeperIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (StoreKeeperData, status) {
+
+                // Table Body
+                var vStoreKeeperTableBody = $('.tblStoreKeeperBody');
+                // HTML CLEAR
+                vStoreKeeperTableBody.html('');
+
+                // JSON
+                var vStoreKeeperDataResult = JSON.parse(StoreKeeperData);
+
+                // For Each Store Keeper - Main
+                $.each(vStoreKeeperDataResult, function (m, StoreKeeperSubData) {
+
+                    // GET Store Keeper Row Content
+                    var vStoreKeeperRowContent = funStoreKeeperRowConfig(vStoreKeeperDataResult[m]);
+                    // Append Row Content
+                    vStoreKeeperTableBody.append(vStoreKeeperRowContent);
+
+
+                })
+                if (vStoreKeeperDataResult == undefined || vStoreKeeperDataResult == '') {
+                    funStoreKeeperAddEmptyRow(vStoreKeeperTableBody);
+                }
+
+                //funStoreKeeperRow();
+            })
+    }
+    function funStoreKeeperAddEmptyRow(pTableBody) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "StoreKeeperIsActive": true,
+                "StoreKeeperId": 0,
+                "StoreKeeperCode": '',
+                "StoreKeeperNameL1": '',
+                "StoreKeeperNameL2": '',
+                "StorId": 0,
+            }
+
+        var vRowContent = funStoreKeeperRowConfig(vRowContentData);
+
+        pTableBody.append(vRowContent);
+    }
+
+      // On Load
+    $(document).ready(function () {
+
+        // Drop Down  Font Size
+        $('#chkbx1').prop('checked', true);
+
+        // Wait 2 Seconds
+        setTimeout(function () {
+            // GET Font Size By Selected List
+           // funGETStoreKeeperBySelectedList();
+            funGetStoreKeepersByStoreId()
+
+        }, 1000);
+    })
+    // Save - Click
+
+    //$('.btnStoreKeeperSave').on('click', function () {
+        function funStoreKeeperSave() {
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblStoreKeeperBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get StoreKeeper Id
+            var vStoreKeeperId = vRowData.attr('data-id');
+            // Code
+            var vStoreKeeperCode = vRowData.find('.StoreKeeperCode').val();
+            // Name L1
+            var vStoreKeeperNameL1 = vRowData.find('.StoreKeeperNameL1').val();
+            // Name L2
+            var vStoreKeeperNameL2 = vRowData.find('.StoreKeeperNameL2').val();
+            // Notes
+            var vStoreId = $('#lblid').attr('data-id');
+            // Is Active
+            var vStoreKeeperIsActive = vRowData.find('.StoreKeeperIsActive').prop('checked');
+
+            // Check Store Keeper If Empty
+            if (vStoreKeeperNameL1 != '') {
+                // Save
+                $.post('/StoreKeeper/StoreKeeperGET',
+                    {
+                        pStoreKeeperId: vStoreKeeperId,
+                        pStoreKeeperCode: vStoreKeeperCode,
+                        pStoreKeeperNameL1: vStoreKeeperNameL1,
+                        pStoreKeeperNameL2: vStoreKeeperNameL2,
+                        pStoreId: vStoreId,
+                        pStoreKeeperIsActive: vStoreKeeperIsActive,
+                        pIsDeleted: false,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+
+
+
+
+                        // GET Store Keeper By Selected List
+                        funGetStoreKeepersByStoreId();
+                       // funGETStoreKeeperBySelectedList();
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+            //funNotification('تم الحفظ بنجاح', '1');
+        }
+
+    //}); // End of Save Click
+    }
+
+
+
+
+    $('body').on('click', '.btnStoreKeeperDelete', function () {
+        // Get StoreKeeper Id
+        var vStoreKeeperIdDelete = $(this).attr('data-id');
+        // Save
+        $.post('/StoreKeeper/StoreKeeperGET',
+            {
+                pStoreKeeperId: vStoreKeeperIdDelete,
+                pStoreKeeperCode: null,
+                pStoreKeeperNameL1: null,
+                pStoreKeeperNameL2: null,
+                pStoreId: null,
+                pStoreKeeperIsActive: null,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+
+                //// Drop Down Main Cash Desk
+                //funFillStoreKeeper(null, 0, null, null, null, null, 1, null, null, false);
+
+                // GET Cash Desk By Selected List
+                funGETStoreKeeperBySelectedList();
+                //funGETStoreKeeperDTl(0);
+
+            });
+
+        // Notification
+        funNotification('تم الحذف بنجاح', 1);
+
+    })
+
+    // Add New Row
+    $('body').on('click', '.btnStoreKeeperAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Store Keeper Add Row
+        funStoreKeeperAddRow(vCurrentRow);
+    })
+
+    // GET Store Keeper By Selected List
+    function funGETStoreKeeperBySelectedList() {
+
+        // Get Value [Id]
+        //var vSelectedStoreKeeper = $('#selectStoreKeeperMain').val();
+
+        // GET Data
+        $.get('/StoreKeeper/StoreKeeperGET',
+            {
+                pStoreKeeperId: null,
+                pStoreKeeperCode: '',
+                pStoreKeeperNameL1: '',
+                pStoreKeeperNameL2: '',
+                pStoreId: $('#lblid').attr('data-id'),
+                pStoreKeeperIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (StoreKeeperData, status) {
+
+                // Table Body
+                var vStoreKeeperTableBody = $('.tblStoreKeeperBody');
+                // HTML CLEAR
+                vStoreKeeperTableBody.html('');
+
+                // JSON
+                var vStoreKeeperDataResult = JSON.parse(StoreKeeperData);
+
+                // For Each Cash Desk - Main
+                $.each(vStoreKeeperDataResult, function (m, StoreKeeperSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vStoreKeeperRowContent = funStoreKeeperRowConfig(vStoreKeeperDataResult[m]);
+                    // Append Row Content
+                    vStoreKeeperTableBody.append(vStoreKeeperRowContent);
+
+                })
+                //funStoreKeeperRow();
+            })
+    }
+    // Store Keeper Add Row
+    function funStoreKeeperAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "StoreKeeperIsActive": true,
+                "StoreKeeperId": 0,
+                "StoreKeeperCode": '',
+                "StoreKeeperNameL1": '',
+                "StoreKeeperNameL2": '',
+                "StorId": 0,
+            }
+
+        var vRowContent = funStoreKeeperRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+
+    // Store Keeper Row Config
+    function funStoreKeeperRowConfig(pStoreKeeperDataResult) {
+
+        // Checked
+        var vChecked = null;
+        if (pStoreKeeperDataResult.StoreKeeperIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vStoreKeeperId = pStoreKeeperDataResult.StoreKeeperId;
+        if (vStoreKeeperId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        var vRowContent = '<tr class="tblRow" data-id="' + pStoreKeeperDataResult.StoreKeeperId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnStoreKeeperAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control StoreKeeperCode" disabled value="' + pStoreKeeperDataResult.StoreKeeperCode + '" /></td>' +
+            '<td><input type="text" class="form-control StoreKeeperNameL1" value="' + pStoreKeeperDataResult.StoreKeeperNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control StoreKeeperNameL2" value="' + pStoreKeeperDataResult.StoreKeeperNameL2 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  StoreKeeperIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnStoreKeeperDelete" data-id="' + pStoreKeeperDataResult.StoreKeeperId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+
+
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+
+    // Row Select
+    $('.tblStoreKeeperBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divStoreKeeper').on('click', 'table tr', function () {
+        var vStoreKeeperId = $(this).attr('data-id')
+        localStorage.setItem('vStoreKeeperId', vStoreKeeperId);
+        //funGETStoreKeeperDTl(vStoreKeeperId)
+    });
+</script>
+<!--Script For StoreSetting Table Operations-->
+<script>
+      // On Load
+    $(document).ready(function () {
+
+        // Drop Down  Font Size
+
+
+
+        // Wait 2 Seconds
+        setTimeout(function () {
+            // GET Store Setting By Selected List
+            //funGETStoreSettingBySelectedList();
+            funGetStoreSettingsByStoreId();
+
+        }, 1000);
+    })
+    // Save - Click
+
+    //$('.btnStoreSettingSave').on('click', function () {
+    function funStoreSettingSave() {
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblStoreSettingBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get StoreSetting Id
+            var vStoreSettingId = vRowData.attr('data-id');
+            // Code
+            var vStoreSettingCode = vRowData.find('.StoreSettingCode').val();
+            // Name L1
+            var vStoreSettingNameL1 = vRowData.find('.StoreSettingNameL1').val();
+            // Name L2
+            var vStoreSettingNameL2 = vRowData.find('.StoreSettingNameL2').val();
+            // Notes
+            var vStoreSettingNotes = vRowData.find('.StoreSettingNotes').val();
+            // Is Active
+            var vStoreSettingIsActive = vRowData.find('.StoreSettingIsActive').prop('checked');
+
+            // Check Store Setting If Empty
+            if (vStoreSettingNameL1 != '') {
+                // Save
+                $.post('/StoreSetting/StoreSettingGET',
+                    {
+                        pStoreSettingId: vStoreSettingId,
+                        pStoreSettingCode: vStoreSettingCode,
+                        pStoreSettingNameL1: vStoreSettingNameL1,
+                        pStoreSettingNameL2: vStoreSettingNameL2,
+                        pStoreSettingNotes: vStoreSettingNotes,
+                        pStoreId: $('#lblid').attr('data-id'),
+                        pStoreSettingIsActive: vStoreSettingIsActive,
+                        pIsDeleted: false,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+
+
+
+
+                        // GET Cash Desk By Selected List
+                        //funGETStoreSettingBySelectedList();
+                        funGetStoreSettingsByStoreId();
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+            //funNotification('تم الحفظ بنجاح', '1');
+        }
+
+        //}); // End of Save Click
+    }
+
+
+
+
+
+    $('body').on('click', '.btnStoreSettingDelete', function () {
+        // Get StoreSetting Id
+        var vStoreSettingIdDelete = $(this).attr('data-id');
+        // Save
+        $.post('/StoreSetting/StoreSettingGET',
+            {
+                pStoreSettingId: vStoreSettingIdDelete,
+                pStoreSettingCode: null,
+                pStoreSettingNameL1: null,
+                pStoreSettingNameL2: null,
+                pStoreSettingNotes: null,
+                pStoreSettingIsActive: null,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+
+                //// Drop Down Main Cash Desk
+                //funFillStoreSetting(null, 0, null, null, null, null, 1, null, null, false);
+
+                // GET Store Setting By Selected List
+                funGETStoreSettingBySelectedList();
+                //funGETStoreSettingDTl(0);
+
+            });
+
+        // Notification
+        funNotification('تم الحذف بنجاح', 1);
+
+    })
+
+    // Add New Row
+    $('body').on('click', '.btnStoreSettingAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funStoreSettingAddRow(vCurrentRow);
+    })
+
+    // GET Store Setting By Selected List
+    function funGETStoreSettingBySelectedList() {
+
+        // Get Value [Id]
+        //var vSelectedStoreSetting = $('#selectStoreSettingMain').val();
+
+        // GET Data
+        $.get('/StoreSetting/StoreSettingGET',
+            {
+                pStoreSettingId: null,
+                pStoreSettingCode: '',
+                pStoreSettingNameL1: '',
+                pStoreSettingNameL2: '',
+                pStoreSettingNotes: '',
+                pStoreSettingIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (StoreSettingData, status) {
+
+                // Table Body
+                var vStoreSettingTableBody = $('.tblStoreSettingBody');
+                // HTML CLEAR
+                vStoreSettingTableBody.html('');
+
+                // JSON
+                var vStoreSettingDataResult = JSON.parse(StoreSettingData);
+
+                // For Each Cash Desk - Main
+                $.each(vStoreSettingDataResult, function (m, StoreSettingSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vStoreSettingRowContent = funStoreSettingRowConfig(vStoreSettingDataResult[m]);
+                    // Append Row Content
+                    vStoreSettingTableBody.append(vStoreSettingRowContent);
+
+                })
+                //funStoreSettingRow();
+            })
+    }
+    // Cash Desk Add Row
+    function funStoreSettingAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "StoreSettingIsActive": true,
+                "StoreSettingId": 0,
+                "StoreSettingCode": '',
+                "StoreSettingNameL1": '',
+                "StoreSettingNameL2": '',
+                "StoreSettingNotes": '',
+            }
+
+        var vRowContent = funStoreSettingRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+
+    // Cash Desk Row Config
+    function funStoreSettingRowConfig(pStoreSettingDataResult) {
+
+        // Checked
+        var vChecked = null;
+        if (pStoreSettingDataResult.StoreSettingIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vStoreSettingId = pStoreSettingDataResult.StoreSettingId;
+        if (vStoreSettingId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        var vRowContent = '<tr class="tblRow" data-id="' + pStoreSettingDataResult.StoreSettingId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnStoreSettingAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control StoreSettingCode" disabled value="' + pStoreSettingDataResult.StoreSettingCode + '" /></td>' +
+            '<td><input type="text" class="form-control StoreSettingNameL1" value="' + pStoreSettingDataResult.StoreSettingNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control StoreSettingNameL2" value="' + pStoreSettingDataResult.StoreSettingNameL2 + '" /></td>' +
+            '<td><input type="text" class="form-control StoreSettingNotes" value="' + pStoreSettingDataResult.StoreSettingNotes + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  StoreSettingIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnStoreSettingDelete" data-id="' + pStoreSettingDataResult.StoreSettingId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+
+
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+
+    // Row Select
+    $('.tblStoreSettingBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divStoreSetting').on('click', 'table tr', function () {
+        var vStoreSettingId = $(this).attr('data-id')
+        localStorage.setItem('vStoreSettingId', vStoreSettingId);
+        //funGETStoreSettingDTl(vStoreSettingId)
+    });
+    function funStoreSettingAddEmptyRow(pTableBody) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "StoreSettingIsActive": true,
+                "StoreSettingId": 0,
+                "StoreSettingCode": '',
+                "StoreSettingNameL1": '',
+                "StoreSettingNameL2": '',
+                "StoreSettingNotes": '',
+            }
+
+        var vRowContent = funStoreSettingRowConfig(vRowContentData);
+
+        pTableBody.append(vRowContent);
+    }
+
+    // Function Select Store Keepers Depend On Store Id
+    function funGetStoreSettingsByStoreId() {
+        console.log('fdgfdgfdg' + $('#lblid').attr('data-id'));
+        // GET Data
+        $.get('/StoreSetting/StoreSettingGET',
+            {
+                pStoreSettingId: null,
+                pStoreSettingCode: '',
+                pStoreSettingNameL1: '',
+                pStoreSettingNameL2: '',
+                pStoreSettingNotes: '',
+                pStoreId: $('#lblid').attr('data-id'),
+                pStoreSettingIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (StoreSettingData, status) {
+
+                // Table Body
+                var vStoreSettingTableBody = $('.tblStoreSettingBody');
+                // HTML CLEAR
+                vStoreSettingTableBody.html('');
+
+                // JSON
+                var vStoreSettingDataResult = JSON.parse(StoreSettingData);
+
+                // For Each Store Keeper - Main
+                $.each(vStoreSettingDataResult, function (m, StoreSettingSubData) {
+
+                    // GET Store Keeper Row Content
+                    var vStoreSettingRowContent = funStoreSettingRowConfig(vStoreSettingDataResult[m]);
+                    // Append Row Content
+                    vStoreSettingTableBody.append(vStoreSettingRowContent);
+
+
+                })
+                if (vStoreSettingDataResult == undefined || vStoreSettingDataResult == '') {
+                    funStoreSettingAddEmptyRow(vStoreSettingTableBody);
+                }
+
+                //funStoreSettingRow();
+            })
+    }
+
+
+
+
+</script>
+<!--Script For StoreType Table Operations-->
+<script>
+    // On Load
+    $(document).ready(function () {
+
+        // Drop Down  Font Size
+
+
+        // Wait 2 Seconds
+        setTimeout(function () {
+            // GET Font Size By Selected List
+            //funGETStoreTypeBySelectedList();
+            funGetStoreTypesByStoreId()
+        }, 1000);
+    })
+    // Save - Click
+
+    //$('.btnStoreTypeSave').on('click', function () {
+        function funStoreTypeSave() {
+            // Is Valid
+            var vIsValid = true;
+
+            // Check All Rows
+            $(".tblStoreTypeBody > tr").each(function () {
+
+                // Row Data
+                var vRowData = $(this);
+                // Get StoreType Id
+                var vStoreTypeId = vRowData.attr('data-id');
+                // Code
+                var vStoreTypeCode = vRowData.find('.StoreTypeCode').val();
+                // Name L1
+                var vStoreTypeNameL1 = vRowData.find('.StoreTypeNameL1').val();
+                // Name L2
+                var vStoreTypeNameL2 = vRowData.find('.StoreTypeNameL2').val();
+                // Is Active
+                var vStoreTypeIsActive = vRowData.find('.StoreTypeIsActive').prop('checked');
+
+                // Check Cash Desk If Empty
+                if (vStoreTypeNameL1 != '') {
+                    // Save
+                    $.post('/StoreType/StoreTypeGET',
+                        {
+                            pStoreTypeId: vStoreTypeId,
+                            pStoreTypeCode: vStoreTypeCode,
+                            pStoreTypeNameL1: vStoreTypeNameL1,
+                            pStoreTypeNameL2: vStoreTypeNameL2,
+                            pStoreId: $('#lblid').attr('data-id'),
+                            pStoreTypeIsActive: vStoreTypeIsActive,
+                            pIsDeleted: false,
+                            pQueryTypeId: 100
+                        },
+                        function (data, status) {
+
+
+
+
+                            // GET Cash Desk By Selected List
+                           // funGETStoreTypeBySelectedList();
+                            funGetStoreTypesByStoreId();
+                        });
+                }
+                else {
+
+                    // Not Valid
+                    vIsValid = false;
+
+                } // End Check Cash Desk Data
+
+            })
+
+            if (!vIsValid) {
+
+                // Notification - Field Required
+                funNotification('@appResource.msgRequired', 2);
+            }
+            else {
+
+                // Notification
+                //funNotification('تم الحفظ بنجاح', '1');
+            }
+
+            //}); // End of Save Click
+        }
+
+
+
+
+
+    $('body').on('click', '.btnStoreTypeDelete', function () {
+        // Get StoreType Id
+        var vStoreTypeIdDelete = $(this).attr('data-id');
+        // Save
+        $.post('/StoreType/StoreTypeGET',
+            {
+                pStoreTypeId: vStoreTypeIdDelete,
+                pStoreTypeCode: null,
+                pStoreTypeNameL1: null,
+                pStoreTypeNameL2: null,
+                pStoreTypeIsActive: null,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+
+                //// Drop Down Main Cash Desk
+                //funFillStoreType(null, 0, null, null, null, null, 1, null, null, false);
+
+                // GET Cash Desk By Selected List
+                funGETStoreTypeBySelectedList();
+                //funGETStoreTypeDTl(0);
+
+            });
+
+        // Notification
+        funNotification('تم الحذف بنجاح', 1);
+
+    })
+
+    // Add New Row
+    $('body').on('click', '.btnStoreTypeAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funStoreTypeAddRow(vCurrentRow);
+    })
+
+    // GET Cash Desk By Selected List
+    function funGETStoreTypeBySelectedList() {
+
+        // Get Value [Id]
+        //var vSelectedStoreType = $('#selectStoreTypeMain').val();
+
+        // GET Data
+        $.get('/StoreType/StoreTypeGET',
+            {
+                pStoreTypeId: null,
+                pStoreTypeCode: '',
+                pStoreTypeNameL1: '',
+                pStoreTypeNameL2: '',
+                pStoreTypeIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (StoreTypeData, status) {
+
+                // Table Body
+                var vStoreTypeTableBody = $('.tblStoreTypeBody');
+                // HTML CLEAR
+                vStoreTypeTableBody.html('');
+
+                // JSON
+                var vStoreTypeDataResult = JSON.parse(StoreTypeData);
+
+                // For Each Cash Desk - Main
+                $.each(vStoreTypeDataResult, function (m, StoreTypeSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vStoreTypeRowContent = funStoreTypeRowConfig(vStoreTypeDataResult[m]);
+                    // Append Row Content
+                    vStoreTypeTableBody.append(vStoreTypeRowContent);
+
+                })
+                //funStoreTypeRow();
+            })
+    }
+    // Cash Desk Add Row
+    function funStoreTypeAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "StoreTypeIsActive": true,
+                "StoreTypeId": 0,
+                "StoreTypeCode": '',
+                "StoreTypeNameL1": '',
+                "StoreTypeNameL2": '',
+            }
+
+        var vRowContent = funStoreTypeRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+
+    // Cash Desk Row Config
+    function funStoreTypeRowConfig(pStoreTypeDataResult) {
+
+        // Checked
+        var vChecked = null;
+        if (pStoreTypeDataResult.StoreTypeIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vStoreTypeId = pStoreTypeDataResult.StoreTypeId;
+        if (vStoreTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        var vRowContent = '<tr class="tblRow" data-id="' + pStoreTypeDataResult.StoreTypeId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnStoreTypeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control StoreTypeCode" disabled value="' + pStoreTypeDataResult.StoreTypeCode + '" /></td>' +
+            '<td><input type="text" class="form-control StoreTypeNameL1" value="' + pStoreTypeDataResult.StoreTypeNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control StoreTypeNameL2" value="' + pStoreTypeDataResult.StoreTypeNameL2 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  StoreTypeIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnStoreTypeDelete" data-id="' + pStoreTypeDataResult.StoreTypeId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+
+
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+
+    // Row Select
+    $('.tblStoreTypeBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divStoreType').on('click', 'table tr', function () {
+        var vStoreTypeId = $(this).attr('data-id')
+        localStorage.setItem('vStoreTypeId', vStoreTypeId);
+        //funGETStoreTypeDTl(vStoreTypeId)
+    });
+    function funStoreTypeAddEmptyRow(pTableBody) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "StoreTypeIsActive": true,
+                "StoreTypeId": 0,
+                "StoreTypeCode": '',
+                "StoreTypeNameL1": '',
+                "StoreTypeNameL2": '',
+            }
+
+        var vRowContent = funStoreTypeRowConfig(vRowContentData);
+
+        pTableBody.append(vRowContent);
+    }
+
+    // Function Select Store Keepers Depend On Store Id
+    function funGetStoreTypesByStoreId() {
+        // GET Data
+        $.get('/StoreType/StoreTypeGET',
+            {
+                pStoreTypeId: null,
+                pStoreTypeCode: '',
+                pStoreTypeNameL1: '',
+                pStoreTypeNameL2: '',
+                pStoreId: $('#lblid').attr('data-id'),
+                pStoreTypeIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (StoreTypeData, status) {
+
+                // Table Body
+                var vStoreTypeTableBody = $('.tblStoreTypeBody');
+                // HTML CLEAR
+                vStoreTypeTableBody.html('');
+
+                // JSON
+                var vStoreTypeDataResult = JSON.parse(StoreTypeData);
+
+                // For Each Store Keeper - Main
+                $.each(vStoreTypeDataResult, function (m, StoreTypeSubData) {
+
+                    // GET Store Keeper Row Content
+                    var vStoreTypeRowContent = funStoreTypeRowConfig(vStoreTypeDataResult[m]);
+                    // Append Row Content
+                    vStoreTypeTableBody.append(vStoreTypeRowContent);
+
+
+                })
+                if (vStoreTypeDataResult == undefined || vStoreTypeDataResult == '') {
+                    funStoreTypeAddEmptyRow(vStoreTypeTableBody);
+                }
+
+                //funStoreTypeRow();
+            })
+    }
+</script>
+<!--End Of Script For StoreType Table Operations-->
+
+<script>
+    $(document).ready(function () {
+        $('#lblid').attr('data-id', 0);
+    });
+    $('#txtCountry').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            var vURL = '/Country/SearchCountry';
+            $('#CountryDataModalContent').load(vURL);
+            // Modal Show
+            $('#CountryDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divcountrySelect', function () {
+
+                // Account Id
+                var vCountryId = $(this).attr('data-id');
+
+                // Get Values
+                var vCountryCodeValue = $(this).find('.divCountryNo').text();
+                var vCountryNameValue = $(this).find('.divCountryName').text();
+
+                // Set Value
+                // $('.txtCountryId').val(vCountryId);
+                $('#txtCountry').val(vCountryId);
+                $('#txtCountryName').val(vCountryNameValue);
+
+
+
+                // Modal Show
+                $('#CountryDataModal').modal('hide');
+
+            })
+
+        }
+
+
+    })
+</script>
+<script>
+    $('#txtStoreCode').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            var vURL = '/Store/SearchStore';
+            $('#StoreDataModalContent').load(vURL);
+            // Modal Show
+            $('#StoreDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divStoreSelect', function () {
+
+                // Account Id
+                var vStoreId = $(this).attr('data-id');
+
+                // Get Values
+                var vStoreCodeValue = $(this).find('.divStoreNo').text();
+                var vStoreNameValue = $(this).find('.divStoreName').text();
+                var vStoreNameL2Value = $(this).find('.divStoreNameL2').text();
+                var vStoreShortNameValue = $(this).find('.divStoreShortName').text();
+                var vStoreTypeNameValue = $(this).find('.divStoreTypeName').text();
+                var vStoreTypeIdValue = $(this).find('.divStoreTypeName').attr('data-id');
+                var vCountryNameValue = $(this).find('.divCountryName').text();
+                var vCountryIdValue = $(this).find('.divCountryName').attr('data-id');
+                var vCityNameValue = $(this).find('.divCityName').text();
+                var vCityIdValue = $(this).find('.divCityName').attr('data-id');
+                var vStoreIsActive = $(this).find('.chkStoreIsActive').prop('checked');
+                var vStoreNotes = $(this).find('.divStoreNotes').text();
+                var vStorePhone = $(this).find('.divStorePhone').text();
+                var vStoreAddress = $(this).find('.divStoreAddress').text();
+                // Set Value
+                // $('.txtCountryId').val(vCountryId);
+                $('#txtStoreCode').val(vStoreCodeValue);
+                $('#txtStoreNameL1').val(vStoreNameValue);
+                $('#txtStoreNameL2').val(vStoreNameL2Value);
+                $('#selectStoreType').val(vStoreTypeIdValue);
+                //$('#selectStoreType').text(vStoreTypeNameValue);
+                $('#txtStoreShortName').val(vStoreShortNameValue);
+                $('#txtCountry').val(vCountryIdValue);
+                $('#txtCountryName').val(vCountryNameValue);
+                $('#txtCity').val(vCityIdValue);
+                $('#txtCityName').val(vCityNameValue);
+                $('#txtStoreNotes').val(vStoreNotes);
+                $('#txtPhone').val(vStorePhone);
+                $('#txtAddress').val(vStoreAddress);
+                $('#chkStoreIsActive').prop("checked", vStoreIsActive);
+
+                $('#selectStoreType').selectpicker('refresh');
+                $('#lblid').attr('data-id', vStoreId);
+
+                console.log('storeid' + $('#lblid').attr('data-id'));
+
+                // Modal Show
+                $('#StoreDataModal').modal('hide');
+                funGetStoreKeepersByStoreId();
+                funGetStoreSettingsByStoreId();
+                funGetStoreTypesByStoreId();
+
+            })
+
+        }
+
+
+    })
+</script>
+
+<script>
+    $('#txtCity').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // get CountryId
+            var vCountryId = $('#txtCountry').val()
+            // Check If CountryId Empty
+            if (vCountryId == undefined || vCountryId == '') {
+
+                $('#txtCountry').focus();
+            }
+            else {
+                var vURL = '/City/SearchCity?pCountryId=' + $('#txtCountry').val();
+                $('#CityDataModalContent').load(vURL);
+                // Modal Show
+                $('#CityDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divCitySelect', function () {
+
+                    // Account Id
+                    var vCityId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vCityCodeValue = $(this).find('.divCityNo').text();
+                    var vCityNameValue = $(this).find('.divCityName').text();
+
+                    // Set Value
+                    // $('.txtCityId').val(vCityId);
+                    $('#txtCity').val(vCityId);
+                    $('#txtCityName').val(vCityNameValue);
+
+
+
+                    // Modal Show
+                    $('#CityDataModal').modal('hide');
+
+                })
+            }
+
+
+        }
+
+
+    })
+</script>
+
+<script>
+    var vStoreTypeId = 0;
+    // List GetStoreType
+    $.post('/Home/GetStoreType',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, StoreType) {
+                $('#selectStoreType').append('<option data-id="' + StoreType.StoreTypeId + '" value="' + StoreType.StoreTypeId + '" sort-id="' + i + '">' + StoreType.StoreTypeNameL1 + '</option>')
+                if (i == 0) {
+                    vStoreTypeId = StoreType.StoreTypeId;
+                }
+            })
+            @*if (parseInt('@ViewBag.vbcStoreTypeId') > 0) {
+                vStoreTypeId = parseInt('@ViewBag.vbcStoreTypeId');
+            }*@
+            $('#selectStoreType').val(vStoreTypeId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+</script>
+<script>
+    $('.btnSave').on('click', function () {
+        // Is Valid
+        var vIsValid = true;
+        var vStoreId = $('#lblid').attr('data-id');
+
+        var vStoreCode = $('#txtStoreCode').val()
+        var vStoreNameL1 = $('#txtStoreNameL1').val()
+        var vStoreNameL2 = $('#txtStoreNameL2').val()
+        var vStoreShortName = $('#txtStoreShortName').val()
+        var vStoreTypeId = $('#selectStoreType').val()
+        var vCountryId = $('#txtCountry').val()
+        var vCityId = $('#txtCity').val()
+        var vStoreNotes = $('#txtStoreNotes').val()
+        var vStorePhone = $('#txtPhone').val()
+        var vStoreAddress = $('#txtAddress').val()
+        var vStoreIsActive = $('#chkStoreIsActive').prop('checked')
+        console.log('vStoreCode' + vStoreCode)
+        console.log('storetype' + vStoreTypeId)
+        console.log('vCountryId' + vCountryId)
+        console.log('vCityId' + vCityId)
+        console.log('vStoreNotes' + vStoreNotes)
+        console.log('vStorePhone' + vStorePhone)
+        console.log('vStoreAddress' + vStoreAddress)
+        if (vStoreCode == undefined || vStoreCode == '') {
+            vStoreId = 0;
+            vStoreCode = 0;
+        }
+        else {
+            vStoreId = vStoreId;
+            vStoreCode = vStoreCode;
+
+        }
+        if (vStoreNameL1) {
+            $.get('/api/APIStore/StoreGET',
+                {
+                    pStoreId: vStoreId,
+                    pStoreCode: vStoreCode,
+                    pStoreNameL1: vStoreNameL1,
+                    pStoreNameL2: vStoreNameL2,
+                    pStoreShortName: vStoreShortName,
+                    pStoreTypeId: vStoreTypeId,
+                    pCountryId: vCountryId,
+                    pCityId: vCityId,
+                    pStoreNotes: vStoreNotes,
+                    pStorePhone: vStorePhone,
+                    pStoreAddress: vStoreAddress,
+                    pStoreIsActive: vStoreIsActive,
+                    pQueryTypeId: 100
+                }
+                , function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Store) {
+                        console.log('laaaaaaaaaaast storeid' + Store.StoreId);
+                        $('#lblid').attr('data-id', Store.StoreId);
+                        funStoreKeeperSave();
+                        funStoreSettingSave();
+                        funStoreTypeSave();
+                        if (vStoreId == "0") {
+                            console.log('falseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+                            $('#lblid').attr('data-id', '0');
+                        }
+                        else {
+                            console.log('trueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+                        }
+                       
+                    })
+
+                })
+          
+           
+          
+         
+           
+        }
+        else {
+            // Not Valid
+            vIsValid = false;
+
+        }
+        if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+            // Notification
+            funNotification('تم الحفظ بنجاح', 1);
+        }
+    })
+
+
+</script>
+<script>
+    // Name L1, Name L2 For Header
+    $('#txtStoreNameL1').on('blur', function () {
+        // Get Name L2 Value
+        var vCurrentNameL2Value = $('#txtStoreNameL2').val();
+        // Check If Empty
+        if (vCurrentNameL2Value == undefined || vCurrentNameL2Value == '') {
+            // Get Name L1 Value
+            var vCurrentNameL1Value = $('#txtStoreNameL1').val();
+            // Change TextBox Value
+            $('#txtStoreNameL2').val(vCurrentNameL1Value);
+        }
+    })
+</script>
+<script>
+    // Event blur 
+    $('.tblStoreKeeperBody').on('blur', '.StoreKeeperNameL1', function () {
+        // Get The Value Of StoreKeeperNameL1
+        var vStoreKeeperNameL1Value = $(this).val();
+        // Get the Current Row
+        var vCurrentRow = $(this).closest('tr');
+        // Get The Element Of Name L2
+        var vElementStoreKeeperNameL2 = vCurrentRow.find('.StoreKeeperNameL2');
+        // check If Empty
+        if (vElementStoreKeeperNameL2.val() == undefined || vElementStoreKeeperNameL2.val() == '') {
+            vElementStoreKeeperNameL2.val(vStoreKeeperNameL1Value);
+        }
+      
+    })
+</script>
+
+<script>
+    // Event blur 
+    $('.tblStoreSettingBody').on('blur', '.StoreSettingNameL1', function () {
+        // Get The Value Of StoreSettingNameL1
+        var vStoreSettingNameL1Value = $(this).val();
+        // Get the Current Row
+        var vCurrentRow = $(this).closest('tr');
+            // Get The Element Of Name L2
+        var vElementStoreSettingNameL2 = vCurrentRow.find('.StoreSettingNameL2');
+        if (vElementStoreSettingNameL2.val() == undefined || vElementStoreSettingNameL2.val() == '') {
+            vElementStoreSettingNameL2.val(vStoreSettingNameL1Value);
+        }
+    })
+</script>
+
+<script>
+     // Event blur 
+    $('.tblStoreTypeBody').on('blur', '.StoreTypeNameL1', function () {
+        // Get The Value Of StoreTypeNameL1
+        var vStoreTypeNameL1Value = $(this).val();
+        // Get the Current Row
+        var vCurrentRow = $(this).closest('tr');
+             // Get The Element Of Name L2
+        var vElementStoreTypeNameL2 = vCurrentRow.find('.StoreTypeNameL2');
+        if (vElementStoreTypeNameL2.val() == undefined || vElementStoreTypeNameL2.val() == '') {
+            vElementStoreTypeNameL2.val(vStoreTypeNameL1Value);
+        }
+    })
+</script>
+
+

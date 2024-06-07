@@ -1,0 +1,155 @@
+﻿<!-- CompanyBranch -->
+@model System.Data.DataTable
+@using System.Data
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.GD
+@using appSERP.appCode.Setting.User
+@{ DataTable vDtData = @Model;}
+
+<!-- Layout --> 
+@{
+    Layout = "~/Views/Shared/appLayout/_AdminLayout.cshtml";
+}
+
+<!-- Header -->
+<div class="container-fluid">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource._Company })
+</div>
+<!-- Data Container -->
+<div class="container-fluid">
+    <!-- DataTable -->
+    <table class="table table-hover tblData" id="tblData">
+        <!-- DataTable Header -->
+        <thead>
+            <tr>
+                <th>@appResource._Company</th>
+                <th>@appResource.DefaultCurrencyId</th>
+                <th>@appResource.PLAccountId</th>
+                <th>@appResource._Level</th>
+                <th>@appResource.IsHolding</th>
+                <th>@appResource.AccountCodeHierarchy</th>
+                <th>@appResource.LastClosedYear</th>
+                <th>@appResource.LastClosedMonth</th>
+                <th>@appResource.RefNumberIsVisible</th>
+                <th>@appResource.CostCenterIsRequired</th>
+                <th>@appResource.PostIsSerialized</th>
+                <th>@appResource.DepositIsSentDirectToBank</th>
+                <th>@appResource._FinancialYear</th>
+                <th>@appResource._IsActive</th>
+                <th class="thActions">@appResource._Actions</th>
+            </tr>
+        </thead> <!-- End of DataTable Header -->
+        <!-- DataTable Body -->
+        <tbody>
+            @foreach (DataRow vDrwData in vDtData.Rows)
+            {
+                <tr data-active="@vDrwData["CompanyBranchIsActive"]">
+                    <!-- Data -->
+                    @if (clsUser.vUserLanguageId == 1)
+                    {
+                        <td title="@vDrwData["CompanyBranchNameL1"]">@vDrwData["CompanyBranchNameL1"]</td>
+                        <td title="@vDrwData["CurrencyNameL1"]">@vDrwData["CurrencyNameL1"]</td>
+                        <td title="@vDrwData["AccountNameL1"]">@vDrwData["AccountNameL1"]</td>
+                    }
+                    else
+                    {
+                        <td title="@vDrwData["CompanyBranchNameL2"]">@vDrwData["CompanyBranchNameL2"]</td>
+                        <td title="@vDrwData["CurrencyNameL2"]">@vDrwData["CurrencyNameL2"]</td>
+                        <td title="@vDrwData["AccountNameL2"]">@vDrwData["AccountNameL2"]</td>
+                    }
+                    <td title="@vDrwData["CompanyBranchLevel"]">@vDrwData["CompanyBranchLevel"]</td>
+                    <td title="@vDrwData["IsHolding"]">@vDrwData["IsHolding"]</td>
+                    <td title="@vDrwData["AccountCodeHierarchy"]">@vDrwData["AccountCodeHierarchy"]</td>
+                    <td title="@vDrwData["LastClosedYear"]">@vDrwData["LastClosedYear"]</td>
+                    <td title="@vDrwData["LastClosedMonth"]">@vDrwData["LastClosedMonth"]</td>
+                    <td title="@vDrwData["RefNumberIsVisible"]">@vDrwData["RefNumberIsVisible"]</td>
+                    <td title="@vDrwData["CostCenterIsRequired"]">@vDrwData["CostCenterIsRequired"]</td>
+                    <td title="@vDrwData["PostIsSerialized"]">@vDrwData["PostIsSerialized"]</td>
+                    <td title="@vDrwData["DepositIsSentDirectToBank"]">@vDrwData["DepositIsSentDirectToBank"]</td>
+                    <td title="@vDrwData["FinancialYear"]">@vDrwData["FinancialYear"]</td>
+
+                    <td class="dataIsActive"></td>
+                    <!-- Actions -->
+                    <td>
+                        <!-- Edit -->
+                        <button type="button" class="btn btnEdit" data-id="@vDrwData["CompanyBranchId"]">
+                            <i class="icoEdit"></i>
+                        </button>
+                        <!-- Delete -->
+                        <button type="button" class="btn btnDelete" data-id="@vDrwData["CompanyBranchId"]" data-name="@vDrwData["CompanyBranchNameL1"]">
+                            <i class="icoDelete"></i>
+                        </button>
+                    </td> <!-- End of Actions Cell -->
+                </tr>
+            }
+        </tbody><!-- End of DataTable Body -->
+    </table> <!-- End of DataTable -->
+</div> <!-- End of Data Container -->
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<!-- Script Create / Edit / Delete -->
+<script>
+    // Data Model URL
+    var vDataURL = '/CPanel/CompanyBranchDataModel/';
+    // Data Model Elements [Create / Edit]
+    var vDataModelElements = $('.btnCreate, .btnEdit');
+    // Click Event
+    vDataModelElements.on('click', function () {
+        // Id
+        var vDataId = $(this).attr('data-id');
+        // Modal
+        $('#dataModalContent').load(vDataURL + vDataId);
+        // Check Modal Input
+        funCheckModalInput();
+        // Modal Show
+        $('#dataModal').modal('show');
+    });</script>
+<script>
+    $('.btnDelete').on('click', function () {
+        // Id - NameAr - NameEn
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                // Modal
+                $('#confirmDeleteModalContent').html(data);
+                $('#confirmDeleteModal').modal('show');
+                // Click Event [Delete Confirm]
+                $("body").on("click", "#btnDeleteConfirm", function () {
+                    // Delete Action URL
+                    var vDeleteActionURL = '/CompanyBranch/DataModel/';
+                    // Delete
+                    $.post(vDeleteActionURL, { id: vDataId, pIsDelete: true }, function () {
+                        window.location.href = '/CompanyBranch';
+                    });
+                });
+            });
+    }); // End of Click Event [Delete Button]</script>
+<!-- Notification -->
+<script src="~/Scripts/Notification/jquery.toast.js"></script>
+<script src="~/Scripts/Notification/jsMKNotifications.js" type="text/javascript"></script>
+<script>
+    funNotification('@dbCompanyBranch.vSQLResult', '@dbCompanyBranch.vSQLResultTypeId');
+    @{ dbCompanyBranch.vSQLResult = string.Empty;}
+</script>

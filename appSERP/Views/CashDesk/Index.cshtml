@@ -1,0 +1,1438 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.Company
+
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource._CashDesk, pIsNew = false })
+</div>
+
+<style>
+    .divTableContainer {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .divCashDesk, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }
+
+    .divSectionTitle {
+        background-color: rgba(41, 128, 185, 0.04);
+        font-weight: bold;
+        color: #2980b9;
+    }
+</style>
+
+
+<!-- Utlity -->
+<div class="divUtilityBar d-flex ">
+    @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+</div>
+<!-- Form Header -->
+<div class="">
+    <div class="bg-white border rounded p-3">
+        <div class=" form-group col-lg-2">
+            <label for="selectCashDeskMain">@appResource.MainCashDesk</label>
+            <select class="form-control selectpicker" id="selectCashDeskMain" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+                @*<option data-id="0" value="0">-</option>*@
+            </select>
+        </div>
+
+    </div>
+</div>
+<!-- Cash Desk -->
+<div class="divTableContainer">
+
+    <!-- Cash Desk Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">@appResource.lblCashDesk</div>
+
+    <!-- Cash Desks Data -->
+    <div class="divCashDesk bg-white border p-2">
+        <table class="table tblCashDesk">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th width="20px"></th>
+                    <th>@appResource._Code</th>
+                    <th>@appResource.CashDesk</th>
+                    <th>@appResource.CashDesk</th>
+                    <th>@appResource._Type </th>
+                    <th>@appResource._IsActive</th>
+                    <th class="thActions">@appResource._Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblCashDeskBody"></tbody>
+        </table>
+
+    </div>
+
+    <!-- Cash Desk Save -->
+    <div class=" bg-white border p-2 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1">
+            @*<button class="btn btn-success btnCashDeskSave">@appResource.btnSave</button>*@
+        </div>
+    </div>
+</div>
+
+<div class="divTableContainer">
+    <!-- Account Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">@appResource.CashDeskAccounts</div>
+
+    <!-- Account Data -->
+    <div class="divAccount bg-white border p-2">
+        <table class="table tblAccount">
+            <!-- Head -->
+            <thead class="">
+                <tr>
+                    <th width="20px"></th>
+
+                    <th>  @appResource.SubCashDesk</th>
+                    <th> @appResource.SubCashDesk</th>
+                    <th>@appResource.AccountNo</th>
+                    <th>@appResource.Account</th>
+                    <th class="thActions">@appResource._IsActive</th>
+                    <th class="thActions">@appResource._Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblAccountBody">
+                <tr class="tblAccountRow"></tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Account Save -->
+    <div class=" bg-white border p-3 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1">
+        @*<button class="btn btn-success btnAccountSave">@appResource.btnSave</button>*@
+        </div>
+        @*<button class="btn btn-warning btnVPrint">طباعة</button>*@
+    </div>
+</div>
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+<!-- CashDeskData Modal -->
+<div id="CashDeskDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CashDeskDataModalContent"></div>
+    </div>
+
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<!-- Cash Desk Scripts -->
+<!-- Cash Desk -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+        localStorage.setItem('SelectedType', 'رئيسى');
+        $('#selectCashDeskMain').val(0)
+        // Drop Down Main Cash Desk
+        funFillCashDesk(null, 0, null, null, null, 1, null, null, false);
+
+        // Wait 2 Seconds
+        setTimeout( function () {
+            // GET Cash Desk By Selected List
+            funGETCashDeskBySelectedList();
+        },1000);
+    })
+
+
+    // Cash Desk GET
+    function funFillCashDesk(
+        pCashDeskId,
+        pCashDeskParentId,
+        pCashDeskCode,
+        pCashDeskNameL1,
+        pCashDeskNameL2,
+        pCashDeskTypeId,
+        pCashDeskAccountId,
+        pAccountId,
+        pIsAccountDetail) {
+
+        // GET Data
+        $.post('/CashDesk/CashDeskGET',
+            {
+                pCashDeskId: pCashDeskId,
+                pCashDeskParentId: pCashDeskParentId,
+                pCashDeskCode: pCashDeskCode,
+                pCashDeskNameL1: pCashDeskNameL1,
+                pCashDeskNameL2: pCashDeskNameL2,
+                pCashDeskTypeId: pCashDeskTypeId,
+                pCashDeskIsActive: null,
+                pIsDeleted: false,
+                pCashDeskAccountId: pCashDeskAccountId,
+                pAccountId: pAccountId,
+                pIsAccountDetail: pIsAccountDetail,
+                pQueryTypeId: 400
+            },
+
+            function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+
+                // Select Cash Desk Element
+                var vSelectCashDesk = $('#selectCashDeskMain');
+                // Clear Items
+                vSelectCashDesk.html('');
+                // Add [Select All] Option
+                vSelectCashDesk.append('<option data-id="0" value="0">-</option>');
+
+                // For Each Cash Desk - Main
+                $.each(vDataResult, function (i, cashDeskData) {
+
+                    // Append Each Option [CashDesk]
+                    vSelectCashDesk.append('<option data-id="' + vDataResult[i].CashDeskId + '" value="' + vDataResult[i].CashDeskId + '">' + vDataResult[i].CashDeskNameL1 + '</option>')
+
+                })
+
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+
+                // Cash Desk [Change]
+                $('#selectCashDeskMain').on('change', function () {
+                    // Row Content Data
+                    var vRowContentData =
+                        {
+                            "CashDeskIsActive": true,
+                            "AccountNo": '',
+                            "AccountId": 0,
+                            "CashDeskCode": '',
+                            "CashDeskNameL1": '',
+                            "CashDeskNameL2": '',
+                            "AccountNameL1": '',
+                            "CashDeskId": 0,
+                            "CashDeskAccountId": 0,
+
+
+                        }
+
+                    var vRowContent = funCashDeskRowAccountConfig(vRowContentData);
+                    $('.tblAccountBody').html('')
+                    $('.tblAccountBody').append(vRowContent);
+
+                    // GET Cash Desk By Selected List
+                    funGETCashDeskBySelectedList();
+                 
+                    
+
+                });
+
+            }) // End of Post
+
+    } // End of Function [GET Data]
+
+        // Save - Click
+
+    $('.btnCashDeskSave').on('click', function () {
+
+
+    }); // End of Save Click
+    function funSaveCashDesk() {
+
+        console.log('bb' + $('#selectCashDeskMain').val())
+         // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblCashDeskBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get CashDesk Id
+            var vCashDeskId = vRowData.attr('data-id');
+            // Get Parent [Id]
+            var vCashDeskParent = $('#selectCashDeskMain').val();
+            // Code
+            var vCashDeskCode = vRowData.find('.CashDeskCode').val();
+            // Type
+            var vCashDeskType = vRowData.find('.CashDeskType').children("option:selected").attr('data-id');
+            // Name L1
+            var vCashDeskNameL1 = vRowData.find('.CashDeskNameL1').val();
+            // Name L2
+            var vCashDeskNameL2 = vRowData.find('.CashDeskNameL2').val();
+            // Is Active
+            var vCashDeskIsActive = vRowData.find('.CashDeskIsActive').prop('checked');
+            // Main Cash Desk Type
+            var vSelectCashDeskType = $('#selectCashDeskMain').val();
+            if (vRowData.attr('data-changed') == '1') {
+                // Check Cash Desk If Empty
+                if (vCashDeskNameL1 != '') {
+                    // If The SelectList Main Cash Desk 
+                    if (vSelectCashDeskType == 0) {
+                        // If The inserted Row is main Cash Desk
+                        if (vCashDeskType == 1) {
+                            // Save
+                            $.post('/CashDesk/CashDeskGET',
+                                {
+                                    pCashDeskId: vCashDeskId,
+                                    pCashDeskParentId: vCashDeskParent,
+                                    pCashDeskCode: vCashDeskCode,
+                                    pCashDeskNameL1: vCashDeskNameL1,
+                                    pCashDeskNameL2: vCashDeskNameL2,
+                                    pCashDeskTypeId: vCashDeskType,
+                                    pCashDeskIsActive: vCashDeskIsActive,
+                                    pIsDeleted: false,
+                                    pCashDeskAccountId: null,
+                                    pAccountId: null,
+                                    pIsAccountDetail: false,
+                                    pQueryTypeId: 100
+                                },
+                                function (data, status) {
+                                    vRowData.attr('data-changed', '0')
+
+                                    // Drop Down Main Cash Desk
+                                    funFillCashDesk(null, 0, null, null, null, 1, null, null, false);
+
+                                    // GET Cash Desk By Selected List
+                                    funGETCashDeskBySelectedList();
+
+                                });
+                        }
+                        // If The inserted Row is not main Cash Desk
+                        else {
+                            funNotification('@appResource.msgMainCashDeskRequired', 2);
+                            vRowData.find('.CashDeskType').focus();
+                        }
+
+
+                    }
+                      // If The SelectList NOT Main Cash Desk
+                    else {
+                         // If The inserted Row is main Cash Desk
+                        if (vCashDeskType == 1) {
+                            funNotification('@appResource.msgSubCashDeskRequired', 2);
+                            vRowData.find('.CashDeskType').focus();
+                        }
+                          // If The inserted Row is NOT main Cash Desk
+                        else {
+                            // Save
+                            $.post('/CashDesk/CashDeskGET',
+                                {
+                                    pCashDeskId: vCashDeskId,
+                                    pCashDeskParentId: vCashDeskParent,
+                                    pCashDeskCode: vCashDeskCode,
+                                    pCashDeskNameL1: vCashDeskNameL1,
+                                    pCashDeskNameL2: vCashDeskNameL2,
+                                    pCashDeskTypeId: vCashDeskType,
+                                    pCashDeskIsActive: vCashDeskIsActive,
+                                    pIsDeleted: false,
+                                    pCashDeskAccountId: null,
+                                    pAccountId: null,
+                                    pIsAccountDetail: false,
+                                    pQueryTypeId: 100
+                                },
+                                function (data, status) {
+                                    vRowData.attr('data-changed', '0')
+
+                                    // Drop Down Main Cash Desk
+                                    funFillCashDesk(null, 0, null, null, null, 1, null, null, false);
+
+                                    // GET Cash Desk By Selected List
+                                    funGETCashDeskBySelectedList();
+
+                                });
+                        }
+
+
+                    }
+
+                 
+                }
+                else {
+                    vRowData.find('.CashDeskNameL1').focus();
+                    vRowData.find('.CashDeskNameL1').css("border-color", "red");
+
+                    // Not Valid
+                    vIsValid = false;
+
+                } // End Check Cash Desk Data
+            }
+
+
+        })
+        if (true) {
+
+        }     
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+            //// Notification
+            //funNotification('تم الحفظ بنجاح', 1);
+            funSaveDTL()
+            // Focus on the first Of The SelectList
+            //$('#selectCashDeskMain').val(0)
+            
+            if (vSelectCashDeskType == 0) {
+                // Clear The Details
+                // Row Content Data
+                var vRowContentData =
+                    {
+                        "CashDeskIsActive": true,
+                        "AccountNo": '',
+                        "AccountId": 0,
+                        "CashDeskCode": '',
+                        "CashDeskNameL1": '',
+                        "CashDeskNameL2": '',
+                        "AccountNameL1": '',
+                        "CashDeskId": 0,
+                        "CashDeskAccountId": 0,
+
+
+                    }
+
+                var vRowContent = funCashDeskRowAccountConfig(vRowContentData);
+                $('.tblAccountBody').html('')
+                $('.tblAccountBody').append(vRowContent);
+            }
+          
+
+        }
+
+    }
+
+
+       // Save - Click
+
+    $('.btnAccountSave').on('click', function () {
+
+        funSaveCashDesk()
+
+    }); // End of Save Click
+    function funSaveDTL() {
+        // Check If The Master Table Row Is Detail
+        if (localStorage.getItem('SelectedType').indexOf('فرع') != -1) {
+     
+                 // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblAccountBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get CashDesk Id
+            var vCashDeskId = localStorage.getItem('vCashDeskId');
+            // Get CashDesk Id
+            var vCashDeskAccountId = vRowData.attr('data-Account-id');
+            // Get Parent [Id]
+            var vCashDeskParent = $('#selectCashDeskMain').val();
+            // Code
+            var vCashDeskCode = vRowData.find('.CashDeskCode').val();
+            // AccountId
+            var vAccountId = vRowData.find('.AccountId').val();
+            // Type
+            var vCashDeskType = vRowData.find('.CashDeskType').children("option:selected").attr('data-id');
+            // Name L1
+            var vCashDeskAccountNameL1 = vRowData.find('.CashDeskNameL1').val();
+            // Name L2
+            var vCashDeskAccountNameL2 = vRowData.find('.CashDeskNameL2').val();
+
+
+            // Is Active
+            var vCashDeskAccountIsActive = vRowData.find('.CashDeskAccountIsActive').prop('checked');
+            if (vRowData.attr('data-changed') == '1') {
+                // Check Cash Desk If Empty
+                if (vCashDeskAccountNameL1 != '') {
+
+                    // Save
+                    $.post('/CashDesk/CashDeskGET',
+                        {
+                            pCashDeskId: vCashDeskId,
+                            pCashDeskParentId: vCashDeskParent,
+                            pCashDeskCode: vCashDeskCode,
+                            pCashDeskNameL1: vCashDeskAccountNameL1,
+                            pCashDeskNameL2: vCashDeskAccountNameL2,
+                            pCashDeskAccountNameL1: vCashDeskAccountNameL1,
+                            pCashDeskAccountNameL2: vCashDeskAccountNameL2,
+                            pCashDeskAccountIsActive: vCashDeskAccountIsActive,
+                            pCashDeskTypeId: vCashDeskType,
+                            pCashDeskIsActive: vCashDeskAccountIsActive,
+                            pIsDeleted: false,
+                            pCashDeskAccountId: vCashDeskAccountId,
+                            pAccountId: vAccountId,
+                            pIsAccountDetail: true,
+                            pQueryTypeId: 100
+                        },
+                        function (data, status) {
+                            vRowData.attr('data-changed', '0')
+                            if (vCashDeskId != 0) {
+                                // GET Cash Desk By Selected List
+                                funGETCashDeskDTl(vCashDeskId);
+                            }
+
+
+                        });
+                }
+
+                else {
+
+                    vRowData.find('.CashDeskNameL1').focus();
+                    vRowData.find('.CashDeskNameL1').css("border-color", "red");
+                    // Not Valid
+                    vIsValid = false;
+
+                } // End Check Cash Desk Data
+            }
+
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+            funNotification('@appResource.msgSave', 1);
+        }
+            
+
+        }
+               // Check If The Master Table Row Is main Cash Desk
+        else {
+            alert('hhhh' + localStorage.getItem('SelectedType'));
+            funNotification('@appResource.msgSubCashDeskRequired', 1);
+        }
+       
+    }
+
+
+    $('body').on('click', '.btnCashDeskDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get Unit Data
+        //var vUnitIdElement = vTableRow.find('.UnitId');
+        var vPrinterId = vTableRow.attr('data-id')
+
+
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.cashDeskNameL1').val();
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdel', vTableRow.index)
+        // Get CashDesk Id
+        var vCashDeskIdDelete = $(this).attr('data-id');
+
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdel') == vTableRow.index) {
+                                // Save
+                                $.post('/CashDesk/CashDeskGET',
+                                    {
+                                        pCashDeskId: vCashDeskIdDelete,
+                                        pCashDeskParentId: null,
+                                        pCashDeskCode: null,
+                                        pCashDeskNameL1: null,
+                                        pCashDeskNameL2: null,
+                                        pCashDeskTypeId: null,
+                                        pCashDeskIsActive: null,
+                                        pIsDeleted: true,
+                                        pCashDeskAccountId: null,
+                                        pAccountId: null,
+                                        pIsAccountDetail: false,
+                                        pQueryTypeId: 300
+                                    },
+                                    function (data, status) {
+
+                                        // Drop Down Main Cash Desk
+                                        funFillCashDesk(null, 0, null, null, null, 1, null, null, false);
+
+                                        // GET Cash Desk By Selected List
+                                        funGETCashDeskBySelectedList();
+
+                                    });
+                                // Notification
+                                funNotification('@appResource.msgSave', 1);
+                                vTableRow = '';
+
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblCashDeskBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    // Cash Desk Add Row
+                                    funCashDeskAddRow(vTableRow);
+
+                                }
+                            }
+                        })
+                    })
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblCashDeskBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funCashDeskAddRow();
+
+                    }
+                }
+            })
+
+
+
+
+
+    })
+
+    // Delete Account
+    $('body').on('click', '.btnCashDeskAccountDelete', function () {
+
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get Unit Data
+        //var vUnitIdElement = vTableRow.find('.UnitId');
+        var vPrinterId = vTableRow.attr('data-id')
+
+
+        var vDataId = vTableRow.attr('data-account-id');
+        var vDataName = vTableRow.find('.cashDeskNameL1').val();
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdeldtl', vTableRow.index)
+        // Get CashDesk Id
+        //var vCashDeskIdDelete = $(this).attr('data-account-id');
+
+        var vCashDeskIdDelete = vTableRow.attr('data-account-id');
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdeldtl') == vTableRow.index) {
+                                // Save
+                                $.post('/CashDesk/CashDeskGET',
+                                    {
+                                        pCashDeskId: null,
+                                        pCashDeskParentId: null,
+                                        pCashDeskCode: null,
+                                        pCashDeskNameL1: null,
+                                        pCashDeskNameL2: null,
+                                        pCashDeskTypeId: null,
+                                        pCashDeskIsActive: null,
+                                        pIsDeleted: true,
+                                        pCashDeskAccountId: vCashDeskIdDelete,
+                                        pAccountId: null,
+                                        pIsAccountDetail: true,
+                                        pQueryTypeId: 300
+                                    },
+                                    function (data, status) {
+                                        // Only Delete The Row
+                                        vElement.closest('tr').remove();
+                                        // Notification
+                                        funNotification('@appResource.msgDelete', 1);
+
+
+                                    });
+
+                                
+                                vTableRow = '';
+
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblAccountBody').find('tr').attr('data-account-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    // Cash Desk Add Row
+                                    funCashDeskAccountAddRow(vTableRow);
+
+                                }
+                            }
+                        })
+                    })
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblAccountBody').find('tr').attr('data-account-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funCashDeskAccountAddRow();
+
+                    }
+                }
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    })
+    // Add New Row
+    $('body').on('click', '.btnCashDeskAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funCashDeskAddRow(vCurrentRow);
+    })
+
+    // GET Cash Desk By Selected List
+    function funGETCashDeskBySelectedList() {
+
+
+
+        // Get Value [Id]
+        var vSelectedCashDesk = $('#selectCashDeskMain').val();
+        // Table Body
+        var vCashDeskTableBody = $('.tblCashDeskBody');
+      
+
+        // GET Data
+        $.post('/CashDesk/CashDeskGET',
+            {
+                pCashDeskId: null,
+                pCashDeskParentId: vSelectedCashDesk,
+                pCashDeskCode: '',
+                pCashDeskNameL1: '',
+                pCashDeskNameL2: '',
+                pCashDeskTypeId: null,
+                pCashDeskIsActive: null,
+                pIsDeleted: false,
+                pCashDeskAccountId: null,
+                pAccountId: null,
+                pIsAccountDetail: false,
+                pQueryTypeId: 400
+            },
+            function (CashDeskData, status) {
+               
+          
+                // HTML CLEAR
+                vCashDeskTableBody.html('');
+
+
+                if (CashDeskData != undefined && CashDeskData != '') {
+                    // JSON
+                    var vCashDeskDataResult = JSON.parse(CashDeskData);
+
+                    // For Each Cash Desk - Main
+                    $.each(vCashDeskDataResult, function (m, cashDeskSubData) {
+
+                        // GET Cash Desk Row Content
+                        var vCashDeskRowContent = funCashDeskRowConfig(vCashDeskDataResult[m]);
+                        // Append Row Content
+                        vCashDeskTableBody.append(vCashDeskRowContent);
+
+                    })
+                }
+                else {
+                        
+                }
+                // Row Content Data
+                var vRowContentData =
+                    {
+                        "CashDeskIsActive": true,
+                        "CashDeskTypeId": 1,
+                        "CashDeskId": 0,
+                        "CashDeskCode": '',
+                        "CashDeskNameL1": '',
+                        "CashDeskNameL2": '',
+                        "CashDeskAccountIsActive": true,
+                        "CashDeskAccountId": 0,
+                        "AccountNo": '',
+                        "AccountNameL1": '',
+                        "CashDeskAccountIsActive": true,
+                        "AccountId": 0
+
+
+
+                    }
+                //// Cash Desk Add Row
+                var vRowContent = funCashDeskRowConfig(vRowContentData);
+                vCashDeskTableBody.append(vRowContent)
+    
+            })
+    }
+
+    // Cash Desk Add Row
+    function funCashDeskAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+        {
+            "CashDeskIsActive": true,
+            "CashDeskTypeId": 1,
+            "CashDeskId": 0,
+            "CashDeskCode": '',
+            "CashDeskNameL1": '',
+                "CashDeskNameL2": '',
+                "CashDeskAccountIsActive": true,
+                "CashDeskAccountId": 0,
+                "AccountNo": '',
+                "AccountNameL1": '',
+                "CashDeskAccountIsActive":true,
+                "AccountId":0
+
+
+
+            }
+
+        var vRowContent = funCashDeskRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+    // Cash Desk Row Config
+    function funCashDeskRowConfig(pCashDeskDataResult) {
+
+        // Checked
+        var vChecked = null;
+        if (pCashDeskDataResult.CashDeskIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vCashDeskTypeId = pCashDeskDataResult.CashDeskTypeId;
+        if (vCashDeskTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        var vRowContent = '<tr data-changed = "0" class="tblRow" data-id="' + pCashDeskDataResult.CashDeskId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnCashDeskAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control CashDeskCode" disabled value="' + pCashDeskDataResult.CashDeskCode + '" /></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL1" value="' + pCashDeskDataResult.CashDeskNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL2" value="' + pCashDeskDataResult.CashDeskNameL2 + '" /></td>' +
+            '<td><select class="CashDeskType form-control">' +
+           
+
+            '<option ' + vSelectedText1 + ' data-id="1">' + '@appResource._Main' + '</option>' +
+            '<option ' + vSelectedText2 + ' data-id="2">' + '@appResource._Sub'+ '</option>' +
+           
+            '</select></td>' +
+            '<td><input type="checkbox" class="form-control  CashDeskIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCashDeskDelete" data-id="' + pCashDeskDataResult.CashDeskId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+    // Cash Desk Row Config
+    function funCashDeskRowAccountConfig(pCashDeskDataResult) {
+
+        // Checked
+        var vChecked = null;
+
+        if (pCashDeskDataResult.CashDeskAccountIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vCashDeskTypeId = pCashDeskDataResult.CashDeskTypeId;
+        if (vCashDeskTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        //// Row Content
+        //var vRowContent = '<tr data-changed = "0" class="tblRow" data-id="' + pCashDeskDataResult.CashDeskId + '">' +
+        //    '<td width="20px"><button class="btn btn-sm btn-light btnCashDeskAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+
+        //    '<td><input type="text" class="form-control CashDeskNameL1" value="' + pCashDeskDataResult.CashDeskNameL1 + '" /></td>' +
+        //    '<td><input type="text" class="form-control CashDeskNameL2" value="' + pCashDeskDataResult.CashDeskNameL2 + '" /></td>' +
+        //    '<td width="7%"><input type="text"  class="form-control AccountCode" value="' + pCashDeskDataResult.AccountCode + '" /><input type="text" class="form-control AccountId d-none" value="' + pCashDeskDataResult.AccountId + '" /></td>' +
+        //    '<td><input type="text" class="form-control AccountNameL1" value="' + pCashDeskDataResult.AccountNameL1 + '" /></td>' +
+        //    '<td><input type="checkbox" class="form-control  CashDeskAccountIsActive" ' + vChecked + ' /></td>' +
+
+        //    '<td><button class="btn btn-light btn-sm btnCashDeskAccountDelete" data-id="' + pCashDeskDataResult.CashDeskAccountId + '"><i class="fa fa-trash"></i></button></td>' +
+        //    '</tr>';
+
+        // Row Content
+        var vRowContent = '<tr data-changed = "0" class="tblRow" data-id="' + pCashDeskDataResult.CashDeskId + '"data-Account-id="' + pCashDeskDataResult.CashDeskAccountId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnCashDeskAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL1" value="' + pCashDeskDataResult.CashDeskNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL2" value="' + pCashDeskDataResult.CashDeskNameL2 + '" /></td>' +
+            '<td><input type="text" class="form-control AccountCode" value="' + pCashDeskDataResult.AccountNo + '" /><input type="text" class="form-control AccountId d-none" value="' + pCashDeskDataResult.AccountId + '" /></td>' +
+            '<td><input type="text" class="form-control  AccountNameL1" disabled value="' + pCashDeskDataResult.AccountNameL1 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  CashDeskAccountIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCashDeskAccountDelete" data-id="' + pCashDeskDataResult.CashDeskId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+
+    // Row Select
+    $('.tblCashDeskBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divCashDesk').on('click', 'table tr', function () {
+        var vCashDeskId = $(this).attr('data-id')
+        localStorage.setItem('vCashDeskId', vCashDeskId);
+        if (vCashDeskId != '0') {
+            funGETCashDeskDTl(vCashDeskId)
+        }
+        else {
+            // Table Body
+            var vBankTableBody = $('.tblAccountBody');
+            // HTML CLEAR
+            vBankTableBody.html('');
+             // Bank Add Empty Row
+            funAccountAddRow();
+        }
+
+
+    });
+    $('.divCashDesk').on('change', '.CashDeskType', function () {
+        var vCurrentRow = $(this).closest('.tblRow');
+        var vSelectedType = vCurrentRow.find('.CashDeskType').children("option:selected").val();
+        console.log('.CashDeskType' + vCurrentRow.find('.CashDeskType').children("option:selected").val());
+        localStorage.setItem('SelectedType', vSelectedType);
+    })
+    $('.divCashDesk').on('focus', '.CashDeskNameL1,.CashDeskNameL2,.CashDeskType', function () {
+        var vCurrentElement = $(this);
+        var vCurrentRow = $(this).closest('.tblRow');
+        var vCashDeskId = vCurrentRow.attr('data-id');
+        var vSelectedType = vCurrentRow.find('.CashDeskType').children("option:selected").val();
+        localStorage.setItem('SelectedType', vSelectedType);
+        localStorage.setItem('vCashDeskId', vCashDeskId);
+        if (vCashDeskId != '0') {
+            funGETCashDeskDTl(vCashDeskId)
+        }
+        else {
+            // Table Body
+            var vBankTableBody = $('.tblAccountBody');
+            // HTML CLEAR
+            vBankTableBody.html('');
+             // Bank Add Empty Row
+            funAccountAddRow();
+        }
+
+    })
+
+
+
+
+    // GET Cash Desk By Selected List
+    function funGETCashDeskDTl(pCashDesk) {
+
+
+        // GET Data
+        $.post('/CashDesk/CashDeskGET',
+            {
+                pCashDeskId: pCashDesk,
+                pCashDeskParentId: null,
+                pCashDeskCode: '',
+                pCashDeskNameL1: '',
+                pCashDeskNameL2: '',
+                pCashDeskTypeId: null,
+                pCashDeskIsActive: null,
+                pIsDeleted: false,
+                pCashDeskAccountId: null,
+                pAccountId: null,
+                pIsAccountDetail: true,
+                pQueryTypeId: 400
+            },
+            function (CashDeskData, status) {
+
+                // Table Body
+                var vCashDeskTableBody = $('.tblAccountBody');
+                // HTML CLEAR
+                vCashDeskTableBody.html('');
+
+                // JSON
+                var vCashDeskDataResult = JSON.parse(CashDeskData);
+
+                // For Each Cash Desk - Main
+                $.each(vCashDeskDataResult, function (m, cashDeskSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vCashDeskRowContent = funCashDeskDTlRowConfig(vCashDeskDataResult[m]);
+                    // Append Row Content
+                    vCashDeskTableBody.append(vCashDeskRowContent);
+
+                })
+                if (pCashDesk) {
+                    funAccountAddRow();
+                }
+            })
+    }
+
+
+
+</script>
+
+
+
+
+
+<!-- Account Scripts -->
+<!-- Add Row -->
+<script>
+    // Account Add Row
+    function funAccountAddRow() {
+        // Table Body
+        var vAccountTableBody = $('.tblAccountBody');
+        // Append
+        vAccountTableBody.append('<tr data-changed = "0" class="tblRow" data-id="0"data-Account-id="0">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnCashDeskAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL1"  /></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL2"  /></td>' +
+            '<td><input type="text" class="form-control AccountCode"  /><input type="text" class="form-control AccountId d-none" /></td>' +
+            '<td><input type="text" class="form-control  AccountNameL1" disabled /></td>' +
+            '<td><input type="checkbox" class="form-control  CashDeskAccountIsActive" checked /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCashDeskAccountDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>'
+        );
+    }
+    // Add Row
+    $('.btnAccountAddRow').on('click', function () {
+        // Cash Desk Add Row
+        funAccountAddRow();
+        // Cash Desk Scroll
+        funAccountScroll();
+    })
+
+    // Account Scroll
+    function funAccountScroll() {
+        // Scroll To Bottom
+        $('.divAccount').animate({ scrollTop: $('.divAccount').prop("scrollHeight") }, 1000);
+    }
+</script>
+<script>
+
+    // Cash Desk Row Config
+    function funCashDeskDTlRowConfig(pCashDeskDataResult) {
+        console.log(pCashDeskDataResult.CashDeskAccountIsActive)
+        // Checked
+        var vChecked = null;
+        if (pCashDeskDataResult.CashDeskAccountIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vCashDeskTypeId = pCashDeskDataResult.CashDeskTypeId;
+        if (vCashDeskTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        var vRowContent = '<tr data-changed = "0" class="tblRow" data-id="' + pCashDeskDataResult.CashDeskId + '"data-Account-id="' + pCashDeskDataResult.CashDeskAccountId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnCashDeskAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL1" value="' + pCashDeskDataResult.CashDeskNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL2" value="' + pCashDeskDataResult.CashDeskNameL2 + '" /></td>' +
+            '<td><input type="text" class="form-control AccountCode" value="' + pCashDeskDataResult.AccountNo + '" /><input type="text" class="form-control AccountId d-none" value="' + pCashDeskDataResult.AccountId + '" /></td>' +
+            '<td><input type="text" class="form-control  AccountNameL1" disabled value="' + pCashDeskDataResult.AccountNameL1 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  CashDeskAccountIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCashDeskAccountDelete" data-id="' + pCashDeskDataResult.CashDeskId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+    ////////// Account Add Row
+    // Add New Row
+    $('body').on('click', '.btnCashDeskAccountAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funCashDeskAccountAddRow(vCurrentRow);
+    })
+
+
+
+    // Cash Desk Add Row
+    function funCashDeskAccountAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "CashDeskIsActive": true,
+                "AccountNo": '',
+                "AccountId": 0,
+                "CashDeskCode": '',
+                "CashDeskNameL1": '',
+                "CashDeskNameL2": '',
+                "AccountNameL1": '',
+                "CashDeskId": 0,
+                "CashDeskAccountId": 0,
+
+
+            }
+        //var vRowContent = '<tr data-changed = "0" class="tblRow" data-id="' + pCashDeskDataResult.CashDeskId + '"data-Account-id="' + pCashDeskDataResult.CashDeskAccountId + '">' +
+        //    '<td width="20px"><button class="btn btn-sm btn-light btnCashDeskAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        //    '<td><input type="text" class="form-control CashDeskNameL1" value="' + pCashDeskDataResult.CashDeskNameL1 + '" /></td>' +
+        //    '<td><input type="text" class="form-control CashDeskNameL2" value="' + pCashDeskDataResult.CashDeskNameL2 + '" /></td>' +
+        //    '<td><input type="text" class="form-control AccountCode" value="' + pCashDeskDataResult.AccountNo + '" /><input type="text" class="form-control AccountId d-none" value="' + pCashDeskDataResult.AccountId + '" /></td>' +
+        //    '<td><input type="text" class="form-control  AccountNameL1" disabled value="' + pCashDeskDataResult.AccountNameL1 + '" /></td>' +
+        //    '<td><input type="checkbox" class="form-control  CashDeskAccountIsActive" ' + vChecked + ' /></td>' +
+        //    '<td><button class="btn btn-light btn-sm btnCashDeskDelete" data-id="' + pCashDeskDataResult.CashDeskId + '"><i class="fa fa-trash"></i></button></td>' +
+        //    '</tr>';
+
+        var vRowContent = funCashDeskRowAccountConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+</script>
+<!-- AccountData Modal -->
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+<!-- Get Account -->
+<script>
+
+    //// Account Code, Name - F9
+    //$('body').on('keydown dblclick', '.AccountNameL1,.AccountCode', function (e) {
+    //    // Get Closest Row
+    //    var vTableRow = $(this).closest('.tblRow');
+    //    // Check F9
+    //    if (e.keyCode == 120 || e.type == 'dblclick') {
+
+
+    //        // Get Account Data
+    //        var vAccountIdElement = vTableRow.find('.AccountId');
+    //        var vAccountCodeElement = vTableRow.find('.AccountCode');
+    //        var vAccountNameElement = vTableRow.find('.AccountNameL1');
+    //        var vAccountCurrencyFactorElement = vTableRow.find('.txtAccountCurrencyFactor');
+
+    //        // Search Account
+    //        var vURL = '/GLVoucher/AccountSearch';
+    //        // Load Content of Account Search
+    //        $('#AccountDataModalContent').load(vURL);
+    //        // Modal Show
+    //        $('#AccountDataModal').modal('show');
+
+    //        // Select Account
+    //        $('body').on('click', '.divAccountSelect', function () {
+
+    //            // Change the Data-changed Attribute
+    //            vTableRow.attr('data-changed', '1');
+
+    //            // Account Id
+    //            var vAccountId = $(this).attr('data-id');
+
+    //            // Get Values
+    //            var vAccountCodeValue = $(this).find('.divAccountNo').text();
+    //            var vAccountNameValue = $(this).find('.divAccountName').text();
+    //            var vAccountCurrencyFactor = $(this).find('.divAccountCurrencyFactor').text();
+
+
+    //            // Set Value
+    //            vAccountIdElement.val(vAccountId);
+    //            vAccountCodeElement.val(vAccountCodeValue);
+    //            vAccountNameElement.val(vAccountNameValue);
+    //            vAccountCurrencyFactorElement.val(vAccountCurrencyFactor);
+
+    //            // Modal Show
+    //            $('#AccountDataModal').modal('hide');
+
+    //        })
+    //    }
+    //})
+
+    // Account Code, Name - F9 - Double Click
+    $('table').on('keyup dblclick', '.AccountCode', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+
+            // Search Account
+            var vURL = '/GLVoucher/AccountSearch';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divAccountSelect', function () {
+                    // Account Id
+                    var vAccountId = $(this).attr('data-id');
+                    // Get Values
+                    var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                    var vAccountNameValue = $(this).find('.divAccountName').text();
+                    var vAccountCurrencyFactor = $(this).find('.divAccountCurrencyFactor').text();
+
+                    // Get Account Data
+                    var vAccountIdElement = vTableRow.find('.AccountId');
+                    var vAccountCodeElement = vTableRow.find('.AccountCode');
+                    var vAccountNameElement = vTableRow.find('.AccountNameL1');
+                    var vAccountCurrencyFactorElement = vTableRow.find('.txtAccountCurrencyFactor');
+
+
+                    // Change the Data-changed Attribute
+                    vTableRow.attr('data-changed', '1');
+
+                    // Set Value
+                    vAccountIdElement.val(vAccountId);
+                    vAccountCodeElement.val(vAccountCodeValue);
+                    vAccountNameElement.val(vAccountNameValue);
+                    vAccountCurrencyFactorElement.val(vAccountCurrencyFactor);
+
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+
+
+                })
+            })
+        }
+    })
+
+</script>
+<script>
+    // Add Row On Load Page
+    function funCashDeskRow() {
+
+        // Table Body
+        var vCashDeskTableBody = $('.tblCashDeskBody');
+        // Append
+        vCashDeskTableBody.append('<tr data-changed = "0" class="tblRow" data-id="0">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnCashDeskAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control CashDeskCode" disabled  /></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL1"  /></td>' +
+            '<td><input type="text" class="form-control CashDeskNameL2" /></td>' +
+            '<td><input type="checkbox" class="form-control  CashDeskIsActive"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnCashDeskDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>');
+    }
+
+</script>
+<script>
+    // When Change Value Of Id
+    $('body').on('keydown', '.AccountCode', function (e) {
+        $('input').on('blur', function () {
+            var row = $(this).closest('tr');
+            var vAccountNo = row.find('.AccountCode').val();
+            // List GetAccount
+            $.post('/Home/GetAccount',
+                { AccountNo: vAccountNo },
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Account) {
+                        // Account Name
+                        row.find('.AccountNameL1').val(Account.AccountNameL1);
+                        // AccountId
+                        row.find('.AccountId').val(Account.AccountId);
+                    })
+                });
+
+        });
+    });
+</script>
+<script>
+    // Search PrinterDataModal
+    $('.btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/CashDesk/SearchCashDesk';
+        // Load Content of CostCenter Search
+        $('#CashDeskDataModalContent').load(vURL);
+        // Modal Full
+        $('#CashDeskDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#CashDeskDataModal').modal('show');
+    })
+ 
+    $('.divCashDesk').on('change', '.CashDeskNameL1,.CashDeskNameL2,.CashDeskType,.CashDeskIsActive', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Change the Data-changed Attribute
+        vTableRow.attr('data-changed', '1');
+
+    })
+    $('.divCashDesk').on('change', '.CashDeskNameL1', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Change the Data-changed Attribute
+        vTableRow.attr('data-changed', '1');
+        vTableRow.find('.CashDeskNameL1').css("border-color", "");
+
+    })
+    $('.divAccount').on('change', '.CashDeskNameL1,.CashDeskNameL2,.AccountCode,.CashDeskAccountIsActive', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Change the Data-changed Attribute
+        vTableRow.attr('data-changed', '1');
+
+    })
+    $('.divAccount').on('change', '.CashDeskNameL1', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Change the Data-changed Attribute
+        vTableRow.attr('data-changed', '1');
+        vTableRow.find('.CashDeskNameL1').css("border-color", "");
+    })
+    $('body').on('click', '.btnSelect', function () {
+        var vCashDeskList = ''
+        var count = $("input[name='chkIsValid']:checked").length;
+        if (count == 0) {
+            $('#CashDeskDataModal').modal('hide');
+        }
+        else {
+            $('.tblCashDeskSearch > tbody > tr ').each(function (i) {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Get Id
+                var vCashDeskId = vElement.attr('data-id');
+                // Check
+                if (vSelectedChk) {
+                    vCashDeskList += vCashDeskId + ','
+                    console.log('vCashDeskIdvCashDeskId' + vCashDeskId);
+                    //if (i == $('.tblCashDeskSearch > tbody > tr ').length - 1) {
+
+                    // close The Modal
+                    $('#CashDeskDataModal').modal('hide');
+                    //}
+
+                }
+            })
+            funGetCashDeskList(vCashDeskList)
+
+        }
+    })
+    function funGetCashDeskList(pCashDeskList)
+    {
+        $.post('/CashDesk/GetCashDeskByList',
+            { pCashDeskList: pCashDeskList},
+            function (CashDeskData, status) {
+                if (CashDeskData != undefined && CashDeskData != '') {
+                    // Table Body
+                    var vCashDeskTableBody = $('.tblCashDeskBody');
+                    // HTML CLEAR
+                    vCashDeskTableBody.html('');
+
+                    // JSON
+                    var vCashDeskDataResult = JSON.parse(CashDeskData);
+
+                    // For Each Cash Desk - Main
+                    $.each(vCashDeskDataResult, function (m, cashDeskSubData) {
+
+                        // GET Cash Desk Row Content
+                        var vCashDeskRowContent = funCashDeskRowConfig(vCashDeskDataResult[m]);
+                        // Append Row Content
+                        vCashDeskTableBody.append(vCashDeskRowContent);
+
+                    })
+
+                    // Cash Desk Add Row
+                    funCashDeskAddRow();
+                }
+
+
+        })
+
+    }
+
+</script>
+<script>
+    // Print
+    $('.btnVPrint').on('click', function () {
+        var url = '/CashDesk/CashDeskReport'
+        var popupWindow = window.open(url);
+    });
+    //SimpleInSameWin()
+    $('.btnSave').on('click', function () {
+        funSaveCashDesk();
+    });
+    $('.btnPrint').on('click', function () {
+        var url = '/CashDesk/CashDeskReport'
+        var popupWindow = window.open(url);
+    });
+
+</script>
+
+

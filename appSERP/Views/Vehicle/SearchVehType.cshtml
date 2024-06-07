@@ -1,0 +1,158 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "VehTypeSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divVehType {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divVehTypeSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divVehTypeSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divVehTypeNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource.lblVehType</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divVehType">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyVehType"></tbody>
+    </table>
+</div>
+
+
+<!-- VehType GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // VehType GET
+        funVehTypeGET();
+    })
+
+    // VehType GET
+    function funVehTypeGET() {
+
+        $.get('/api/APIVehType/VehTypeGET',
+            {
+
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyVehType');
+
+
+                // VehTypes
+                $.each(vDataResult, function (i, VehTypeData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].VehTypeId + '">';
+
+                    var vVehTypeName = vDataResult[i].LookupDtlDesc;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vVehTypeName = vDataResult[i].LookupDtlDesc;
+                        }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].LookupDtlId + '">';
+                    vRowContent += '<div class="divVehTypeSelect d-flex p-2" data-id="' + vDataResult[i].LookupDtlId + '">';
+                    vRowContent += '<div class="divVehTypeNo px-4">' + vDataResult[i].CodeId  + '</div>';
+                                vRowContent += '<div class="divVehTypeName px-4">' + vVehTypeName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search VehType -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divVehTypeSelect').each(function () {
+
+                // Get VehType Code
+                var vVehTypeCode = $(this).find('.divVehTypeNo').text();
+                var vVehTypeName = $(this).find('.divVehTypeName').text();
+
+                if (vVehTypeCode.search(vSearchInput) != -1 || vVehTypeName.search(vSearchInput) != -1) {
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                    console.log('found')
+                }
+                else {
+                    //$(this).removeClass('table-success');
+                    //$(this).show();
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            //$('.divVehTypeSelect').removeClass('table-success');
+            //$(this).show();
+            $('.divVehTypeSelect').each(function () {
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+            })
+
+        }
+    })
+</script>

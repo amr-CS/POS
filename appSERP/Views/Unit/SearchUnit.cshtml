@@ -1,0 +1,156 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "SearchUnit";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divUnit {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divUnitSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divUnitSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divUnitNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">Unit</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divUnit">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyUnit"></tbody>
+    </table>
+</div>
+
+
+<!-- Unit GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Unit GET
+        funUnitGET();
+    })
+
+    // Unit GET
+    function funUnitGET() {
+
+        @*var vUnitId = '@ViewBag.pUnitId'*@
+        $.get('/api/APIUnit/UnitGET',
+            {
+                //pUnitId: vUnitId,
+                pQueryTypeId:400
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyUnit');
+
+
+                // Units
+                $.each(vDataResult, function (i, UnitData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].UnitId + '">';
+
+                    var vUnitName = vDataResult[i].UnitNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vUnitName = vDataResult[i].UnitNameL2;
+                             }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].UnitId + '">';
+                    vRowContent += '<div class="divUnitSelect d-flex p-2" data-id="' + vDataResult[i].UnitId + '" data-parent-id = "' + vDataResult[i].UnitParentId + '" data-parent-code = "' + vDataResult[i].ParentUnitCode +'" data-parent-name = "' + vDataResult[i].ParentUnitNameL1 +'">';
+                    vRowContent += '<div class="divUnitNo px-4">' + vDataResult[i].UnitCode + '</div>';
+                    vRowContent += '<div class="divUnitName px-4">' + vDataResult[i].UnitNameL1 + '</div>';
+                    vRowContent += '<div class="divUnitameL2 px-4">' + vDataResult[i].UnitNameL2 + '</div>';
+
+                    vRowContent += '<div visibil class="divUnitIsActive d-none px-4" ><input type="checkbox" class="chkUnitIsActive"  id=chkUnitIsActive' + i + '"  checked="' + vDataResult[i].UnitIsActive + '" /></div>';
+                                //vRowContent += '<div class="divUnitUnitFactor d-none px-4">' + vDataResult[i].UnitExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search Unit -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divUnitSelect').each(function () {
+
+                // Get Unit Code
+                var vUnitCode = $(this).find('.divUnitNo').text();
+                var vUnitName = $(this).find('.divUnitName').text();
+
+                if (vUnitCode.search(vSearchInput) != -1 || vUnitName.search(vSearchInput) != -1) {
+
+                    $(this).addClass('table-success');
+                    $(this).hide();
+
+                    console.log('found')
+                }
+                else {
+                    $(this).removeClass('table-success');
+                    $(this).show();
+                }
+
+            })
+
+        }
+        else {
+            $('.divUnitSelect').removeClass('table-success');
+            $(this).show();
+        }
+    })
+</script>
+

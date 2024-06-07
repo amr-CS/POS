@@ -1,0 +1,159 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "IdentityTypeSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divIdentityType {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divIdentityTypeSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divIdentityTypeSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divIdentityTypeNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource.IdentityTypes</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divIdentityType">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyIdentityType"></tbody>
+    </table>
+</div>
+
+
+<!-- IdentityType GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // IdentityType GET
+        funIdentityTypeGET();
+    })
+
+    // IdentityType GET
+    function funIdentityTypeGET() {
+
+        $.get('/api/APIIdentityType/IdentityTypeGET',
+            {
+
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyIdentityType');
+
+
+                // IdentityTypes
+                $.each(vDataResult, function (i, IdentityTypeData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].LookupDtlId + '">';
+
+                    var vIdentityTypeName = vDataResult[i].LookupDtlDesc;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vIdentityTypeName = vDataResult[i].LookupDtlDesc;
+                        }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].LookupDtlId + '">';
+                    vRowContent += '<div class="divIdentityTypeSelect d-flex p-2" data-id="' + vDataResult[i].LookupDtlId + '">';
+                    vRowContent += '<div class="divIdentityTypeNo px-4">' + vDataResult[i].CodeId  + '</div>';
+                                vRowContent += '<div class="divIdentityTypeName px-4">' + vIdentityTypeName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search IdentityType -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divIdentityTypeSelect').each(function () {
+
+                // Get IdentityType Code
+                var vIdentityTypeCode = $(this).find('.divIdentityTypeNo').text();
+                var vIdentityTypeName = $(this).find('.divIdentityTypeName').text();
+
+                if (vIdentityTypeCode.search(vSearchInput) != -1 || vIdentityTypeName.search(vSearchInput) != -1) {
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                    console.log('found')
+                }
+                else {
+                    //$(this).removeClass('table-success');
+                    //$(this).show();
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            //$('.divIdentityTypeSelect').removeClass('table-success');
+            //$(this).show();
+            $('.divIdentityTypeSelect').each(function () {
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+            })
+        }
+    })
+</script>

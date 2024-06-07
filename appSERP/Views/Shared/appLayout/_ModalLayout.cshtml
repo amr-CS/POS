@@ -1,0 +1,94 @@
+﻿@using appSERP.appCode.Setting.Company;
+@{
+                /**/
+
+                Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_ModalLayout</title>
+
+</head>
+<body>
+    <div id="loading">
+        <img src="~/Image/PreloaderImage/WhiteCloud.gif" class="loader" />
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+
+
+    <!-- Validate --->
+
+    <script src="/Scripts/jquery.validate.min.js"></script>
+    <script src="/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <script>
+
+      // Add Language Abberviation
+      function fnAddLanguageAbbreviation(LanguageCode1, LanguageCode2) {
+          // Get Element
+          var elementL1 = $("label[for*='NameL1']");
+          var elementL2 = $("label[for*='NameL2']");
+          // Text [SET]
+          elementL1.text(elementL1.text() + ' - ' + LanguageCode1);
+          elementL2.text(elementL2.text() + ' - ' + LanguageCode2);
+      }
+      // Document Ready
+      $(document).ready(function () {
+          // Language 1, 2 Code
+          var LanguageCode1 = '@clsCompany.vCompanyLanguageCode1'
+          var LanguageCode2 = '@clsCompany.vCompanyLanguageCode2'
+          // Add Language Abberviation
+          fnAddLanguageAbbreviation(LanguageCode1, LanguageCode2);
+      });
+        // Add class [Select]
+        $('select').addClass('custom-select custom-select-lg');
+    </script>
+
+
+    <!-- Name - L1, L2 -->
+    <script>
+        // Blur of Name [1st Language]
+        $('body').on('blur', 'input', function (e) {
+
+            // Current Input
+            var vCurrentInput = $(e.target).attr('id');
+            // GET Current Value
+            var vNameValue = $(e.target).val();
+            if (vCurrentInput == undefined || vCurrentInput == '') {
+            }
+            else {
+                // Check Target
+                if (vCurrentInput.indexOf("NameL1") >= 0) {
+
+                    // Find Input NameL2
+                    var vCurrentNameL2Value = $("input[id*='NameL2']").val();
+
+                    // Check If Value == '' OR Undefined
+                    if (vCurrentNameL2Value == undefined || vCurrentNameL2Value == '') {
+
+                        // Set Value of NameL2
+                        $("input[id*='NameL2']").val(vNameValue);
+
+                    } // Enf of Check If Value == '' OR Undefined
+
+                } // End of Check if NameL1
+            }
+
+        }) // End of Blur Event
+
+
+        //Close
+        $('.btnClose').on('click', function () {
+            $('#AccountDataModal').modal('hide');
+        })
+    </script>
+</body>
+</html>
+

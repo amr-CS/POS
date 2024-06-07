@@ -1,0 +1,30 @@
+﻿-----------------------------------------------------------------------------
+Date : 09/05/2021 04:45:35 م
+
+System.Exception
+Message : Index is out of range
+StackTrace :    عند appSERP.Controllers.DataController.RES.POS.POSController.PrintKHtml(DataTable data) في D:\Work\appSERP\appSERP\Controllers\DataController\RES\POS\POSController.cs:السطر 362
+-----------------------------------------------------------------------------
+Date : 09/05/2021 04:54:04 م
+
+System.Exception
+Message : Index is out of range
+StackTrace :    عند appSERP.Controllers.DataController.RES.POS.POSController.PrintKHtml(DataTable data) في D:\Work\appSERP\appSERP\Controllers\DataController\RES\POS\POSController.cs:السطر 361
+-----------------------------------------------------------------------------
+Date : 08/06/2021 03:35:43 م
+
+System.Runtime.InteropServices.COMException
+Message print : Invalid printer specified.
+temp_8c2bd01f-285b-4908-92c6-f934699c4347 2352_16628_{9A79B8E2-FBF1-4CF9-BBC7-924E1510884C}.rpt
+StackTrace :    عند CrystalDecisions.ReportAppServer.Controllers.PrintOutputControllerClass.ModifyPrinterName(String newVal)
+   عند CrystalDecisions.CrystalReports.Engine.PrintOptions.set_PrinterName(String value)
+   عند appSERP.appCode.Setting.ReportSetting.ClsReport.PrintKitchen(ReportClass rpt, DataTable temp, String PrinterName) في D:\Work\appSERP\appSERP\appCode\Setting\ReportSetting\ClsReport.cs:السطر 58
+-----------------------------------------------------------------------------
+Date : 08/06/2021 04:37:28 م
+
+System.Runtime.InteropServices.COMException
+Message print : Invalid printer specified.
+temp_38f8a726-f678-4909-836e-731e832348e9 2352_19724_{DAB221DC-F59B-4360-A4F4-1CA984382EAA}.rpt
+StackTrace :    عند CrystalDecisions.ReportAppServer.Controllers.PrintOutputControllerClass.ModifyPrinterName(String newVal)
+   عند CrystalDecisions.CrystalReports.Engine.PrintOptions.set_PrinterName(String value)
+   عند appSERP.appCode.Setting.ReportSetting.ClsReport.PrintKitchen(ReportClass rpt, DataTable temp, String PrinterName) في D:\Work\appSERP\appSERP\appCode\Setting\ReportSetting\ClsReport.cs:السطر 58

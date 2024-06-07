@@ -1,0 +1,415 @@
+﻿
+
+@{
+
+    string UserId = string.Empty;
+    DateTime dateTimeFrom = ViewBag.DateFrom;
+    DateTime dateTimeTo = ViewBag.DateTo;
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+
+}
+@{
+    ViewBag.Title = "متابعة حالة الفواتير مع الهيئة";
+}
+
+<style>
+
+    /*.selected {
+        background-color: #2980b9 !important;
+    }*/
+
+    .errorClass {
+        border: 1px solid red;
+    }
+
+    body {
+        font-family: Cairo;
+        background-color: #FFF;
+    }
+
+    .fullHeightInput {
+        height: 50px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table {
+        padding: 0rem;
+    }
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    /*.clsSelected {
+        background-color: #2980b9 !important;
+        cursor: pointer;
+    }*/
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:Readonly, .form-control[Readonly] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .txtDiscount {
+        height: 27px !important;
+        padding: 1px;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+
+    .cardHeader {
+        background-color: #D3EDFF;
+    }
+
+    .clsItem {
+        height: 500px;
+        border: 1px #dee2e6 solid;
+        overflow-y: scroll !important;
+    }
+
+    .btn-Trans {
+        color: #000000;
+        background-color: #D3EDFF;
+        border-color: #D3EDFF;
+    }
+
+    /*.selected {
+        background-color: #2980b9 !important;
+    }
+*/
+    .clsColorGreen {
+        color: green;
+    }
+
+    .clsColorRed {
+        color: red;
+    }
+
+</style>
+
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+</style>
+
+
+<div id="loading">
+    <img src="~/Image/PreloaderImage/load-from-cloud.gif" class="loader" />
+</div>
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "متابعة حالة الفواتير مع الهيئة", pIsNew = false })
+</div>
+<div class="report d-none">
+</div>
+<!-- Utlity -->
+<div class="divUtilityBar d-flex ">
+    <div class="row col-md-12">
+
+        <div class="col-sm-8">
+            <div class="row">
+                <div class="col-md-6 d-flex">
+                    من تاريخ :
+                    <input class="timeFrom" type="time" name="appt-time" value="04:00">
+                    <input type="Date" class="form-control txtDateFrom" value="@dateTimeFrom.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-6 d-flex">
+                    الى تاريخ :
+                    <input class="timeTo" type="time" value="04:00" />
+                    <input type="Date" class="form-control txtDateTo" value="@dateTimeTo.ToString("yyyy-MM-dd")" />
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class=" col-sm-1">
+            <button type="button" class="btn btn-secondary btnSearch">بحث</button>
+        </div>
+        <div class="col-sm-3">
+            <input class="form-control text-center txtCount" style="color:red;font-weight:bolder ;font-size:12px" type="text" value="عدد الفواتير = 0" disabled />
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Head -->
+<div class="divQuanties bg-white border p-2" id="table-wrapper">
+    <div id="table-scroll">
+
+      
+        <table class=" table table-hover border">
+            <thead>
+                <tr class="cardHeader">
+                    <th></th>
+                    <th>كود الفاتورة</th>
+                    <th>تاريخ الفاتورة</th>
+                    <th>المبلغ</th>
+                    <th>الخصم</th>
+                    <th>الحالة</th>
+                    <th>النوع</th>
+                    <th>المستخدم</th>
+                    <th>الطلب</th>
+                    <th>العميل</th>
+                    <th>الهاتف</th>
+                    <th>الزر</th>
+                </tr>
+            </thead>
+            <tbody class="tblInvoicesDataBody">
+
+                <tr class="tblRow" data-id="0" style="">
+
+                    <td colspan="10" class="text-center font-weight-bold">لم يتم البحث على البيانات</td>
+                    <td><button class="btn btn-light btn-sm btnResend" disabled><i class="fa fa-send" style="color:white"></i></button></td>
+
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+
+
+
+<script>
+        // Action Search
+    $('.btnSearch').on('click', function () {
+        funSearchData();
+    });
+
+    function funSearchData() {
+        //var vDocSearchNo = $('.txtDocSearchNo').val();
+        var timeFrom = $('.timeFrom').val()
+        var timeTo = $('.timeTo').val()
+        var vDateFrom = $('.txtDateFrom').val() + ' ' + timeFrom;
+        var vDateTo = $('.txtDateTo').val() + ' ' + timeTo;
+        // Get Row
+        funGetInvoicesData(vDateFrom, vDateTo);
+    }
+    function funGetInvoicesData(pDateFrom, pDateTo) {
+        var vDataResult;
+        var lengthRow = 0;
+        var vTableBody = $('.tblInvoicesDataBody')
+        var countNotPassed = 0;
+        $.get('/api/APIINVInvoice/funInvoiceOrderOrPOS',
+            {
+                // Head Parameters
+                pDateFrom: pDateFrom,
+                pDateTo: pDateTo,
+                pBranchId:@BranchId,
+                //pQueryTypeId: '400',
+            },
+            function (data, status) {
+                // JSON Parse
+
+                vTableBody.html('');
+                if (data != undefined && data != '') {
+                    vDataResult = JSON.parse(data);
+                    //funNotification(vDataResult[0].InvCode, 3);
+                    $.each(vDataResult, function (m, InvoicesData) {
+                        if (vDataResult[m].IsPassed == '0')
+                            countNotPassed += 1;
+                        //var vRow = funRowInvoices(vDataResult[m]);                       
+                        var vRow = funRowInvoices(InvoicesData);
+                        // Append Row Content
+                        vTableBody.append(vRow);
+                    });
+                    lengthRow = $('.tblRow').length;
+                }
+                else {
+                    funEmptyRow(vTableBody);
+                    lengthRow = 0;
+                }
+                //funNotification('تمت إرجاع النتائج', 1);
+                funNotification('عدد الفواتير = ' + lengthRow, 1);
+                $('.divUtilityBar').find('.txtCount').val('عدد الفواتير = ' + lengthRow +'  &  الغير مجتازة = ' + countNotPassed);
+                funNotification('عدد الفواتير الغير مجتازة = '+countNotPassed, 3);
+            })
+    }
+
+    //InvId, OrderId, InvCode, InvDate, Total, Discount, PassedName, IsPassed, CashierInvoiceOrOrder, UserFullName,
+    //orderNumber, CustomerId, CustomerName, InvPhoneNo, Tax, ZatcaResponse, InvStatus, CreatedBy, BranchId
+    function funRowInvoices(pRow) {
+        var vColorClass = ""
+        var vbtnResendDisabled = ""
+        var vbtnResendBackground = ""
+        vbtnResendBackground = "color:white"
+        if (pRow.IsPassed == 1 || pRow.IsPassed == 'true') {
+            vColorClass = "clsColorGreen"
+            vbtnResendDisabled = "disabled"            
+        }
+        else {
+            vColorClass = "clsColorRed"
+            vbtnResendBackground = "color:red"
+        }
+        var vRowContent = '<tr class="tblRow" data-id="' + pRow.InvId + '" data-orderId="' + pRow.OrderId + '" style="">' +
+            '<td>' +
+            '<input type="text" class="form-control form-control-sm text-center d-none txtOrderId ' + vColorClass + '" value="' + pRow.OrderId + '" disabled />' +
+            '<input type="text" class="form-control form-control-sm text-center d-none txtIsPassed ' + vColorClass + '" value="' + pRow.IsPassed + '" disabled />' +
+            '<input type="text" class="form-control form-control-sm text-center d-none txtCustomerId ' + vColorClass + '" value="' + pRow.CustomerId + '" disabled />' +
+            '<input type="text" class="form-control form-control-sm text-center d-none txtBranchId ' + vColorClass + '" value="' + pRow.BranchId + '" disabled />' +
+          '</td > ' +
+            '<td width="8%"><input type="text" class="form-control form-control-sm text-center txtInvCode ' + vColorClass + '" value="' + pRow.InvCode + '"   disabled /></td>' +
+
+            '<td><input type="datetime" class="form-control form-control-sm text-center txtInvDate ' + vColorClass + '" value="' + formatDateTime(pRow.InvDate) + '"   disabled /></td>' +
+            '<td width="6%"><input type="text" class="form-control form-control-sm text-center txtTotal ' + vColorClass + '" value="' + pRow.Total + '"   disabled /></td>' +
+            '<td width="5%"><input type="text" class="form-control form-control-sm text-center txtDiscount ' + vColorClass + '" value="' + pRow.Discount + '"  disabled /></td>' +
+
+            '<td width="7%"><input type="text" class="form-control form-control-sm text-center txtPassedName  ' + vColorClass + '"    value="' + pRow.PassedName + '" disabled  /></td>' +
+            '<td width="7%"><input type="text" class="form-control form-control-sm text-center txtCashierInvoiceOrOrder  ' + vColorClass + '"  value="' + pRow.CashierInvoiceOrOrder + '" readonly /></td>' +
+            '<td><input type="text" class="form-control form-control-sm text-center txtUserFullName  ' + vColorClass + '"    value="' + pRow.UserFullName + '"  readonly /></td>' +
+            '<td width="6%"><input type="text" class="form-control form-control-sm text-center txtOrderNumber  ' + vColorClass + '"    value="' + pRow.orderNumber + '"  readonly /></td>' +
+            '<td><input type="text" class="form-control form-control-sm text-center txtCustomerName  ' + vColorClass + '"    value="' + pRow.CustomerName + '"  readonly /></td>' +
+            '<td><input type="text" class="form-control form-control-sm text-center txtInvPhoneNo  ' + vColorClass + '"    value="' + pRow.InvPhoneNo + '" readonly  /></td>' +
+
+            '<td><button class="btn btn-light btn-sm btnResend" data-orderId="' + pRow.OrderId + '" data-id="' + pRow.InvId + '" ' + vbtnResendDisabled + ' "><i class="fa fa-send"  style="'+vbtnResendBackground+'" ></i></button></td>' +
+
+            '</tr>';
+
+        return vRowContent;
+    }
+
+    function funEmptyRow(vBody) {
+        var vRowContent = '<tr class="tblRow" data-id="0" style="">' +
+                '<td colspan="10" class="text-center font-weight-bold">لا يوجد بيانات بين التاريخين المحدد</td>' +
+            '</tr>';
+        vBody.append(vRowContent);
+
+    }
+
+    $('body').on('click', '.btnResend', function () {
+        //var vInvId = $(this).closest('tr').attr('data-id');
+        var vInvId = $(this).attr('data-id');
+        //funNotification(vInvId, 3);
+
+        var vOrderId = $(this).attr('data-orderId');
+        //var vOrderId = $(this).closest('tr').find('.txtOrderId').val()
+        //var vElement = $(this).closest('tr')
+        //var vOrderId = vElement.find('.txtOrderId').val();
+       
+        if (window.navigator.onLine == false) {
+            funNotification('الانترنت لا يعمل', 3);
+            return
+        } else {
+
+
+            funNotification('من فضلك إنتظر', 2);
+
+            // Send
+            $.get('/POS/sendInvoice',
+                {
+                    pInvId: vInvId,
+                    pOrderId: vOrderId
+                }, function (data) {
+                    console.log(data)
+                    if (data != undefined || data != null || data != '') {
+                        var vResultData = JSON.parse(data);
+                        if (vResultData[0].SuccessStatus) {
+                            funNotification(vResultData[0].SystemMessageText, 1);
+                            funSearchData();
+                        }
+                        else
+                            funNotification(vResultData[0].SystemMessageText, 3);
+                    }
+                });
+        }
+
+    });
+
+
+
+    function formatDateTime(dateTime) {
+        var dateObj = new Date(dateTime);
+
+        var day = '' + dateObj.getDate();
+        var month = '' + (dateObj.getMonth() + 1);
+        var year = dateObj.getFullYear();
+        var hours = '' + dateObj.getHours();
+        var minutes = '' + dateObj.getMinutes();
+        var seconds = '' + dateObj.getSeconds();
+
+        // إضافة صفر إلى اليوم والشهر والساعات والدقائق والثواني إذا كانت تتكون من رقم واحد فقط
+        if (day.length < 2) day = '0' + day;
+        if (month.length < 2) month = '0' + month;
+        if (hours.length < 2) hours = '0' + hours;
+        if (minutes.length < 2) minutes = '0' + minutes;
+        if (seconds.length < 2) seconds = '0' + seconds;
+
+        var formattedDate = [day, month, year].join('/');
+        var formattedTime = [hours, minutes, seconds].join(':');
+
+        return formattedDate + ' ' + formattedTime + ' ' + (dateObj.getHours() < 12 ? 'ص' : 'م');
+    }
+
+
+</script>

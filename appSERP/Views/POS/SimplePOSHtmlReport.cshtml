@@ -1,0 +1,200 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "SimplePOSHtmlReport";
+    Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
+    DataTable Data = ViewBag.vDT;
+    double Discount = 0;
+    double TotalDiscount = 0;
+    bool IsClosedPeriod = false ;
+    if (Data != null)
+    {
+     DataRow DRow = Data.Rows[0];
+     Discount = Convert.ToDouble(DRow["Discount"].ToString());
+         IsClosedPeriod = Convert.ToBoolean(DRow["IsClosedPeriod"].ToString());
+    }
+    double Total = 0;
+    double TotalSales = 0;
+    double TotalVatTotal = 0;
+    double TotalInsurance = 0;
+    double TotalInsuranceReturns = 0;
+    string PeriodWord = "الفترة غير مغلقة يجب اغلاق الفترة ثم اعادة الطباعة";
+}
+    <style>
+        @@media print {
+            #periodWord {
+                font-size: 40px !important;
+                font: bold;
+                line-height: 0;
+                position: absolute;
+                top: 40% !important;
+                padding: 0;
+                -ms-transform: rotate(45deg);
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+                cursor: pointer;
+                color: red;
+                border: none;
+                outline: none;
+                background: #000000;
+            }
+        }
+
+        #periodWord {
+            font-size: 48px;
+            font: bold;
+            line-height: 0;
+            position: absolute;
+            top: 55%;
+            left: 15%;
+            display: block;
+            padding: 0;
+            -ms-transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+            cursor: pointer;
+            color: red;
+            border: none;
+            outline: none;
+            background: #000000;
+        }
+        @@font-face {
+            font-family: 'Dubai';
+            src: url('../../fonts/appFont/Dubai.ttf') format('truetype');
+        }
+
+        body {
+            font-size: 14px;
+        }
+    </style>
+    @if (!IsClosedPeriod)
+    {
+        <span id="periodWord">
+            @PeriodWord
+        </span>
+    }
+
+    <table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+        <thead style="">
+            <tr>
+                <th width="30%">الكاشير</th>
+                <th>المبيعات</th>
+                <th>الضريبة</th>
+                <th>التأمين </th>
+                <th>التأجير </th>
+                <th>المصروفات </th>
+                <th>مردودات التأمين </th>
+                <th>الاجمالي </th>
+            </tr>
+        </thead>
+        @if (Data != null)
+        {
+            foreach (DataRow item in Data.Rows)
+            {
+                double Salesdis = Convert.ToDouble(item["Sales"]) ;
+                double sales =(Salesdis / (1+ Convert.ToDouble(item["Vat"])));
+                double Vat = Salesdis-sales;
+                double TotalRow = Salesdis
+             + Convert.ToDouble(item["Insurance"].ToString())
+             - (Convert.ToDouble(item["InsuranceReturns"].ToString()));
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">
+                        @item["CashierName"]
+                        <br />
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                        @Math.Round(sales, 2, MidpointRounding.ToEven)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        @Math.Round(Vat, 2, MidpointRounding.ToEven)
+                    </td>
+                    <td style="text-align:center; vertical-align: middle; "> @item["Insurance"]</td>
+                    <td style="text-align: center; vertical-align: middle;">@item["Rent"]</td>
+                    <td style="text-align: center; vertical-align: middle;">@item["Expenses"]</td>
+                    <td style="text-align: center; vertical-align: middle;">@item["InsuranceReturns"]</td>
+                    <td style="text-align:center;vertical-align: middle;">
+                        @Math.Round(TotalRow, 2, MidpointRounding.ToEven)
+                    </td>
+                </tr>
+                TotalSales = TotalSales + sales;
+                TotalVatTotal = TotalVatTotal + Vat;
+                TotalInsurance = TotalInsurance + Convert.ToDouble(item["Insurance"].ToString());
+                TotalDiscount = TotalDiscount + Convert.ToDouble(item["Discount"].ToString());
+                TotalInsuranceReturns = TotalInsuranceReturns + Convert.ToDouble(item["InsuranceReturns"].ToString());
+
+                Total = Total + TotalRow;
+            }
+        }
+        <tr class="total">
+            <td style="text-align: center;font:bold; vertical-align: middle;">
+                اجمالي المبيعات:
+                <br />
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                @Math.Round(TotalSales, 2, MidpointRounding.ToEven)
+            </td>
+
+            <td style="text-align: center; vertical-align: middle;">
+                @Math.Round(TotalVatTotal, 2, MidpointRounding.ToEven)
+            </td>
+            <td style="text-align:center; vertical-align: middle; ">@TotalInsurance</td>
+            <td style="text-align:center;vertical-align: middle;">0</td>
+            <td style="text-align: center; vertical-align: middle;">0</td>
+            <td style="text-align: center; vertical-align: middle;">@TotalInsuranceReturns</td>
+            <td style="text-align: center; vertical-align: middle;">
+                @Math.Round(Total, 2, MidpointRounding.ToEven)
+
+            </td>
+        </tr>
+    </table>
+
+    <table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+        <thead>
+            <tr>
+                <th width="30%">الكاشير</th>
+                <th>المبيعات</th>
+                <th>الضريبة</th>
+                <th>التأمين </th>
+                <th>التأجير </th>
+                <th>المصروفات </th>
+                <th>مردودات التأمين </th>
+                <th>الاجمالي </th>
+            </tr>
+        </thead>
+
+        <tr>
+            <td style="text-align: center; vertical-align: middle;">
+                خصم العملاء
+                <br />
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                @Math.Round(TotalDiscount, 2, MidpointRounding.ToEven)
+            </td>
+
+            <td style="text-align: center; vertical-align: middle;">0</td>
+            <td style="text-align:center; vertical-align: middle; ">0</td>
+            <td style="text-align: center; vertical-align: middle;">0</td>
+            <td style="text-align:center;vertical-align: middle;">0</td>
+            <td style="text-align: center; vertical-align: middle;">0</td>
+            <td style="text-align: center; vertical-align: middle;">
+                @Math.Round(TotalDiscount, 2, MidpointRounding.ToEven)
+            </td>
+        </tr>
+        <tr class="total">
+            <td style="text-align: center; vertical-align: middle;">
+                اجمالي الخصم:
+                <br />
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                @Math.Round(TotalDiscount, 2, MidpointRounding.ToEven)
+            </td>
+            <td style="text-align: center; vertical-align: middle;">0</td>
+            <td style="text-align:center; vertical-align: middle; ">0</td>
+            <td style="text-align: center; vertical-align: middle;">0</td>
+            <td style="text-align:center;vertical-align: middle;">0</td>
+            <td style="text-align: center; vertical-align: middle;">0</td>
+            <td style="text-align: center; vertical-align: middle;">
+                @Math.Round(TotalDiscount, 2, MidpointRounding.ToEven)
+
+            </td>
+        </tr>
+    </table>

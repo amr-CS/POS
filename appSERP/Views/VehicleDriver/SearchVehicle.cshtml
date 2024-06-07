@@ -1,0 +1,250 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "VehicleSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divVehicle {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divVehicleSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divVehicleSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divVehicleNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Vehicles	
+</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divVehicle">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyVehicle"></tbody>
+    </table>
+</div>
+
+
+<!-- Vehicle GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Vehicle GET
+        funVehicleGET();
+    })
+
+    // Vehicle GET
+    function funVehicleGET() {
+
+        $.get('/api/APIVehicle/VehicleGET',
+            {
+
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyVehicle');
+
+
+                // Vehicles
+                $.each(vDataResult, function (i, VehicleData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].VehicleId + '">';
+
+                    var vVehicleName = vDataResult[i].VecDescL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vVehicleName = vDataResult[i].VecDescL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].VehicleId + '">';
+                            vRowContent += '<div class="divVehicleSelect d-flex p-2" data-id="' + vDataResult[i].VehicleId + '">';
+                    vRowContent += '<div class="divVehicleNo px-4">' + vDataResult[i].VehicleCode + '</div>';
+                                vRowContent += '<div class="divVehicleName px-4">' + vVehicleName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search Vehicle -->
+<script>
+    //// Search
+    //$('.txtSearch').on('keyup', function () {
+
+    //    // Search Input
+    //    var vSearchInput = $(this).val();
+
+    //    if (vSearchInput) {
+
+    //        // Check All
+    //        $('.divVehicleSelect').each(function () {
+
+    //            // Get Vehicle Code
+    //            var vVehicleCode = $(this).find('.divVehicleNo').text();
+    //            var vVehicleName = $(this).find('.divVehicleName').text();
+
+    //            if (vVehicleCode.search(vSearchInput) != -1 || vVehicleName.search(vSearchInput) != -1) {
+
+    //                $(this).addClass('table-success');
+    //                $(this).hide();
+
+    //                console.log('found')
+    //            }
+    //            else {
+    //                $(this).removeClass('table-success');
+    //                $(this).show();
+    //            }
+
+    //        })
+
+    //    }
+    //    else {
+    //        $('.divVehicleSelect').removeClass('table-success');
+    //        $(this).show();
+    //    }
+    //})
+      // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+        // Table Body
+        var vTableBody = $('.tblBodyVehicle');
+        if (vSearchInput.trim() != '') {
+            $.post('/Vehicle/SearchVehicleByCode',
+                {
+                    pVehicleCode: vSearchInput
+            }, function (data, status) {
+
+
+                    if (data != undefined && data != '') {
+
+                        // JSON
+                        var vDataResult = JSON.parse(data);
+                        vTableBody.html('');
+                             // Vehicles
+                $.each(vDataResult, function (i, VehicleData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].VehicleId + '">';
+
+                    var vVehicleName = vDataResult[i].VecDescL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vVehicleName = vDataResult[i].VecDescL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].VehicleId + '">';
+                            vRowContent += '<div class="divVehicleSelect d-flex p-2" data-id="' + vDataResult[i].VehicleId + '">';
+                    vRowContent += '<div class="divVehicleNo px-4">' + vDataResult[i].VehicleCode + '</div>';
+                                vRowContent += '<div class="divVehicleName px-4">' + vVehicleName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+                    }
+                    else {
+                        vTableBody.html('');
+
+                    }
+
+           
+
+            })
+
+        }
+        else {
+                $.post('/Vehicle/SearchVehicleByCode',
+                {
+            }, function (data, status) {
+
+           
+
+                    if (data != undefined && data != '') {
+                        // JSON
+                        var vDataResult = JSON.parse(data);
+                        vTableBody.html('');
+                             // Vehicles
+                $.each(vDataResult, function (i, VehicleData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].VehicleId + '">';
+
+                    var vVehicleName = vDataResult[i].VecDescL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vVehicleName = vDataResult[i].VecDescL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].VehicleId + '">';
+                            vRowContent += '<div class="divVehicleSelect d-flex p-2" data-id="' + vDataResult[i].VehicleId + '">';
+                    vRowContent += '<div class="divVehicleNo px-4">' + vDataResult[i].VehicleCode + '</div>';
+                                vRowContent += '<div class="divVehicleName px-4">' + vVehicleName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+                    }
+                    else {
+                        vTableBody.html('');
+
+                    }
+
+           
+
+            })
+
+        }
+
+    })
+</script>

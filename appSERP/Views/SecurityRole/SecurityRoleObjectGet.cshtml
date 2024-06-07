@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "SecurityRoleGet";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+
+
+<link href="~/Content/bootstrap/bootstrap.min_rtl.css" rel="stylesheet" />
+
+
+<div class="divSecurityRoleObject alert alert-success">
+
+
+
+</div>
+<div class="div accordion alert alert-success" id="accordionExample">
+
+
+
+</div>
+
+<style>
+    * {
+        font-size: 12px !important;
+    }
+</style>
+
+
+<script>
+
+    // POST
+    $.post('/SecurityRole/SecurityRoleObjectData', {}, function (data, status) {
+
+
+        var vHTMLElement = $('.divSecurityRoleObject');
+
+        // GET DATA
+        var vDataResult = JSON.parse(data);
+
+        $.each(vDataResult, function (i, dataResultElement) {
+
+            // SYSTEM
+            var vData = vDataResult[i];
+             vHTMLElement.append('<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" data-system-id="'+vData.SystemId+'">'+ vData.SystemName + '<br>');
+
+
+
+            if ($.isArray(vData.arrType)) {
+                var vObjectType = vData.arrType;
+                $.each(vObjectType, function (m, objectTypeElement) {
+
+                    vHTMLElement.append('<div class="alert alert-warning mx-2" data-objecttype-id="' + vObjectType[m].ObjectTypeId + '">' + vObjectType[m].ObjectTypeName + '<br>');
+
+
+                    // Object
+                    var vObject = vObjectType[m].arrObject;
+
+                    $.each(vObject, function (s, objectElement) {
+
+                        var vObjectData = vObject[s].arrObjectAction;
+
+                        vHTMLElement.append('<div class="alert alert-danger mx-4" data-object-id="' + vObject[s].ObjectId + '">' + vObject[s].ObjectName + '<br>');
+
+                        $.each(vObjectData, function (y, objectDataElement) {
+
+                            console.log(vObjectData[y])
+
+                            //if ($.isArray(vObjectData[y])) {
+
+                            vHTMLElement.append('<input type="checkbox" data-objectaction-id="' + vObjectData[y].ObjectActionId + '">' + vObjectData[y].ObjectActionName);
+                            //}
+
+
+
+                        })
+
+
+
+
+                    })
+
+
+
+                })
+
+
+
+
+
+
+            }
+        })
+
+
+        //console.log(vDataResult);
+
+    })
+
+
+
+</script>
+

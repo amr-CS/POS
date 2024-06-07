@@ -1,0 +1,1966 @@
+﻿
+@{
+    ViewBag.Title = "شاشة طلبات البيع";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Data
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType;
+@using appSERP.appCode.dbCode.RES;
+@{
+
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    string name = ticket.Name;
+
+    string CashierId = string.Empty;
+    if (Request.Cookies["CashierId"] != null)
+    { CashierId = Request.Cookies["CashierId"].Value; };
+    DataTable Branch = ViewBag.Branch;
+    string InsuranceCategory = Branch.Rows[0]["PlateCode"].ToString();
+    string SheepCat = Branch.Rows[0]["SheepCat"].ToString();
+    string SheepOutRes = Branch.Rows[0]["SheepOutRes"].ToString();
+    var CategoryInsurance = InsuranceCategory;
+    DateTime ORderTime = DateTime.Now;
+    int UserId = 0;
+    if (Request.Cookies["UserId"] != null)
+    { UserId = Convert.ToInt32(Request.Cookies["UserId"].Value); };
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+}
+@{
+
+    ViewBag.Title = "شاشة البيع";
+}
+<style>
+    body {
+        font-family: Cairo;
+    }
+
+    .fullHeightInput {
+        height: 30px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+        padding: 0px;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+    }
+    /*.table td {
+        margin-top: 0.5rem;
+        padding: 0rem !important;
+    }*/
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+</style>
+<div id="loading">
+    <img src="~/Image/PreloaderImage/load-from-cloud.gif" class="loader" />
+</div>
+<!-- Utility Bar -->
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="">
+        @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblAccountType })
+    </div>
+    <!-- Utlity -->
+    <div class="divUtilityBar d-flex ">
+        @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+    </div>
+    <!-- Head -->
+    <div class="bg-white border rounded p-3">
+        <div class="row">
+            <!-- Main Inputs -->
+            <div class="col-sm-8">
+                <!-- Doc No -->
+                <div class="row controlRow">
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">رقم الطلب</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control  txtOrderId" disabled />
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="custom-control custom-checkbox">
+
+                            <input type="checkbox" class="custom-control-input disabled txtDelivery" id="chkDelivery">
+                            <label class="custom-control-label small" for="chkDelivery">توصيل الطلب</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2 txtOrderStatus">حالة الطلب</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control  txtOrderStatues" disabled />
+                    </div>
+                </div>
+                <!-- Doc Date -->
+                <div class="row controlRow">
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">تاريخ الطلب</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control  txtOrderDate" value="@DateTime.Now" disabled />
+                    </div>
+                    <!-- Doc Date -->
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">تاريخ التوصيل</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control  txtDeliverDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control  txtDate d-none" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <!-- Ref Doc No -->
+                <div class="row controlRow">
+                    @*<div class="col-sm-2">
+                            <label class="small float-right pt-2">مدخل الفاتورة</label>
+                        </div>*@
+                    @*<div class="col-sm-4">
+                            <input type="text" class="form-control  clsUser" value="@clsUser.vUserFullName" disabled />
+                        </div>*@
+                    <!-- Ref Doc No -->
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">وقت التوصيل</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="time" class="form-control  txtDeliverTime" value="12:00" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="small float-right pt-2">العميل</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="d-flex txtCustomer">
+                            <input type="text" class="form-control  txtCustomerCode w-50" />
+                            <input type="text" class="form-control  txtCustomerName" disabled />
+                        </div>
+                    </div>
+                    <div class="col-sm-2 d-none">
+                        <label class="small float-right pt-2">اختيار الفترة</label>
+                    </div>
+                    <div class="col-sm-4 d-none">
+                        <select id="PeriodType" class="PeriodId form-control " name="PeriodType" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required></select>
+                    </div>
+                </div>
+
+                <div class="row controlRow">
+
+                </div>
+                <!-- Ref Doc Date -->
+                <div class="row ">
+                    <!-- Ref Doc Date -->
+                    <div class="col-sm-2">
+                        <label class="float-right small">البيان</label>
+                    </div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control  txtNote" />
+                    </div>
+                </div>
+
+
+            </div> <!-- End of Main Inputs -->
+            <!-- Left Controls [Doc No, Ref, ..] -->
+            <div class="col-sm-4 mt-3">
+
+                <!-- Ref Doc Date -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">اجمالي الطلب</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control  txtTotalOrder" value="0.00" disabled />
+                    </div>
+                </div>
+                <!-- Source -->
+                @*<div class="row controlRow">
+                        <div class="col-sm-4">
+                            <label class="small float-right pt-2">الضريبة</label>
+                        </div>
+                        <div class="col-sm-8 d-flex">
+                            <input type="number" class="form-control" id="totalVat" disabled />
+                        </div>
+                    </div>*@
+                <!-- Source -->
+                @*<div class="row controlRow">
+                        <div class="col-sm-4">
+                            <label class="small float-right pt-2">الصافي</label>
+                        </div>
+                        <div class="col-sm-8 d-flex">
+                            <input type="number" class="form-control   txtTotalPrice" disabled />
+                        </div>
+                    </div>*@
+                <!-- Source -->
+                <div class="row ">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2 d-none">اجمالي التأمين</label>
+                    </div>
+                    <div class="col-sm-8 d-flex d-none">
+                        <input type="number" class="form-control   txtTotalIns d-none" value="0.00" disabled />
+                    </div>
+                </div>
+                <!-- Source -->
+                <!-- <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">اجمالي الايجار</label>
+                    </div>
+                    <div class="col-sm-8 d-flex">
+                        <input type="number" class="form-control   txtTotalDiscount" value="0.00" disabled />
+                    </div>
+                </div> -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">اجمالي الخصم</label>
+                    </div>
+                    <div class="col-sm-8 d-flex">
+                        <input type="number" class="form-control   txtTotalDiscount" value="0.00" disabled />
+                    </div>
+                </div>
+                <!-- Source -->
+                <div class="row controlRow">
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2">اجمالي المطلوب</label>
+                    </div>
+                    <div class="col-sm-8 d-flex">
+                        <input type="number" class="form-control   txtTotalReq" value="0.00" disabled />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- Details Main -->
+    <div class="bg-white border rounded p-3 mt-3">
+        <div class="col-sm-12 pt-2">
+            <table class="table  tblOrderLocation">
+                <tr>
+                    <th>الموقع</th>
+                    <th>العنوان</th>
+                    <th>البيان</th>
+                </tr>
+                <tr>
+                    <td><select id="selectSite" class="selectpicker selSite form-control btn" name="SiteId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select></td>
+                    <td><input type="text" class="form-control  txtAddress" /></td>
+                    <td><input type="text" class="form-control  txtNotes" /></td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- Details Main -->
+    <div class="bg-white border rounded p-3 mt-3 ">
+        <!-- Details -->
+        <table class="table table-sm table-responsive-sm">
+            <thead>
+                <tr class="tblHead">
+                    <th class=""></th>
+                    <th class="" width="30%">
+                        <div>الوجبة</div>
+                    </th>
+                    <th class="d-none" width="7%">
+                        <div>الوسم</div>
+                    </th>
+                    <th class="" width="5%">
+                        <div>الكمية</div>
+                    </th>
+                    <th class="">
+                        <div>السعر</div>
+
+                    </th>
+                    <th class="d-none" width="5%">
+                        <div>سعر التأمين</div>
+                    </th>
+
+                    <th class="">
+                        <div>الضريبة</div>
+                    </th>
+                    <th class="">
+                        <div>الاجمالي</div>
+                    </th>
+                    <th class="d-none" width="7%">
+                        <div>علي قدر</div>
+                    </th>
+                    <th class="d-none" width="7%">
+                        <div>طريقة التقطيع</div>
+                    </th>
+                    <th class="d-none" width="7%">
+                        <div>الذبيحة خاصة ب</div>
+                    </th>
+                    <th class="d-none" width="7%">
+                        <div>المتبقي من الذبيحة</div>
+                    </th>
+                    <th class="d-none" width="5%">
+                        <div>عدد الصحون</div>
+                    </th>
+                    <th class="">
+                        <div>البيان</div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody class="tblOrderBody">
+            </tbody>
+
+        </table>
+
+        <div class="row" style="align-content:center">
+            <div class="">
+                <label class="small  mx-1 pt-2">نقدا</label>
+            </div>
+            <div class="">
+                <input class="form-control  text-center disabled font-weight-bold txtPayCash " type="text" min=0 required />
+            </div>
+            <div class="">
+                <label class="small  mx-1 pt-2">شبكة</label>
+            </div>
+            <div class="">
+                <input class="form-control  text-center disabled font-weight-bold   txtPayNet" type="text" min=0 required />
+            </div>
+            <div class="">
+                <div class="d-flex">
+                    <label class="small mx-1 pt-2">أجل</label>
+                    <input class="form-control  text-center disabled txtCredit font-weight-bold" id="future-sum" disabled type="text" required />
+                </div>
+            </div>
+            <div class="">
+                <div class="d-flex">
+                    <label class="small mx-1 pt-2">الخصم</label>
+                    <input class="form-control  text-center disabled txtDiscount font-weight-bold" id="future-sum" @ViewBag.Discount type="text" required />
+                </div>
+            </div>
+            <div class="">
+                <input type="button" class="btn btn-info btnCustomer" value="العملاء" />
+            </div>
+            <div class="">
+                <input type="button" class="btn btn-success btnInvPosted" value="اصدار الفاتورة" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- AccountData Modal -->
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+<div id="tagDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="tagDataModalContent"></div>
+    </div>
+</div>
+<!-- AccountData Modal -->
+<div id="ItemDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="ItemDataModalContent"></div>
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+
+<script>
+
+      $('body').on('keyup keydown click', '.txtCustomerCode', function (e) {
+        // Error Class Validation
+        $('.txtCustomer').removeClass('errorClass')
+    })
+
+            var Meals = $.parseJSON($.ajax({
+            url: '/api/APIInvItem/InvItemGET',
+            dataType: "json",
+                method: 'GET', contentType: 'application/json',
+                data: { pItemType: 3, pCategoryId: 1490, pQueryTypeId: '460', pItemSales: true },
+            async: false
+            }).responseText);
+
+      function GetPeriod(Value) {
+      //   var res = parseInt(Value.substring(0, 2));
+        $('#PeriodType').html('')
+        $.get('/api/APILookup/LookupGET',
+            {
+                pIsDetail: true,
+                pLookupId: 112,
+                pdDate1: Value,
+                pQueryTypeId: '400',
+            },
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+
+                $.each(vDataJSON, function (i, PeriodType) {
+                    var Time1 = parseInt(PeriodType.Value1)
+                    var Time2 = parseInt(PeriodType.Value2)
+
+                 //   if ((Time1 < res && Time2 > res) || (Time1 > res && Time2 < res)) {
+                        $('#PeriodType').append('<option  val1="' + PeriodType.Value1 + '" val2="' + PeriodType.Value2 + '"  data-id="' + PeriodType.LookupDtlId + '" value="' + PeriodType.LookupDtlId + '" sort-id="' + i + '">' + PeriodType.LookupDtlDesc + '</option>')
+                //    }
+                })
+                // Refresh Select Picker
+                $('#PeriodType').selectpicker('refresh');
+            })
+
+    }
+         var Lookup = $.parseJSON($.ajax({
+            url: '/api/APILookup/LookupGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: { pIsDetail: true,  pLookupCode: '2,136,107,111,112', pQueryTypeId: '400' },
+            async: false
+        }).responseText);
+
+    var vLookupData = JSON.parse(Lookup)
+
+    var date = new Date();
+    //var currentTime = date.getHours() + ':' + date.getMinutes();
+    //$('.txtDeliverTime').val(currentTime)
+   // console.log(currentTime)
+    // Check Time
+    var TimeFrom;
+    var TimeTo;
+    var DeliverTime=$('.txtDeliverTime').val();
+    $('#PeriodType').change(function () {
+         TimeFrom = $(this).find('option:selected').attr('val1');
+         TimeTo = $(this).find('option:selected').attr('val2');
+
+    })
+    //$('.txtDeliverTime').blur(function () {
+    //    var Time = $(this).val();
+    //   Time= parseInt(Time.substring(0, 2));
+    //    if ((Time < TimeFrom  || Time > TimeTo) ) {
+    //   funNotification(" الوقت لا مناسب للفترة التي اختارتها يجب ان يكون من "+TimeTo + "الي" + TimeFrom  , 2);
+    //        $('.txtDeliverTime').val('');
+    //    }
+    //})
+
+    // Open Customer Supplier Modal
+    $('body').on('keyup dblclick', '.txtCustomerCode', function (e) {
+
+
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Search Account
+            var vURL = '/GLCustomer/SearchCustomerModal';
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divCSSelect', function () {
+
+                    // Get Values
+                    var vCSId = $(this).closest('tr').attr('data-id');
+                    var vCSNameValue = $(this).closest('tr').find('.divCustomerName').text();
+                    var vCSNameL2Value = $(this).closest('tr').find('.divCustomerNameL2').text();
+                    var vCSCodeValue = $(this).closest('tr').find('.divCustomerNo').text();
+                    var vCSphoneValue = $(this).closest('tr').find('.divCustomerPhoneNumber').text();
+
+                    // Get CS Data
+                    var vCSIdElement = $('.txtCustomerCode');
+                    var vCSCodeElement = $('.txtCustomerCode');
+                    var vCSNameElement = $('.txtCustomerName');
+                    var vCSNameL2Element = $('.txtCustomerNameL2');
+
+                    // Set Value
+                    vCSIdElement.val(vCSId);
+                    vCSCodeElement.attr('data-id',vCSCodeValue);
+                    vCSCodeElement.attr('data-phone',vCSphoneValue);
+                    vCSNameElement.val(vCSNameValue);
+                    vCSNameL2Element.val(vCSNameL2Value);
+                    FillSite(vCSCodeValue);
+                    $('#chkDelivery').prop('checked', true);
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+
+                })
+            })
+        }
+    })
+
+
+
+    $('body').on('change', '.txtCustomerCode', function (e) {
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+
+        // Get  Data
+        var vCustomerIdElement = $('.txtCustomerCode').val();
+        var vCustomerNameElement =$('.txtCustomerName');
+        var vCustomerCodeElement = $('.txtCustomerCode');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APIGLCustomer/GLCustomerGET',
+            {
+                pIsCustomer: true,
+                pCustomerCode: vCustomerIdElement,
+                pQueryTypeId: '413',
+            },
+            function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vCustomerNameElement.val('');
+                        vCustomerCodeElement.val('');
+                        funNotification('@appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Customer) {
+                            // Set Value
+                            vCustomerNameElement.val(Customer.CustomerNameL1);
+                            vCustomerCodeElement.attr('data-id',Customer.CustomerId);
+                            vCustomerCodeElement.attr('data-phone', Customer.CustomerPhoneNumber);
+                            FillSite(Customer.CustomerId)
+                            $('#chkDelivery').prop('checked', true);
+                        });
+                    }
+                });
+    })
+    $('.txtDeliverDate').on('blur', function () {
+
+        if ($(".txtDeliverDate").val() < $(".txtDate").val()) {
+            funNotification('تاريخ التسليم اقل من التاريخ الحالي', 3)
+        }
+    })
+
+
+    // Save Using button
+    $('.btnSave').on('click', function () {
+        var ORDER_STATUS = $('.txtOrderStatues').attr('data-id');
+        if (ORDER_STATUS != '2') {
+            // Save  ALL
+            funSaveMaster()
+        } else {
+            funNotification('تم التسليم من قبل',3)
+        }
+    }) // End BtnSave
+
+    // Save Using F10
+    $('body').on('keyup', function (e) {
+        // Check F10
+        if (e.keyCode == 121) {
+
+            var ORDER_STATUS = $('.txtOrderStatues').attr('data-id');
+            if (ORDER_STATUS != '2') {
+                // Save  ALL
+                funSaveMaster()
+            } else {
+                funNotification('تم التسليم من قبل',3)
+            }
+            // Save  ALL
+        }
+    })
+
+    // Save Head
+    function funSaveMaster() {
+        // Get Doc Id
+        var OrderId = $('.txtOrderId').val();
+        var UserId = $('.divUserId').text();
+        var Discount = $('.txtDiscount').val();
+
+
+        // Get Doc Date
+        var OrderDate = $('.txtOrderDate').val();
+
+        // Get Vocher Type
+        var DeliverDate = $('.txtDeliverDate').val();
+        var DateNow = '@DateTime.Now';
+
+        var DeliverTime = $('.txtDeliverTime').val();
+        var DeliverDateTime = DeliverDate+'T'+DeliverTime
+
+        // Is Posted
+        var CUST_SEQ = $('.txtCustomerCode').val()
+        var ORDER_PHONE_NO = $('.txtCustomerCode').attr('data-phone')
+        // Doc Note
+        var PERIOD_TYPE = $('#PeriodType').val();
+        // Doc Is Repeated
+        var NOTES = $('.txtNote').val();
+        // Doc Is Opps
+        var DELIVERY = $('#chkDelivery').prop("checked");
+
+        // Doc Is Wait
+        var PAY_CASH = $('.txtPayCash').val();
+        var PAY_Net = $('.txtPayNet').val();
+        var Credit = $('.txtCredit').val();
+        var OrderLocId = $('.txtAddress').attr('data-id');
+        var ADDRESS = $('.txtAddress').val();
+        var NOTES = $('.txtNotes').val();
+        var TotalReq = $('.txtTotalReq').val();
+        var vat = TotalReq * 0.15
+
+        var valid = false;
+
+        $(".tblOrderRow").each(function () {
+            valid = true;
+            // Row Data
+            var vRowData = $(this);
+           vRowData.find('.txtTag').removeClass('errorClass');
+            var tagId = vRowData.find('.txtTagId').val();
+            var MealId = vRowData.find('.txtMealId').val();
+            var Grpid = vRowData.find('.txtMealCode').attr('data-type');
+            if (Grpid == '@SheepCat' || Grpid == '@SheepOutRes') {
+                if (tagId == '' || tagId == '0' || tagId == 'null') {
+                    valid = false
+                    vRowData.find('.txtTag').addClass('errorClass');
+                }
+            }
+        });
+if (parseFloat($(".txtTotalDiscount").val()) > parseFloat($(".txtTotalOrder").val())) {
+   valid = false
+    $('.txtDiscount').addClass('errorClass')
+    funNotification('لا يمكن تجاوز نسبة الخصم المتاحة', 3)
+
+        }
+        if (CUST_SEQ && valid == true && $(".txtDeliverDate").val() >= $(".txtDate").val()) {
+            // Save Head
+            $.get('/api/APIResOrder/ResOrderGET',
+                {
+                    // Head Parameters
+                    pOrderId: OrderId,
+                    pORDER_TYPE: 120,
+                    pSUB_SEQ: 1,
+                    pORDER_DATE: OrderDate,
+                    pDELIVERY_DATE: DeliverDateTime,
+                    pCUST_SEQ: CUST_SEQ,
+                    pADDRESS: $('.txtAddress').val(),
+                    //pORDER_STATUS: 1,
+                    pPERIOD_TYPE: PERIOD_TYPE,
+                    pCOST_ID: 1021,
+                    pNOTES: $('.txtNote').val(),
+                    pMULTI_DAY: 0,
+                    pDELIVERY: DELIVERY,
+                    pPAY_CASH: PAY_CASH,
+                    pPAY_NET: PAY_Net,
+                    pCREDIT: Credit,
+                    pPRICE_CAT: TotalReq,
+                    pORDER_PHONE_NO: ORDER_PHONE_NO,
+                    pORDER_PHONE_NUMBER: '',
+                    pDiscount: Discount,
+                    pIsDeleted: false,
+                    pCreatedBy: UserId,
+                    pLastUpdatedBy:UserId,
+                    pQueryTypeId: '100'
+                },
+                function (data, status) {
+                    var DataResult = JSON.parse(data)
+                    var Id = DataResult[0].Id
+                    if (Id == undefined) {
+                        Id = $('.txtOrderId').val()
+                    }
+                    funSaveOrderLocation(Id)
+                    funSaveDtl(Id)
+                    $('.txtOrderId').val(Id)
+                    funNotification('تم الحفظ بنجاح', 1)
+                })
+        } else {
+            // Error Class Validation
+            if (CUST_SEQ == '' || CUST_SEQ == '0' || CUST_SEQ == 'null') {
+                $('.txtCustomer').addClass('errorClass')
+            }
+
+            if ($(".txtDeliverDate").val() < $(".txtDate").val()) {
+                $('.txtDeliverDate').addClass('errorClass')
+                funNotification('تاريخ التسليم اقل من التاريخ الحالي', 3)
+            }
+        }
+    }
+    // Save Locations
+    function funSaveOrderLocation(pOrderId) {
+        // Get Doc Id
+        var OrderLocId = $('.txtAddress').attr('data-id');
+        var ADDRESS = $('.txtAddress').val();
+        var NOTES = $('.txtNotes').val();
+
+        // Is Posted
+        var CUST_SEQ = $('#selectSite').val();
+        // Save Head
+        $.post('/ResOrder/funSaveOrderLocation',
+            {
+                // Head Parameters
+                pOrderLocId: OrderLocId,
+                pOrderId: pOrderId,
+                pCUST_LOC_SEQ: CUST_SEQ,
+                pADDRESS: ADDRESS,
+                pNOTES: NOTES,
+                pIsDeleted: false,
+                pQueryTypeId: '100'
+            },
+            function (data, status) {
+            })
+    }
+
+
+
+    FillSite(null)
+    function FillSite(pCustomerId) {
+        $('#selectSite').html('')
+        // List GetSite
+        $.get('/api/APISite/SiteGet',
+            {
+                pCustomerId: pCustomerId
+
+            },
+            function (data, status) {
+                if (data != '') {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Site)
+                    {
+                        $('#selectSite').append('<option data-id="' + Site.SiteId + '" value="' + Site.SiteId + '" sort-id="' + i + '">' + Site.SiteNameL1 + '</option>')
+                    }
+                    )
+                    // Refresh Select Picker
+                    $('.selSite').selectpicker('refresh');
+                }
+            })
+
+    }
+</script>
+<script>
+
+    // Open Voucher Tag Modal
+    $('body').on('keyup dblclick', '.txtMealCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+       //----------------------NEW Load List
+       var SHEEP = vTableRow.find('.SHEEP_REMAINDER');
+       SHEEP.html('');
+       SHEEP.append('<option data-id="" value="" sort-id="" class="selected" >-</option>')
+        $.each(vLookupData, function (i, SHEEP_REMAINDER) {
+            if (SHEEP_REMAINDER.LookupId === 111) {
+                SHEEP.append('<option data-id="' + SHEEP_REMAINDER.LookupDtlId + '" value="' + SHEEP_REMAINDER.LookupDtlId + '" sort-id="' + i + '">' + SHEEP_REMAINDER.LookupDtlDesc + '</option>')
+            }
+        })
+
+        var CUST = vTableRow.find('.CUST_SHEEP');
+        CUST.html('');
+        $.each(vLookupData, function (i, CUST_SHEEP) {
+            if (CUST_SHEEP.LookupId === 136) {
+                CUST.append('<option data-id="' + CUST_SHEEP.LookupDtlId + '" value="' + CUST_SHEEP.LookupDtlId + '" sort-id="' + i + '">' + CUST_SHEEP.LookupDtlDesc + '</option>')
+            }
+        })
+        var SLICING = vTableRow.find('.SLICING_TYPE');
+        SLICING.html('');
+        $.each(vLookupData, function (i, SLICING_TYPE) {
+            if (SLICING_TYPE.LookupId === 107) {
+                SLICING.append('<option data-id="' + SLICING_TYPE.LookupDtlId + '" value="' + SLICING_TYPE.LookupDtlId + '" sort-id="' + i + '">' + SLICING_TYPE.LookupDtlDesc + '</option>')}
+        })
+      var CUST=vTableRow.find('.CUST_PLATE');
+        CUST.html('')
+        $.each(vLookupData, function (i, CUST_PLATE) {
+            if (CUST_PLATE.LookupId === 2) {
+                CUST.append('<option data-id="' + CUST_PLATE.LookupDtlId + '" value="' + CUST_PLATE.LookupDtlId + '" sort-id="' + i + '">' + CUST_PLATE.LookupDtlDesc + '</option>')
+            }
+        })
+
+            // ---------------------- END OF LOAD LIST
+
+
+
+            // Search Account
+            var vURL = '/ResItem/MealSearch';
+
+
+            // Load Content of Account Search
+            $('#ItemDataModalContent').load(vURL);
+            // Modal Show
+            $('#ItemDataModal').modal('show');
+            // Focus
+            $('#ItemDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divContentSelect', function () {
+                    // Get Values
+                    var vContentId = $(this).attr('data-id');
+                    var vType = $(this).closest('tr').attr('data-type');
+                    var Grpid = $(this).closest('tr').attr('data-type');
+                    var vContentNameValue = $(this).find('.divContentName').text();
+                    var vContentCodeValue = $(this).find('.divContentCode').text();
+                    var UnitId = $(this).find('.divUnitId').text();
+                    var vContentPriceValue = $(this).find('.divPrice').text();
+                    var vContentCategeoryValue = $(this).find('.divCategory').text();
+                    // Get GLVoucherMeal Data
+                    var vMealIdElement = vTableRow.find('.txtMealId');
+                    var vMealNameElement = vTableRow.find('.txtMealName');
+                    var vMealCodeElement = vTableRow.find('.txtMealCode');
+                    var vMealPriceElement = vTableRow.find('.txtPrice');
+                    var vMealInsElement = vTableRow.find('.txtIns');
+                    var vMealVatElement = vTableRow.find('.txtVat');
+                    var vQty = vTableRow.find('.txtQty');
+                    var vTotal = vTableRow.find('.txtTotal');
+                    // Set Value
+                    vMealIdElement.val(vContentId);
+                    vMealNameElement.val(vContentNameValue);
+                    vMealCodeElement.val(vContentCodeValue);
+                    vMealCodeElement.attr('data-type', vType);
+                    vMealCodeElement.attr('grpid', Grpid);
+                    vMealCodeElement.attr('unitid', UnitId);
+                    vMealPriceElement.val(vContentPriceValue);
+                    vMealInsElement.val(0.00);
+                    vMealVatElement.val(0.00);
+                    vQty.val(1);
+                    vTotal.val(vMealPriceElement.val() * vQty.val());
+
+                    if (vMealCodeElement.attr('data-type') !=@CategoryInsurance) {
+                        vMealVatElement.val(((vMealPriceElement.val() * vQty.val()) - ((vMealPriceElement.val() * vQty.val()) / 1.15)).toFixed(2));
+
+                    }
+
+                if (vMealCodeElement.attr('grpid') !='@SheepCat' && vMealCodeElement.attr('grpid') !='@SheepOutRes')
+                {
+
+                    vTableRow.find('.SLICING_TYPE').prop("disabled", true);
+                        vTableRow.find('.SLICING_TYPE').html('');
+                        vTableRow.find('.SLICING_TYPE').append('<option data-id="" value="" sort-id="" class="selected" >-</option>')
+
+                         vTableRow.find('.CUST_PLATE').prop("disabled", true);
+                        vTableRow.find('.CUST_PLATE').html('');
+                        vTableRow.find('.CUST_PLATE').append('<option data-id="" value="" sort-id="" class="selected" >-</option>')
+
+                        vTableRow.find('.CUST_SHEEP').prop("disabled", true);
+                        vTableRow.find('.CUST_SHEEP').html('');
+                        vTableRow.find('.CUST_SHEEP').append('<option data-id="" value="" sort-id="" class="selected" >-</option>')
+
+
+                        vTableRow.find('.SHEEP_REMAINDER').prop("disabled", true);
+                        vTableRow.find('.SHEEP_REMAINDER').html('');
+                        vTableRow.find('.SHEEP_REMAINDER').append('<option data-id="" value="" sort-id="" class="selected" >-</option>')
+
+                    }
+
+
+                let sum = 0;
+                    let rent = 0;
+                $('.txtTotal').each(function () {
+                    if ($(this).closest('tr').find('.txtMealCode').attr('data-type') == @CategoryInsurance)
+                        rent += $(this).val() * 1;
+                    else
+                        sum += $(this).val() * 1;
+                });
+            $('.txtTotalOrder').val(sum.toFixed(2));
+        let sumVat = 0;
+        $('.txtVat').each(function () {
+            sumVat += $(this).val() * 1;
+        });
+                    $('#totalVat').val(sumVat.toFixed(2));
+
+                    if (vMealCodeElement.attr('data-type')==@CategoryInsurance)  {
+             let Ins = 0;
+
+                        $('.txtTotalIns').val(rent);
+                    }
+       $('.txtTotalReq').val(($('.txtTotalOrder').val() * 1 + $('.txtTotalIns').val() * 1 - $('.txtTotalDiscount').val() * 1).toFixed(2));
+
+        $('#future-sum').val(($('.txtTotalReq').eq(0).val()*1).toFixed(2));
+        $('.txtPayCash').val(0);
+        $('.txtPayNet').val(0);
+
+
+
+                    // Modal Show
+                    $('#ItemDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+    funAddItemRow()
+    /*    $('body').on('change', '.txtMealCode', function (e) {
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+            // Get  Data
+            var vMealIdElement = vTableRow.find('.txtMealId');
+            var vMealNameElement = vTableRow.find('.txtMealName');
+            var vMealCodeElement = vTableRow.find('.txtMealCode');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+          $.get('/api/APIInvItem/InvItemGET',
+                {
+                    pItemType: 3,
+                    pInvItemCode: vCode,
+                pQueryTypeId: '400',
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vMealIdElement.val('');
+                        vMealNameElement.val('');
+                        vMealCodeElement.val('');
+                          // funNotification('appResource.msgRequiredCorrectData', 2);
+                    } else {
+                        funAddItemRow();
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Content) {
+                            // Set Value
+                            vMealIdElement.val(Content.InvItemId);
+                            vMealNameElement.val(Content.InvItemNameL1);
+                        });
+                    }
+              });
+        })*/
+
+    //tag
+     // Open Voucher Tag Modal
+    $('body').on('keyup dblclick', '.txtTagCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            var CatgeoryId = vTableRow.find('.txtMealCode').attr('data-type')
+            // Search tag
+            var vURL = '/ResOrder/TagSearch?CategoryId='+ CatgeoryId
+            // Load Content of tag Search
+            $('#tagDataModalContent').load(vURL);
+            // Modal Show
+            $('#tagDataModal').modal('show');
+            // Focus
+            $('#tagDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select tag
+                $('body').on('click', '.divTagSelect', function () {
+                    // Get Values
+                    var vTagId = $(this).attr('data-id');
+                    var vTagNameValue = $(this).find('.divTagName').text();
+                    var vTagCodeValue = $(this).find('.divTagCode').text();
+                    var vTagIdValue = $(this).find('.divTagId').text();
+                    // Get GLVoucherTag Data
+                    var vTagIdElement = vTableRow.find('.txtTagId');
+                    var vTagNameElement = vTableRow.find('.txtTagName');
+                    var vTagCodeElement = vTableRow.find('.txtTagCode');
+                    // Set Value
+                    vTagIdElement.val(vTagIdValue);
+                    vTagNameElement.val(vTagNameValue);
+                    vTagCodeElement.val(vTagCodeValue);
+                    // Modal Show
+                    $('#tagDataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+
+    $('body').on('change', '.txtTagCode', function (e) {
+        // Table Row - Closest Row
+        vTableRow = $(this).closest('tr');
+            // Get  Data
+            var vTagIdElement = vTableRow.find('.txtTagId');
+            var vTagNameElement = vTableRow.find('.txtTagName');
+            var vTagCodeElement = vTableRow.find('.txtTagCode');
+
+        var vCode = $(this).val();
+              // List GetCostCenter
+        $.get('/api/APILookup/LookupGET',
+            {
+                pIsDetail: true,
+                pLookupId: 125,
+                pdORD: vCode,
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vTagIdElement.val('');
+                        vTagNameElement.val('');
+                        vTagCodeElement.val('');
+                        funNotification('يجب اختيار بيان  صحيح', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Tag) {
+                            // Set Value
+                            vTagIdElement.val(Tag.LookupDtlId);
+                            vTagCodeElement.val(Tag.ORD);
+                            vTagNameElement.val(Tag.LookupDtlDesc);
+                        });
+                    }
+                });
+    })
+
+    function funConfigTable(pData) {
+        var SELECTEDSHEEP = ''
+        var CUSTPLATE = ''
+        var CUSTSHEEP = ''
+        var SLICINGTYPE = ''
+        var SHEEP = '<div><select id="SHEEP_REMAINDER" class="SHEEP_REMAINDER form-control index" value="'+pData.SHEEP_REMAINDER +'" name="SHEEP_REMAINDER" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required>'+
+        '<option data-id="" value="" sort-id="" class="selected" >-</option>'
+        $.each(vLookupData, function (i, SHEEP_REMAINDER) {
+            if (SHEEP_REMAINDER.LookupId === 111) {
+                if (SHEEP_REMAINDER.LookupDtlId === pData.SHEEP_REMAINDER) {
+                    SELECTEDSHEEP = 'selected'
+
+                }
+                SHEEP += '<option ' + SELECTEDSHEEP +'  data-id="' + SHEEP_REMAINDER.LookupDtlId + '" value="' + SHEEP_REMAINDER.LookupDtlId + '" sort-id="' + i + '">' + SHEEP_REMAINDER.LookupDtlDesc + '</option>'
+                SELECTEDSHEEP = ''
+            }
+        })
+        SHEEP += '</select><div>'
+
+
+
+        var CUST_PLATE =
+'<select id="CUST_PLATE" class="CUST_PLATE form-control index" value="'+ pData.CUST_PLATE +'" name="CUST_PLATE" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required>'  +
+            '<option data-id="" sort-id="" class="selected" >-</option>'
+        $.each(vLookupData, function (i, CUST_SHEEP) {
+            if (CUST_SHEEP.LookupId === 136) {
+                if (CUST_SHEEP.LookupDtlId === pData.CUST_PLATE){
+                    CUSTPLATE = 'selected'
+
+                }
+                CUST_PLATE += '<option ' + CUSTPLATE + ' data-id="' + CUST_SHEEP.LookupDtlId + '" value="' + CUST_SHEEP.LookupDtlId + '" sort-id="' + i + '">' + CUST_SHEEP.LookupDtlDesc + '</option>'
+                CUSTPLATE=''
+            }
+        })
+        CUST_PLATE += '</select>';
+
+
+        var SLICING = '<select id="SLICING_TYPE" class="SLICING_TYPE form-control index" value="' + pData.SLICING_TYPE +'" name="SLICING_TYPE" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required>' +
+        '<option data-id=""  sort-id="" class="selected" >-</option>'
+        $.each(vLookupData, function (i, SLICING_TYPE) {
+            if (SLICING_TYPE.LookupId === 107) {
+                if (SLICING_TYPE.LookupDtlId === pData.SLICING_TYPE) {
+                    SLICINGTYPE = 'selected'
+
+                }
+                SLICING += '<option ' + SLICINGTYPE + ' data-id="' + SLICING_TYPE.LookupDtlId + '" value="' + SLICING_TYPE.LookupDtlId + '" sort-id="' + i + '">' + SLICING_TYPE.LookupDtlDesc + '</option>'
+                SLICINGTYPE = ''
+            }
+
+        })
+        SLICING += '</select>';
+
+
+        var CUST = '<select id="CUST_SHEEP" class="CUST_SHEEP form-control index" value="'+ pData.CUST_SHEEP +'" name="CUST_SHEEP" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required>' +
+            '<option data-id="" value="" sort-id="" class="selected" >-</option>'
+        $.each(vLookupData, function (i, CUST_SHEEP) {
+            if (CUST_SHEEP.LookupId === 2) {
+                if (CUST_SHEEP.LookupDtlId === pData.CUST_SHEEP) {
+                    CUSTSHEEP = 'selected'
+                }
+                CUST += '<option '+ CUSTSHEEP +' data-id="' + CUST_SHEEP.LookupDtlId + '" value="' + CUST_SHEEP.LookupDtlId + '" sort-id="' + i + '">' + CUST_SHEEP.LookupDtlDesc + '</option>'
+                CUSTSHEEP=''
+                }
+            })
+
+
+        CUST += '</select>'
+
+
+        var DataRow =
+            '<tr class="tblOrderRow " data-id="' + pData.OrderDTLID +'" value="'+pData.OrderDTLID+'" >' +
+            '<td class="">' +
+            '<button class="btn btn-light btn-sm border btnAddRow" type="submit">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            ' </button>' +
+            '</td>' +
+            '<td class="d-flex">' +
+            '<div class="col-sm-4 p-0">' +
+            '<input class="form-control  text-center   txtMealItemId d-none" type="text" value="' + pData.InvItemId+'" required />' +
+            '<input class="form-control  text-center   d-none txtMealId" type="text" value="' + pData.InvItemId + '" required />' +
+            '<input class="form-control  text-center   txtMealCode index" type="text" value="' + pData.InvItemCode + '" unitid='+ pData.TYP +' required />' +
+            '</div>' +
+            ' <div class="col-sm-8 p-0">' +
+            ' <input class="form-control  text-center   txtMealName" type="text" value="' + pData.InvItemNameL1 +'" required disabled />' +
+            ' </div>' +
+            '</td>' +
+            '<td class="d-none">' +
+            '<div class="d-flex txtTag d-none">' +
+            ' <div class="col-sm-3 p-0">' +
+            '<input class="form-control  text-center   txtTagId d-none" value="' + pData.TAG+'" type="text" required id="txtTagIddtl" />' +
+            '<input class="form-control  text-center  txtTagCode" type="text" value="' + pData.TAG +'" required id="txtTagCodedtl" readonly />' +
+            '</div>' +
+            ' <div class="col-sm-9 p-0">' +
+            '<input class="form-control  text-center  txtTagName" type="text" value="' + pData.TagName +'" required disabled id="txtTagNamedtl" />' +
+            ' </div>' +
+            '</div>' +
+            ' </td>' +
+            '<td class="">' +
+            '<input class="form-control  text-center  txtQty index" value="' + pData.QTY +'" type="text" required />' +
+            ' </td>' +
+            '<td class="">' +
+            '<input class="form-control  text-center  txtPrice" value="' + pData.PRICE +'" type="text" required  />' +
+            '</td>' +
+            '<td class="d-none">' +
+            '<input class="form-control  text-center  txtIns d-none" value="' + pData.PRICE_INSUR +'" type="text" required  disabled/>' +
+            ' </td>' +
+
+            '<td class="">' +
+            '<input class="form-control  text-center  txtVat" value="'+ pData.VAT_PRICE +'" type="text" required disabled />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control  text-center  txtTotal" value="' + pData.QTY * pData.PRICE +'" type="text" required disabled />' +
+            '</td>' +
+            '<td class="d-none">' +
+            CUST_PLATE+
+            '</td>' +
+            '<td class="d-none">' +
+            SLICING+
+            '</td>' +
+            '<td class="d-none">' +
+            CUST+
+
+            '</td>' +
+            '<td class="d-none"><div>' +
+            SHEEP+
+            '</div></td>' +
+            '<td class="d-none">' +
+            '<input class="form-control  text-center  txtPlates index d-none" value="' + pData.QTY_PLATE +'" type="text" required />' +
+            '</td>' +
+            '<td class="">' +
+            '<input class="form-control  text-center  txtOrderNotes index" value="' + pData.NOTES +'" type="text" required />' +
+            '</td>' +
+            '<td><button class="btn btn-light btn-sm btnContentDelete" data-id="' + pData.OrderDTLID +'"><i class="fa fa-trash"></i></button></td>'
+            '</tr >';
+       // funLoadSelectList()
+        return DataRow;
+    }
+
+    // Add Item Row
+    function funAddItemRow(pCurrentRow) {
+        var RowContent = {
+            NOTES: '',
+            QTY_PLATE:'',
+            SHEEP_REMAINDER: '',
+            CUST_SHEEP: '',
+            SLICING_TYPE: '',
+            VAT_PRICE: '',
+            PRICE: '',
+            'OrderDTLID': '0',
+            InvItemId: '',
+            InvItemCode: '',
+            InvItemNameL1: '',
+            TAG: '',
+            TagName: '',
+            PRICE_INSUR: '',
+            QTY: '',
+        };
+        var vRowContent = funConfigTable(RowContent)
+
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+      //  funLoadSelectList()
+
+    }
+
+
+
+    function funAddItemRow() {
+
+
+            // Closest Row
+            var vRow = $('.tblOrderRow')[0];
+            // Cloned Row
+            var vRowCloned = $(vRow).clone();
+            // Clear
+            vRowCloned.find(':input').val('');
+
+            vRowCloned.closest('tr').attr('data-id', '0')
+            // Append
+            $('.tblOrderBody').append(vRowCloned);
+
+       funLoadSelectList()
+    }
+    function funAddItemRow() {
+
+        var RowContent = {
+            OrderDTLID: 0,
+            NOTES: '',
+            QTY_PLATE: '',
+            VAT_PRICE: '',
+            PRICE: '',
+
+            InvItemId: '',
+            InvItemCode: '',
+            InvItemNameL1: '',
+            TAG: '',
+            TagName: '',
+            PRICE_INSUR: '',
+            QTY: '1',
+        };
+
+        var vRowContent = funConfigTable(RowContent)
+        // Add Row After Current Row
+        $('.tblOrderBody').append(vRowContent);
+
+     //   funLoadSelectList($(".tblOrderRow"))
+    }
+    $('body').on('click', '.btnAddRow', function () {
+        var vRow = $(this).closest('tr')
+
+        // Add New Row
+        funAddItemRow(vRow)
+       // funLoadSelectList()
+
+    })
+    let custPlates = [];
+    let custsheep= [];
+    let slicingTypes= [];
+    let sheepRemainders= [];
+
+
+
+
+
+    function funSaveDtl(OrderId) {
+        let resOrderDtls = [];
+
+        $(".tblOrderRow").each(function () {
+            // Row Data
+            var vRowData = $(this);
+            if (vRowData.find('.txtMealId').val() != '' && vRowData.find('.txtQty').val()!='')
+                resOrderDtls.push({
+                    OrderDTLID: vRowData.attr('data-id'),
+                    ORDER_LOC_SEQ: vRowData.find('.ORDER_LOC_SEQ').val(),
+                    ITEM_UNIT_SEQ: vRowData.find('.txtMealId').val(),
+                    TAG: vRowData.find('.txtTagId').val(),
+                    QTY: vRowData.find('.txtQty').val(),
+                    PRICE: vRowData.find('.txtPrice').val(),
+                    NOTES: vRowData.find('.txtOrderNotes').val(),
+                    SLICING_TYPE: vRowData.find('#SLICING_TYPE').val(),
+                    SHEEP_REMAINDER: vRowData.find('#SHEEP_REMAINDER').val(),
+                    CUST_SHEEP: vRowData.find('#CUST_SHEEP').val(),
+                    CUST_PLATE: vRowData.find('#CUST_PLATE').val(),
+                    // TYP: vRowData.find('.TYP').val(),
+                    TYP: vRowData.find('.txtMealCode').attr('unitid'),
+                    PRICE_INSUR: vRowData.find('.txtIns').val(),
+                    QTY_PLATE: vRowData.find('.txtPlates').val(),
+                   // DISC_AMT: $('.txtDiscount').val(),
+                    VAT_PRICE: vRowData.find('.txtVat').val(),
+                    VAT_TOTAL: vRowData.find('.txtVat').val(),
+                });
+        });
+        $.ajax({
+            url: '/resorder/InsertResOrderDtlBulk',
+            method: 'POST', contentType: 'application/json',
+            data: JSON.stringify({
+                resOrderDtls,
+                orderId: OrderId
+            }),
+              beforeSend: function(){
+         $('#loading').show();
+             },
+         complete: function(){
+         $('#loading').hide();
+            },
+            success: function (r) {
+               // Clear();
+                window.open('/ResOrder/POSOrderReport/' + OrderId);
+            }
+        });
+
+
+
+
+    }
+
+    // Modal Search
+    $('.btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/ResOrder/OrderSearch';
+        // Load Content of CostCenter Search
+        $('#AccountDataModalContent').load(vURL);
+        // Modal Full
+        $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#AccountDataModal').modal('show');
+    })
+</script>
+<!--Search Select Next Prev-->
+<script>
+    GetPeriod($('.txtDeliverTime').val())
+    var vDataSearch;
+    var vCount = 0;
+
+    // PRINT
+    $('body').on('click', '.btnSelect', function () {
+
+
+        var count = $("input[name='chkIsValid']:checked").length;
+        if (count == 0) {
+            return false;
+        }
+        else {
+            // Selected Permissions
+            var vSelected = '';
+
+            vIsSearch = 1;
+
+            // Check If All True Or False
+            $('table > tbody > tr ').each(function () {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Check
+                if (vSelectedChk) {
+                    // Get Id
+                    var vGlVoucherId = vElement.attr('data-id');
+                    // Add Selected Action
+                    vSelected += vGlVoucherId + ',';
+                    vCount += $(this).length
+
+                }
+            });
+
+            // close The Modal
+            $('#AccountDataModal').modal('hide');
+            // Get Data From Gl Voucher After Select
+            $.get('/api/APIResOrder/ResOrderGet',
+                {
+                    // Head Parameters
+                    phNumbers: vSelected,
+                    //pdInvId:1,
+                    //phIsDeleted: false,
+                    // Query Type Id
+                    pQueryTypeId: '400'
+                },
+                function (data, status) {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    vDataSearch = vDataResult
+                    displayData(vDataSearch[0])
+                })
+
+        }
+    });
+    //Next-Previous-First-Last
+    var index = 0;
+    $('#btnNext').click(function () {
+        if (index <= vDataSearch.length) {
+            // Call Function Display Data
+            displayData(vDataSearch[++index]);
+
+            $('.txtCount').text(index)
+        }
+    });
+    $('#btnPrev').click(function () {
+        if (index > 0) {
+            // Call Function Display Data
+            displayData(vDataSearch[--index])
+            $('.txtCount').text(index)
+        }
+    });
+    $('#btnFirst').click(function () {
+        $('.txtCount').text(1)
+        displayData(vDataSearch[0])
+    });
+    $('#btnLast').click(function () {
+        $('.txtCount').text(vDataSearch.length)
+        displayData(vDataSearch[vDataSearch.length - 1])
+    });
+    // Get Data
+    function displayData(pData) {
+
+
+        var vGlVoucherDataResult = pData
+
+        var vData = pData;
+
+        // For Each DocDetail  - Main
+        if (vData) {
+            if (vData != undefined && vData != '') {
+
+            }
+
+            if (pData.tblResOrderDtl) {
+                $('.tblOrderBody').html('')
+
+                for (var i = 0; i <= pData.tblResOrderDtl.length - 1; i++) {
+
+                    vCurrentRowIndex = i;
+
+
+
+                    // GET Cash Desk Row Content
+                    var vContent = funConfigTable(vGlVoucherDataResult.tblResOrderDtl[i]);
+
+                    // Append Row Content
+                    $('.tblOrderBody').append(vContent);
+                    //$('#CUST_PLATE').selectpicker("refresh")
+                    //$('.CUST_PLATE').last().val(vGlVoucherDataResult.tblResOrderDtl[i].CUST_PLATE).trigger('change')
+                    //$('.SLICING_TYPE').last().val(vGlVoucherDataResult.tblResOrderDtl[i].SLICING_TYPE).trigger('change')
+                    //$('.CUST_SHEEP').last().val(vGlVoucherDataResult.tblResOrderDtl[i].CUST_SHEEP).trigger('change')
+                    //$('.SHEEP_REMAINDER').last().val(vGlVoucherDataResult.tblResOrderDtl[i].SHEEP_REMAINDER).trigger('change')
+
+                    $('.SLICING_TYPE').val(vGlVoucherDataResult.tblResOrderDtl[i].SLICING_TYPE)
+                }
+            }
+            //funLoadSelectList()
+            // Fill Head
+            LoadMaster(pData)
+        }
+
+    }
+    function LoadMaster(pData) {
+        console.log(pData)
+        $('.txtOrderId').val(pData.OrderId);
+        $('.txtOrderStatues').val(pData.ORDER_STATUS_Name);
+        $('.txtOrderStatues').attr('data-id', pData.ORDER_STATUS);
+        $('.txtCustomerCode').val(pData.CustomerId);
+        $('.txtCustomerCode').attr('data-id', pData.CustomerId);
+        $('.txtCustomerName').val(pData.CustomerNameL1);
+        $('.txtCustomerCode').attr('data-phone', pData.ORDER_PHONE_NO)
+        $('.txtTotalOrder').val(pData.TotalOrder)
+        $('.txtTotalReq').val(pData.PRICE_CAT)
+        $('.txtPayCash').val(pData.PAY_CASH)
+        $('.txtPayCheck').val(pData.PAY_CHECK)
+        $('.txtCredit').val(pData.CREDIT)
+        $('.txtNote').val(pData.NOTES);
+        $('.clsUser').val(pData.CashierName)
+        $('.txtOrderDate').val(pData.ORDER_DATE);
+        $('.txtDeliverDate').val(pData.DELIVERY_DATE);
+        $('.txtDeliverTime').val(pData.DELIVERY_Time);
+        GetPeriod(pData.DELIVERY_Time)
+        //$('#selectSite').val(pData.CUST_LOC_SEQ)
+        //$('#selectSite').selectpicker('refresh')
+        $('.txtAddress').val(pData.ADDRESS);
+        $('#chkDelivery').prop('checked', pData.DELIVERY)
+        $('.txtDiscount').val(pData.DISCOUNT);
+        $('.txtTotalDiscount').val(pData.DISCOUNT)
+
+        // $('#PeriodType').val(pData.PERIOD_TYPE);
+        // $('#PeriodType').selectpicker('refresh');
+
+        // funLoadSelectList()
+    }
+
+
+</script>
+<!--Delete-->
+<script>
+     //New Delete
+    $('body').on('click', '.btnContentDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vDataId = $(this).closest('tr').attr('data-id');
+        var vDataName = $(this).closest('tr').attr('data-id');
+
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIRESOrderDtl/ResOrderDtlGET';
+                        // Delete
+                        $.get(vDeleteActionURL, { pOrderDtlId: vDataId, pIsDeleted: true, pQueryTypeId: '300' }, function (data) {
+
+                            vElement.closest('tr').remove();
+
+
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblOrderBody').find('tr').attr('data-id')
+
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    //funAddDTLEmptyRow($('.tblItemBody'))
+                                    funAddItemRow()
+                            }
+
+
+                                // Notification
+                                funNotification('@appResource.msgDelete', 1);
+
+                            ChangeTotal();
+
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+
+
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblOrderBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                      //  funAddDTLEmptyRow($('.tblDtlBody'))
+                        funAddItemRow()
+                    }
+                    ChangeTotal();
+
+
+                }
+            });
+    }); // End of Click Event [Delete Button]
+
+    //New Delete
+    $('body').on('click', '.btnDeleteHead', function () {
+        var OrderId = $(".txtOrderId").val();
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: OrderId,
+                pName: OrderId,
+            },
+            // Function
+            function (data, status) {
+                // Modal
+                $('#confirmDeleteModalContent').html(data);
+                $('#confirmDeleteModal').modal('show');
+                $("body").on("click", "#btnDeleteConfirm", function () {
+                    // Delete Action URL
+                    var vDeleteActionURL = '/api/APIRESOrder/ResOrderGET';
+                    // Delete
+                    $.get(vDeleteActionURL, { pOrderId: OrderId, pIsDeleted: true, pQueryTypeId: '300' }, function (data) {
+                        Clear()
+                        var Jsondata = JSON.parse(data);
+                        // Notification
+                        funNotification(Jsondata[0].msg, 2);
+
+                    });
+                })
+
+            }); // End of Click Event [Delete Button]
+    });
+
+    function ChangeTotal() {
+
+                          let sum = 0;
+                    let rent = 0;
+                $('.txtTotal').each(function () {
+                    if ($(this).closest('tr').find('.txtMealCode').attr('data-type') == @CategoryInsurance)
+                        rent += $(this).val() * 1;
+                    else
+                        sum += $(this).val() * 1;
+                });
+
+            let Ins = 0;
+            $('.txtMealCode[data-type=@CategoryInsurance]').each(function () {
+                Ins += parseFloat($(this).closest('tr').find('.txtTotal').val());
+            });
+
+       $('.txtTotalIns').val(Ins);
+            $('.txtTotalOrder').val(sum.toFixed(2));
+        let sumVat = 0;
+        $('.txtVat').each(function () {
+            sumVat += $(this).val() * 1;
+        });
+                    $('#totalVat').val(sumVat.toFixed(2));
+
+
+        $('.txtTotalReq').val(($('.txtTotalOrder').val() * 1 + $('.txtTotalIns').val() * 1 - $('.txtTotalDiscount').val() * 1).toFixed(2));
+
+        $('#future-sum').val(($('.txtTotalReq').eq(0).val()*1).toFixed(2));
+        $('.txtPayCash').val(0);
+        $('.txtPayNet').val(0);
+    }
+
+    $(document).on('change', '.txtPrice, .txtQty', function () {
+        let price = $(this).closest('tr').find('.txtPrice').val();
+        let qty = $(this).closest('tr').find('.txtQty').val();
+        let CatgeoryId = $(this).closest('tr').find('.txtMealCode').attr('data-type');
+        $(this).closest('tr').find('.txtTotal').val(price * qty).trigger('change');
+        if (CatgeoryId != @CategoryInsurance) {
+            $(this).closest('tr').find('.txtVat').val(((price * qty) - ((price * qty) / 1.15)).toFixed(2)).trigger('change');
+        }
+    });
+    $(document).on('change', '.txtTotal', function () {
+        let sum = 0;
+        let rent = 0;
+        $('.txtTotal').each(function () {
+            if ($(this).closest('tr').find('.txtMealCode').attr('data-type') == @CategoryInsurance)
+                rent += $(this).val() * 1;
+            else
+                sum += $(this).val() * 1;
+        });
+
+        $('.txtTotalOrder').val(sum.toFixed(2));
+       // $('.txtTotalDiscount').val(rent.toFixed(2));
+      //  $('.txtTotalPrice').val((sum + $('#totalVat').val() * 1).toFixed(2));
+        // $('.txtTotalReq').val($('.txtTotalOrder').val());
+        //alert($('.txtTotalIns').val())
+        $('.txtTotalReq').val(($('.txtTotalOrder').val() * 1 + $('.txtTotalIns').val() * 1 - $('.txtTotalDiscount').val() * 1).toFixed(2));
+
+        $('#future-sum').val(($('.txtTotalReq').eq(0).val() * 1).toFixed(2));
+        $('.txtPayCash').val(0);
+        $('.txtPayNet').val(0);
+    });
+
+    $(document).on('change', '.txtVat,.txtQty', function () {
+        let sum = 0;
+        $('.txtVat').each(function () {
+            sum += $(this).val() * 1;
+        });
+        $('#totalVat').val(sum.toFixed(2));
+        let CatgeoryId = $(this).closest('tr').find('.txtMealCode').attr('data-type');
+
+             if (CatgeoryId === '@CategoryInsurance') {
+             let Ins = 0;
+            $('.txtMealCode[data-type=@CategoryInsurance]').each(function () {
+                Ins += parseFloat( $(this).closest('tr').find('.txtTotal').val());
+        });
+       $('.txtTotalIns').val(Ins);
+        }
+        $('.txtTotalReq').val(($('.txtTotalOrder').val() * 1 + $('.txtTotalIns').val() * 1 - $('.txtTotalDiscount').val() * 1).toFixed(2));
+        $('#future-sum').val(($('.txtTotalReq').eq(0).val()*1).toFixed(2));
+        $('.txtPayCash').val(0);
+        $('.txtPayNet').val(0);
+
+
+
+    });
+
+    $(document).on('change', '.txtIns', function () {
+        let sum = 0;
+        $('.txtIns').each(function () {
+            sum += $(this).val() * 1;
+        });
+        $('.txtTotalIns').val(sum.toFixed(2));
+        $('.txtTotalReq').val(( $('.txtTotalIns').val() * 1 - $('.txtTotalDiscount').val() * 1).toFixed(2));
+        $('#future-sum').val(($('.txtTotalReq').eq(0).val() * 1).toFixed(2));
+        $('.txtPayCash').val(0);
+        $('.txtPayNet').val(0);
+    });
+
+    $('.txtPayCash').on('change', function () {
+        let total = $('.txtTotalReq').eq(0).val();
+        let credit= $('.txtPayNet').eq(0).val();
+        let cash = $(this).val();
+        $('#future-sum').val((total - cash - credit).toFixed(2));
+    });
+
+    $('.txtPayNet').on('change', function () {
+        let total=$('.txtTotalReq').eq(0).val();
+        let cash= $('.txtPayCash').eq(0).val();
+        let credit = $(this).val();
+        $('#future-sum').val((total - cash - credit).toFixed(2));
+    });
+
+    $(document).on('click', '.btnPrint', function () {
+        if (vDataSearch) {
+            if (vDataSearch[index]) {
+                //window.open('/ResOrder/POSOrderReport/' + vDataSearch[index].OrderId);
+                window.open('/ResOrder/POSOrderHtmlReport/' + vDataSearch[index].OrderId);
+            }
+        }
+    })
+
+
+
+    // Next Index
+    $('body').on('keydown','.index',function (e) {
+        if (e.which === 13) {
+            var index = $('.index').index(this) + 1;
+            $('.index').eq(index).focus();
+        }
+    });
+
+    $('.txtDiscount').on('change blur', function () {
+        $('.txtTotalDiscount').val($('.txtDiscount').val());
+        ChangeTotal();
+    });
+
+    //Open Modal Customer
+    $('.btnCustomer').on('click', function (e) {
+        // Search Account
+        var vURL = '/ResOrder/AddCustomer';
+        $('#AccountDataModalContent').html('');
+        // Load Content of Account Search
+        $('#AccountDataModalContent').load(vURL);
+        // Modal Full
+        $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#AccountDataModal').modal('show');
+
+        // Focus
+        $('#AccountDataModal').on('shown.bs.modal', function () {
+            $('.txtSearch').focus();
+
+        })
+    })
+
+
+
+        $('.txtDeliverTime').change(function () {
+            var Value = $(this).val();
+       GetPeriod(Value)
+    })
+
+
+   // funLoadSelectList();
+        // Load Select List
+    function funLoadSelectList() {
+
+
+        //$.each(vLookupData, function (i, PeriodType) {
+        //    if (PeriodType.LookupId === 112) {
+        //        $('#PeriodType').append('<option  val1="' + PeriodType.Value1 + '" val2="' + PeriodType.Value2 + '"  data-id="' + PeriodType.LookupDtlId + '" value="' + PeriodType.LookupDtlId + '" sort-id="' + i + '">' + PeriodType.LookupDtlDesc + '</option>')
+        //    }
+        //    })
+
+
+        var SHEEP = $('.SHEEP_REMAINDER');
+        SHEEP.html('');
+       SHEEP.append('<option data-id="" value="" sort-id="" class="selected" >-</option>')
+        $.each(vLookupData, function (i, SHEEP_REMAINDER) {
+            if (SHEEP_REMAINDER.LookupId === 111) {
+                SHEEP.append('<option data-id="' + SHEEP_REMAINDER.LookupDtlId + '" value="' + SHEEP_REMAINDER.LookupDtlId + '" sort-id="' + i + '">' + SHEEP_REMAINDER.LookupDtlDesc + '</option>')
+            }
+        })
+
+        var CUST = $('.CUST_SHEEP');
+        CUST.html('');
+        $.each(vLookupData, function (i, CUST_SHEEP) {
+            if (CUST_SHEEP.LookupId === 136) {
+                CUST.append('<option data-id="' + CUST_SHEEP.LookupDtlId + '" value="' + CUST_SHEEP.LookupDtlId + '" sort-id="' + i + '">' + CUST_SHEEP.LookupDtlDesc + '</option>')
+            }
+
+        })
+
+
+        var SLICING = $('.SLICING_TYPE');
+        SLICING.html('');
+        $.each(vLookupData, function (i, SLICING_TYPE) {
+            if (SLICING_TYPE.LookupId === 107) {
+                SLICING.append('<option data-id="' + SLICING_TYPE.LookupDtlId + '" value="' + SLICING_TYPE.LookupDtlId + '" sort-id="' + i + '">' + SLICING_TYPE.LookupDtlDesc + '</option>')
+            }
+
+        })
+      var CUST= $('.CUST_PLATE');
+        CUST.html('')
+        $.each(vLookupData, function (i, CUST_PLATE) {
+            if (CUST_PLATE.LookupId === 2) {
+                CUST.append('<option data-id="' + CUST_PLATE.LookupDtlId + '" value="' + CUST_PLATE.LookupDtlId + '" sort-id="' + i + '">' + CUST_PLATE.LookupDtlDesc + '</option>')
+            }
+
+        })
+        SetValueSelectList()
+    }
+    function SetValueSelectList() {
+        // Select List Value From DataBase
+        $('table > tbody > tr > td > select').each(function () {
+            var vSelectValue = $(this).attr('value')
+
+            for (i = 0; i < $(this).children().length; i++) {
+                var vOptionValue = $(this).children()[i].value
+                if (vOptionValue == vSelectValue) {
+                    $(this).children()[i].selected = true
+                }}}) }
+      // Bulk Save
+      function funSaveInvoiceDtl(InvId) {
+                let InvoiceDtls = [];
+                  $(".tblOrderRow").each(function () {
+                // Row Data
+                var vRowData = $(this);
+                if (vRowData.find('.txtMealId').val() != '')
+                    InvoiceDtls.push({
+                     ItemUnitId: vRowData.find('.txtMealId').val(),
+                        Price: vRowData.find('.txtPrice').val(),
+                        Qty: vRowData.find('.txtQty').val(),
+                        ItemType: 1,
+                       /// ItemType: ItemType,
+                        VatTotal: vRowData.find('.txtVat').val(),
+                });
+        });
+        $.ajax({
+            url: '/Invoice/InsertInvoiceDtlBulk',
+            method: 'POST', contentType: 'application/json',
+            data: JSON.stringify({
+                InvoiceDtls,
+                InvId: InvId,
+                UserId: '@UserId',
+                BranchId:'@BranchId'
+            }),
+            success: function (r) {
+            }
+        });
+    }
+    $('.btnUtility').on('click', function () {
+      //  Clear()
+    })
+      function Clear() {
+            $(':input')
+                .not(':button, :submit, :reset, :hidden ,.txtOrderDate,.txtDeliverDate,.txtDeliverTime,.txtDeliverDate,#PeriodType,#CUST_PLATE,#SLICING_TYPE ,#CUST_SHEEP,#SHEEP_REMAINDER ')
+                .val('')
+                .removeAttr('checked')
+                .removeAttr('selected');
+            $('.tblItemBody').html('');
+            $('.txtVouchTotal').text('0.00')
+            $('.txtVouchPrice').text('0.00')
+            $('.txtVouchVat').text('0.00')
+            $('.clsPoint').text('0')
+            $('.clsPoint').attr('data-id', '0')
+            $('.CustomerId').val('');
+            $('.tblOrderBody').html('');
+            funAddItemRow();
+    }
+    $('.btnInvPosted').on('click', function () {
+        if (!$('.txtOrderId').val()) { funNotification('لا يوجد طلب لعملية اصدار الفاتورة', 3) }
+        else {
+            funSaveInvoiceDtl();
+        }
+    });
+        // Bulk Save
+    function funSaveInvoiceDtl() {
+        var UserId = $('.divUserId').text();
+        var ADDRESS = $('.txtAddress').val();
+        var OrderId = $('.txtOrderId').val();
+        var NOTES = $('.txtNote').val();
+        var TotalReq = $('.txtTotalReq').val();
+        var vat = TotalReq-(TotalReq / 1.15)
+        // Is Posted
+        var CUST_SEQ = $('.txtCustomerCode').val()
+        var CUST_Name = $('.txtCustomerName').val();
+        var PhoneNumber = $('.txtCustomerCode').attr('data-phone')
+            //$('.phonenumber').val();
+        var DELIVERY = $('#chkDelivery').prop("checked");
+        var Delivery = $('#DriverId').val();
+        var DeliveryDate ='@ORderTime';
+            //$('.txtDeliverDate').val();
+        let InvoiceDtls = [];
+        $(".tblOrderRow").each(function () {
+            // Row Data
+            var vRowData = $(this);
+            if (vRowData.find('.txtMealId').val() != '')
+                InvoiceDtls.push({
+
+                    ItemId: vRowData.find('.txtMealId').val(),
+                    Price: vRowData.find('.txtPrice').val(),
+                    ItemQty: vRowData.find('.txtQty').val(),
+                    ItemType: vRowData.find('.txtMealId').attr('Item-Type'),
+                    /// ItemType: ItemType,
+                    VatTotal: vRowData.find('.txtVat').val(),
+                });
+        });
+        $.ajax({
+            url: '/Invoice/InsertMovementBulk',
+            method: 'POST', contentType: 'application/json',
+            data: JSON.stringify({
+                InvoiceDtls,
+                InvId: 0,
+                InvStatus:1,
+                InvDate: DeliveryDate,
+                Notes: NOTES,
+                CashDeskId: '@CashierId',
+                UserId: '@UserId',
+                BranchId:'@BranchId',
+                InvPhoneNo: PhoneNumber,
+                CustomerName: CUST_Name,
+                InvCurValue: TotalReq,
+                Delivery: Delivery,
+                Tax:vat,
+                InvIsCancel:false,
+                InvMachine: '@Environment.MachineName',
+                DeliveryInvoice: DELIVERY,
+                LocAddressInvoice: ADDRESS,
+                CustomerId: CUST_SEQ,
+                OrderId: OrderId,
+                //Discount: $('.txtDiscount').val()
+            }),
+              beforeSend: function(){
+         $('#loading').show();
+             },
+         complete: function(){
+         $('#loading').hide();
+            },
+            success: function (r) {
+                var m = JSON.parse(r);
+                   $.each(m, function (i, a) {
+                       funNotification(a.msg, a.c)
+                       if (a.c === 1) {
+                           window.open('/ResOrder/POSOrderReport/' + OrderId);
+                       }
+                                        })
+               // $('.selected').remove();
+                $('.tblCustomerOrderBody').load('/ResOrder/OrderData');
+            }
+        });
+    }
+</script>

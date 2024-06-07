@@ -1,0 +1,196 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblSearchLookupBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <div>رقم النوع<input type="text" class="form-control txtCode text-center" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                النوع عربي
+                                <input type="text" class="form-control txtNameL1 text-center" />
+                            </div>
+                            <div class="col-sm-6">
+                                النوع انجليزي
+                                <input type="text" class="form-control txtNameL2 text-center" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+                              
+                            </div>
+                            <div class="col-sm-6">
+                           
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+                   
+                    </div>
+                    <div class=" col-sm-1">
+                    
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer text-muted">
+                <button type="button" class="btn btn-secondary btnSearch">@appResource.btnSearch</button>
+
+            </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblSearchLookup">
+            <thead>
+                <tr>
+                    <th class=" " data-checked="false">
+                        <input type="checkbox" class="btnCheckAll">
+                        تحديد الكل
+                    </th>
+                    <th>الرقم </th>
+                    <th>النوع - عربي</th>
+                    <th>النوع انجليزي</th>
+                </tr>
+            </thead>
+
+            <tbody class="tblSearchLookupBody"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    //function Append
+    function funSearchLookupRowConfig(pLookupRow) {
+        // Content
+        var RowContent = '<tr data-id="' + pLookupRow.TypeId + '" data-lookupid="' + pLookupRow.LookupId +'">' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pLookupRow.TypeId + '" data-lookupid="' + pLookupRow.LookupId+'"/></td> ' +
+            '<td>' + pLookupRow.TypeId + '</td>' +
+            '<td>' + pLookupRow.LookupDescL1 + '</td>' +
+            '<td>' + pLookupRow.LookupDescL2 + '</td>' 
+            +'</tr > '
+        return RowContent
+    }
+    function funGetLookupData(pLookupCode, pLookupDesc, pLookupDescL) {
+        var vDataResult;
+        $.get('/api/APILookup/LookupGet',
+            {
+                // search Parameters
+                pLookupId: pLookupCode,
+                pLookupDescL1: pLookupDesc,
+                pLookupDescL2: pLookupDescL,
+                phIsDeleted: false,
+                // Query Type Id
+                pQueryTypeId: '402',
+                //pItemTypeId: pItemTypeId,
+            },
+            function (data, status) {
+
+                // JSON Parse
+                vDataResult = JSON.parse(data);
+                $('.tblSearchLookupBody').html('');
+                $.each(vDataResult, function (m, LookupData) {
+                    // GET Cash Desk Row Content
+
+                    var vAccountRowContent = funSearchLookupRowConfig(vDataResult[m]);
+
+                    // Append Row Content
+                    $('.tblSearchLookupBody').append(vAccountRowContent);
+                });
+
+            })
+
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearch').on('click', function () {
+        var vCode;
+        var NameL1;
+        var Namel2;
+        if ($('.txtCode').val().trim() != '') {
+            vCode = $('.txtCode').val();
+        }
+        if ($('.txtNameL1').val().trim() != '') {
+            NameL1 = $('.txtNameL1').val();
+        }
+        if ($('.txtNameL2').val().trim() != '') {
+            Namel2 = $('.txtNameL2').val();
+        }
+
+        //console.log(Group)
+        //console.log(CatAccount)
+        //console.log(Store)
+        // Get Row
+        funGetLookupData(vCode, NameL1, Namel2)
+    })
+    // Actione Load
+    $(document).ready(function () {
+        //var vItemTypeId = $('.txtItemType').val();
+        //// Get Row
+        //funGetLookupData(null, null, null, null, null, null, null, vItemTypeId)
+    });
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+</script>

@@ -1,0 +1,328 @@
+﻿@{
+    Layout = null;
+    //"~/Views/Shared/appLayout/_POSLayout.cshtml";
+}
+<style>
+
+    .propertyMapContainer {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .gm-style .gm-style-iw {
+        font-family: Cairo !important;
+    }
+
+    .map-responsive {
+        overflow: hidden;
+        padding-bottom: 30%;
+    }
+
+    .pac-container {
+        z-index: 100000 !important;
+    }
+</style>
+
+<input class="btn blueBgColor badge btn-sm text-white btnMapDirection d-none" id="btnMapDirection" value="المسافة">
+<input type="text" class="form-control clsMap pac-container" id="pac-input"><input type="button" class="btn btn-info" id="SearchId" value="بحث">
+
+
+<div class="  ">
+
+
+    <!-- Property Map Container -->
+    <div class="propertyMapContainer border bg-white">
+        <!-- Map -->
+        <div id="map" class="map-responsive"></div>
+    </div>
+
+
+</div>
+
+@{ double vLat = 31.205753;}
+@{ double vLng = 29.924526;}
+
+
+<!-- Hide Image From Contact Agent Form -->
+<script>
+    $('.propertyImage').hide();
+</script>
+
+<!-- Hide Show Map -->
+<script>
+    $('.propertyMap').on('click', function () {
+
+        // Show Hide
+        $('.propertyMapContainer').fadeToggle();
+
+    });
+</script>
+
+
+
+@*<!-- Map Scripts -->
+<!-- Import Scripts -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAs0A2KxExYBGE6-KUsfd_LYTbjCPGH4KA&libraries=places&language=ar&region=EG"></script>
+
+<!--Moveing Marker-->
+<script src="~/Scripts/AnimateMarker/jquery.easing.1.3.js"></script>
+<script src="~/Scripts/AnimateMarker/markerAnimate.js"></script>
+<script src="~/Scripts/AnimateMarker/SlidingMarker.js"></script>*@
+<script>
+    // Focus
+    $('#MapDataModal').on('shown.bs.modal', function () {
+        $('.txtSearch').focus();
+
+  
+
+    // Variables
+    var vMap;
+    var vCurrentLocationLongLat;
+    var vCurrentInfoWindow;
+   // PlaceInfo Window
+    var vPlaceInfoWindow;
+    var vImage = URL;
+    // Place Type
+    var arrPlaceType = [];
+
+
+        // PlaceInfo Window
+        vPlaceInfoWindow = new google.maps.InfoWindow();
+        // Current Position
+        var vCurrentLocationLongLat = { lat: @vLat, lng: @vLng };
+
+        // Map Style
+        var vMapStyle = [
+            {
+                featureType: "poi",
+                elementType: "labels",
+                stylers: [
+                    { visibility: "off" }
+                ]
+            }
+        ];
+        // Map Otions
+        var vMapOtions = {
+            zoom: 16,
+            center: vCurrentLocationLongLat,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: vMapStyle
+        };
+
+        // Map [Depend on Current Position]
+        vMap = new google.maps.Map(document.getElementById('map'),
+            vMapOtions);
+
+        var trafficLayer = new google.maps.TrafficLayer();
+        trafficLayer.setMap(vMap);
+
+        var input = document.getElementById("pac-input");
+        var button = document.getElementById("SearchId");
+      //  var Distance = document.getElementById("btnMapDirection");
+
+        // Search Box
+        var searchBox = new google.maps.places.SearchBox(input);
+
+        //Push Control On The Map
+   // vMap.controls[google.maps.ControlPosition.TOP_CENTER].push(Distance);
+        vMap.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+        vMap.controls[google.maps.ControlPosition.TOP_CENTER].push(button);
+
+
+        document.getElementById("SearchId").onclick = function () {
+            google.maps.event.trigger(input, "focus")
+            google.maps.event.trigger(input, "keydown", { keyCode: 13 })
+        }
+
+        // Array Of Marker
+    var Markers = [];
+
+        searchBox.addListener('places_changed', function () {
+            var Places = searchBox.getPlaces();
+            if (Places.length == null) {
+                return;
+            }
+
+            Markers.forEach(function (marker) {
+                marker.setMap(null);
+            })
+
+            Markers = [];
+
+            // For Each Place Get Name Locatione
+            var bounds = new google.maps.LatLngBounds();
+            // Debugger
+            Places.forEach(function (place) {
+                console.log(place)
+                if (!place.geometry) {
+                    console.log("not Contain Geometer")
+                    return;
+                }
+
+                var icon = {
+                    url: place.icon,
+                    size: new  google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0), // origin
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25), // scaled size
+                };
+
+                console.log(place.geometry.location.lat())
+                // Marker
+                Markers.push(new google.maps.Marker({
+                    map: vMap,
+                    position: place.geometry.location,
+                    icon: icon,
+                    title: place.name
+                }));
+                var vPlaceRating = place.rating;
+                if (vPlaceRating == undefined) {
+                    vPlaceRating = '';
+                }
+
+                // Marker
+                var vPlaceMarker = new google.maps.Marker({
+                    map: vMap,
+                    position: place.geometry.location,
+                    icon: icon
+                });
+
+                // Add Event [Click To Show Info Window]
+                google.maps.event.addListener(vPlaceMarker, 'click', function () {
+                    // Content
+                    vPlaceInfoWindow.setContent(
+                        '<div style=text-align:right>' +
+                        '<img src=' + place.icon + '  width=20 />' +
+                        '<h6 style=margin-top:10px>' + place.name + '</h6>' + place.formatted_address +
+                        //'<h6>' + vPlaceRating + '</h6>' +
+                        '</div>'
+                    )
+                    // Show Window
+                    vPlaceInfoWindow.open(vMap, this);
+                });
+
+
+                if (place.geometry.viewport) {
+
+                    bounds.union(place.geometry.viewport)
+                } else { bounds.extend(place.geometry.viewport) }
+
+
+            vMap.fitBounds(bounds)
+            })
+        });
+
+    google.maps.event.addListener(vMap, 'click', function (event) {
+        var location = event.latLng
+        localStorage.setItem('location', location)
+        codeLatLng(location.lat(), location.lng())
+        PlaceMarker(event.latLng, 'title')
+    });
+
+
+
+    var marker;
+    var Loc;
+    function PlaceMarker(Location, title) {
+
+
+        if (marker != null) {
+            marker.setPosition(Location)
+        }
+        else {
+            marker = new SlidingMarker({
+                position: Location,
+                map: vMap,
+                title: title,
+                labelContent: "Label",
+                optimized: false
+            });
+            marker.setDuration(1000);
+            marker.setEasing("linear");
+        }
+
+        google.maps.event.addListener(marker, 'click', function (event) {
+            var location = event.latLng
+            codeLatLng(location.lat(), location.lng())
+            // Content
+            //vPlaceInfoWindow.setContent(
+            //    '<div style=text-align:right>' +
+            //    '<h6 style=margin-top:10px>' + Title + '</h6>' +
+            //    '</div>'
+            //)
+            //// Show Window
+            //vPlaceInfoWindow.open(vMap, marker);
+        });
+
+        Loc = Location;
+    }
+
+      // Map Direction
+    $('.btnMapDirection').on('click', function () {
+        // fun Map Direction
+        funMapDirection();
+    })
+
+    // Map Direction
+    function funMapDirection() {
+
+        var vLat = Loc.lat();
+        var vLng = Loc.lng();
+        // Direction
+        var directionsDisplay;
+        var directionsService = new google.maps.DirectionsService();
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        directionsDisplay.setMap(vMap);
+
+        var request = {
+            origin: { lat: @vLat, lng: @vLng },
+            destination: { lat: vLat, lng: vLng},
+            travelMode: google.maps.TravelMode.DRIVING
+        };
+        directionsService.route(request, function (result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+
+                directionsDisplay.setDirections(result);
+            }
+        });
+
+    }
+
+
+    var Title;
+    var Address;
+    var city;
+    //Function To Get Title And Address
+    function codeLatLng(lat, lng) {
+        var latlng = new google.maps.LatLng(lat, lng);
+        console.log(latlng)
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                console.log(results)
+                //if (results[1]) {
+                    //formatted address
+                    Title = results[0].formatted_address
+                    //find country name
+                vPlaceInfoWindow.setContent(
+                '<div style=text-align:right>' +
+                '<h6 style=margin-top:10px>' + Title + '</h6>' +
+                '</div>'
+                    )
+                 var Name  = results[3].formatted_address
+                    // Show Window
+                    vPlaceInfoWindow.open(vMap, marker);
+                    // Change customer Data
+                    CustomerLocation(Title, lat, lng, Name)
+            
+
+        });
+    }
+    function CustomerLocation(pAddress, lat, lng, Name) {
+        $('.Address').val(pAddress);
+        $('.Address').attr('lat', lat);
+        $('.Address').attr('lng', lng);
+        $('.Address').attr('Name', Name);
+    }
+    })
+</script>
+

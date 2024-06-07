@@ -1,0 +1,281 @@
+﻿@using System.Data;
+@{
+    Layout = null;
+    DataTable InvData = ViewBag.Data;
+    DataRow RowData = InvData.Rows[0];
+    DateTime InvDate = Convert.ToDateTime(RowData["InvDate"]);
+    string InvCode = RowData["InvCode"].ToString();
+    string CustomerName = RowData["CustomerName"].ToString();
+    string CashierName = RowData["UserFullName"].ToString();
+  //  string CustomerPhone = RowData["InvPhoneNo"].ToString();
+    string DeliveryInvoice = RowData["DeliveryInvoice"].ToString();
+    double Total = 0;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+    <style>
+        .NoteBox {
+            border: 1px solid black;
+            width: 100px !important;
+            height: 100px !important;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        #logo {
+            font-size: 0;
+            line-height: 0;
+            position: absolute;
+            top: 40px;
+            left: 25%;
+            display: block;
+            width: 140px;
+            height: 80px;
+            padding: 0;
+            -webkit-transform: translate(0, -50%);
+            -ms-transform: translate(0, -50%);
+            transform: translate(0, -50%);
+            cursor: pointer;
+            color: #000000;
+            border: none;
+            outline: none;
+            background: #000000;
+        }
+
+        #qr {
+            font-size: 0;
+            line-height: 0;
+            top: 75%;
+            left: 25%;
+            display: block;
+            width: 152px;
+            height: 152px;
+            padding: 0;
+            cursor: pointer;
+            color: #000000;
+            border: none;
+            outline: none;
+            background: #000000;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+        .tblitem, th, td {
+            border-top: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .table, .td {
+            border-top: 0px !important;
+            border-collapse: collapse;
+        }
+
+        .center {
+            margin: auto;
+            width: 60%;
+            padding: 10px;
+        }
+
+        .box {
+            /* border: 3px solid black;*/
+            width: 70%;
+            height: 30px !important;
+            text-align: center;
+            margin: auto;
+        }
+
+        p span {
+            display: block;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        div span {
+            display: block;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .divleft {
+            width: 55%;
+            display: inline-block;
+            float: right;
+        }
+
+        .divRight {
+            width: 45%;
+            display: inline-block;
+        }
+
+        .divleft20 {
+            width: 30%;
+            display: inline-block;
+            float: right;
+        }
+
+        .divRight80 {
+            width: 70%;
+            display: inline-block;
+            float: right;
+        }
+
+        hr.line {
+            border: 1px solid black;
+        }
+
+        @@import url('../../fonts/appFont/Dubai.ttf');
+
+        @@font-face {
+            font-family: 'Dubai';
+            src: url('../../fonts/appFont/Dubai.ttf') format('truetype');
+        }
+    </style>
+
+</head>
+<body style="font-family:Dubai;line-height: 90%;">
+    <div>
+
+        <div style="padding-bottom:4px;margin-left:70px">
+            <div class="divRight">
+                <img  id="logo" src="~/Image/Walema.jpg" />
+                <!-- <img src="~/Image/pandalos.jpeg" />-->
+            </div>
+        </div>
+        <div style="margin-top:55px">
+            <span style="">
+            </span>
+          
+
+        </div>
+
+
+        <div class="divRight80">
+
+
+        </div>
+        <div class="" style="font-weight: bold;font-size:25px;line-height:30px">
+            <span style=" font-weight: bold;font-size:20px;padding-right:5px;line-height:25px">
+
+               
+            </span>
+
+        </div>
+        <div class="">
+            <span style=" font-weight: bold;font-size:20px;padding-right:5px;line-height:25px">
+
+                @DeliveryInvoice
+            </span>
+        </div>
+      
+        <div>
+            <span>
+                <label>تمت الطباعة في </label>
+                <label>:</label>
+                <label>@InvDate</label>
+            </span>
+        </div>
+        <hr class="line" />
+        
+    </div>
+    <div>
+        <div class="divleft" dir="rtl">
+            <span>
+                <label>رقم الفاتورة</label>
+                <label>:</label>
+                <label dir="rtl">
+                    @InvCode
+                </label>
+            </span>
+
+
+        
+        </div>
+        <div class="divRight">
+            <span>
+                <label>المستخدم</label>
+                <label>:</label>
+                <label>@CashierName </label>
+            </span>
+        </div>
+        <br />
+ 
+        @if (CustomerName != "")
+        {
+            <div class="divleft">
+
+                <span>
+
+                    <label>عميل</label>
+                    <label>:</label>
+                    <label>@CustomerName</label>
+                </span>
+            </div>
+        }
+       
+        <br />
+        
+
+        
+        </div>
+    <hr class="line" />
+
+    <table class="tblitem" dir="rtl" style="line-height:20px;font-size:13px;margin-right:15px;width:100%">
+        <thead>
+            <tr>
+                <th width="30%">الكمية</th>
+                <th>الصنف</th>
+                <th>السعر</th>
+                <th style="padding-right:5px">الاجمالي </th>
+            </tr>
+        </thead>
+        @foreach (DataRow item in InvData.Rows)
+        {
+            <tr >
+                <td style="text-align: center; vertical-align: middle;padding-right:20px;">@item["Qty"]</td>
+                <td style="text-align: center; vertical-align: middle;;font-weight:bold">
+                    @item["InvItemName"]
+                    <br />
+                    @*@item["ItemAdd"]*@
+                </td>
+                <td style="text-align: center; vertical-align: middle;">@item["Price"]</td>
+                <td style="text-align: center;">@(Convert.ToDecimal(item["Qty"])* Convert.ToDecimal(item["Price"]))</td>
+            </tr>
+            Total = Total + Convert.ToDouble((Convert.ToDecimal(item["Qty"]) * Convert.ToDecimal(item["Price"])));
+        }
+    </table>
+    <hr class="line" />
+ 
+    <div class="divLeft20">
+        <table class="table" dir="rtl" style="line-height:20px;font-size:13px">
+            <tr class="tr">
+                
+            </tr>
+         
+            <tr>
+
+               
+            </tr>
+            <tr style="border-top:1px solid">
+                <td class="td">الاجمالي</td>
+                <td class="td">@Total<td>
+            </tr>
+        </table>
+    </div>
+
+    <hr class="line">
+  </body>
+</html>
+<script>
+
+        window.print();
+    
+
+
+      /* $.get('/POS/PrintKHtml', function () {
+        })*/
+</script>

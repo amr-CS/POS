@@ -1,0 +1,278 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+@{ int vStudentCount = 10;
+
+    if (vStudentCount == 0)
+    {
+        vStudentCount = 1;
+    }
+}
+
+<!-- DashBard Cards -->
+@{ double vAttendanceCount = 5;}
+@{ double vLateCount = 5;}
+@{ double vAbsentCount = 6;}
+@{ double vPermissionCount = 6;}
+@{ double vAttendancePercent = 8;}
+@{ double vLatePercent = 9;}
+@{ double vAbsentPercent = 10;}
+@{ double vPermissionPercent = 11;}
+
+
+<!-- Comapred to Yesterday -->
+@{ double vAttendanceCountY = 10;}
+@{ double vLateCountY = 2;}
+@{ double vAbsentCountY = 4;}
+@{ double vPermissionCountY = 54;}
+@{ double vAttendancePercentY = 45;}
+@{ double vLatePercentY = 45;}
+@{ double vAbsentPercentY = 45;}
+@{ double vPermissionPercentY = 45;
+    string New = "NEW"; }
+
+
+
+
+
+
+<!-- Data -->
+<div class="header bg-gradient-primary pb-8 pt-md-8 mt-1" id="divStat">
+   
+        <div class="header-body">
+            <!-- Card stats -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">المبيعات</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor Sales"></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-white h3 text-success rounded-circle">
+                                                <img src="~/Image/Icons/Details.png"  width="20"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-success mr-2">1</span>
+                                        <span class="text-success mr-2"></span>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0"> الضريبة</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor Tax"></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-white h3  text-warning rounded-circle">
+                                                <img src="~/Image/Icons/accounts.png" width="20"  />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-danger mr-2"></span>
+                                        <span class="text-danger mr-2">2</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0"> التأمين</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">0</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-danger rounded-circle">
+                                                <img src="~/Image/Icons/Assets.png" width="20" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-warning mr-2"></span>
+                                        <span class="text-warning mr-2">3</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0"> الـتأجير</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">0</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-danger rounded-circle">
+                                                   <img src="~/Image/Icons/Assets.png" width="20" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-warning mr-2"></span>
+                                        <span class="text-warning mr-2"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col" style="width:100px">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">المصروفات</h5>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor ">0</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-success rounded-circle">
+                                                <img src="~/Image/Icons/Assets.png" width="20" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-success mr-2"></span>
+                                        <span class="text-success mr-2">@vAttendancePercentY%</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col" style="width:100px">
+                                            <h5 class="card-title ">مردودات التأمين</h5>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">0</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-success rounded-circle">
+                                                <img src="~/Image/Icons/Assets.png" width="20" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-success mr-2"></span>
+                                        <span class="text-success mr-2">5</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col" style="width:100px">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">الفواتير</h5>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor"></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-danger rounded-circle">
+                                                <img src="~/Image/Icons/Assets.png" width="20" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-success mr-2"></span>
+                                        <span class="text-success mr-2">@vAbsentPercentY%</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">العملاء</h5>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">6</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-success mr-2"></span>
+                                        <span class="text-success mr-2">0</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+   
+</div>
+
+
+
+<script>
+    //Get DashBoard Data
+    $.get('/api/APIDashBoard/DashBoardGet', function (data) {
+        var DataResult = JSON.parse(data)
+        funDashBoard(DataResult[0])
+    })
+    // Fill Data DashBoard
+    function funDashBoard(pData) {
+        console.log(pData.Sales)
+        console.log(pData.Tax)
+        $('.Sales').text((pData.Sales).toFixed(2))
+        $('.Tax').text((pData.Tax).toFixed(2))
+    }
+
+
+    // Prev Day Click
+    $('.btnPrevDay').on('click', function () {
+        // Show / Hide Previous Day
+        $('.divPrevDay').slideToggle();
+    });
+
+    // Stage Click
+    $('.btnStageSTAT').on('click', function () {
+        // Show / Hide Stage Click
+        $('.divStageSTAT').slideToggle();
+    })
+
+</script>

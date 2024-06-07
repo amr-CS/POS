@@ -1,0 +1,255 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    Layout = null;
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblCashDeskBodySearch {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="w-100 bg-white border font-weight-bold p-4">الصناديق</div>
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>@appResource._Code<input type="text" class="form-control txtCode" /></div>
+                    </div>
+
+                    @*<div class="col-sm-4">
+                        <div class="row">
+                            الاسم عربي
+                            <input type="text" class="form-control txtCashDeskNameL1" />
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            الاسم انجليزي
+                            <input type="text" class="form-control txtCashDeskNameL2" />
+                        </div>
+                    </div>*@
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                الاسم عربي
+                                <input type="text" class="form-control txtCashDeskNameL1" />
+                            </div>
+                            <div class="col-md-6">
+                                الاسم انجليزي
+                                <input type="text" class="form-control txtCashDeskNameL2" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                النوع
+                                <select id="selectType" multiple class="selectType form-control" name="CashDeskType" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-6">
+                            
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+        
+                        @*النوع
+                        <select id="selectType" multiple class="selectType form-control" name="CashDeskType" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>*@
+           
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearch btnSearchh">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblCashDeskSearch">
+            <thead>
+                <tr>
+                    <th class="btnCheckAll" data-checked="false">
+                        تحديد الكل
+                        <input type="checkbox" class="btnCheckAll">
+                    </th>
+                    <th>الكود</th>
+                    <th>الاسم - عربي </th>
+                    <th>الاسم - انجليزي </th>
+                    <th>النوع </th>
+
+
+                </tr>
+            </thead>
+
+            <tbody class="tblCashDeskBodySearch"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+<script>
+    // Actione Load
+    $(document).ready(function () {
+
+        $('#selectType').append('<option data-id="" value="" sort-id="">-</option>');
+        //// Get Row
+        //funGetVehicles();
+        funGetLists();
+    });
+    function funGetLists() {
+        var vSelectListType = '';
+        vSelectListType += '<option sort-id="1" data-id="1" value="1">رئيسى</option >';
+        vSelectListType += '<option sort-id="2" data-id="2" value="2">فرعي</option >';
+
+        $('#selectType').append(vSelectListType);
+        $('#selectType').selectpicker('refresh');
+
+    }
+
+
+    $('.btnSearchh').on('click', function () {
+
+
+        var vCashDeskCode = null;
+        var vCashDeskNameL1 = null;
+        var vCashDeskNameL2 = null;
+        var vType = null;
+
+
+        if ($('.txtCode').val() != '') {
+            vCashDeskCode = $('.txtCode').val();
+
+        }
+        if ($('.txtCashDeskNameL1').val() != '') {
+            vCashDeskNameL1 = $('.txtCashDeskNameL1').val();
+
+        }
+        if ($('.txtCashDeskNameL2').val() != '') {
+            vCashDeskNameL2 = $('.txtCashDeskNameL2').val();
+
+        }
+        if ($('#selectType').prop('selectedIndex') > 0) {
+            vType = $('#selectType').val()
+        }
+        else {
+            vType = null
+        }
+
+        funGetCashDesksBySearch(vCashDeskCode, vCashDeskNameL1, vCashDeskNameL2, vType)
+
+    })
+    function funGetCashDesksBySearch(pCashDeskCode, pCashDeskNameL1, pCashDeskNameL2, pType) {
+        var vLstType = [];
+
+
+
+
+
+        if (pType == null) {
+
+
+        }
+        else if (pType.indexOf(',')) {
+            for (i = 0; i < pType.length; i++) {
+                vLstType.push(pType[i]);
+            }
+            pType = vLstType.toString();
+
+        }
+        else {
+
+        }
+        $.post('/CashDesk/FilterCashDesks',
+            {
+                pCashDeskCode: pCashDeskCode,
+                pCashDeskNameL1: pCashDeskNameL1,
+                pCashDeskNameL2: pCashDeskNameL2,
+                pType: pType
+            }
+            , function (data, status) {
+                $('.tblCashDeskBodySearch').html('');
+                if (data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, CashDeskData) {
+                        // GET Cash Desk Row Content
+
+                        var vCashDeskRowContent = funFilterCashDeskRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblCashDeskBodySearch').append(vCashDeskRowContent);
+                    });
+
+
+
+                }
+            })
+
+    }
+    // Cash Desk Row Config
+    function funFilterCashDeskRowConfig(pCashDeskDataResult) {
+
+        // Checked
+     
+
+        // Row Content
+        var vRowContent = '<tr data-changed = "0" class="tblRow" data-id="' + pCashDeskDataResult.CashDeskId + '">' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pCashDeskDataResult.CashDeskId + '"/></td> ' +
+            '<td  class = ".CashDeskCode">' + pCashDeskDataResult.CashDeskCode + '</td>' +
+            '<td class = ".CashDeskNameL1">' + pCashDeskDataResult.CashDeskNameL1 +'</td>' +
+            '<td class = ".CashDeskNameL2">' + pCashDeskDataResult.CashDeskNameL2 + '</td>' +
+            '<td class = ".CashDeskType" data-id= ' + pCashDeskDataResult.CashDeskTypeId+'>' + pCashDeskDataResult.CashDeskTypeNameL1 +'</td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+
+        }
+    })
+
+</script>
+

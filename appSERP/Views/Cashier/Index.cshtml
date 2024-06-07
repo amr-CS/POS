@@ -1,0 +1,4122 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewBag.Title = "انشاء الكاشيرات";
+}
+<style>
+    body {
+        font-family: Cairo;
+        background-color: #FFF;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[disabled] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+
+    .divUnitPrice {
+        max-height: 18vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .divCashBox, .divChkStat {
+        background-color: #eef1f5;
+        padding: 5px;
+        border: 1px solid #d4d4d4;
+        border-radius: 3px;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+
+    .cardHeader {
+        background-color: #D3EDFF;
+    }
+
+    .divHead {
+        max-height: 29vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .clsPerm {
+        max-height: 200px;
+        height: 200px;
+        overflow-y: scroll;
+    }
+
+    .clsSelected {
+        background-color: #d4d4d4 !important;
+    }
+
+    .clsGroupSelected {
+        background-color: #d4d4d4 !important;
+    }
+</style>
+
+<!-- Head -->
+<div class="">
+    <div class="bg-white border rounded ">
+        <div class="w-100">
+
+            <div class="d-flex justify-content-end">
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Save -->
+                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Copy -->
+                    <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                    <!-- Paste -->
+                    <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Print -->
+                    <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                    <!-- Sort Desc -->
+                    <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnUtility btnAdd" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                    <!-- Edit -->
+                    <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- PDF -->
+                    <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <!-- Excel -->
+                    <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                    <!-- Word -->
+                    <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Close -->
+                    <button class="btn btnUtility btnDelete" title="@appResource.btnDelete"><i class="fa fa-close"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Full Screen -->
+                    <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <div class="dropdown">
+                        <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-table"></i>
+                        </button>
+                        <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Title -->
+<div class="bg-white border rounded p-2  text">انشاء كاشيرات</div>
+<div class="bg-white  rounded m-3">
+    <div class="row pt-1">
+        <div class="col-sm-2">
+            <label>اسم المستخدم </label>
+        </div>
+        <div class="col-sm-5">
+            <div class="d-flex ">
+                <div class="col-sm-4 p-0">
+                    <input class="form-control form-control-sm text-center txtUserGroupCode" data-id="0" type="text" min=0 required />
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control form-control-sm text-center txtUserGroupName" type="text" required disabled />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pt-3 pb-3 border">
+
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-4">
+
+                </div>
+                <div class="col-sm-3">مجموعة الصلاحيات </div>
+
+            </div>
+            <div class="border clsPerm">
+                <div class="list-group clsGroup">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="btn-group " role="group" style="padding-top:100px !important" aria-label="First group">
+                <!-- Next -->
+                <button class="btn btnAddGroup" id=""><i class="fa  fa-angle-left"></i></button>
+                <!-- Prev -->
+                <button class="btn btnAddAllGroup" id=""><i class="fa  fa-angle-double-left "></i></button>
+                <!-- Prev -->
+                <button class="btn btnRemoveAllGroup" id=""><i class="fa  fa-angle-double-right "></i></button>
+                <!-- Next -->
+                <button class="btn btnRemoveGroup" id=""><i class="fa  fa-angle-right"></i></button>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-4">
+
+                </div>
+                <div class="col-sm-6">الصلاحيات الممنوحة للمستخدم </div>
+
+            </div>
+            <div class="border clsPerm">
+                <div class="list-group clsUserGroup">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="row ">
+                <div class="col-sm-4">
+
+                </div>
+                <div class="col-sm-8">المستخدمين تحت المجموعة المحددة </div>
+
+            </div>
+            <div class="border clsPerm ">
+                <div class="list-group clsUserSpecificGroup">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!--Content-->
+<div class=" bg-white border rounded  mt-3">
+
+    <ul class="nav nav-tabs  cardHeader" data-changed="5" id="myTab" role="tablist">
+        <li class="nav-item divCash " id="divCash">
+            <a class="nav-link    " id="Cash-tab" data-toggle="tab" href="#Cash" role="tab" aria-controls="Cash" aria-selected="true">انشاء كاشير</a>
+        </li>
+        <li class="nav-item divEmployee" id="divEmployee">
+            <a class="nav-link" id="Employee-tab" data-toggle="tab" href="#Employee" role="tab" aria-controls="Employee" aria-selected="false">انشاء موظف</a>
+        </li>
+        <li class="nav-item divUser" id="divUser">
+            <a class="nav-link" id="User-tab" data-toggle="tab" href="#User" role="tab" aria-controls="User" aria-selected="false">انشاء مستخدم</a>
+        </li>
+        <li class="nav-item divUserCashier " id="divUserCashier">
+            <a class="nav-link    " id="UserCashier-tab" data-toggle="tab" href="#UserCashier" role="tab" aria-controls="UserCashier" aria-selected="false">صلاحيات المستخدم</a>
+        </li>
+        <li class="nav-item divUserObject show active " id="divUserObject">
+            <a class="nav-link    " id="UserObject-tab" data-toggle="tab" href="#UserObject" role="tab" aria-controls="UserObject" aria-selected="false">منح الصلاحيات علي الشاشات</a>
+        </li>
+    </ul>
+
+    <div class="tab-content table-wrapper" id="myTabContent">
+        <div class="tab-pane fade  divCash  table-scroll" id="Cash" role="tabpanel" aria-labelledby="Cash-tab">
+            <a class="nav-link" id="User-tab" data-toggle="tab" href="#User" role="tab" aria-controls="User" aria-selected="false">انشاء كاشير</a>
+            <!-- Details Main -->
+            <div class="bg-white border rounded p-3  divGlVoucher">
+
+                <!-- Details -->
+                <table class="table table-sm table-responsive-sm">
+                    <thead>
+                        <tr class="tblHead">
+                            <th class=""></th>
+                            <th class="" width="5%">
+                                <div>الرقم</div>
+                            </th>
+                            <th class="" width="15%">
+                                <div> اسم الكاشير-عربي</div>
+                            </th>
+                            <th class="" width="15%">
+                                <div> اسم الكاشير-انجليزي</div>
+                            </th>
+                            <th class="" width="15%">
+                                <div>الموظف</div>
+                            </th>
+                            <th class="" width="15%">
+                                <div>جهاز الدفع الالكتروني</div>
+                            </th>
+                            <th class="" width="10%">
+                                <div>حساب النقد</div>
+                            </th>
+                            <th class="" width="10%">
+                                <div>حساب الشبكة</div>
+                            </th>
+                            <th class="" width="10%">
+                                <div>ملاحظات</div>
+                            </th>
+                            <th class="" width="5%">
+                                <div>صندوق الفرع</div>
+                            </th>
+
+
+                            <th class="" width="5%">
+                                <div>حالة الكاشير</div>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="tblCashierBody">
+                        <tr class="tblCashierRow" data-id="0" data-changed="0">
+                            <td class="">
+                                <button class="btn btn-light btn-sm border btnAddCashRow" type="submit">
+                                    <i class="fa fa-plus-circle"></i>
+                                </button>
+                            </td>
+
+                            <td class="">
+                                <input class="form-control form-control-sm text-center txtCashierCode" data-id="0" type="text" required disabled />
+                            </td>
+                            <td class="">
+                                <input class="form-control form-control-sm text-center txtCashierNameL1" type="text" required />
+                            </td>
+                            <td class="">
+                                <input class="form-control form-control-sm text-center txtCashierNameL2" type="text" required />
+                            </td>
+                            <td class="">
+                                <div class="d-flex ">
+                                    <div class="col-sm-4 p-0">
+                                        <input class="form-control form-control-sm text-center txtEmpCode" data-id="0" type="text" min=0 required />
+                                    </div>
+                                    <div class="col-sm-8 p-0">
+                                        <input class="form-control form-control-sm text-center txtEmpName" type="text" required disabled />
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="">
+                                <div class="">
+                                    <input class="form-control form-control-sm text-center  txtCredit" type="text" required />
+                                </div>
+                            </td>
+                            <td class="">
+                                <div class="">
+                                    <input class="form-control form-control-sm text-center  txtCashAcc" type="text" required />
+                                </div>
+                            </td>
+                            <td class="">
+                                <div class="">
+                                    <input class="form-control form-control-sm text-center  txtNetAcc" type="text" required />
+                                </div>
+                            </td>
+                            <td class="">
+                                <div class="">
+                                    <input class="form-control form-control-sm text-center txtNotes" type="text" required />
+                                </div>
+                            </td>
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ">
+                                    <input type="checkbox" class="custom-control-input  chkIsCashComp" id="chkIsActive" checked>
+                                    <label class="custom-control-label small" for="chkIsCashComp"></label>
+                                </div>
+                            </td>
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ">
+                                    <input type="checkbox" class="custom-control-input  chkIsActive" id="chkIsActive" checked>
+                                    <label class="custom-control-label small" for="chkIsActive"></label>
+                                </div>
+                            </td>
+
+                            <td><button class="btn btn-light btn-sm btnCashierDelete"><i class="fa fa-trash"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+        <div class="tab-pane fade divEmployee" id="Employee" role="tabpanel" aria-labelledby="Employee-tab">
+
+            <a class="nav-link" id="Employee-tab" data-toggle="tab" href="#Employee" role="tab" aria-controls="Employee" aria-selected="false">انشاء موظف</a>
+
+            <div class="container-fluid">
+                <div class="row bg-white border rounded p-3 divPrinter">
+                    <div class="col-md-6">
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الرقم</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" class="form-control " id="txtResEmployeeId" disabled data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الاسم عربي</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control " id="txtResEmployeeNameL1" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الاسم لاتيني</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control " id="txtResEmployeeNameL2" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الجنس</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="radio" id="rdMale" name="gender" value="male" checked> ذكر
+                                <input type="radio" id="rdFemale" name="gender" value="female"> انثى
+                            </div>
+                            <div class="col-2">
+                                <label>نوع البطاقة</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control w-25" id="txtIdentityTypeId" data-id="0" />
+                                    <input type="text" class="form-control w-75" id="txtIdentityTypeName" disabled data-id="0" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>رقم الهوية</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" class="form-control " id="txtIdentityNumber" data-id="0" />
+                            </div>
+                            <div class="col-2">
+                                <label>تاريخ الهوية</label>
+                            </div>
+                            <div class="col-4">
+
+                                <input type="date" class="form-control" id="txtIdentityDate" data-id="0" />
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الجنسية</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25" id="txtNationalityId" data-id="0" />
+                                    <input type="text" class="form-control  w-75" id="txtNationalityName" disabled data-id="0" />
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label>حالة الموظف</label>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25" id="txtEmpStatusId" data-id="0" />
+                                    <input type="text" class="form-control  w-75" id="txtEmpStatusName" disabled data-id="0" />
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>تاريخ الميلاد</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="date" class="form-control " id="txtBirthDate" data-id="0" />
+                            </div>
+                            <div class="col-2">
+                                <label>رقم التليفون</label>
+                            </div>
+                            <div class="col-4">
+
+                                <input type="text" class="form-control" id="txtMobile" data-id="0" />
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>العنوان</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control " id="txtAddress" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>نوع القيمة</label>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25" id="txtValueTypeId" data-id="0" />
+                                    <input type="text" class="form-control  w-75" id="txtValueTypeName" disabled data-id="0" />
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label>قيمة التوصيل</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" class="form-control" id="txtDeliveryValue" data-id="0" />
+                            </div>
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>حد الاحتساب</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" class="form-control" id="txtPercentageRange" data-id="0" />
+
+                            </div>
+                            <div class="col-2">
+                                <label>تاريخ الخروج</label>
+                            </div>
+                            <div class="col-4">
+
+                                <input type="date" class="form-control" id="txtExitDate" data-id="0" />
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>طريقة الخروج</label>
+                            </div>
+                            <div class="col-4">
+
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25" id="txtExitTypeId" data-id="0" />
+                                    <input type="text" class="form-control  w-75" id="txtExitTypeName" disabled data-id="0" />
+                                </div>
+
+                            </div>
+                            <div class="col-2">
+
+                            </div>
+                            <div class="col-4">
+
+
+
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>سبب الخروج</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control" id="txtExitReason" data-id="0" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="IdentityTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="IdentityTypeDataModalContent"></div>
+                    </div>
+                </div>
+                <div id="NationalityDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="NationalityDataModalContent"></div>
+                    </div>
+                </div>
+                <div id="EmpStatusDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="EmpStatusDataModalContent"></div>
+                    </div>
+                </div>
+                <div id="ValueTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="ValueTypeDataModalContent"></div>
+                    </div>
+                </div>
+                <div id="ExitTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="ExitTypeDataModalContent"></div>
+                    </div>
+                </div>
+                <!-- ResEmployeeData Modal -->
+                <div id="ResEmployeeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="ResEmployeeDataModalContent"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="tab-pane fade " id="User" role="tabpanel" aria-labelledby="User-tab">
+
+            <a class="nav-link" id="User-tab" data-toggle="tab" href="#User" role="tab" aria-controls="User" aria-selected="false">انشاء مستخدم</a>
+            <div class="container-fluid">
+                <div class="row bg-white border rounded p-3 ">
+                    <div class="col-md-6">
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الرقم</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" class="form-control " id="txtUserId" disabled data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الاسم بالكامل </label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control txtUserFullName" id="txtUserFullName" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>اسم المستخدم </label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" class="form-control txtUserName" id="txtUserName" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الرقم السري</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="password" class="form-control txtUserPassword" id="txtUserPassword" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>  تأكيد الرقم السري   </label>
+                            </div>
+                            <div class="col-10">
+                                <input type="password" class="form-control txtUserConfirmPassword" id="txtUserConfirmPassword" data-id="0" />
+                            </div>
+
+                        </div>
+                        <div class="row pt-1">
+                            <div class="col-2">
+                                <label>الموظف</label>
+                            </div>
+                            <div class="col-10">
+
+                                <div class="row pt-1 d-flex w-100 ml-0">
+                                    <input type="text" class="form-control  w-25 txtEmployeeCode" id="txtEmployeeCode" data-id="0" />
+                                    <input type="text" class="form-control  w-75 txtEmployeeName" id="txtEmployeeName" disabled data-id="0" />
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div id="IdentityTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="IdentityTypeDataModalContent"></div>
+                </div>
+            </div>
+            <div id="NationalityDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="NationalityDataModalContent"></div>
+                </div>
+            </div>
+            <div id="EmpStatusDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="EmpStatusDataModalContent"></div>
+                </div>
+            </div>
+            <div id="ValueTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="ValueTypeDataModalContent"></div>
+                </div>
+            </div>
+            <div id="ExitTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="ExitTypeDataModalContent"></div>
+                </div>
+            </div>
+            <!-- ResEmployeeData Modal -->
+            <div id="ResEmployeeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="ResEmployeeDataModalContent"></div>
+                </div>
+
+            </div>
+            <!-- Confirm Delete Modal -->
+            @*<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="confirmDeleteModalContent"></div>
+                </div>
+            </div>*@
+        </div>
+
+        <div class="tab-pane fade  divUserCashier  table-scroll" id="UserCashier" role="tabpanel" aria-labelledby="UserCashier-tab">
+            <a class="nav-link" id="UserCashier-tab" data-toggle="tab" href="#UserCashier" role="tab" aria-controls="User" aria-selected="false">صلاحيات المستخدم</a>
+            <!-- Details Main -->
+            <div class="bg-white border rounded p-3  divGlVoucher">
+
+                <!-- Details -->
+                <table class="table table-sm table-responsive-sm">
+                    <thead>
+                        <tr class="tblHead">
+                            <th class=""></th>
+                            <th class="" width="15%">
+                                <div>رقم المستخدم</div>
+                            </th>
+                            <th class="" width="15%">
+                                <div>  الكاشير</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>طول فترة التأمين</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>  طول فترة طباعة التقارير</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div> السماح بتعديل الفاتورة</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>السماح بالغاء الفاتورة</div>
+                            </th>
+
+                            <th class="" width="6%">
+                                <div>السماح باعادة الطباعة</div>
+                            </th>
+                            <th class="" width="6%">
+                                <div>التوصيل افتراضي</div>
+                            </th>
+                            <th class="" width="6%">
+                                <div>ربط الجهاز بالمستخدم</div>
+                            </th>
+                            <th class="" width="6%">
+                                <div>امكانية اعادة التأمين</div>
+                            </th>
+
+
+                            <th class="" width="6%">
+                                <div>السماح بالبحث عن الفواتير</div>
+                            </th>
+
+                            <th class="" width="6%">
+                                <div>اظهار الفواتير المعلقة</div>
+                            </th>
+                            <th class="" width="6%">
+                                <div>السماح بالخصم</div>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="tblUserCashierBody">
+                        <tr class="tblUserCashierRow" data-id="0" data-changed="0">
+                            <td class="">
+                                <button class="btn btn-light btn-sm border btnAddUserCashierRow" type="submit">
+                                    <i class="fa fa-plus-circle"></i>
+                                </button>
+                            </td>
+
+                            <td class="">
+                                <div class="d-flex ">
+                                    <div class="col-sm-4 p-0">
+                                        <input class="form-control form-control-sm text-center txtUserCode" data-id="0" type="text" min=0 required />
+                                    </div>
+                                    <div class="col-sm-8 p-0">
+                                        <input class="form-control form-control-sm text-center txtUserName" type="text" required disabled />
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td class="">
+                                <div class="d-flex ">
+                                    <div class="col-sm-4 p-0">
+                                        <input class="form-control form-control-sm text-center txtCashierCode" data-id="0" type="text" min=0 required />
+                                    </div>
+                                    <div class="col-sm-8 p-0">
+                                        <input class="form-control form-control-sm text-center txtCashierName" type="text" required disabled />
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="" style=" padding-right:1rem !important;">
+                                <input type="text" value="0" class="form-control form-control-sm text-center">
+                            </td>
+                            <td class="" style=" padding-right:1rem !important;">
+                                <input type="text" value="0" class="form-control form-control-sm text-center">
+                            </td>
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkModifyInvoice " id="chkModifyInvoice" checked>
+                                    <label class="custom-control-label small" for="chkModifyInvoice"></label>
+                                </div>
+                            </td>
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkCancelInvoice " id="chkCancelInvoice" checked>
+                                    <label class="custom-control-label small" for="chkCancelInvoice"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkRePrintInvoice" id="chkRePrintInvoice" checked>
+                                    <label class="custom-control-label small" for="chkRePrintInvoice"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkIsCashierDelivery" id="chkIsCashierDelivery" checked>
+                                    <label class="custom-control-label small" for="chkIsCashierDelivery"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkPcVerfiy" id="chkPcVerfiy" checked>
+                                    <label class="custom-control-label small" for="chkPcVerfiy"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkReturnInsurance " id="chkReturnInsurance" checked>
+                                    <label class="custom-control-label small" for="chkReturnInsurance"></label>
+                                </div>
+                            </td>
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkSearchInvoice " id="chkSearchInvoice" checked>
+                                    <label class="custom-control-label small" for="chkSearchInvoice"></label>
+                                </div>
+                            </td>
+
+
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkInsuranceLimit" id="chkInsuranceLimit" checked>
+                                    <label class="custom-control-label small" for="chkInsuranceLimit"></label>
+                                </div>
+                            </td>
+                            <td width="3%" class="" style=" padding-right:1rem !important;">
+                                <div class="custom-control custom-checkbox ml-5">
+                                    <input type="checkbox" class="custom-control-input  chkDiscount" id="chkDiscount">
+                                    <label class="custom-control-label small" for="chkDiscount"></label>
+                                </div>
+                            </td>
+                            <td><button class="btn btn-light btn-sm btnUserCashierDelete"><i class="fa fa-trash"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade  divUserObject active show  table-scroll" id="UserObject" role="tabpanel" aria-labelledby="UserObject-tab">
+            <a class="nav-link" id="UserObject-tab" data-toggle="tab" href="#UserObject" role="tab" aria-controls="User" aria-selected="false">صلاحيات المستخدم</a>
+            <!-- Details Main -->
+            <div class="bg-white border rounded p-3  divGlVoucher">
+
+                <!-- Details -->
+                <table class="table table-sm table-responsive-sm">
+                    <thead>
+                        <tr class="tblHead">
+                            <th class=""></th>
+                            <th class="" width="40%">
+                                <div>الكائن</div>
+                            </th>
+
+
+                            <th class="" width="7%">
+                                <div> كل الصلاحيات</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>عرض</div>
+                            </th>
+
+                            <th class="" width="7%">
+                                <div>جديد </div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>حفظ</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>تعديل</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>حذف</div>
+                            </th>
+                            <th class="" width="7%">
+                                <div>طباعة</div>
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="tblUserObjectBody">
+                        <tr class="tblUserObjectRow" data-id="0" data-changed="0">
+                            <td class="">
+                                <button class="btn btn-light btn-sm border btnAddUserObjectRow" type="submit">
+                                    <i class="fa fa-plus-circle"></i>
+                                </button>
+                            </td>
+
+                            <td class="">
+                                <div class="d-flex ">
+                                    <div class="col-sm-4 p-0">
+                                        <input class="form-control form-control-sm text-center txtUserObjectCode" data-id="0" type="text" min=0 required />
+                                    </div>
+                                    <div class="col-sm-8 p-0">
+                                        <input class="form-control form-control-sm text-center txtUserObjectName" type="text" required disabled />
+                                    </div>
+                                </div>
+
+                            </td>
+
+
+                            <td width="3%" class="">
+                                <input type="checkbox" class="chkAllActions" id="chkAllActions" checked>
+                            </td>
+                            <td width="3%" class="DevChk">
+                                <input type="checkbox" class="chk chkView " name="1" id="chkView" checked>
+                            </td>
+
+                            <td width="3%" class="DevChk">
+                                <input type="checkbox" class="chk  chkNew" name="2" id="chkNew" checked>
+
+                            </td>
+
+                            <td width="3%" class="DevChk">
+                                <input type="checkbox" class="chk  chkSave" name="3" id="chkSave" checked>
+                            </td>
+
+                            <td width="3%" class="DevChk">
+                                <input type="checkbox" class="chk  chkEdit" name="4" id="chkEdit" checked>
+                            </td>
+
+                            <td width="3%" class="DevChk">
+                                <input type="checkbox" class="chk  chkDelete " name="5" id="chkDelete" checked>
+                            </td>
+
+                            <td width="3%" class="DevChk">
+                                <input type="checkbox" class="chk  chkPrint " name="6" id="chkPrint" checked>
+                            </td>
+
+
+
+
+                            <td><button class="btn btn-light btn-sm btnUserObjectDelete"><i class="fa fa-trash"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+
+<!-- AccountData Modal -->
+<div id="DataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="DataModalContent"></div>
+    </div>
+</div>
+<!--Fill List Group-->
+<script>
+    $.get('/api/APILookup/LookupGET',
+        {
+            pIsDetail: true,
+            pLookupId: 110,
+            pQueryTypeId: '@clsQueryType.qSelect',
+
+        }, function (data) {
+            var vDataResult = JSON.parse(data);
+            $.each(vDataResult, function (i, Group) {
+                $('.clsGroup').append('<a href = "#" class="list-group-item list-group-item-action clsGroupLink"  data-id="' + Group.LookupDtlId+'" >' + Group.LookupDtlDesc+'</a>')
+            })
+        })
+
+    $('body').on('click','.clsGroupLink', function () {
+        // Element
+        var vElement = $(this)
+        // Selected
+        $('.clsGroupLink').removeClass('clsSelected')
+        vElement.addClass('clsSelected')
+
+    })
+    $('body').on('click', '.UserGroup', function () {
+        // Element
+        var vElement = $(this)
+        // Selected
+        $('.UserGroup').removeClass('clsGroupSelected')
+        vElement.addClass('clsGroupSelected')
+    })
+    // Add Group
+    $('.btnAddGroup').on('click', function () {
+        // Append
+        var Id = $('.clsSelected').attr('data-id')
+        var value = $('.clsSelected').text();
+
+        // Check If Id Is Exist
+        var Count = $('.clsUserGroup a').length
+        var Valid ;
+        $('.clsUserGroup a').each(function () {
+            var id = $(this).attr('data-id')
+            if (Id != id) {
+            } else {
+                Valid = false;
+            }
+        })
+
+        if (Valid != false) {
+            $('.clsUserGroup').append('<a href = "#" class="list-group-item list-group-item-action UserGroup" id="0" data-id="' + Id + '">' + value + '</a>')
+        }})
+    // Add All Group
+    $('.btnAddAllGroup').on('click', function () {
+        $('.clsGroupLink').each(function () {
+            var vElement = $(this)
+            var Id = vElement.attr('data-id')
+           var value = vElement.text();
+            $('.clsUserGroup').append('<a href = "#" class="list-group-item list-group-item-action UserGroup" id="0" data-id="' + Id + '">' + value + '</a>')
+        })
+    })
+
+    // Add All Group
+    $('.btnRemoveAllGroup').on('click', function (e) {
+        $('.clsUserGroup').html('')
+    })
+    $('.btnSave').on('click', function () {
+        // Get Data Changes Of TAb
+        var CardNum = $('.cardHeader').attr('data-changed')
+        if (CardNum === '1') {
+            var UserId = $('.txtUserGroupCode').attr('data-id')
+            if (UserId) {
+                // For Update Data
+                $.get('/UserCashier/funSaveUserGroup',
+                    {
+                        pUserId: UserId,
+                        pQueryTypeId: '300'
+                    },
+                    function (data) {
+                        var vResultData = JSON.parse(data)
+
+                        // Save All Data
+                        $('.UserGroup').each(function () {
+                            var vElement = $(this)
+                            // Get Data
+                            var UserGroupId = vElement.attr('id');
+
+                            var GroupId = vElement.attr('data-id')
+
+                            $.get('/UserCashier/funSaveUserGroup',
+                                {
+                                    pUserGroupId: UserGroupId,
+                                    pUserId: UserId,
+                                    pGroupId: GroupId,
+                                    pIsDeleted: false,
+                                    pQueryTypeId: '100'
+                                }, function (data) {
+                                    var vResultData = JSON.parse(data)
+                                })
+                        })
+
+                    })
+
+
+                funNotification('تم الحفظ بنجاح', 1)
+            }
+        }
+    })
+
+     // Get User Group
+    // Account Code, Name - F9 - Double Click
+    $('body').on('keyup dblclick', '.txtUserGroupCode', function (e) {
+
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+
+            // Search Account
+            var vURL = '/UserCashier/UserSearch';
+            // Load Content of Account Search
+            $('#DataModalContent').load(vURL);
+            // Modal Show
+            $('#DataModal').modal('show');
+            // Focus
+            $('#DataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divUserSelect', function () {
+
+                    // Get Values
+                    var vCashId = $(this).attr('data-id');
+                    var vCashNameValue = $(this).find('.divUserName').text();
+                    var vCashCodeValue = $(this).find('.divUserCode').text();
+                    // Get Cash Data
+                    var vCashIdElement = $('.txtUserGroupCode');
+                    var vCashNameElement = $('.txtUserGroupName');
+                    var vCashCodeElement = $('.txtUserGroupCode');
+
+                    // Set Value
+                    vCashIdElement.attr('data-id', vCashId);
+                    vCashNameElement.val(vCashNameValue);
+                    vCashCodeElement.val(vCashCodeValue);
+
+                    // Modal Show
+                    $('#DataModal').modal('hide');
+                      LoadUserGroup()
+
+                })
+            })
+        }
+    })
+    // Get User Group
+    $('body').on('change', '.txtUserGroupCode', function (e) {
+        var Code = $(this).val()
+        if ($(this).val().trim() == '') {
+            $('.UserGroupName').val('')
+        }
+        else {
+            $.get('/api/APIUser/UserGET', {
+                pUserCode: Code,
+                pQueryTypeId: 400
+            }, function (data, status) {
+
+
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+
+                    $.each(vDataResult, function (i, User) {
+
+                        $('.txtUserGroupCode').attr('data-id', User.UserId);
+                        $('.txtUserGroupName').val(User.UserName);
+                    })
+                    LoadUserGroup()
+                }
+                else {
+
+                    // Cashierty Fileds
+                    $('.txtUserGroupCode').val('');
+                    $('.txtUserGroupName').val('');
+                    $('.txtUserGroupCode').attr('data-id', 0);
+              //     funNotification('يجب اختيار بيان  صحيح', 2);
+                }
+            })
+
+        }
+    })
+
+    function LoadUserGroup() {
+        var userId = $('.txtUserGroupCode').attr('data-id')
+
+        $.get('/api/APIUserGroup/UserGroupGet',
+            {
+                pUserId: userId
+            },
+            function (data) {
+                $('.clsUserGroup').html('')
+                if (data!='') {
+                    var vDataResult = JSON.parse(data)
+
+                    $.each(vDataResult, function (i, Group) {
+                        var UserGroupId = Group.UserGroupId;
+                        var UserId = Group.UserId;
+                        var GroupId = Group.GroupId;
+                        var GroupName = Group.LookupDtlDesc;
+                        $('.clsUserGroup').append('<a href = "#" class="list-group-item list-group-item-action UserGroup" id="' + UserGroupId + '" data-id="' + GroupId + '">' + GroupName + '</a>')
+
+                    })
+                }
+        })
+    }
+
+    // Get User That Belong To Group
+    $('body').on('click', '.clsSelected', function () {
+        var Id = $(this).attr('data-id')
+        $('.clsUserSpecificGroup').html('')
+        $.get('/api/APIUserGroup/UserGroupGet',
+            {
+                pGroupId: Id
+            }, function (data) {
+                if (data) {
+                    var vResultData = JSON.parse(data)
+                    $.each(vResultData, function (i, Group) {
+                        var UserId = Group.UserId;
+                        var UserName = Group.UserName;
+                        $('.clsUserSpecificGroup').append('<a href = "#" class= "list-group-item list-group-item-action UserGroup" id = "0" data-id="' + UserId + '" > ' + UserName + '</a >')
+
+                    })
+                }
+            })
+    });
+
+</script>
+
+
+
+<!--Cashier Save-->
+<script>
+    var vNav='divCash';
+    $('.nav-item').on('click', function () {
+        vNav = $(this).attr('id')
+    })
+    $('.nav-item').on('click', function () {
+        vNav = $(this).attr('id')
+        if (vNav == 'divCash') {
+            //Config
+            function funConfigCashier(pData) {
+                var IsCashComp;
+                if (pData.IsCashComp) {
+                    var IsCashComp = 'checked';
+                }
+
+                var CashStatus;
+                if (pData.CashStatus) {
+                    var CashStatus = 'checked';
+                }
+
+                var rowContent =
+                    '<tr class="tblCashierRow" data-id="' + pData.CashId + '">' +
+                    ' <td class="">' +
+                    '<button class="btn btn-light btn-sm border btnAddCashRow" type="submit">' +
+                    '<i class="fa fa-plus-circle"></i>' +
+                    '</button>' +
+                    '</td>' +
+                    ' <td class="">' +
+                    '<input class="form-control form-control-sm text-center txtCashierCode" value="' + pData.CashCode + '" data-id="' + pData.CashId + '" type="text" required disabled />' +
+                    '</td>' +
+                    '<td class="">' +
+                    '<input class="form-control form-control-sm text-center txtCashierNameL1" value="' + pData.CashNameL1 + '" type="text" required />' +
+                    '</td>' +
+                    '<td class="">' +
+                    '<input class="form-control form-control-sm text-center txtCashierNameL2" value="' + pData.CashNameL2 + '" type="text" required />' +
+                    '</td>' +
+                    '<td class="" >' +
+                    '<div class="d-flex ">' +
+                    '<div class="col-sm-4 p-0">' +
+                    '<input class="form-control form-control-sm text-center txtEmpCode" data-id="' + pData.EmpId + '" value="' + pData.EmpCode + '" type="text" min=0 required />' +
+                    '</div>' +
+                    '<div class="col-sm-8 p-0">' +
+                    '<input class="form-control form-control-sm text-center txtEmpName" type="text" value="' + pData.EmpName + '" required disabled />' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                     '<td class="" >' +
+                    '<div class="d-flex ">' +
+                    '<div class="col-sm-4 p-0">' +
+                    '<input class="form-control form-control-sm text-center txtCredit" data-id="' + pData.Credit + '" value="' + pData.Credit + '" type="text" min=0 required />' +
+                    '</div>' +
+                    '<div class="col-sm-8 p-0">' +
+                    '<input class="form-control form-control-sm text-center txtCreditNo" type="text" value="' + pData.LookupDtlDesc + '" required disabled />' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td class="">' +
+
+                    '<div class="">' +
+                    '<input class="form-control form-control-sm text-center  txtCashAcc" value="' + pData.CashAcc + '"  type="text" required />' +
+                    '</div>' +
+                    '</td>' +
+                    '<td class="">' +
+                    '<div class="">' +
+                    '<input class="form-control form-control-sm text-center  txtNetAcc" value="' + pData.NetAcc + '" type="text" required />' +
+                    '</div>' +
+                    '</td>' +
+                    '<td class="">' +
+                    '<div class="">' +
+                    '<input class="form-control form-control-sm text-center txtNotes" value="' + pData.NOTES + '" type="text" required />' +
+                    '</div>' +
+                    '</td>' +
+                    '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+                    '<div class="custom-control custom-checkbox ">' +
+                    '<input type="checkbox" class="custom-control-input  chkIsCashComp" ' + IsCashComp + ' id="chkIsCashComp' + pData.CashId + '" >' +
+                    '<label class="custom-control-label small" for="chkIsCashComp' + pData.CashId + '"></label>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+                    '<div class="custom-control custom-checkbox ">' +
+                    '<input type="checkbox" class="custom-control-input  chkIsActive" ' + CashStatus + ' id="chkIsActive' + pData.CashId + '" >' +
+                    '<label class="custom-control-label small" for="chkIsActive' + pData.CashId + '"></label>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td><button class="btn btn-light btn-sm btnCashierDelete" data-id="' + pData.CashId + '"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>';
+                return rowContent;
+            }
+
+            // Add New Row
+            $('body').on('click', '.btnAddCashRow', function () {
+                var RowContent = {
+                    'CashId': '0',
+                    'CashCode': '',
+                    'CashNameL1': '',
+                    'CashNameL2': '',
+                    'EmpId': '0',
+                    'EmpCode': '',
+                    'EmpName': '',
+                    'CashAcc': '',
+                    'NetAcc': '',
+                    'NOTES': '',
+                };
+                var vTableRow = $(this).closest('.tblCashierRow');
+                $(vTableRow).closest("tr").after(funConfigCashier(RowContent));
+
+            })
+
+            // function Add New Row
+            function funAddNewRow() {
+                var RowContent = {
+                    'CashId': '0',
+                    'CashCode': '',
+                    'CashNameL1': '',
+                    'CashNameL2': '',
+                    'EmpId': '0',
+                    'EmpCode': '',
+                    'EmpName': '',
+                    'CashAcc': '',
+                    'NetAcc': '',
+                    'NOTES': '',
+                };
+                var vTableRow = $('.tblCashierBody');
+                $(vTableRow).append(funConfigCashier(RowContent));
+            }
+
+            // Load Data
+            $(document).ready(function () {
+                funLoadData();
+            })
+            // Function To Load Data
+            function funLoadData() {
+                $.get('/api/APICashier/CashierGet',
+                    {
+                        pIsDeleted: false,
+                        pQueryTypeId: '@clsQueryType.qSelect'
+
+                    },
+                    function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vBody = $('.tblCashierBody')
+                            vBody.html('')
+                            var DataResult = JSON.parse(data)
+                            console.log(DataResult)
+                            $.each(DataResult, function (i, Item) {
+                                vBody.append(funConfigCashier(Item));
+                            })
+                        }
+                    })
+            }
+
+
+            //--Modal--
+             //$('body').on('dblclick', '.txtCredit', function (e) {
+             //   // Get Closest Row
+             //   var vTableRow = $(this).closest('.tblCashierRow');
+             //   // Check F9
+             //   if (e.keyCode == 120 || e.type == 'dblclick') {
+             //       localStorage.setItem('lstcurrentEmptxt', '0')
+             //       localStorage.setItem('lstEmpcurrentindex', vTableRow.index)
+
+
+             //       // Get Emp Data
+             //       var vEmpIdElement = vTableRow.find('.txtEmpCode');
+             //       var vEmpNameElement = vTableRow.find('.txtEmpName');
+             //         var Credit = vTableRow.find('.txtCredit');
+             //       var CreditNo = vTableRow.find('.txtCreditNo');
+
+             //       // Search Emp
+             //       var vURL = '/ResEmployee/SearchCredit';
+             //       // Load Content of Emp Search
+             //       $('#DataModalContent').load(vURL);
+
+             //       var vLstEmps = localStorage.getItem('lstEmps');
+             //       var vDRowContent = '';
+             //       // Modal Show
+             //       $('#DataModal').modal('show');
+             //       // Focus
+             //       $('#DataModal').on('shown.bs.modal', function () {
+             //           $('.txtSearch').focus();
+             //           // Select Emp
+             //          $('body').on('click', '.divCatAccountSelect', function () {
+             //       // Get Values
+             //       var vCatAccountId = $(this).attr('data-id');
+             //       var vCatAccountNameValue = $(this).find('.divCatAccountName').text();
+             //       var vCatAccountIdValue = $(this).find('.divCatAccountId').text();
+             //       // Get GLVoucherCatAccount Data
+
+             //       // Set Value
+             //       Credit.val(vCatAccountIdValue);
+             //       CreditNo.val(vCatAccountNameValue);
+             //       // Modal Show
+             //       $('#DataModal').modal('hide');
+             //       vTableRow.removeClass('table-info');
+
+             //       vTableRow = '';
+             //   })
+             //       })
+             //   }
+             //})
+
+
+             $('body').on('keyup dblclick', '.txtCredit', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            // Search Account
+            var vURL =  '/ResEmployee/SearchCredit';
+            // Load Content of Account Search
+            $('#DataModalContent').load(vURL);
+            // Modal Show
+            $('#DataModal').modal('show');
+            // Focus
+            $('#DataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Account
+                $('body').on('click', '.divCatAccountSelect', function () {
+                    // Get Values
+                    var vCatAccountId = $(this).attr('data-id');
+                    var vCatAccountNameValue = $(this).find('.divCatAccountName').text();
+                    var vCatAccountIdValue = $(this).find('.divCatAccountId').text();
+                    // Get GLVoucherCatAccount Data
+                    var Credit = vTableRow.find('.txtCredit');
+                    var CreditNo = vTableRow.find('.txtCreditNo');
+                    // Set Value
+                    Credit.val(vCatAccountIdValue);
+                    CreditNo.val(vCatAccountNameValue);
+                    // Modal Show
+                    $('#DataModal').modal('hide');
+                    vTableRow.removeClass('table-info');
+
+                    vTableRow = '';
+                })
+            })
+        }
+    })
+            // Open Employee Modal
+
+            $('body').on('dblclick', '.txtEmpCode', function (e) {
+                // Get Closest Row
+                var vTableRow = $(this).closest('.tblCashierRow');
+                // Check F9
+                if (e.keyCode == 120 || e.type == 'dblclick') {
+                    localStorage.setItem('lstcurrentEmptxt', '0')
+                    localStorage.setItem('lstEmpcurrentindex', vTableRow.index)
+
+
+                    // Get Emp Data
+                    var vEmpIdElement = vTableRow.find('.txtEmpCode');
+                    var vEmpNameElement = vTableRow.find('.txtEmpName');
+
+
+                    // Search Emp
+                    var vURL = '/ResEmployee/SearchResEmployeeModal';
+                    // Load Content of Emp Search
+                    $('#DataModalContent').load(vURL);
+
+                    var vLstEmps = localStorage.getItem('lstEmps');
+                    var vDRowContent = '';
+                    // Modal Show
+                    $('#DataModal').modal('show');
+                    // Focus
+                    $('#DataModal').on('shown.bs.modal', function () {
+                        $('.txtSearch').focus();
+                        // Select Emp
+                        $('body').on('click', '.divResEmployeeSelect', function () {
+                            if (localStorage.getItem('lstEmpcurrentindex') == vTableRow.index) {
+                                $('.txtSearch').focus();
+
+                                // Emp Id
+                                var vEmpId = $(this).attr('data-id');
+
+                                // Get Values
+                                var vEmpCodeValue = $(this).find('.divResEmployeeNo').text();
+                                var vEmpNameValue = $(this).find('.divResEmployeeName').text();
+
+
+
+                                // Set Value
+                                vEmpIdElement.val(vEmpCodeValue);
+                                vEmpIdElement.attr('data-id', vEmpId);
+                                vEmpNameElement.val(vEmpNameValue);
+                                vTableRow.attr('data-changed', '1');
+                                vEmpIdElement.css("border-color", "");
+
+                                // Modal Show
+                                $('#DataModal').modal('hide');
+                                vTableRow = '';
+                            }
+                        })
+                    })
+                }
+            })
+            $('body').on('change', '.txtEmpCode', function (e) {
+                var vTableRow = $(this).closest('.tblCashierRow');
+                if ($(this).val().trim() == '') {
+                    vTableRow.find('.EmpName').val('')
+                }
+                else {
+                    vTableRow.find('.EmpId').css("border-color", "");
+                    $.post('/ResEmployee/GetResEmployeeByCode', {
+                        pResEmployeeCode: vTableRow.find('.txtEmpCode').val()
+                    }, function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            $.each(vDataResult, function (i, Emp) {
+                                vTableRow.find('.txtEmpCode').attr('data-id', Emp.ResEmployeeId);
+
+                                vTableRow.find('.txtEmpName').val(Emp.ResEmployeeNameL1);
+                            })
+                        }
+                        else {
+
+                            // Empty Fileds
+                            vTableRow.find('.txtEmpCode').val('');
+                            vTableRow.find('.txtEmpName').val('');
+                            vTableRow.find('.txtEmpCode').attr('data-id', 0);
+                            funNotification('يجب اختيار بيان  صحيح', 2);
+
+                        }
+                    })
+                    if (vTableRow.index > 0) {
+                        if (vTableRow.find('.txtEmpId').val().trim() != '') {
+
+                        }
+                    }
+                }
+            })
+
+            // Save Using button
+            $('.btnSave').on('click', function () {
+                var CardNum = $('.cardHeader').attr('data-changed')
+                if (CardNum === '1') {
+                    // Save  ALL
+                    SaveCash()
+                }
+            }) // End BtnSave
+
+            // Save Using F10
+            $('body').on('keyup', function (e) {
+                // Check F10
+                if (e.keyCode == 121) {
+                    // Save  ALL
+                    SaveCash()
+                }
+            })
+            $('body').on('change', '.txtCashierNameL1,.txtCashierNameL2,.txtEmpCode,.txtCashAcc,.txtNetAcc,.txtNotes,.chkIsCashComp,.chkIsActive,.txtCredit', function () {
+
+                // Get Closest Row
+                var vTableRow = $(this).closest('.tblCashierRow');
+
+                vTableRow.attr('data-changed', '1')
+
+            })
+            // Save Content
+            function SaveCash() {
+
+                var valid = false;
+                $('.tblCashierRow').each(function () {
+                    var vElement = $(this).closest('tr')
+                    // Get Data
+                    var CashId = vElement.find('.txtCashierCode').attr('data-id');
+                    var CashNameL1 = vElement.find('.txtCashierNameL1').val()
+                    var CashNameL2 = vElement.find('.txtCashierNameL2').val()
+                    var EmpId = vElement.find('.txtEmpCode').attr('data-id');
+                    var EmpCode = vElement.find('.txtEmpCode').val();
+                    var CashAcc = vElement.find('.txtCashAcc').val()
+                    var Credit = vElement.find('.txtCredit').val()
+                    var NetAcc = vElement.find('.txtNetAcc').val()
+                    var Notes = vElement.find('.txtNotes').val()
+                    var chkIsComp = vElement.find('.chkIsCashComp').prop('checked')
+                    var chkIsActive = vElement.find('.chkIsActive').prop('checked')
+                    if (vElement.attr('data-changed') == '1') {
+                        if (CashNameL1 != '' && EmpCode != '') {
+                            vElement.attr('data-changed', '0')
+                            $.get('/Cashier/funSaveCashier',
+                                {
+                                    pCashId: CashId,
+                                    pIsCashComp: chkIsComp,
+                                    pNetAcc: NetAcc,
+                                    Credit: Credit,
+                                    pNOTES: Notes,
+                                    pCashAcc: CashAcc,
+                                    pCashStatus: chkIsActive,
+                                    pCashNameL2: CashNameL2,
+                                    pEmpId: EmpId,
+                                    pCashNameL1: CashNameL1,
+                                    pIsDeleted: false,
+                                    pQueryTypeId: '100'
+                                }, function (data) {
+                                    var vResultData = JSON.parse(data)
+                                    vElement.attr('data-id', vResultData[0].CashId);
+                                    vElement.find('.txtCashCode').attr('data-id', vResultData[0].CashId)
+                                })
+                            valid = true;
+                        }
+                        else {
+                            // Error Class Validation
+                            if (CashNameL1 == '') {
+                                vElement.find('.txtCashierNameL1').addClass('errorClass')}
+                            if (EmpCode == '') {
+                                vElement.find('.txtEmpCode').addClass('errorClass')}
+                            funNotification('يجب استكمال البيانات', '2')
+                            valid = false;
+                        }
+                    }
+                })
+                if (valid) {funNotification('تم الحفظ بنجاح', 1)}
+            }
+            // Check UnitAdd
+            $('.tblCashierBody').on('keyup keydown click', '.tblCashierRow', function (e) {
+                // Error Class Validation
+                $(this).find('.txtEmpCode').removeClass('errorClass')
+                $(this).find('.txtCashierNameL1').removeClass('errorClass')
+
+            })
+
+            //New Delete
+            $('body').on('click', '.btnCashierDelete', function () {
+                // Id - NameAr - NameEn
+                var vElement = $(this)
+                var vDataId = $(this).attr('data-id');
+                var vDataName = $(this).attr('data-name');
+                // URL
+                var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+                // Get HTML Content of [Confirm Delete] Partial View
+                $.get(
+                    // URL
+                    vDataURL,
+                    // Parameters
+                    {
+                        id: vDataId,
+                        pName: vDataName,
+                    },
+                    // Function
+                    function (data, status) {
+                        if (vDataId > 0) {
+                            // Modal
+                            $('#confirmDeleteModalContent').html(data);
+                            $('#confirmDeleteModal').modal('show');
+                            // Click Event [Delete Confirm]
+                            $("body").on("click", "#btnDeleteConfirm", function () {
+                                // Delete Action URL
+                                var vDeleteActionURL = '/api/APICashier/CashierGet';
+                                // Delete
+                                $.get(vDeleteActionURL, { pCashId: vDataId, pIsDeleted: true, pQueryTypeId: '300' }, function (data) {
+
+
+                                    vElement.closest('tr').remove();
+                                    // Check If IT The Last Row
+                                    var vLastRow = $('.tblCashierBody').find('tr').attr('data-id')
+
+                                    // Add Row If Empty
+                                    if (vLastRow == undefined) {
+                                        funAddNewRow()
+                                    }
+                                    // Notification
+                                    funNotification('تم الحذف بنجاح', 1);
+
+                                });
+                            });
+                        }
+                        else {
+                            // Only Delete The Row
+                            vElement.closest('tr').remove();
+                            // Check If IT The Last Row
+                            var vLastRow = $('.tblCashierBody').find('tr').attr('data-id')
+                            // Add Row If Empty
+                            if (vLastRow == undefined) {
+                                //funAddDTLEmptyRow($('.tblDtlBody'))
+                                funAddNewRow()
+                            }
+                        }
+                    });
+            });
+               // End of Click Event [Delete Button]
+        }
+    })
+</script>
+
+<!--Emplyee-->
+<script>
+    $('.nav-item').on('click', function () {
+        vNav = $(this).attr('id')
+    if (vNav == 'divEmployee') {
+        var vAllData = '';
+        var vCurrentData = '';
+        var vCurrentIndex = 0;
+        var vLstCheckedItems = [];
+        var vIsClear = 0;
+        //funGetAllEmp()
+        function funGetAllEmp() {
+            $.post('/ResEmployee/GetAllEmp', {
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    vAllData = vDataResult;
+                    vCurrentData = vAllData[vCurrentIndex];
+                    funRowConfig(vCurrentData)
+
+                    $.each(vDataResult, function (i, Emp) {
+                    })
+
+                }
+            })
+
+        }
+        function funRowConfig(vRow) {
+            $('#txtResEmployeeId').attr('data-id', vRow.ResEmployeeId)
+            $('#txtResEmployeeId').val(vRow.ResEmployeeCode)
+            $('#txtResEmployeeNameL1').val(vRow.ResEmployeeNameL1)
+            $('#txtResEmployeeNameL2').val(vRow.ResEmployeeNameL2)
+            $('#txtHireDate').val(vRow.HireDate)
+            $('#txtEmpStatusId').attr('data-id', vRow.EmpStatusId)
+            $('#txtEmpStatusId').val(vRow.StatusCode)
+            $('#txtEmpStatusName').val(vRow.StatusDesc)
+            $('#txtExitDate').val(vRow.ExitDate)
+            $('#txtAddress').val(vRow.Address)
+            $('#txtMobile').val(vRow.Mobile)
+            $('#txtBirthDate').val(vRow.BirthDate)
+            $('#txtIdentityNumber').val(vRow.IdentityNumber)
+            $('#txtIdentityDate').val(vRow.IdentityDate)
+            $('#txtDeliveryValue').val(vRow.DeliveryValue)
+            $('#txtValueTypeId').attr('data-id', vRow.ValueTypeId)
+            $('#txtValueTypeId').val(vRow.ValueTypeCode)
+            $('#txtValueTypeName').val(vRow.ValueTypeDesc)
+            $('#txtPercentageRange').val(vRow.PercentageRange)
+            $('#txtExitTypeId').attr('data-id', vRow.ExitTypeId)
+            $('#txtExitTypeId').val(vRow.ExitTypeCode)
+            $('#txtExitTypeName').val(vRow.ExitTypeDesc)
+            $('#txtExitReason').val(vRow.ExitReason)
+            $('#txtIdentityTypeId').attr('data-id', vRow.IdentityTypeId)
+            $('#txtIdentityTypeId').val(vRow.IdentityCode)
+            $('#txtIdentityTypeName').val(vRow.IdentityDesc)
+            $('#txtNationalityId').attr('data-id', vRow.NationalityId)
+            $('#txtNationalityId').val(vRow.NationalityCode)
+            $('#txtNationalityName').val(vRow.NationalityDesc)
+            if (vRow.Gender == 49) {
+                $("#rdMale").prop("checked", true);
+            }
+            else {
+                $("#rdFemale").prop("checked", true);
+            }
+
+        }
+        function GetIndex(pcheckeditem) {
+            var vFound = 0;
+            for (var i = 0; i <= vLstCheckedItems.length - 1; i++) {
+                if (vFound == 0) {
+                    if (pcheckeditem == vLstCheckedItems[i]) {
+                        vFound = 1
+                        return i;
+
+                    }
+                    else {
+
+
+                    }
+                }
+
+            }
+
+        }
+
+
+        var vResEmployeeList = '';
+
+        $('.btnFirst').click(function () {
+            if (vLstCheckedItems.length == 0) {
+                vCurrentIndex = 0;
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+            }
+            else {
+                vCurrentIndex = vLstCheckedItems[0];
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+            }
+
+            //funGetFirstEmp();
+        })
+        $('.btnNext').click(function () {
+            if (vLstCheckedItems.length == 0) {
+                if (vCurrentIndex + 1 <= vAllData.length - 1) {
+                    vCurrentIndex = vCurrentIndex + 1;
+                    vCurrentData = vAllData[vCurrentIndex];
+                    funRowConfig(vCurrentData);
+                }
+
+            }
+            else {
+                var vCurrentCode = $('#txtResEmployeeId').val();
+
+                if (GetIndex(vCurrentCode - 1) < vLstCheckedItems.length - 1) {
+                    vCurrentIndex = vLstCheckedItems[GetIndex(vCurrentCode - 1) + 1]
+                    vCurrentData = vAllData[vCurrentIndex];
+                    funRowConfig(vCurrentData);
+                }
+
+
+            }
+            //funGetNextEmp();
+        })
+        $('.btnPrev').click(function () {
+            if (vLstCheckedItems.length == 0) {
+                if (vCurrentIndex - 1 >= 0) {
+                    vCurrentIndex = vCurrentIndex - 1;
+                    vCurrentData = vAllData[vCurrentIndex];
+                    funRowConfig(vCurrentData);
+                }
+
+            }
+            else {
+                var vCurrentCode = $('#txtResEmployeeId').val();
+                if (GetIndex(vCurrentCode - 1) > 0) {
+                    vCurrentIndex = vLstCheckedItems[GetIndex(vCurrentCode - 1) - 1]
+                    vCurrentData = vAllData[vCurrentIndex];
+                    funRowConfig(vCurrentData);
+                }
+
+            }
+            // funGetPreviousEmp();
+        })
+        $('.btnLast').click(function () {
+            if (vLstCheckedItems.length == 0) {
+                vCurrentIndex = vAllData.length - 1;
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+            }
+            else {
+                vCurrentIndex = vLstCheckedItems[vLstCheckedItems.length - 1];
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+            }
+            // funGetLastEmp();
+        })
+        $('.btnSave').click(function () {
+            var CardNum = $('.cardHeader').attr('data-changed')
+           // if (CardNum === '2') {
+                funSaveEmp();
+          //  }
+        })
+
+        $('body').on('click', '.btnSearchh', function () {
+            var vCode = null;
+            var vNat = null;
+            var vIdentityType = null;
+            var vStatus = null;
+            var vValueType = null;
+            var vExitType = null;
+            var vDate = null;
+            var vMobile = null;
+
+            if ($('.txtCode').val().trim() != '') {
+                vCode = $('.txtCode').val()
+            }
+            else {
+                vCode = null
+            }
+            if ($('.txtMobile').val().trim() != '') {
+                vMobile = $('.txtMobile').val()
+            }
+            else {
+                vMobile = null
+            }
+            if ($('#selectNat').prop('selectedIndex') > 0) {
+                vNat = $('#selectNat').val()
+            }
+            else {
+                vNat = null
+            }
+            if ($('#selectIdentityType').prop('selectedIndex') > 0) {
+                vIdentityType = $('#selectIdentityType').val()
+            }
+            else {
+                vIdentityType = null
+            }
+            if ($('#selectStatus').prop('selectedIndex') > 0) {
+                vStatus = $('#selectStatus').val()
+            }
+            else {
+                vStatus = null
+            }
+
+            if ($('#selectValueType').prop('selectedIndex') > 0) {
+                vValueType = $('#selectValueType').val()
+            }
+            else {
+                vValueType = null
+            }
+            if ($('#selectExitType').prop('selectedIndex') > 0) {
+                vExitType = $('#selectExitType').val()
+            }
+            else {
+                vExitType = null
+            }
+            funFilterEmp(vCode, vNat, vIdentityType, vStatus, vValueType, vExitType, vMobile)
+
+        })
+
+        function funGetFirstEmp() {
+            $.post('/ResEmployee/GetfirstEmp', {
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.ValueTypeCode)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id', Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id', Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+
+
+
+                    })
+
+                }
+
+
+            })
+
+        }
+        function funGetLastEmp() {
+            $.post('/ResEmployee/GetLastEmp', {
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.ValueTypeCode)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id', Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id', Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+                    })
+
+                }
+
+
+            })
+
+        }
+        function funGetPreviousEmp() {
+            $.post('/ResEmployee/GetPreviousEmp', {
+                pResEmployeeId: $('#txtResEmployeeId').attr('data-id')
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.ValueTypeCode)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id', Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id', Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+                    })
+
+                }
+
+
+            })
+
+        }
+        function funGetNextEmp() {
+            $.post('/ResEmployee/GetNextEmp', {
+                pResEmployeeId: $('#txtResEmployeeId').attr('data-id')
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.ValueTypeCode)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id', Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id', Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+                    })
+
+                }
+
+
+            })
+
+        }
+        function funSaveEmp() {
+            var vIsValid = true;
+            if ($('#txtResEmployeeNameL1').val().trim() != '' && $('#txtResEmployeeNameL2').val().trim() != '') {
+
+                var vGender = 49
+                if ($("#rdFemale").prop("checked") == true) {
+                    vGender = 50;
+                }
+                $.post('/ResEmployee/SaveEmp',
+                    {
+                        pResEmployeeId: $('#txtResEmployeeId').attr('data-id'),
+                        pResEmployeeNameL1: $('#txtResEmployeeNameL1').val(),
+                        pResEmployeeNameL2: $('#txtResEmployeeNameL2').val(),
+                        pHireDate: $('#txtHireDate').val(),
+                        pEmpStatusId: $('#txtEmpStatusId').attr('data-id'),
+                        pExitDate: $('#txtExitDate').val(),
+                        pAddress: $('#txtAddress').val(),
+                        pBirthDate: $('#txtBirthDate').val(),
+                        pMobile: $('#txtMobile').val(),
+                        pGender: vGender,
+                        pIdentityTypeId: $('#txtIdentityTypeId').attr('data-id'),
+                        pIdentityNumber: $('#txtIdentityNumber').val(),
+                        pIdentityDate: $('#txtIdentityDate').val(),
+                        pNationalityId: $('#txtNationalityId').attr('data-id'),
+                        pDeliveryValue: $('#txtDeliveryValue').val(),
+                        pValueTypeId: $('#txtValueTypeId').attr('data-id'),
+                        pPercentageRange: $('#txtPercentageRange').val(),
+                        pExitTypeId: $('#txtExitTypeId').attr('data-id'),
+                        pExitReason: $('#txtExitReason').val(),
+                        pResEmployeeIsActive: true,
+
+
+
+                    }, function (data, status) {
+                        
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            vAllData = vDataResult[0].tblAllData
+                        }
+                        if ($('#txtResEmployeeId').attr('data-id').trim() == '0') {
+                            funClearAll()
+                        }
+
+                    })
+            }
+            else {
+                vIsValid = false;
+            }
+
+
+            if (!vIsValid) {
+                // Notification - Field Required
+                funNotification('@appResource.msgRequired', 2);
+            }
+            else {
+                // Notification
+                funNotification('تم الحفظ بنجاح', 1);
+            }
+
+        }
+        function funClearAll() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + dd;
+            $('#txtResEmployeeId').attr('data-id', '0')
+            $('#txtResEmployeeId').val('')
+            $('#txtResEmployeeNameL1').val('')
+            $('#txtResEmployeeNameL2').val('')
+            $('#txtHireDate').val(today)
+            $('#txtEmpStatusId').attr('data-id', '0')
+            $('#txtEmpStatusId').val('')
+            $('#txtEmpStatusName').val('')
+            $('#txtExitDate').val(today)
+            $('#txtAddress').val('')
+            $('#txtMobile').val('')
+            $('#txtBirthDate').val(today)
+            $('#txtIdentityNumber').val('')
+            $('#txtIdentityDate').val(today)
+            $('#txtDeliveryValue').val('')
+            $('#txtValueTypeId').attr('data-id', '0')
+            $('#txtValueTypeId').val('')
+            $('#txtValueTypeName').val('')
+            $('#txtPercentageRange').val('')
+            $('#txtExitTypeId').attr('data-id', '0')
+            $('#txtExitTypeId').val('')
+            $('#txtExitTypeName').val('')
+            $('#txtExitReason').val('')
+            $('#txtIdentityTypeId').attr('data-id', '0')
+            $('#txtIdentityTypeId').val('')
+            $('#txtIdentityTypeName').val('')
+            $('#txtNationalityId').attr('data-id', '0')
+            $('#txtNationalityId').val('')
+            $('#txtNationalityName').val('')
+            $("#rdMale").prop("checked", true);
+
+        }
+        function funDeleteEmp() {
+            $.post('/ResEmployee/GetfirstEmp',
+                {
+                    pResEmployeeId: $('#txtResEmployeeId').attr('data-id'),
+
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        vAllData = vDataResult[0].tblAllData
+                    }
+
+                    vCurrentIndex = 0;
+                    vLstCheckedItems = [];
+                    funGetAllEmp();
+
+                })
+
+        }
+        $('#txtIdentityTypeId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchIdentityType';
+                $('#IdentityTypeDataModalContent').load(vURL);
+                // Modal Show
+                $('#IdentityTypeDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divIdentityTypeSelect', function () {
+
+                    vElementGroupAccount = $('body').find('#txtIdentityTypeId');
+                    // IdentityType Id
+                    var vIdentityTypeId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vIdentityTypeCodeValue = $(this).find('.divIdentityTypeNo').text();
+                    var vIdentityTypeNameValue = $(this).find('.divIdentityTypeName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtIdentityTypeId').val(vIdentityTypeCodeValue);
+                    $('#txtIdentityTypeId').attr('data-id', vIdentityTypeId)
+                    $('#txtIdentityTypeName').val(vIdentityTypeNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#IdentityTypeDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtNationalityId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchNationality';
+                $('#NationalityDataModalContent').load(vURL);
+                // Modal Show
+                $('#NationalityDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divNationalitySelect', function () {
+
+                    vElementGroupAccount = $('body').find('#txtNationalityId');
+                    // Nationality Id
+                    var vNationalityId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vNationalityCodeValue = $(this).find('.divNationalityNo').text();
+                    var vNationalityNameValue = $(this).find('.divNationalityName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtNationalityId').val(vNationalityCodeValue);
+                    $('#txtNationalityId').attr('data-id', vNationalityId)
+                    $('#txtNationalityName').val(vNationalityNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#NationalityDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtEmpStatusId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchEmpStatus';
+                $('#EmpStatusDataModalContent').load(vURL);
+                // Modal Show
+                $('#EmpStatusDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divEmpStatusSelect', function () {
+
+                    vElementGroupAccount = $('body').find('#txtEmpStatusId');
+                    // EmpStatus Id
+                    var vEmpStatusId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vEmpStatusCodeValue = $(this).find('.divEmpStatusNo').text();
+                    var vEmpStatusNameValue = $(this).find('.divEmpStatusName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtEmpStatusId').val(vEmpStatusCodeValue);
+                    $('#txtEmpStatusId').attr('data-id', vEmpStatusId)
+                    $('#txtEmpStatusName').val(vEmpStatusNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#EmpStatusDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtValueTypeId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchValueType';
+                $('#ValueTypeDataModalContent').load(vURL);
+                // Modal Show
+                $('#ValueTypeDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divValueTypeSelect', function () {
+                    vElementGroupAccount = $('body').find('#txtValueTypeId');
+                    // ValueType Id
+                    var vValueTypeId = $(this).attr('data-id');
+                    // Get Values
+                    var vValueTypeCodeValue = $(this).find('.divValueTypeNo').text();
+                    var vValueTypeNameValue = $(this).find('.divValueTypeName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtValueTypeId').val(vValueTypeCodeValue);
+                    $('#txtValueTypeId').attr('data-id', vValueTypeId)
+                    $('#txtValueTypeName').val(vValueTypeNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#ValueTypeDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtExitTypeId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                var vURL = '/ResEmployee/SearchExitType';
+                $('#ExitTypeDataModalContent').load(vURL);
+                // Modal Show
+                $('#ExitTypeDataModal').modal('show');
+                // Select Account
+                $('body').on('click', '.divExitTypeSelect', function () {
+
+                    vElementGroupAccount = $('body').find('#txtExitTypeId');
+                    // ExitType Id
+                    var vExitTypeId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vExitTypeCodeValue = $(this).find('.divExitTypeNo').text();
+                    var vExitTypeNameValue = $(this).find('.divExitTypeName').text();
+                    // Check The Controller Who Fires The Data Modal
+                    //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtExitTypeId').val(vExitTypeCodeValue);
+                    $('#txtExitTypeId').attr('data-id', vExitTypeId)
+                    $('#txtExitTypeName').val(vExitTypeNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#ExitTypeDataModal').modal('hide');
+
+
+                })
+
+            }
+        });
+        $('#txtIdentityTypeId').on('change', function (e) {
+
+            if ($('#txtIdentityTypeId').val().trim() == '') {
+                $('#txtIdentityTypeName').val('')
+            }
+            else {
+                $.post('/ResEmployee/GetIdentityType', {
+                    pCodeId: $('#txtIdentityTypeId').val()
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            $('#txtIdentityTypeId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtIdentityTypeName').val(Emp.LookupDtlDesc)
+
+                        })
+                    }
+                })
+            }
+
+        });
+        $('#txtNationalityId').on('change', function (e) {
+            if ($('#txtNationalityId').val().trim() == '') {
+                $('#txtNationalityName').val('')
+            }
+            else {
+                $.post('/ResEmployee/GetNationality', {
+                    pCodeId: $('#txtNationalityId').val()
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            $('#txtNationalityId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtNationalityName').val(Emp.LookupDtlDesc)
+                        })
+
+                    }
+
+
+                })
+            }
+
+        });
+        $('#txtEmpStatusId').on('change', function (e) {
+
+            if ($('#txtEmpStatusId').val().trim() == '') {
+                $('#txtEmpStatusName').val('')
+            }
+            else {
+                $.post('/ResEmployee/GetEmpStatus', {
+                    pCodeId: $('#txtEmpStatusId').val()
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            $('#txtEmpStatusId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtEmpStatusName').val(Emp.LookupDtlDesc)
+                        })
+                    }
+                })
+            }
+
+        });
+        $('#txtValueTypeId').on('change', function (e) {
+
+            if ($('#txtValueTypeId').val().trim() == '') {
+                $('#txtValueTypeName').val('')
+            }
+            else {
+                $.post('/ResEmployee/GetValueType', {
+                    pCodeId: $('#txtValueTypeId').val()
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            $('#txtValueTypeId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtValueTypeName').val(Emp.LookupDtlDesc)
+                        })
+                    }
+                })
+            }
+
+        });
+        $('#txtExitTypeId').on('change', function (e) {
+            if ($('#txtExitTypeId').val().trim() == '') {
+                $('#txtExitTypeName').val('')
+            }
+            else {
+
+                $.post('/ResEmployee/GetExitType', {
+                    pCodeId: $('#txtExitTypeId').val()
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Emp) {
+                            $('#txtExitTypeId').attr('data-id', Emp.LookupDtlId)
+                            $('#txtExitTypeName').val(Emp.LookupDtlDesc)
+                        })
+
+                    }
+
+
+                })
+
+            }
+
+
+
+        });
+        // Search ResEmployeeDataModal
+        $('.btnSearch').on('click', function () {
+            // Search CostCenter
+            var vURL = '/ResEmployee/ResEmployeeSearch';
+            // Load Content of CostCenter Search
+            $('#ResEmployeeDataModalContent').load(vURL);
+            // Modal Full
+            $('#ResEmployeeDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#ResEmployeeDataModal').modal('show');
+        })
+        $('body').on('click', '.btnSelect', function () {
+            var count = $("input[name='chkIsValid']:checked").length;
+            vLstCheckedItems = [];
+            vCurrentIndex = 0;
+            if (count == 0) {
+                $('#ResEmployeeDataModal').modal('hide');
+            }
+            else {
+                $('.tblResEmployeeSearch > tbody > tr ').each(function () {
+
+                    // Element
+                    var vCurrentDataRow = $(this);
+                    var vElement = $(this).find('.clsChk')
+                    var vCountChecked = 0;
+                    var vSelectedChk = vElement.prop('checked')
+                    // Check
+                    if (vSelectedChk) {
+                        vCountChecked++;
+                        //if (vCountChecked == 1) {
+                        // Fill The List Of Checked Indexes
+                        vLstCheckedItems.push(vCurrentDataRow.attr('data-code') - 1);
+                        //}
+                        // Get Id
+                        var vResEmployeeId = vElement.attr('data-id');
+                        $('#txtResEmployeeId').attr('data-id', vResEmployeeId)
+                        //funGetEmpById()
+                        // close The Modal
+                        $('#ResEmployeeDataModal').modal('hide');
+
+                    }
+                })
+            }
+
+            if (count > 0) {
+                vCurrentIndex = vLstCheckedItems[0];
+                vCurrentData = vAllData[vCurrentIndex];
+                funRowConfig(vCurrentData);
+            }
+
+
+
+        })
+
+        function funGetEmpById() {
+            $.post('/ResEmployee/GetResEmployeeById', {
+                pResEmployeeId: $('#txtResEmployeeId').attr('data-id')
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Emp) {
+                        $('#txtResEmployeeId').attr('data-id', Emp.ResEmployeeId)
+                        $('#txtResEmployeeId').val(Emp.ResEmployeeCode)
+                        $('#txtResEmployeeNameL1').val(Emp.ResEmployeeNameL1)
+                        $('#txtResEmployeeNameL2').val(Emp.ResEmployeeNameL2)
+                        $('#txtHireDate').val(Emp.HireDate)
+                        $('#txtEmpStatusId').attr('data-id', Emp.EmpStatusId)
+                        $('#txtEmpStatusId').val(Emp.StatusCode)
+                        $('#txtEmpStatusName').val(Emp.StatusDesc)
+                        $('#txtExitDate').val(Emp.ExitDate)
+                        $('#txtAddress').val(Emp.Address)
+                        $('#txtMobile').val(Emp.Mobile)
+                        $('#txtBirthDate').val(Emp.BirthDate)
+                        $('#txtIdentityNumber').val(Emp.IdentityNumber)
+                        $('#txtIdentityDate').val(Emp.IdentityDate)
+                        $('#txtDeliveryValue').val(Emp.DeliveryValue)
+                        $('#txtValueTypeId').attr('data-id', Emp.ValueTypeId)
+                        $('#txtValueTypeId').val(Emp.ValueTypeCode)
+                        $('#txtValueTypeName').val(Emp.ValueTypeDesc)
+                        $('#txtPercentageRange').val(Emp.PercentageRange)
+                        $('#txtExitTypeId').attr('data-id', Emp.ExitTypeId)
+                        $('#txtExitTypeId').val(Emp.ExitTypeCode)
+                        $('#txtExitTypeName').val(Emp.ExitTypeDesc)
+                        $('#txtExitReason').val(Emp.ExitReason)
+                        $('#txtIdentityTypeId').attr('data-id', Emp.IdentityTypeId)
+                        $('#txtIdentityTypeId').val(Emp.IdentityCode)
+                        $('#txtIdentityTypeName').val(Emp.IdentityDesc)
+                        $('#txtNationalityId').attr('data-id', Emp.NationalityId)
+                        $('#txtNationalityId').val(Emp.NationalityCode)
+                        $('#txtNationalityName').val(Emp.NationalityDesc)
+                        if (Emp.Gender == 49) {
+                            $("#rdMale").prop("checked", true);
+                        }
+                        else {
+                            $("#rdFemale").prop("checked", true);
+                        }
+
+                    })
+
+                }
+
+
+            })
+
+        }
+        $('.btnDelete').on('click', function () {
+            // Id - NameAr - NameEn
+            var vDataId = $('#txtResEmployeeId').attr('data-id');
+            if (vDataId != '0') {
+                var vDataName = $('#txtResEmployeeNameL1').val();
+                // URL
+                var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+                // Get HTML Content of [Confirm Delete] Partial View
+                $.get(
+                    // URL
+                    vDataURL,
+                    // Parameters
+                    {
+                        id: vDataId,
+                        pName: vDataName,
+                    },
+                    // Function
+                    function (data, status) {
+                        // Modal
+                        $('#confirmDeleteModalContent').html(data);
+                        $('#confirmDeleteModal').modal('show');
+                        // Click Event [Delete Confirm]
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            funNotification('تم الحذف بنجاح', 1);
+                            // Delete Action URL
+                            var vDeleteActionURL = '/ResEmployee/DeleteEmp/';
+                            // Delete
+                            $.post(vDeleteActionURL, { pResEmployeeId: vDataId, pIsDelete: true }, function () {
+                                window.location.href = '/ResEmployee';
+
+
+                            });
+
+                        });
+                    });
+            }
+
+        }); // End of Click Event [Delete Button]
+
+        $('.btnAdd').on('click', function () {
+            vIsClear = 1;
+            funClearAll();
+            vIsClear = 0;
+        })
+
+
+        $('#txtResEmployeeNameL2').on('keydown', function (e) {
+            var keyCode = e.keyCode || e.which;
+
+            if (keyCode == 9) {
+                e.preventDefault();
+                $('#txtIdentityTypeId').focus();
+                // call custom function here
+            }
+        });
+        $('#txtMobile').on('change', function () {
+            var vMobile = $('#txtMobile').val().trim();
+            if (vMobile != '') {
+                if (vIsClear == 0) {
+                    $.post('/ResEmployee/CheckMobile',
+                        { pMobile: vMobile },
+                        function (data, status) {
+                            if (data != undefined && data != '') {
+                                var vDataResult = JSON.parse(data);
+                                if (vDataResult[0].ResEmployeeCode != $('#txtResEmployeeId').val().trim()) {
+                                    funNotification(vDataResult[0].ResEmployeeCode + 'هذا الرقم موجود من قبل للموظف رقم', 2);
+                                    $('#txtMobile').focus();
+                                }
+
+
+                            }
+
+                        })
+                }
+
+            }
+        })
+    }
+    })
+</script>
+<!--Users-->
+<script>
+
+    $('.nav-item').on('click', function () {
+
+        var vDataSearch;
+        var vCount = 0;
+        vNav = $(this).attr('id')
+        if (vNav == 'divUser') {
+            // Search ResEmployeeDataModal
+            $('.btnSearch').on('click', function () {
+
+                // Search CostCenter
+                var vURL = '/User/UserSearch';
+                // Load Content of CostCenter Search
+                $('#DataModalContent').load(vURL);
+                // Modal Full
+                $('#DataModalContent').parent().addClass('modal-dialog-full');
+                // Modal Show
+                $('#DataModal').modal('show');
+            })
+
+            // SElECT
+            $('body').on('click', '.btnSelectUser', function () {
+
+                var count = $("input[name='chkIsValid']:checked").length;
+                if (count == 0) {
+
+                    // alert("No rows selected to Print");
+                    return false;
+                }
+                else {
+
+                    // Selected Permissions
+                    var vSelected = '';
+                    // Check If All True Or False
+                    $('table > tbody > tr ').each(function () {
+                        // Element
+                        var vElement = $(this).find('.clsChk')
+                        var vSelectedChk = vElement.prop('checked')
+                        // Check
+                        if (vSelectedChk) {
+                            // Get Id
+                            var vGlVoucherId = vElement.attr('data-id');
+                            // Add Selected Action
+                            vSelected += vGlVoucherId + ',';
+                            vCount += $(this).length
+                        }
+                    });
+                    // close The Modal
+                    $('#DataModal').modal('hide');
+                    // Get Data From Gl Voucher After Select
+                    $.get('/api/APIUser/UserGet',
+                        {
+                            // Head Parameters
+                            phNumbers: vSelected,
+                            // Query Type Id
+                            pQueryTypeId: '400'
+                        }, function (data, status) {
+                            // JSON Parse
+                            vDataResult = JSON.parse(data);
+                            vDataSearch = vDataResult
+                            displayData(vDataSearch[0])
+                        })
+                }
+            });
+
+            function displayData(vRow) {
+                if (vRow) {
+                    $('#txtUserId').val(vRow.UserId)
+                    $('#txtUserName').val(vRow.UserName)
+                    $('#txtUserPassword').val(vRow.UserPassword)
+                    $('#txtUserConfirmPassword').val(vRow.UserPassword)
+                    $('#txtEmployeeCode').val(vRow.EmployeeCode)
+                    $('#txtEmployeeCode').attr('data-id', vRow.EmployeeId)
+                    $('#txtEmployeeName').val(vRow.EmployeeName)
+                }
+            }
+
+            //Next-Previous-First-Last
+            var index = 0;
+            $('#btnNext').click(function () {
+                if (index <= vDataSearch.length) {
+                    // Call Function Display Data
+
+                    displayData(vDataSearch[++index]);
+                    $('.txtCount').text(index)
+                }
+            });
+            $('#btnPrev').click(function () {
+                if (index > 0) {
+                    // Call Function Display Data
+                    displayData(vDataSearch[--index])
+                    $('.txtCount').text(index)
+                }
+            });
+            $('#btnFirst').click(function () {
+                $('.txtCount').text(1)
+                displayData(vDataSearch[0])
+            });
+            $('#btnLast').click(function () {
+                $('.txtCount').text(vDataSearch.length)
+                displayData(vDataSearch[vDataSearch.length - 1])
+            });
+
+
+            $('#txtUserName').on('keyup keydown click', function () {
+                $(this).removeClass('errorClass')
+            })
+            $('#txtUserPassword').on('keyup keydown click', function () {
+                $(this).removeClass('errorClass')
+            })
+            $('#txtUserConfirmPassword ').on('keyup keydown click', function () {
+                $(this).removeClass('errorClass')
+            })
+            $('#txtEmployeeCode').on('keyup keydown click', function () {
+                $(this).removeClass('errorClass')
+            })
+
+
+            // Save Using button
+            $('.btnSave').on('click', function () {
+                var CardNum = $('.cardHeader').attr('data-changed')
+                //     if (CardNum === '3') {
+                // Save  ALL
+                SaveUser()
+                //     }
+
+            }) // End BtnSave
+
+            // Save Using F10
+            $('body').on('keyup', function (e) {
+                // Check F10
+                if (e.keyCode == 121) {
+                    // Save  ALL
+                    SaveUser()
+                }
+            })
+
+            // Function SAVE USER
+            function SaveUser() {
+
+                var UserId = $('#txtUserId').val();
+                var UserName = $('#txtUserName').val();
+                var UserFullName = $('#txtUserFullName').val();
+                var UserPassword = $('#txtUserPassword').val();
+                var UserConfirmPassword = $('#txtUserConfirmPassword').val();
+                var EmpolyeeId = $('#txtEmployeeCode').attr('data-id');
+                var EmpolyeeCode = $('#txtEmployeeCode').val()
+                var Valid = false;
+                if (UserName != '' && UserPassword != '') {
+                    if (UserPassword == UserConfirmPassword) {
+                        $.get('/api/APIUser/UserGet',
+                            {
+                                pUserId: UserId,
+                                pUserName: UserName,
+                                pUserFullName: UserFullName,
+                                pUserPassword: btoa(UserPassword),
+                                pEmployeeId: EmpolyeeId,
+                                pIsDeleted: false,
+                                pUserIsActive: true,
+                                pLanguageId: 1,
+                                pQueryTypeId: 100
+                            },
+                            function (data) {
+                                var vDataResult = JSON.parse(data)
+
+                                $('#txtUserId').val(vDataResult[0].UserId)
+                                funNotification('تم الحفظ بنجاح', 1)
+                            })
+                    } else {
+                        $('#txtUserConfirmPassword').addClass('errorClass')
+                        funNotification('الرقم السري غير متطابق', 3)
+                    }
+                }// Check Empty
+                else {
+
+                    if (UserName == '') {
+                        $('.txtUserName').addClass('errorClass')
+                    }
+                    if (UserPassword == '') {
+                        $('.txtUserPassword').addClass('errorClass')
+                    }
+                    if (EmpolyeeCode == '') {
+                        $('#txtEmployeeCode').addClass('errorClass')
+                    }
+
+                    funNotification('يجب اكمال البيانات ', 2)
+                }
+            }
+            $('body').on('keydown dblclick', '.txtEmployeeCode', function (e) {
+
+                // Check F9
+                if (e.keyCode == 120 || e.type == 'dblclick') {
+                    localStorage.setItem('lstcurrentEmptxt', '0')
+
+                    // Get Emp Data
+                    var vEmpIdElement = $('.txtEmployeeCode');
+                    var vEmpNameElement = $('.txtEmployeeName');
+
+
+                    // Search Emp
+                    var vURL = '/ResEmployee/SearchResEmployeeModal';
+                    // Load Content of Emp Search
+                    $('#DataModalContent').load(vURL);
+
+                    var vLstEmps = localStorage.getItem('lstEmps');
+                    var vDRowContent = '';
+                    // Modal Show
+                    $('#DataModal').modal('show');
+                    // Focus
+                    $('#DataModal').on('shown.bs.modal', function () {
+                        $('.txtSearch').focus();
+                        // Select Emp
+                        $('body').on('click', '.divResEmployeeSelect', function () {
+                            $('.txtSearch').focus();
+
+                            // Emp Id
+                            var vEmpId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vEmpCodeValue = $(this).find('.divResEmployeeNo').text();
+                            var vEmpNameValue = $(this).find('.divResEmployeeName').text();
+
+
+
+                            // Set Value
+                            vEmpIdElement.val(vEmpCodeValue);
+                            vEmpIdElement.attr('data-id', vEmpId);
+                            vEmpNameElement.val(vEmpNameValue);
+
+                            // Modal Show
+                            $('#DataModal').modal('hide');
+
+                        })
+                    })
+                }
+            })
+            $('body').on('change', '.txtEmployeeCode', function (e) {
+                if ($(this).val().trim() == '') {
+                    $('.txtEmployeeName').val('')
+                }
+                else {
+                    $.post('/ResEmployee/GetResEmployeeByCode', {
+                        pResEmployeeCode: $('.txtEmployeeCode').val()
+                    }, function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            $.each(vDataResult, function (i, Emp) {
+                                $('.txtEmployeeCode').attr('data-id', Emp.ResEmployeeId);
+
+                                $('.txtEmployeeName').val(Emp.ResEmployeeNameL1);
+                            })
+                        }
+                        else {
+
+                            // Empty Fileds
+                            $('.txtEmployeeCode').val('');
+                            $('.txtEmployeeName').val('');
+                            $('.txtEmployeeCode').attr('data-id', 0);
+                            funNotification('يجب اختيار بيان  صحيح', 2);
+
+                        }
+                    })
+                }
+            })
+
+            function funClear() {
+                $('#txtUserId').val('')
+                $('#txtUserName').val('')
+                $('#txtUserPassword').val('')
+                $('#txtUserConfirmPassword').val('')
+                $('#txtEmployeeCode').val('')
+                $('#txtEmployeeName').val('')
+            }
+
+
+            $('.btnDelete').on('click', function () {
+                // Id - NameAr - NameEn
+                var vDataId = $('#txtUserId').val();
+                if (vDataId != '0') {
+                    var vDataName = $('#txtUserName').val();
+                    // URL
+                    var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+                    // Get HTML Content of [Confirm Delete] Partial View
+                    $.get(
+                        // URL
+                        vDataURL,
+                        // Parameters
+                        {
+                            id: vDataId,
+                            pName: vDataName,
+                        },
+                        // Function
+                        function (data, status) {
+                            // Modal
+                            $('#confirmDeleteModalContent').html(data);
+                            $('#confirmDeleteModal').modal('show');
+                            // Click Event [Delete Confirm]
+                            $("body").on("click", "#btnDeleteConfirm", function () {
+                                funNotification('تم الحذف بنجاح', 1);
+                                // Delete Action URL
+                                var vDeleteActionURL = '/api/APIUser/UserGet';
+                                // Delete
+                                $.get(vDeleteActionURL, { pUserId: vDataId, pIsDeleted: true, pQueryTypeId: 300 }, function () {
+                                    funClear();
+                                    funNotification('تم الحذف بنجاح ', 1)
+                                });
+
+                            });
+                        });
+                }
+
+            }); // End of Click Event [Delete Button]
+
+        }
+
+    });// END Of Use Nav
+</script>
+<!--User Permission-->
+<script>
+    // Code Here
+    function funUserCashier(pData) {
+        var ModifyInvoice;
+        if (pData.ModifyInvoice) {
+            var ModifyInvoice = 'checked';
+        }
+
+        var CancelInvoice;
+        if (pData.CancelInvoice) {
+            var CancelInvoice = 'checked';
+        }
+
+        var RePrintInvoice;
+        if (pData.RePrintInvoice) {
+            var RePrintInvoice = 'checked';
+        }
+
+        var IsCashierDelivery;
+        if (pData.IsCashierDelivery) {
+            var IsCashierDelivery = 'checked';
+        }
+
+        var PcVerfiy;
+        if (pData.PcVerfiy) {
+            var PcVerfiy = 'checked';
+        }
+
+        var ReturnInsurance;
+        if (pData.ReturnInsurance) {
+            var ReturnInsurance = 'checked';
+        }
+
+        var SearchInvoice;
+        if (pData.SearchInvoice) {
+            var SearchInvoice = 'checked';
+        }
+
+        var HoldInvoice;
+        if (pData.HoldInvoice) {
+            var HoldInvoice = 'checked';
+        }
+        var Discount;
+        if (pData.Discount) {
+            var Discount = 'checked';
+        }
+
+
+        var vData =
+            '<tr class="tblUserCashierRow" data-id="' + pData.UserCashierId + '" data-changed="0">' +
+            '<td class="" >' +
+            '<button class="btn btn-light btn-sm border btnAddUserCashierRow" type="submit">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            '</button>' +
+            '</td >' +
+            '<td class="">' +
+            '<div class="d-flex ">' +
+            '<div class="col-sm-4 p-0">' +
+            '<input class="form-control form-control-sm text-center txtUserCode" value="' + pData.UserCode + '" data-id="' + pData.UserId + '" type="text" min=0 required />' +
+            '</div>' +
+            '<div class="col-sm-8 p-0">' +
+            '<input class="form-control form-control-sm text-center txtUserName" value="' + pData.UserName + '" type="text" required disabled />' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '<td class="">' +
+            '<div class="d-flex ">' +
+            '<div class="col-sm-4 p-0">' +
+            '<input class="form-control form-control-sm text-center txtCashierCode" value="' + pData.CashierCode + '" data-id="' + pData.CashierId + '" type="text" min=0 required />' +
+            '</div>' +
+            '<div class="col-sm-8 p-0">' +
+            '<input class="form-control form-control-sm text-center txtCashierName" value="' + pData.CashierName + '" type="text" required disabled />' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '<td class="" style=" padding-right:1rem !important;">' +
+            '<input type="text" value="' + pData.InsuranceLimit + '" class="form-control form-control-sm text-center txtInsuranceLimit">' +
+            '</td>' +
+            '<td class="" style=" padding-right:1rem !important;">' +
+            '<input type="text" value="' + pData.ReportPeriod + '" class="form-control form-control-sm text-center ReportPeriod">' +
+            '</td>' +
+            '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+            '<div class="custom-control custom-checkbox ml-5">' +
+            '<input type="checkbox" class="custom-control-input  chkModifyInvoice" ' + ModifyInvoice + ' id="chkModifyInvoice' + pData.UserCashierId + '" >' +
+            '<label class="custom-control-label small" for="chkModifyInvoice' + pData.UserCashierId + '"></label>' +
+            '</div>' +
+            '</td>' +
+            '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+            '<div class="custom-control custom-checkbox ml-5">' +
+            '<input type="checkbox" class="custom-control-input  chkCancelInvoice" ' + CancelInvoice + ' id="chkCancelInvoice' + pData.UserCashierId + '" >' +
+            ' <label class="custom-control-label small" for="chkCancelInvoice' + pData.UserCashierId + '"></label>' +
+            '</div>' +
+            '</td>' +
+            '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+            '<div class="custom-control custom-checkbox ml-5">' +
+            '<input type="checkbox" class="custom-control-input  chkRePrintInvoice" ' + RePrintInvoice + ' id="chkRePrintInvoice' + pData.UserCashierId + '" >' +
+            '<label class="custom-control-label small" for="chkRePrintInvoice' + pData.UserCashierId + '"></label>' +
+            '</div>' +
+            '</td>' +
+            '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+            '<div class="custom-control custom-checkbox ml-5">' +
+            '<input type="checkbox" class="custom-control-input  chkIsCashierDelivery" ' + IsCashierDelivery + ' id="chkIsCashierDelivery' + pData.UserCashierId + '" >' +
+            '<label class="custom-control-label small" for="chkIsCashierDelivery' + pData.UserCashierId + '"></label>' +
+            '</div>' +
+            ' </td>' +
+            '<td width = "3%" class="" style = " padding-right:1rem !important;">' +
+            '<div class="custom-control custom-checkbox ml-5">' +
+            '<input type="checkbox" class="custom-control-input  chkPcVerfiy" ' + PcVerfiy + ' id="chkPcVerfiy' + pData.UserCashierId + '" >' +
+            '<label class="custom-control-label small" for="chkPcVerfiy' + pData.UserCashierId + '"></label>' +
+            '</div>' +
+            '</td>' +
+            '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+            '<div class="custom-control custom-checkbox ml-5">' +
+            '<input type="checkbox" class="custom-control-input  chkReturnInsurance " ' + ReturnInsurance + ' id="chkReturnInsurance' + pData.UserCashierId + '" >' +
+            '<label class="custom-control-label small" for="chkReturnInsurance' + pData.UserCashierId + '"></label>' +
+            '</div>' +
+            ' </td>' +
+            '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+            '<div class="custom-control custom-checkbox ml-5">' +
+            '<input type="checkbox" class="custom-control-input  chkSearchInvoice " ' + SearchInvoice + ' id="chkSearchInvoice' + pData.UserCashierId + '" >' +
+            '<label class="custom-control-label small" for="chkSearchInvoice' + pData.UserCashierId + '"></label>' +
+            '</div>' +
+            '</td>' +
+            '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+            '<div class="custom-control custom-checkbox ml-5">' +
+            '<input type="checkbox" class="custom-control-input  chkHoldInvoice" ' + HoldInvoice + ' id="chkHoldInvoice' + pData.UserCashierId + '" >' +
+            '<label class="custom-control-label small" for="chkHoldInvoice' + pData.UserCashierId + '"></label>' +
+            '</div>' +
+            '</td>' +
+            '<td width="3%" class="" style=" padding-right:1rem !important;">' +
+            '<div class="custom-control custom-checkbox ml-5">' +
+            '<input type="checkbox" class="custom-control-input  chkDiscount" ' + Discount + ' id="chkDiscount' + pData.UserCashierId + '" >' +
+            '<label class="custom-control-label small" for="chkDiscount' + pData.UserCashierId + '"></label>' +
+            '</div>' +
+            '</td>' +
+
+            '<td><button class="btn btn-light btn-sm btnUserCashierDelete" data-id="' + pData.UserCashierId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+        return vData;
+    }
+    $('.nav-item').on('click', function () {
+        vNav = $(this).attr('id')
+        if (vNav == 'divUserCashier') {
+
+
+
+
+
+            // Add New Row
+            $('body').on('click', '.btnAddUserCashierRow', function () {
+                var RowContent = {
+                    'UserCashierId': '0',
+                    'UserCode': '',
+                    'UserName': '',
+                    'CashierCode': '',
+                    'CashierName': '',
+                    'InsuranceLimit': '0',
+                    'ReportPeriod': '0',
+                };
+                var vTableRow = $(this).closest('.tblUserCashierRow');
+                $(vTableRow).closest("tr").after(funUserCashier(RowContent));
+            })
+
+
+            // Add New Row
+            function funAddUserCashierRow() {
+                var RowContent = {
+                    'UserCashierId': '0',
+                    'UserCode': '',
+                    'UserName': '',
+                    'CashierCode': '',
+                    'CashierName': '',
+                    'InsuranceLimit': '0',
+                    'ReportPeriod': '0',
+                };
+                var vTableRow = $('.tblUserCashierRow');
+                $(vTableRow).append(funUserCashier(RowContent));
+            }
+            //Save
+            // Save Using button
+            $('.btnSave').on('click', function () {
+
+                // Save  ALL
+                SaveUserCashier()
+
+            }) // End BtnSave
+
+            //// Save Using F10
+            //$('body').on('keyup', function (e) {
+            //    // Check F10
+            //    if (e.keyCode == 121) {
+            //        // Save  ALL
+            //        SaveUserCashier()
+            //    }
+            //})
+            $('body').on('change', '.txtCashierCode,.txtUserCode,.txtInsuranceLimit,.ReportPeriod', function () {
+
+                // Get Closest Row
+                var vTableRow = $(this).closest('.tblUserCashierRow');
+
+                vTableRow.attr('data-changed', '1')
+
+            })
+         $('body').on('click', '.chkModifyInvoice,.chkCancelInvoice,.chkRePrintInvoice,.chkIsCashierDelivery,.chkPcVerfiy,.chkReturnInsurance,.chkSearchInvoice,.chkHoldInvoice,.chkDiscount', function () {
+
+                // Get Closest Row
+                var vTableRow = $(this).closest('.tblUserCashierRow');
+
+                vTableRow.attr('data-changed', '1')
+
+            })
+            function SaveUserCashier() {
+                var valid = false;
+                $('.tblUserCashierRow').each(function () {
+                    var vElement = $(this).closest('tr')
+                    // Get Data
+                    var UserCashierId = vElement.attr('data-id');
+                    var UserId = vElement.find('.txtUserCode').attr('data-id')
+                    var CashierId = vElement.find('.txtCashierCode').attr('data-id')
+                    var UserCode = vElement.find('.txtUserCode').val()
+                    var CashierCode = vElement.find('.txtCashierCode').val()
+                    var InsuranceLimit = vElement.find('.txtInsuranceLimit').val()
+                    var ReportPeriod = vElement.find('.ReportPeriod').val()
+                    var ModifyInvoice = vElement.find('.chkModifyInvoice').prop('checked')
+                    var CancelInvoice = vElement.find('.chkCancelInvoice').prop('checked')
+                    var RePrintInvoice = vElement.find('.chkRePrintInvoice').prop('checked')
+                    var IsCashierDelivery = vElement.find('.chkIsCashierDelivery').prop('checked')
+                    var PcVerfiy = vElement.find('.chkPcVerfiy').prop('checked')
+                    var ReturnInsurance = vElement.find('.chkReturnInsurance').prop('checked')
+                    var SearchInvoice = vElement.find('.chkSearchInvoice').prop('checked')
+                    var HoldInvoice = vElement.find('.chkHoldInvoice').prop('checked')
+                    var Discount = vElement.find('.chkDiscount').prop('checked')
+
+                    if (vElement.attr('data-changed') == '1') {
+                        if (UserCode != '' && CashierCode != '') {
+                            vElement.attr('data-changed', '0')
+
+                            $.get('/UserCashier/funSaveUserCashier',
+                                {
+                                    pUserCashierId: UserCashierId,
+                                    pUserId: UserId,
+                                    pCashierId: CashierId,
+                                    pModifyInvoice: ModifyInvoice,
+                                    pCancelInvoice: CancelInvoice,
+                                    pRePrintInvoice: RePrintInvoice,
+                                    pIsCashierDelivery: IsCashierDelivery,
+                                    pPcVerfiy: PcVerfiy,
+                                    pReturnInsurance: ReturnInsurance,
+                                    pSearchInvoice: SearchInvoice,
+                                    pHoldInvoice: HoldInvoice,
+                                    Discount: Discount,
+                                    pInsuranceLimit: InsuranceLimit,
+                                    ReportPeriod: ReportPeriod,
+                                    pIsDeleted: false,
+                                    pQueryTypeId: '100'
+
+                                }, function (data) {
+
+                                    //var vResultData = JSON.parse(data)
+                                    //vElement.attr('data-id', vResultData[0].UserCashId);
+                                    //vElement.find('.txtCashCode').attr('data-id', vResultData[0].UserCashId)
+                                })
+                            valid = true;
+                        }
+                        else {
+                            // Error Class Validation
+                            if (UserCode == '') {
+                                vElement.find('.txtUserCode').addClass('errorClass')
+                            }
+                            if (CashierCode == '') {
+                                vElement.find('.txtCashierCode').addClass('errorClass')
+                            }
+                            funNotification('يجب استكمال البيانات', '2')
+                            valid = false;
+                        }
+                    }
+                    else {
+                    }
+                })
+                if (valid) {
+
+                    funNotification('تم الحفظ بنجاح', 1)
+                }
+            }
+
+        }
+
+
+        // Account Code, Name - F9 - Double Click
+        $('.tblUserCashierBody').on('keyup dblclick', '.txtCashierCode', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+                // Search Account
+                var vURL = '/UserCashier/CashierSearch';
+                // Load Content of Account Search
+                $('#DataModalContent').load(vURL);
+                // Modal Show
+                $('#DataModal').modal('show');
+                // Focus
+                $('#DataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divCashSelect', function () {
+
+                        // Get Values
+                        var vCashId = $(this).attr('data-id');
+                        var vCashNameValue = $(this).find('.divCashName').text();
+                        var vCashCodeValue = $(this).find('.divCashCode').text();
+
+
+                        // Get Cash Data
+                        var vCashIdElement = vTableRow.find('.txtCashierCode');
+                        var vCashNameElement = vTableRow.find('.txtCashierName');
+                        var vCashCodeElement = vTableRow.find('.txtCashierCode');
+
+
+                        // Set Value
+                        vCashIdElement.attr('data-id',vCashId);
+                        vCashNameElement.val(vCashNameValue);
+                        vCashCodeElement.val(vCashCodeValue);
+
+                        // Modal Show
+                        $('#DataModal').modal('hide');
+                        vTableRow.attr('data-changed', '1');
+                        vTableRow.removeClass('table-info');
+
+                        vTableRow = '';
+                    })
+                })
+            }
+        })
+
+
+
+
+
+
+        $('.tblUserCashierBody').on('change', '.txtCashierCode', function (e) {
+            var vTableRow = $(this).closest('.tblUserCashierRow');
+            var Code =$(this).val()
+            if ($(this).val().trim() == '') {
+                vTableRow.find('.CashierName').val('')
+            }
+            else {
+                $.get('/api/APICashier/CashierGET', {
+                    pCashCode: Code,
+                    pQueryTypeId:400
+                }, function (data, status) {
+
+
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+
+                        $.each(vDataResult, function (i, Cashier) {
+
+                            vTableRow.find('.txtCashierCode').attr('data-id', Cashier.CashId);
+                            vTableRow.find('.txtCashierName').val(Cashier.CashNameL1);
+                        })
+                    }
+                    else {
+
+                        // Cashierty Fileds
+                        vTableRow.find('.txtCashierCode').val('');
+                        vTableRow.find('.txtCashierName').val('');
+                        vTableRow.find('.txtCashierCode').attr('data-id', 0);
+                        funNotification('يجب اختيار بيان  صحيح', 2);
+
+                    }
+                })
+                if (vTableRow.index > 0) {
+                    if (vTableRow.find('.txtCashierId').val().trim() != '') {
+
+                    }
+                }
+            }
+        })
+
+
+
+        $('.tblUserCashierBody').on('change', '.txtUserCode', function (e) {
+            var vTableRow = $(this).closest('.tblUserCashierRow');
+            var Code = $(this).val()
+            if ($(this).val().trim() == '') {
+                vTableRow.find('.UserName').val('')
+            }
+            else {
+                $.get('/api/APIUser/UserGET', {
+                    pUserCode: Code,
+                    pQueryTypeId: 400
+                }, function (data, status) {
+
+
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+
+                        $.each(vDataResult, function (i, User) {
+
+                            vTableRow.find('.txtUserCode').attr('data-id', User.UserId);
+                            vTableRow.find('.txtUserName').val(User.UserName);
+                        })
+                    }
+                    else {
+
+                        // Cashierty Fileds
+                        vTableRow.find('.txtUserCode').val('');
+                        vTableRow.find('.txtUserName').val('');
+                        vTableRow.find('.txtUserCode').attr('data-id', 0);
+                        funNotification('يجب اختيار بيان  صحيح', 2);
+
+                    }
+                })
+                if (vTableRow.index > 0) {
+                    if (vTableRow.find('.txtUserId').val().trim() != '') {
+
+                    }
+                }
+            }
+        })
+
+
+        // Modal USer
+
+        // Account Code, Name - F9 - Double Click
+        $('.tblUserCashierBody').on('keyup dblclick', '.txtUserCode', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+                // Search Account
+                var vURL = '/UserCashier/UserSearch';
+                // Load Content of Account Search
+                $('#DataModalContent').load(vURL);
+                // Modal Show
+                $('#DataModal').modal('show');
+                // Focus
+                $('#DataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divUserSelect', function () {
+
+                        // Get Values
+                        var vCashId = $(this).attr('data-id');
+                        var vCashNameValue = $(this).find('.divUserName').text();
+                        var vCashCodeValue = $(this).find('.divUserCode').text();
+
+
+                        // Get Cash Data
+                        var vCashIdElement = vTableRow.find('.txtUserCode');
+                        var vCashNameElement = vTableRow.find('.txtUserName');
+                        var vCashCodeElement = vTableRow.find('.txtUserCode');
+
+
+                        // Set Value
+                        vCashIdElement.attr('data-id', vCashId);
+                        vCashNameElement.val(vCashNameValue);
+                        vCashCodeElement.val(vCashCodeValue);
+
+                        // Modal Show
+                        $('#DataModal').modal('hide');
+                        vTableRow.attr('data-changed', '1');
+                        vTableRow.removeClass('table-info');
+
+                        vTableRow = '';
+                    })
+                })
+            }
+        })
+
+        // Load Data
+        LoadUserCasherData()
+
+           // Function To Load Data
+            function LoadUserCasherData() {
+                $.get('/api/APIUserCashier/UserCashierGet',
+                    {
+                        pIsDeleted: false,
+                        pQueryTypeId: '@clsQueryType.qSelect'
+
+                    },
+                    function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vBody = $('.tblUserCashierBody')
+                            vBody.html('')
+                            var DataResult = JSON.parse(data)
+                            $.each(DataResult, function (i, Item) {
+                                vBody.append(funUserCashier(Item));
+                            })
+                        }
+                    })
+            }
+
+
+        //New Delete
+        $('body').on('click', '.btnUserCashierDelete', function () {
+            // Id - NameAr - NameEn
+            var vElement = $(this)
+            var vDataId = $(this).attr('data-id');
+            var vDataName = $(this).attr('data-name');
+            // URL
+            var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+            // Get HTML Content of [Confirm Delete] Partial View
+            $.get(
+                // URL
+                vDataURL,
+                // Parameters
+                {
+                    id: vDataId,
+                    pName: vDataName,
+                },
+                // Function
+                function (data, status) {
+                    if (vDataId > 0) {
+                        // Modal
+                        $('#confirmDeleteModalContent').html(data);
+                        $('#confirmDeleteModal').modal('show');
+                        // Click Event [Delete Confirm]
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            // Delete Action URL
+                            var vDeleteActionURL = '/api/APIUserCashier/UserCashierGet';
+                            // Delete
+                            $.get(vDeleteActionURL, { pUserCashierId: vDataId, pIsDeleted: true, pQueryTypeId: '300' }, function (data) {
+
+
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblUserCashierBody').find('tr').attr('data-id')
+
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    funAddUserCashierRow()
+                                }
+                                // Notification
+                                funNotification('تم الحذف بنجاح', 1);
+
+                            });
+                        });
+                    }
+                    else {
+                        // Only Delete The Row
+                        vElement.closest('tr').remove();
+                        // Check If IT The Last Row
+                        var vLastRow = $('.tblUserCashierBody').find('tr').attr('data-id')
+                        // Add Row If Empty
+                        if (vLastRow == undefined) {
+                            //funAddDTLEmptyRow($('.tblDtlBody'))
+                            funAddUserCashierRow()
+                        }
+                    }
+                });
+        }); // End of Click Event [Delete Button]
+
+
+    });
+
+
+    $('table').on('keyup dblclick', '.txtUserObjectCode', function (e) {
+        // F9 - Double Click
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            // Table Row - Closest Row
+            vTableRow = $(this).closest('tr');
+            localStorage.setItem('lsType', 'Content')
+
+            // Search Account
+            var vURL = '/SecurityRole/ObjectSearch';
+            // Load Content of Account Search
+            $('#DataModalContent').load(vURL);
+            // Modal Show
+            $('#DataModal').modal('show');
+            // Focus
+            $('#DataModal').on('shown.bs.modal', function () {
+
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divObjectSelect', function () {
+                        // Get Values
+                        var vCashId = $(this).attr('data-id');
+                        var vCashNameValue = $(this).find('.divObjectName').text();
+                        var vCashCodeValue = $(this).find('.divObjectCode').text();
+
+
+
+                        // Get Cash Data
+                        var vCashIdElement = vTableRow.find('.txtUserObjectCode');
+                        var vCashNameElement = vTableRow.find('.txtUserObjectName');
+                        var vCashCodeElement = vTableRow.find('.txtUserObjectCode');
+
+                        // Set Value
+                        vCashIdElement.attr('data-id', vCashId);
+                        vCashNameElement.val(vCashNameValue);
+                        vCashCodeElement.val(vCashCodeValue);
+                        vTableRow.attr('data-changed', '1')
+                        // Modal Show
+                        $('#DataModal').modal('hide');
+                         vTableRow.attr('data-changed', '1')
+                        vTableRow.removeClass('table-info');
+
+                        vTableRow = '';
+                })
+            })
+        }
+    })
+
+
+    //On Change User Object Code
+    // Get  Object
+    $('body').on('change', '.txtUserObjectCode', function (e) {
+        var Element = $(this).closest('tr')
+        var Code = $(this).val()
+
+        if ($(this).val().trim() == '') {
+            $('.txtUserObjectName').val('')
+        }
+        else {
+            $.get("/api/APIObject/ObjectGET", {
+                pObjectId: Code,
+                pQueryTypeId: 400
+            }, function (data, status) {
+
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+
+                    $.each(vDataResult, function (i, Object) {
+
+                        Element.find('.txtUserObjectCode').attr('data-id', Object.ObjectId);
+                        Element.find('.txtUserObjectName').val(Object.ObjectNameL1);
+                    })
+                    LoadUserGroup()
+                }
+                else {
+
+                    // Cashierty Fileds
+                    Element.find('.txtUserObjectCode').val('');
+                    Element.find('.txtUserObjectName').val('');
+                    Element.find('.txtUserObjectCode').attr('data-id', 0);
+                    funNotification('يجب اختيار بيان  صحيح', 2);
+                }
+            })
+
+        }
+    })
+
+    function funConfigUserObject(pData) {
+        var RowContent =
+            '<tr class="tblUserObjectRow" data-id="' + pData.SecurityRoleObjectId + '"  data-SecurityRoleId="' + pData.SecurityRoleId +'" data - changed="0" >'+
+            '<td class="">' +
+            '<button class="btn btn-light btn-sm border btnAddUserObjectRow" type="submit">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            '</button>' +
+            ' </td>' +
+            '<td class="">' +
+            '<div class="d-flex ">' +
+            '<div class="col-sm-4 p-0">' +
+            '<input class="form-control form-control-sm text-center txtUserObjectCode" value="' + pData.ObjectId+'" data-id="0" type="text" min=0 required />' +
+            '</div>' +
+            '<div class="col-sm-8 p-0">' +
+            '<input class="form-control form-control-sm text-center txtUserObjectName" value="' + pData.ObjectNameL1 +'" type="text" required disabled />' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '<td width="3%" class="" >' +
+            '<input type="checkbox" class="chkAllActions" id="chkAllActions"  >' +
+            '</td>' +
+            '<td width="3%" class="DevChk" >' +
+            '<input type="checkbox" class="chk chkView " name="1" id="chkView"  ' +pData.IsView+' >' +
+            '</td>' +
+            '<td width="3%" class="DevChk" >' +
+            '<input type="checkbox" class="chk chkNew" name="2" id="chkNew" '+pData.IsNew +'>' +
+            '</td>' +
+            '<td width="3%" class="DevChk" >' +
+            '<input type="checkbox" class="chk  chkSave" name="3" id="chkSave" '+pData.IsSave +'>' +
+            ' </td>' +
+            '<td width="3%" class="DevChk" >' +
+            ' <input type="checkbox" class="chk  chkEdit" name="4" id="chkEdit" '+pData.IsEdit +'>' +
+            '</td>' +
+            '<td width="3%" class="DevChk" >' +
+            '<input type="checkbox" class="chk  chkDelete " name="5" id="chkDelete" '+pData.IsDelete +'>' +
+            '</td>' +
+
+            '<td width="3%" class="DevChk" >' +
+            '<input type="checkbox" class="chk  chkPrint " name="6" id="chkPrint" ' + pData.IsPrint +'>' +
+            '</td>' +
+            ' <td><button class="btn btn-light btn-sm btnUserObjectDelete"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+
+     return RowContent;
+    }
+    $('.DevChk').on('click', function () {
+        $(this).attr('data-changed', '1');
+    })
+    // Add Item Row
+    function funAddUserObjectRow(pCurrentRow) {
+        var RowContent = {
+            'ObjectId': '',
+
+            'SecurityRoleId': '0',
+            'ObjectNameL1': '',
+            'SecurityRoleObjectId': '0',
+
+        };
+        var vBody = $('.tblUserObjectBody')
+        $(pCurrentRow).closest("tr").after(funConfigUserObject(RowContent));
+    }
+
+    function funAddUserObjectRowNew() {
+        var RowContent = {
+            'ObjectId': '',
+            'SecurityRoleId': '0',
+            'ObjectNameL1': '',
+            'SecurityRoleObjectId': '0',
+        };
+        var vBody = $('.tblUserObjectBody')
+        vBody.append(funConfigUserObject(RowContent));
+    }
+    $('body').on('click', '.btnAddUserObjectRow', function () {
+        var Current = $(this).closest('tr')
+        // Add New Row
+        funAddUserObjectRow(Current)
+    })
+
+
+    // funLoadContentData()
+    function funLoadObjectData(pSecurityRoleId) {
+        $.get('/api/APISecurityRole/SecurityRoleGET',
+            {
+                IsMaster: false,
+                pSecurityRoleId: pSecurityRoleId,
+                pQueryTypeId: '400',
+
+            },
+            function (data, status) {
+                var vBody = $('.tblUserObjectBody')
+                vBody.html('')
+                if (data != undefined && data != '') {
+
+
+
+                    var DataResult = JSON.parse(data)
+
+                    if (DataResult[0] == undefined || DataResult[0] == '') {
+                        funAddUserObjectRowNew()
+
+
+                    }
+                    else {
+                        $.each(DataResult, function (i, Item) {
+                            vBody.append(funConfigUserObject(Item));
+                        })
+                    }
+                } else {
+                    funAddUserObjectRowNew()
+                }
+
+            })
+    }
+
+    $('body').on('click', '.DevChk', function () {
+        $(this).closest('tr').attr('data-changed', '1')
+    })
+
+    // Get CheckBoxes Data
+    $(document).ready(function () {
+        var GroupId;
+        // On CLick On Tab
+
+        $('#Cash-tab').on('click', function () {
+            $('.cardHeader').attr('data-changed', 1)
+        })
+        $('#Employee-tab').on('click', function () {
+            $('.cardHeader').attr('data-changed', 2)
+        })
+        $('#User-tab').on('click', function () {
+            $('.cardHeader').attr('data-changed', 3)
+        })
+        $('#UserCashier-tab').on('click', function () {
+            $('.cardHeader').attr('data-changed', 4)
+        })
+        $('#UserObject-tab').on('click', function (e) {
+            e.preventDefault();
+            $('.cardHeader').attr('data-changed', 5)
+        })
+        // Select Group
+        $('body').on('click', '.clsGroupLink,.UserGroup', function () {
+            GroupId = $(this).attr('data-id')
+            UserId = $('.txtUserGroupCode').attr('data-id')
+            funLoadObjectData(GroupId)
+            funFillUserGroup(UserId)
+        })
+        // Get Data Changes Of TAb
+        var CardNum = $('.cardHeader').attr('data-changed')
+        if (CardNum === '5') {
+        $('.btnSave').click(function () {
+            // Check USer Exist
+            var UserId = $('.txtUserGroupCode').attr('data-id')
+            var UserCode = $('.txtUserGroupCode').val();
+            var ValidGroup;
+            if (UserCode !='') {
+                // Role
+                var arrRole = [];
+
+                $(' .tblUserObjectBody > .tblUserObjectRow').each(function () {
+
+                    // Selected Row
+                    var arrSelectedRow = [];
+                    var vSelected = '';
+                    // Row Id
+                    var vObjectId = $(this).find('.txtUserObjectCode').val();
+
+                    var element = $(this).closest('tr')
+                    //arrSelectedRow.push(vObjectId);
+
+
+                    $(this).find('.DevChk input:checked').each(function () {
+
+                        // Current Object Id
+                        var vCurrentObjectActionId = $(this).attr('name');
+                        arrSelectedRow.push(vCurrentObjectActionId);
+                        vSelected += vCurrentObjectActionId + ','
+
+                    })
+                    var DataChanged = element.attr('data-changed');
+                    var SecurityRoleObjectId = element.attr('data-id');
+                    console.log(SecurityRoleObjectId)
+                    if (DataChanged === '1') {
+                        if (GroupId) {
+                            $.get('/api/APISecurityRole/SecurityRoleGET',
+                                { pSecurityRoleObjectId: SecurityRoleObjectId, pSecurityRoleId: GroupId, pObjectId: vObjectId, pObjectAction: vSelected, pIsMaster: false, pQueryTypeId: '100' },
+                                function (data, status) {
+                                    var DataResult = JSON.parse(data)
+                                    console.log(DataResult[0].Id)
+                                    // Notification
+                                    element.attr('data-changed', '0')
+                                    element.attr('data-id', DataResult[0].Id)
+                                })
+                        } else {
+                            ValidGroup = false
+
+                        }
+                    }
+                    arrRole.push(arrSelectedRow);
+                })
+                //Save User Group
+                SaveUserGroup()
+                console.log(ValidGroup)
+                if (ValidGroup = true) {
+                    funNotification('تم الحفظ بنجاح', '1');
+                }
+            }
+            else {
+               // funNotification('يجب اختيار مستخدم',2)
+            }
+            });
+            // Get Data Of User Group
+        }
+    });
+    //New Delete
+    $('body').on('click', '.btnUserObjectDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this).closest('tr')
+        var vDataId = vElement.attr('data-id');
+        var vDataName = vElement.attr('data-id');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+               
+                //$('#confirmDeleteModalContent').html(data);
+                //$('#confirmDeleteModal').modal('show');
+                if (vDataId > 0) {
+                    console.log(vDataId)
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APISecurityRole/SecurityRoleGet';
+                        // Delete
+                        $.get(vDeleteActionURL, { pSecurityRoleObjectId: vDataId, pIsMaster: false, pQueryTypeId: '300' }, function (data) {
+
+
+                            vElement.closest('tr').remove();
+                            // Check If IT The Last Row
+                            var vLastRow = $('.tblUserObjectBody').find('tr').attr('data-id')
+
+                            // Add Row If Empty
+                            if (vLastRow == undefined) {
+                                funAddUserObjectRowNew()
+                            }
+                            // Notification
+                            funNotification('تم الحذف بنجاح', 1);
+
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblUserObjectBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //funAddDTLEmptyRow($('.tblDtlBody'))
+                        funAddUserObjectRowNew()
+                    }
+                }
+            });
+    }); // End of Click Event [Delete Button]
+    function funFillUserGroup(pUserId) {
+
+        //Fill Group
+        $.get('/api/APIUserGroup/UserGroupGet',
+            {
+                pGroupId: pUserId,
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            }, function (data) {
+               if (data != '') {
+                var vDataResult = JSON.parse(data);
+                $.each(vDataResult, function (i, Group) {
+                    $('.clsUserGroup').append('<a href = "#" class="list-group-item list-group-item-action "  data-id="' + Group.LookupDtlId + '" >' + Group.LookupDtlDesc + '</a>')
+                })
+            }
+
+                })
+    
+    }
+
+    //Save UserGroup
+    // Save All Data
+    function SaveUserGroup() {
+
+        var CardNum = $('.cardHeader').attr('data-changed')
+            var UserId = $('.txtUserGroupCode').attr('data-id')
+            if (UserId) {
+                // For Update Data
+                $.get('/UserCashier/funSaveUserGroup',
+                    {
+                        pUserId: UserId,
+                        pQueryTypeId: '300'
+                    },
+                    function (data) {
+                        var vResultData = JSON.parse(data)
+
+
+
+                    })
+
+            }
+        $('.UserGroup').each(function () {
+            var vElement = $(this)
+            // Get Data
+            var UserGroupId = vElement.attr('id');
+
+            var GroupId = vElement.attr('data-id')
+
+            var UserId = $('.txtUserGroupCode').attr('data-id')
+            if (UserId) {
+                $.get('/UserCashier/funSaveUserGroup',
+                    {
+                        pUserGroupId: UserGroupId,
+                        pUserId: UserId,
+                        pGroupId: GroupId,
+                        pIsDeleted: false,
+                        pQueryTypeId: '100'
+                    }, function (data) {
+                        var vResultData = JSON.parse(data)
+                    })
+            }
+            else {
+               // funNotification('يجب اختيار مستخدم',2)
+            }
+        })
+    }
+
+    // Add Group
+    $('.btnRemoveGroup').on('click', function (e) {
+
+        e.preventDefault();
+        var UserGroupId = $('.clsGroupSelected').attr('Id')
+        $('.clsGroupSelected').closest('a').remove();
+
+        $.get('/UserCashier/funSaveUserGroup',
+            {
+                pUserGroupId: UserGroupId,
+                pQueryTypeId: '300'
+            }, function (data) {
+                var vResultData = JSON.parse(data)
+            })
+    })
+
+    $('body').on('change', '.chkAllActions', function () {
+        var Element = $(this).closest('tr');
+        if ($(this).is(":checked")) {
+            Element.find('.chk').prop("checked", true);
+        } else {
+            Element.find('.chk').prop("checked", false);
+        }
+
+    })
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+</script>
+

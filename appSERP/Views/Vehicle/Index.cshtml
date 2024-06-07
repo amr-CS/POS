@@ -1,0 +1,1992 @@
+﻿@using appSERP.Views.Shared.appResource;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "المركبات";
+}
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+    /* expanding input CSS only */
+    #myInput {
+        width: 130px;
+        -webkit-transition: width 0.3s ease-in-out;
+    }
+        #myInput:focus {
+            width: 100%;
+            -webkit-transition: width 0.5s ease-in-out;
+        }
+
+    #table-wrapper {
+        position: relative;
+    }
+
+    #table-scroll {
+        height: 600px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    .clsDiv {
+        /*position: fixed;*/
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        position: absolute;
+        top: -20px;
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        background-color: #D3EDFF !important;
+        background-color: #D3EDFF !important;
+    }
+
+    #table-wrapper table thead th .text {
+        position: absolute;
+        top: -20px;
+    }
+</style>
+<style class="cp-pen-styles">
+    body {
+        font-family: "Raleway", sans-serif;
+        height: 100vh;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        background-color: #eff5f6;
+    }
+
+    .wrapper {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+    }
+
+    h1 {
+        font-family: inherit;
+        margin: 0 0 .75em 0;
+        color: #728c8d;
+        text-align: center;
+    }
+
+    .box {
+        display: block;
+        /*min-width: 300px;
+        height: 300px;*/
+        min-width: 100px;
+        height: 100px;
+        margin: 10px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        -webkit-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        overflow: hidden;
+    }
+
+    .upload-options {
+        position: relative;
+        /*height: 75px;*/
+        height: 44px;
+        background-color: cadetblue;
+        cursor: pointer;
+        overflow: hidden;
+        text-align: center;
+        -webkit-transition: background-color ease-in-out 150ms;
+        transition: background-color ease-in-out 150ms;
+    }
+
+        .upload-options:hover {
+            background-color: #7fb1b3;
+        }
+
+        .upload-options input {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .upload-options label {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            width: 100%;
+            /*height: 100%;*/
+            height: 50%;
+            /*font-weight: 400;*/
+            font-weight: 100;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+            .upload-options label::after {
+                content: 'add';
+                font-family: 'Material Icons';
+                position: absolute;
+                font-size: 2.5rem;
+                color: #e6e6e6;
+                top: calc(50% - 2.5rem);
+                left: calc(50% - 1.25rem);
+                z-index: 0;
+            }
+
+            .upload-options label span {
+                display: inline-block;
+                /*width: 50%;
+                height: 100%;*/
+                width: 50%;
+                height: 50%;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                vertical-align: middle;
+                text-align: center;
+            }
+
+                .upload-options label span:hover i.material-icons {
+                    color: lightgray;
+                }
+
+    .js--image-preview {
+        /*height: 225px;*/
+        height: 60px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background-image: url("");
+        background-color: white;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+
+        .js--image-preview::after {
+            content: "photo_size_select_actual";
+            font-family: 'Material Icons';
+            position: relative;
+            font-size: 4.5em;
+            color: #e6e6e6;
+            top: calc(50% - 3rem);
+            left: calc(50% - 2.25rem);
+            z-index: 0;
+        }
+
+        .js--image-preview.js--no-default::after {
+            display: none;
+        }
+
+    i.material-icons {
+        -webkit-transition: color 100ms ease-in-out;
+        transition: color 100ms ease-in-out;
+        font-size: 2.25em;
+        line-height: 55px;
+        color: white;
+        display: block;
+    }
+
+    .drop {
+        display: block;
+        position: absolute;
+        background: rgba(95, 158, 160, 0.2);
+        border-radius: 100%;
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+
+    .animate {
+        -webkit-animation: ripple 0.4s linear;
+        animation: ripple 0.4s linear;
+    }
+    /*#table-wrapper table thead th .text {
+        position: absolute;
+        top: -20px;
+    }*/
+</style>
+
+@*<div class="container-fluid">
+        <div class="row bg-white border rounded p-3 ">
+            <div>
+                <input type="submit" value="استعلام" class="btn btn-success btnSearch" />
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnCreate btnUtilityCreate" title="@appResource.ttAdd"><i class="fa fa-save"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.btnDelete"><i class="fa fa-cut"></i></button>
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </div>*@
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "", pIsNew = false })
+</div>
+@*<div class="container-fluid">*@
+<div class="bg-white border rounded p-3">
+    <div class="w-100">
+        <div class="d-flex justify-content-end">
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Save -->
+                <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+            </div>
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Copy -->
+                <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                <!-- Cut -->
+                <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                <!-- Paste -->
+                <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Print -->
+                <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                <!-- Sort Asc -->
+                <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                <!-- Sort Asc -->
+                <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- ADD -->
+                <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                <!-- Edit -->
+                <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- PDF -->
+                <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                <!-- Excel -->
+                <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                <!-- Word -->
+                <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Close -->
+                <button class="btn btnUtility btnClose" title="@appResource.ttClose"><i class="fa fa-close"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Next -->
+                <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                <!-- Prev -->
+                <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                <!-- First -->
+                <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                <!-- Last -->
+                <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Full Screen -->
+                <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <div class="dropdown">
+                    <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-table"></i>
+                    </button>
+                    <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*</div>*@
+
+
+
+
+
+@*<div class="container-fluid">
+        <div class="row bg-white border rounded p-3 divPrinter">
+            <div class="col-md-6">
+                <div class="row pt-1">
+                    <div class="col-2">
+                        <label>الرقم</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control " id="txtVehicleId" data-id="0" />
+                    </div>
+                    <div class="col-2">
+                        <label>حالة المركبة</label>
+                    </div>
+                    <div class="col-4">
+                        <select data-val="0" class="VecStatusId form-control select" id="VecStatusId" name="VecStatusId">
+                            <option value="0"> لاتعمل</option>
+                            <option value="1"> تعمل</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row pt-1">
+                    <div class="col-2">
+                        <label>الوصف عربي</label>
+                    </div>
+                    <div class="col-10">
+                        <input type="text" class="form-control " id="txtVecDescL1" data-id="0" />
+                    </div>
+
+                </div>
+                <div class="row pt-1">
+                    <div class="col-2">
+                        <label>الوصف لاتيني</label>
+                    </div>
+                    <div class="col-10">
+                        <input type="text" class="form-control " id="txtVecDescL2" data-id="0" />
+                    </div>
+
+                </div>
+                <div class="row pt-1">
+                    <div class="col-2">
+                        <label>تاريخ ادخال الخدمة</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="date" class="form-control " id="txtInitialDate" data-id="0" />
+                    </div>
+                    <div class="col-2">
+                        <label>رقم اللوحة</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control " id="txtPanelNumber" data-id="0" />
+                    </div>
+
+                </div>
+                <div class="row pt-1">
+                    <div class="col-2">
+                        <label>نوع المركبة</label>
+                    </div>
+                    <div class="col-10">
+                        <div class="row pt-1 d-flex w-100 ml-0">
+                            <input type="text" class="form-control w-25" id="txtTypeId" data-id="0" />
+                            <input type="text" class="form-control w-75 disabled" id="txtTypeDesc" data-id="0" />
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row pt-1">
+                    <div class="col-2">
+                        <label>الماركة</label>
+                    </div>
+                    <div class="col-10">
+                        <div class="row pt-1 d-flex w-100 ml-0">
+                            <input type="text" class="form-control w-25" id="txtBrandId" data-id="0" />
+                            <input type="text" class="form-control w-75 disabled" id="txtBrandDesc" data-id="0" />
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row pt-1">
+                    <div class="col-2">
+                        <label>لون المركبة</label>
+                    </div>
+                    <div class="col-10">
+                        <div class="row pt-1 d-flex w-100 ml-0">
+                            <input type="text" class="form-control w-25" id="txtColorId" data-id="0" />
+                            <input type="text" class="form-control w-75 disabled" id="txtColorDesc" data-id="0" />
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row pt-1">
+                    <div class="col-2">
+                        <label>محتوى المركبة</label>
+                    </div>
+                    <div class="col-10">
+                        <input type="text" class="form-control " id="txtComments" data-id="0" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+
+
+
+                <div class="row pt-1">
+                    <label>صورة المركبة</label>
+                </div>
+
+                <div class="row pt-1">
+                    <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" data-src="" data-src-basic="" data-filename="" class="clsimg" width="120" />
+                </div>
+
+
+
+
+            </div>
+
+
+
+        </div>
+    </div>*@
+
+<div class="container-fluid" id="table-wrapper">
+    <div class="row bg-white border rounded  divPrinter" id="table-scroll">
+
+        @*<div class="js--image-preview js--no-default" style="background-image: url(&quot;data:image/jpeg;base64,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&quot;);"></div>*@
+        @*<div class="box">
+                <div class="js--image-preview js--no-default" style="background-image: url(&quot;data:image/jpeg;)"></div>
+                <div class="upload-options">
+                    <label>
+                        <input type="file" class="image-upload" accept="image/*">
+                    </label>
+                </div>
+            </div>*@
+
+        <div class=" clsDiv"><div style="visibility:hidden;">1</div></div>
+        <table class="tblVehicle border" width="100%">
+            <!-- Head -->
+            <thead>
+                <tr>
+
+                    <th><div class="text"></div></th>
+                    <th>   <div class="text">@appResource._No</div></th>
+
+                    <th>
+                        <div class="text">
+                            العربي @appResource._Desc
+                        </div>
+                    </th>
+                    <th><div class="text"> الانجليزي  @appResource._Desc </div></th>
+                    <th>
+                        <div class="text">
+                            @appResource.StartDate
+                        </div>
+                    </th>
+                    <th>
+                        <div class="text">
+                            @appResource.PlateNo
+                        </div>
+                    </th>
+                    <th> <div class="text">@appResource._Model</div></th>
+                    <th>
+                        <div class="text">
+                            @appResource.ChassisNo
+                        </div>
+                    </th>
+                    <th>
+
+                        <div class="text">
+                            @appResource.VehicleCondition
+                        </div>
+                    </th>
+                    <th colspan="2">
+                        <div class="text">
+                            @appResource.VehicleType
+                        </div>
+                    </th>
+                    <th colspan="2">
+                        <div class="text">
+                            @appResource._Brand
+                        </div>
+                    </th>
+                    <th colspan="2">
+                        <div class="text">
+                            @appResource._Color
+                        </div>
+                    </th>
+                    <th>
+                        <div class="text">
+                            @appResource._Content
+                        </div>
+                    </th>
+                    <th>
+                        <div class="text">
+                            @appResource._Color
+                        </div>
+                    </th>
+
+                    <th class="thActions">
+                        <div class="text">
+                            @appResource._Actions
+                        </div>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody class="tblVehicleBody"></tbody>
+        </table>
+    </div>
+</div>
+<div id="BrandDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="BrandDataModalContent"></div>
+    </div>
+</div>
+<div id="TypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="TypeDataModalContent"></div>
+    </div>
+</div>
+<div id="ColorDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="ColorDataModalContent"></div>
+    </div>
+</div>
+<!-- VehicleData Modal -->
+<div id="VehicleDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="VehicleDataModalContent"></div>
+    </div>
+
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="CommentModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CommentModalContent"></div>
+    </div>
+</div>
+
+
+@*<div class="box">
+        <div class="js--image-preview js--no-default" style="background-image: url(&quot;data:image/jpeg;base64,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&quot;);"></div>
+        <div class="upload-options">
+            <label>
+                <input type="file" class="image-upload" accept="image/*">
+            </label>
+        </div>
+    </div>*@
+<script>
+    var vSelectListData = '';
+    GetSelectLists();
+    var vSelectListEmpty = '';
+        fnGetVehicles()
+        function fnGetVehicles() {
+            var vTableBody = $('.tblVehicleBody');
+            vTableBody.html('');
+            $.post('/Vehicle/GetVehicle', {
+            }
+                , function (data, status) {
+
+
+
+
+
+                    if (data != undefined && data != '') {
+
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, Vehicle) {
+                            var vImageSrc = "https://www.freelogodesign.org/Content/img/logo-ex-7.png"
+                            if (Vehicle.VehicleImage != '') {
+                                vImageSrc = Vehicle.VehicleImage
+
+                            }
+                            var vSelectList = '';
+                            vSelectList = '<select   data-val="' + Vehicle.VecStatus + '"  class="VecStatus form-control select" id = "VecStatus" name = "VecStatus" >';
+                            for (var m = 0; m < Vehicle.tblStatus.length; m++) {
+                                var vSelected = '';
+                                if (Vehicle.tblStatus[m].LookupDtlId == Vehicle.VecStatus ) {
+                                    //vSelected = 'selected="selected"';
+                                    vSelected = "selected";
+                                    vSelectList += '<option selected="' + vSelected + '" value = "' + Vehicle.tblStatus[m].LookupDtlId + '" > ' + Vehicle.tblStatus[m].LookupDtlDesc + '</option >'
+                                }
+                                else {
+                                    vSelectList += '<option  value = "' + Vehicle.tblStatus[m].LookupDtlId + '" > ' + Vehicle.tblStatus[m].LookupDtlDesc + '</option >'
+                                }
+
+
+                            }
+
+                            vSelectList += '</select >'
+                            var vImage = $('#img'+ i);
+                            console.log('vImage' + vImage);
+                            var vRowContent = '<tr class="tblRow" data-id="' + Vehicle.VehicleId + '" style="height:70px;">' +
+                                '<td><button class="btn btn-sm btn-light btnVehicleAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                //'<td width="2%"><input type="text" class="form-control VehicleCode" disabled value="' + Vehicle.VehicleCode + '" /></td>' +
+                                '<td width="2%"><input type="text" class="form-control VehicleCode" disabled value="' + Vehicle.VehicleCode + '" /></td>' +
+                                 '<td><input type="text" class="form-control VecDescL1"  value="' + Vehicle.VecDescL1 + '" /></td>'+
+                                '<td><input type="text" class="form-control VecDescL2"  value="' + Vehicle.VecDescL2 + '" /></td>' +
+                                '<td width="3%"><input type="date" class="form-control InitialDate"  value="' + Vehicle.InitialDate + '" style="width:140px;" /></td>' +
+                                '<td  width="5%"><input type="text" class="form-control PanelNumber"  value="' + Vehicle.PanelNumber + '" /></td>' +
+                                '<td width="5%"><input type="text" class="form-control VecModelId" data-id="' + Vehicle.VecModelId + '"  value="' + Vehicle.vModelCode + '" /></td>' +
+                                '<td width="7%"><input type="text" class="form-control VecVINNO"  value="' + Vehicle.VecVINNO + '" /></td>' +
+
+                                '<td>' +
+                                '<div>' +
+                                vSelectList
+                                + '</div>'
+                                + '</td>' +
+                                '<td  width="2%"><input type="text" class="form-control VecTypeId" data-id="' + Vehicle.VecTypeId + '"   value="' + Vehicle.vTypeCode + '" /></td>' +
+                                '<td width="5%"><input type="text" class="form-control vTypeDesc"  value="' + Vehicle.vTypeDesc + '" disabled /></td>' +
+                                '<td  width="2%"><input type="text" class="form-control BrandId" data-id="' + Vehicle.BrandId + '" value="' + Vehicle.vBrandCode + '" /></td>' +
+                                '<td width="5%"><input type="text" class="form-control vBrandDesc"  value="' + Vehicle.vBrandDesc + '" disabled /></td>' +
+                                '<td width="2%"><input type="text" class="form-control ColorId" data-id="' + Vehicle.VecColorId + '" value="' + Vehicle.vColorCode+ '" /></td>' +
+                                '<td width="5%"><input type="text" class="form-control vColorDesc"  value="' + Vehicle.vColorDesc + '" disabled /></td>' +
+                                '<td><input type="text" class="form-control Comments"  value="' + Vehicle.Comments + '" />'+
+                                //'<input type = "text" class="form-control input-lg" id = "myInput" placeholder = "Click here" >
+                                 '</td > ' +
+                                '<td align="center">' +
+
+                                //'<div align="center">'+
+                                //'<form id = "uploader" align="center" >'+
+                                //'<input name="pFile' + i +'" id="pFile'+i+'" type="file" multiple="multiple" accept="image/*" onchange="funShowImage2(this,'+i+')" />'+
+                                //    '</form >' +
+                                //    '</div>'+
+                                //' <a href = "' + vImageSrc + '" >'+
+                                //'<img id="img' + i + '" class="img-thumbnail imgData clsimg" src = "' + vImageSrc + '" width = "80" style = "height:50px;" data-src="' + Vehicle.VehicleImage + '" data-src-basic="' + Vehicle.VehicleImage + '" data-filename="' + Vehicle.VehicleImage + '"   /></a >'
+
+                            '<div align="center">' +
+                                '<form id = "uploader" align="center" >'
+                                + '<input name="pFile' + i + '" id="pFile' + i + '" type="file" class="ImageUploader" multiple="multiple" accept="image/*" onchange="funShowImage2(this,' + i + ')" style = "display: none;" />'
+                                + '<input type="button" class="btn btn-light btn-sm btnUploadImage"  value="..."  />'
+                                + '</form >'
+                                + '</div>'
+                                + '<a href = "' + vImageSrc + '"  >' +
+                                '<img id="img' + i + '" class="img-thumbnail imgData clsimg" src = "' + vImageSrc + '"   width = "80" style = "height:50px;" data-src="' + Vehicle.VehicleImage + '" data-src-basic="' + Vehicle.VehicleImage + '" data-filename="' + Vehicle.VehicleImage + '"   /></a >'
+                                  +  '</td > ' +
+
+
+                                '<td><button class="btn btn-light btn-sm btnVehicleDelete" data-id="0"><i class="fa fa-trash"></i></button></td>'+
+                                '</tr>';
+
+                            vTableBody.append(vRowContent);
+
+                        })
+
+                    }
+                }
+            )
+        }
+        function changeimage(pIndex) {
+            var formdata = new FormData(); //FormData object
+            var fileInput = document.getElementById('pFile' + pIndex );
+            //Iterating through each files selected in fileInput
+            for (i = 0; i < fileInput.files.length; i++) {
+                //Appending each file to FormData object
+                formdata.append(fileInput.files[i].name, fileInput.files[i]);
+            }
+            //Creating an XMLHttpRequest and sending
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/Vehicle/Upload');
+            xhr.send(formdata);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    //alert(xhr.responseText);
+                }
+            }
+            return false;
+        }
+        // Show Image [on Change]
+        function funShowImage2(pElement, pIndex) {
+            changeimage(pIndex);
+            if (pElement.files && pElement.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    //$('.clsimg').attr('src', e.target.result);
+                    $('#img' + pIndex).attr('src', e.target.result);
+                    //var fileName = e.target.files[0].name;
+
+                }
+                filerdr.readAsDataURL(pElement.files[0]);
+                //var filename = $('.clsimg').attr('src').filename;
+                var vBasicPath = "~/Image/DataImage/"
+                var vBasicPathForSave = "/Image/DataImage/"
+                console.log('filename   -          ' + vBasicPath + pElement.files[0].name);
+                //$('.clsimg').attr('data-src', vBasicPathForSave + pElement.files[0].name);
+                $('#img' + pIndex).attr('data-src', vBasicPathForSave + pElement.files[0].name);
+                //$('.clsimg').attr('data-src-basic', vBasicPathForSave);
+                $('#img' + pIndex).attr('data-src-basic', vBasicPathForSave);
+                //$('.clsimg').attr('data-filename', pElement.files[0].name);
+                $('#img' + pIndex).attr('data-filename', pElement.files[0].name);
+                //'~\DataImage\FoesEnd.jpg'
+            }
+        }
+    $('.btnFirst').click(function () {
+        $.post('/Vehicle/GetFirstVehicle',
+            {
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    //fnClearAll();
+                    // fncleartables();
+                    //fnClearBarcode();
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Vehicle) {
+                        $('#txtVehicleId').attr('data-id', Vehicle.VehicleId)
+                        $('#txtVehicleId').val(Vehicle.VehicleCode);
+                        $('#txtVecDescL1').val(Vehicle.VecDescL1);
+                        $('#txtVecDescL2').val(Vehicle.VecDescL2);
+                        $('#txtInitialDate').val(Vehicle.InitialDate);
+                        $('#txtPanelNumber').val(Vehicle.PanelNumber);
+                        $('#txtTypeId').val(Vehicle.VecTypeId);
+                        $('#txtTypeDesc').val(Vehicle.vTypeDesc);
+                        $('#txtColorId').val(Vehicle.VecColorId);
+                        $('#txtColorDesc').val(Vehicle.vColorDesc);
+                        $('#txtComments').val(Vehicle.Comments);
+                        $('#txtBrandId').val(Vehicle.BrandId);
+                        $('#txtBrandDesc').val(Vehicle.vBrandDesc);
+
+
+                        //$('.clsimg').attr('src', invitem.ItemImage)
+
+                    });
+
+                }
+            }
+        )
+    });
+    $('.btnLast').click(function () {
+        $.post('/Vehicle/GetLastVehicle',
+            {
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    //fnClearAll();
+
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Vehicle) {
+                        $('#txtVehicleId').attr('data-id', Vehicle.VehicleId)
+                        $('#txtVehicleId').val(Vehicle.VehicleCode);
+                        $('#txtVecDescL1').val(Vehicle.VecDescL1);
+                        $('#txtVecDescL2').val(Vehicle.VecDescL2);
+                        $('#txtInitialDate').val(Vehicle.InitialDate);
+                        $('#txtPanelNumber').val(Vehicle.PanelNumber);
+                        $('#txtTypeId').val(Vehicle.VecTypeId);
+                        $('#txtTypeDesc').val(Vehicle.vTypeDesc);
+                        $('#txtColorId').val(Vehicle.VecColorId);
+                        $('#txtColorDesc').val(Vehicle.vColorDesc);
+                        $('#txtComments').val(Vehicle.Comments);
+                        $('#txtBrandId').val(Vehicle.BrandId);
+                        $('#txtBrandDesc').val(Vehicle.vBrandDesc);
+
+
+
+                        //$('.clsimg').attr('src', invitem.ItemImage)
+
+                    });
+
+                }
+            }
+        )
+    });
+
+    $('.btnSave').click(function () {
+        //$('.btnCreate').click(function () {
+            var vIsValid = true;
+            $(".tblVehicleBody > tr").each(function (index) {
+                // Row Data
+                var vRowData = $(this);
+                //var vParentId = vRowData.find('.DefaultUnit').attr('data-id')
+                //if (vParentId = undefined && vParentId == '') {
+                //    vParentId = 0
+                //}
+                if (vRowData.find('.VecDescL1').val() != undefined && vRowData.find('.VecDescL1').val() != '') {
+                    //$.get('/api/APIINVItemUnit/InvItemUnitGET',
+                    $.post('/Vehicle/SaveVehicle',
+                        {
+                            pVehicleId: vRowData.attr('data-id'),
+                            pVecStatus: vRowData.find('.VecStatus').val(),
+                            pVecDescL1: vRowData.find('.VecDescL1').val(),
+                            pVecDescL2: vRowData.find('.VecDescL2').val(),
+                            pInitialDate: vRowData.find('.InitialDate').val().toString("yyyy-MM-dd"),
+                            pPanelNumber: vRowData.find('.PanelNumber').val(),
+                            pVecModelId: vRowData.find('.VecModelId').attr('data-id'),
+                            pVecVINNO: vRowData.find('.VecVINNO').val(),
+                            pVecTypeId: vRowData.find('.VecTypeId').attr('data-id'),
+                            pBrandId: vRowData.find('.BrandId').attr('data-id'),
+                            pVecColorId: vRowData.find('.ColorId').attr('data-id'),
+                            pComments: vRowData.find('.Comments').val(),
+                            pVehicleImage: vRowData.find('.clsimg').attr('data-src'),
+                            pVehicleIsActive: true,
+
+                        }, function (data, status) {
+                            if (vRowData.attr('data-id') == '0') {
+                                if (data != undefined && data != '') {
+
+                                    var vDataResult = JSON.parse(data);
+                                    vRowData.find('.VehicleCode').val(vDataResult[0].VehicleCode);
+                                    vRowData.attr('data-id', vDataResult[0].VehicleId);
+
+                                }
+                            }
+
+                            //if ($('.tblVehicleBody tr:last').length  == index) {
+                            //    fnGetVehicles()
+                            //}
+
+
+                        }
+                    )
+                }
+                else {
+                    vIsValid = false;
+                }
+        });
+
+        //setTimeout(function () {
+        //    fnGetVehicles()
+        //}, 1200);
+
+
+
+             if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+            // Notification
+            funNotification('@appResource.msgSave', 1);
+        }
+
+
+
+
+
+        @*if ($('#txtVecDescL1').val().trim() == '') {
+            vIsValid = false;
+        }
+        $.post('/Vehicle/SaveVehicle',
+            {
+                pVehicleId: $('#txtVehicleId').attr('data-id'),
+                pVecDescL1: $('#txtVecDescL1').val(),
+                pInitialDate: $('#txtInitialDate').val(),
+                pPanelNumber:$('#txtPanelNumber').val(),
+                pVecTypeId: $('#txtTypeId').val(),
+                pBrandId: $('#txtBrandId').val(),
+                pVecColorId: $('#txtColorId').val(),
+                pComments: $('#txtComments').val(),
+                pVehicleIsActive:true,
+
+
+            },
+            function (data, status) {
+
+            }
+
+        )
+          if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+            // Notification
+            funNotification('تم الحفظ بنجاح', 1);
+        }*@
+        });
+
+        // Brand Code, Name - F9
+        $('body').on('keydown dblclick', '.BrandId', function (e) {
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+            // Check F9
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                localStorage.setItem('lstcurrentBrandtxt', '0')
+                localStorage.setItem('lstBrandcurrentindex', vTableRow.index)
+
+
+                // Get Brand Data
+                var vBrandIdElement = vTableRow.find('.BrandId');
+                var vBrandNameElement = vTableRow.find('.vBrandDesc');
+
+
+                // Search Brand
+                var vURL = '/Vehicle/SearchVehBrand';
+                // Load Content of Brand Search
+                $('#BrandDataModalContent').load(vURL);
+                // Modal Show
+                $('#BrandDataModal').modal('show');
+                // Focus
+                $('#BrandDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+                    // Select Brand
+                    $('body').on('click', '.divVehBrandSelect', function () {
+                        if (localStorage.getItem('lstBrandcurrentindex') == vTableRow.index) {
+                            $('.txtSearch').focus();
+
+                            // Brand Id
+                            var vBrandId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vBrandCodeValue = $(this).find('.divVehBrandNo').text();
+                            var vBrandNameValue = $(this).find('.divVehBrandName').text();
+
+
+
+                            // Set Value
+                            vBrandIdElement.val(vBrandCodeValue);
+                            vBrandIdElement.attr('data-id', vBrandId);
+                            vBrandNameElement.val(vBrandNameValue);
+
+                            // Modal Show
+                            $('#BrandDataModal').modal('hide');
+                            vTableRow = '';
+                        }
+
+
+
+                    })
+                })
+            }
+        })
+
+    $('#txtBrandId').on('keydown dblclick', function (e) {
+
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            var vURL = '/Vehicle/SearchVehBrand';
+            $('#BrandDataModalContent').load(vURL);
+            // Modal Show
+            $('#BrandDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divVehBrandSelect', function () {
+
+                vElementGroupAccount = $('body').find('#txtBrandId');
+                // Brand Id
+                var vBrandId = $(this).attr('data-id');
+
+                // Get Values
+                var vBrandCodeValue = $(this).find('.divVehBrandNo').text();
+                var vBrandNameValue = $(this).find('.divVehBrandName').text();
+                // Check The Controller Who Fires The Data Modal
+                //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                // Set Value
+                $('#txtBrandId').val(vBrandCodeValue);
+                $('#txtBrandId').attr('data-id', vBrandId)
+                $('#txtBrandDesc').val(vBrandNameValue);
+                //}
+
+
+                // Modal Show
+                $('#BrandDataModal').modal('hide');
+
+
+            })
+
+        }
+        });
+
+
+        // Type Code, Name - F9
+        $('body').on('keydown dblclick', '.VecTypeId', function (e) {
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+            // Check F9
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                localStorage.setItem('lstcurrentTypetxt', '0')
+                localStorage.setItem('lstTypecurrentindex', vTableRow.index)
+
+
+                // Get Type Data
+                var vTypeIdElement = vTableRow.find('.VecTypeId');
+                var vTypeNameElement = vTableRow.find('.vTypeDesc');
+
+
+                // Search Type
+                var vURL = '/Vehicle/SearchVehType';
+                // Load Content of Type Search
+                $('#TypeDataModalContent').load(vURL);
+                // Modal Show
+                $('#TypeDataModal').modal('show');
+                // Focus
+                $('#TypeDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+                    // Select Type
+                    $('body').on('click', '.divVehTypeSelect', function () {
+                        if (localStorage.getItem('lstTypecurrentindex') == vTableRow.index) {
+                            $('.txtSearch').focus();
+
+                            // Type Id
+                            var vTypeId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vTypeCodeValue = $(this).find('.divVehTypeNo').text();
+                            var vTypeNameValue = $(this).find('.divVehTypeName').text();
+
+
+
+                            // Set Value
+                            vTypeIdElement.val(vTypeCodeValue);
+                            vTypeIdElement.attr('data-id', vTypeId);
+                            vTypeNameElement.val(vTypeNameValue);
+
+                            // Modal Show
+                            $('#TypeDataModal').modal('hide');
+                            vTableRow = '';
+                        }
+
+
+
+                    })
+                })
+            }
+        })
+    $('#txtTypeId').on('keydown dblclick', function (e) {
+
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            var vURL = '/Vehicle/SearchVehType';
+            $('#TypeDataModalContent').load(vURL);
+            // Modal Show
+            $('#TypeDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divVehTypeSelect', function () {
+
+                vElementGroupAccount = $('body').find('#txtTypeId');
+                // Type Id
+                var vTypeId = $(this).attr('data-id');
+
+                // Get Values
+                var vTypeCodeValue = $(this).find('.divVehTypeNo').text();
+                var vTypeNameValue = $(this).find('.divVehTypeName').text();
+                // Check The Controller Who Fires The Data Modal
+                //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                // Set Value
+                $('#txtTypeId').val(vTypeCodeValue);
+                $('#txtTypeId').attr('data-id', vTypeId)
+                $('#txtTypeDesc').val(vTypeNameValue);
+                //}
+
+
+                // Modal Show
+                $('#TypeDataModal').modal('hide');
+
+
+            })
+
+        }
+        });
+        // Type Code, Name - F9
+        $('body').on('keydown dblclick', '.ColorId', function (e) {
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+            // Check F9
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                localStorage.setItem('lstcurrentColortxt', '0')
+                localStorage.setItem('lstColorcurrentindex', vTableRow.index)
+
+
+                // Get Color Data
+                var vColorIdElement = vTableRow.find('.ColorId');
+                var vColorNameElement = vTableRow.find('.vColorDesc');
+
+
+                // Search Color
+                var vURL = '/Vehicle/SearchVehColor';
+                // Load Content of Color Search
+                $('#ColorDataModalContent').load(vURL);
+                // Modal Show
+                $('#ColorDataModal').modal('show');
+                // Focus
+                $('#ColorDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+                    // Select Color
+                    $('body').on('click', '.divVehColorSelect', function () {
+                        if (localStorage.getItem('lstColorcurrentindex') == vTableRow.index) {
+                            $('.txtSearch').focus();
+
+                            // Color Id
+                            var vColorId = $(this).attr('data-id');
+
+                            // Get Values
+                            var vColorCodeValue = $(this).find('.divVehColorNo').text();
+                            var vColorNameValue = $(this).find('.divVehColorName').text();
+
+
+
+                            // Set Value
+                            vColorIdElement.val(vColorCodeValue);
+                            vColorIdElement.attr('data-id', vColorId);
+                            vColorNameElement.val(vColorNameValue);
+
+                            // Modal Show
+                            $('#ColorDataModal').modal('hide');
+                            vTableRow = '';
+                        }
+
+
+
+                    })
+                })
+            }
+        });
+    $('#txtColorId').on('keydown dblclick', function (e) {
+
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            var vURL = '/Vehicle/SearchVehColor';
+            $('#ColorDataModalContent').load(vURL);
+            // Modal Show
+            $('#ColorDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divVehColorSelect', function () {
+
+                vElementGroupAccount = $('body').find('#txtColorId');
+                // Color Id
+                var vColorId = $(this).attr('data-id');
+
+                // Get Values
+                var vColorCodeValue = $(this).find('.divVehColorNo').text();
+                var vColorNameValue = $(this).find('.divVehColorName').text();
+                // Check The Controller Who Fires The Data Modal
+                //if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                // Set Value
+                $('#txtColorId').val(vColorCodeValue);
+                $('#txtColorId').attr('data-id', vColorId)
+                $('#txtColorDesc').val(vColorNameValue);
+                //}
+
+
+                // Modal Show
+                $('#ColorDataModal').modal('hide');
+
+
+            })
+
+        }
+        });
+
+        // Search VehicleDataModal
+        $('.btnSearch').on('click', function () {
+            // Search CostCenter
+            var vURL = '/Vehicle/VehicleSearch';
+            // Load Content of CostCenter Search
+            $('#VehicleDataModalContent').load(vURL);
+            // Modal Full
+            $('#VehicleDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#VehicleDataModal').modal('show');
+    })
+    //// Search VehicleDataModal
+    //$('.btnSearch').on('click', function () {
+    //    // Search CostCenter
+    //    var vURL = '/Vehicle/VehicleSearch';
+    //    // Load Content of CostCenter Search
+    //    $('#VehicleDataModalContent').load(vURL);
+    //    // Modal Full
+    //    $('#VehicleDataModalContent').parent().addClass('modal-dialog-full');
+    //    // Modal Show
+    //    $('#VehicleDataModal').modal('show');
+    //})
+    // Select Customer
+    $('body').on('click', '.btnSelect', function () {
+        var vVehicleList = ''
+        var count = $("input[name='chkIsValid']:checked").length;
+        if (count == 0) {
+            $('#VehicleDataModal').modal('hide');
+        }
+        else {
+            $('.tblVehicleSearch > tbody > tr ').each(function (i) {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Get Id
+                var vVehicleId = vElement.attr('data-id');
+                // Check
+                if (vSelectedChk) {
+                    vVehicleList += vVehicleId + ','
+                    console.log('vVehicleIdvVehicleId' + vVehicleId);
+                    //if (i == $('.tblVehicleSearch > tbody > tr ').length - 1) {
+
+                        // close The Modal
+                        $('#VehicleDataModal').modal('hide');
+                    //}
+
+                }
+            })
+            funGetVehicleList(vVehicleList)
+
+        }
+    })
+
+    function funGetVehicleList(pList) {
+        var vTableBody = $('.tblVehicleBody');
+        vTableBody.html('');
+        $.post('/Vehicle/GetVehicleByLst', {
+            pListVehicles: pList
+        }
+            , function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Vehicle) {
+                        var vSelectList = '';
+                        var vImageSrc = "https://www.freelogodesign.org/Content/img/logo-ex-7.png"
+                        if (Vehicle.VehicleImage != '') {
+                            vImageSrc = Vehicle.VehicleImage
+
+                        }
+                        vSelectList = '<select   data-val="' + Vehicle.VecStatus + '"  class="VecStatus form-control select" id = "VecStatus" name = "VecStatus" >';
+                        for (var m = 0; m < Vehicle.tblStatus.length; m++) {
+                            var vSelected = '';
+                            if (Vehicle.tblStatus[m].LookupDtlId == Vehicle.VecStatus) {
+                                //vSelected = 'selected="selected"';
+                                vSelected = "selected";
+                                vSelectList += '<option selected="' + vSelected + '" value = "' + Vehicle.tblStatus[m].LookupDtlId + '" > ' + Vehicle.tblStatus[m].LookupDtlDesc + '</option >'
+                            }
+                            else {
+                                vSelectList += '<option  value = "' + Vehicle.tblStatus[m].LookupDtlId + '" > ' + Vehicle.tblStatus[m].LookupDtlDesc + '</option >'
+                            }
+                        }
+                        vSelectList += '</select >'
+                        var vImage = $('#img' + i);
+                        var vRowContent = '<tr class="tblRow" data-id="' + Vehicle.VehicleId + '" style="height:70px;">' +
+                            '<td><button class="btn btn-sm btn-light btnVehicleAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                            '<td width="2%"><input type="text" class="form-control VehicleCode" disabled value="' + Vehicle.VehicleCode + '" /></td>' +
+
+                            '<td><input type="text" class="form-control form-control-sm VecDescL1"  value="' + Vehicle.VecDescL1 + '" /></td>' +
+                            '<td><input type="text" class="form-control VecDescL2"  value="' + Vehicle.VecDescL2 + '" /></td>' +
+                            '<td width="3%"><input type="date" class="form-control InitialDate"  value="' + Vehicle.InitialDate + '" style="width:140px;"  /></td>' +
+                            '<td width="5%"><input type="text" class="form-control PanelNumber"  value="' + Vehicle.PanelNumber + '" /></td>' +
+                            '<td width="5%"><input type="text" class="form-control VecModelId" data-id="' + Vehicle.VecModelId + '"   value="' + Vehicle.vModelCode + '" /></td>' +
+                            '<td width="7%"><input type="text" class="form-control VecVINNO"  value="' + Vehicle.VecVINNO + '" /></td>' +
+                            '<td>' +
+                            '<div>' +
+                            vSelectList
+                            + '</div>'
+                            + '</td>' +
+                            '<td  width="2%"><input type="text" class="form-control VecTypeId" data-id="' + Vehicle.VecTypeId + '"   value="' + Vehicle.vTypeCode + '" /></td>' +
+                            '<td width="5%"><input type="text" class="form-control vTypeDesc"  value="' + Vehicle.vTypeDesc + '" disabled /></td>' +
+                            '<td width="2%" ><input type="text" class="form-control BrandId" data-id="' + Vehicle.BrandId + '" value="' + Vehicle.vBrandCode + '" /></td>' +
+                            '<td width="5%"><input type="text" class="form-control vBrandDesc"  value="' + Vehicle.vBrandDesc + '" disabled /></td>' +
+                            '<td width="2%"><input type="text" class="form-control ColorId" data-id="' + Vehicle.VecColorId + '" value="' + Vehicle.vColorCode + '" /></td>' +
+                            '<td width="5%"><input type="text" class="form-control vColorDesc"  value="' + Vehicle.vColorDesc + '" disabled /></td>' +
+                            '<td><input type="text" class="form-control Comments"  value="' + Vehicle.Comments + '" /></td>' +
+                            '<td  align="center">' +
+                            //'<div align="center">' +
+                            //'<form id = "uploader" >' +
+                            //'<input name="pFile' + i + '" id="pFile' + i + '" type="file" multiple="multiple" accept="image/*" onchange="funShowImage2(this,' + i + ')" />' +
+                            //'</form >' +
+                            //'</div>'+
+                            //' <a href = "' + Vehicle.VehicleImage + '" >' +
+                            //'<img id="img' + i + '" class="img-thumbnail imgData clsimg" src = "' + vImageSrc + '" width = "80" style = "height:50px;" data-src="' + Vehicle.VehicleImage + '" data-src-basic="' + Vehicle.VehicleImage + '" data-filename="' + Vehicle.VehicleImage + '"   /></a ></td > ' +
+                            //'<td><button class="btn btn-light btn-sm btnVehicleDelete" data-id="0"><i class="fa fa-trash"></i></button>'+
+                            '<div align="center">' +
+                            '<form id = "uploader" align="center" >'
+                            + '<input name="pFile' + i + '" id="pFile' + i + '" type="file" class="ImageUploader" multiple="multiple" accept="image/*" onchange="funShowImage2(this,' + i + ')" style = "display: none;" />'
+                            + '<input type="button" class="btn btn-light btn-sm btnUploadImage"  value="..."  />'
+                            + '</form >'
+                            + '</div>'
+                            + '<a href = "' + vImageSrc + '"  >' +
+                            '<img id="img' + i + '" class="img-thumbnail imgData clsimg" src = "' + vImageSrc + '"   width = "80" style = "height:50px;" data-src="' + Vehicle.VehicleImage + '" data-src-basic="' + Vehicle.VehicleImage + '" data-filename="' + Vehicle.VehicleImage + '"   /></a >'+
+                            '</td > ' +
+                            '<td><button class="btn btn-light btn-sm btnVehicleDelete" data-id="0"><i class="fa fa-trash"></i></button>' +
+                            '</td > ' +
+                            '</tr>';
+
+                        vTableBody.append(vRowContent);
+
+                    })
+
+                }
+            }
+        )
+
+    }
+
+            $(document).on('pageinit', '.btnDelete', function () {
+    $('.btnDelete').on('click', function () {
+        // Id - NameAr - NameEn
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                // Modal
+                $('#confirmDeleteModalContent').html(data);
+                $('#confirmDeleteModal').modal('show');
+                // Click Event [Delete Confirm]
+                $('#confirmDeleteModal').on('shown.bs.modal', function (e) {
+
+                    $("body").one("click", "#btnDeleteConfirm", function (e) {
+
+                    // Delete Action URL
+                    var vDeleteActionURL = '/Account/DataModel/';
+                    // Delete
+                    $.post(vDeleteActionURL, { id: vDataId, pIsDelete: true }, function () {
+                        window.location.href = '/Account';
+
+                    });
+
+                    });
+
+                });
+            });
+                }); // End of Click Event [Delete Button]
+            });
+    // Brand Code, Name - F9
+    $('body').on('dblclick', '.Comments', function (e) {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        var vParentText = vTableRow.find('.Comments');
+        // Check F9
+        //if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentCommenttxt', '0')
+            localStorage.setItem('lstCommentcurrentindex', vTableRow.index)
+            // Search Comment
+            var vURL = '/Vehicle/ShowComment';
+            // Load Content of Comment Search
+            $('#CommentModalContent').load(vURL);
+            // Modal Show
+        $('#CommentModal').modal('show');
+        $('#CommentModal').on('shown.bs.modal', function () {
+            if (vParentText.val() != undefined && vParentText.val().trim() != '' ) {
+                $('#ExpTxt').val(vParentText.val());
+            }
+            else {
+                $('#ExpTxt').val('');
+            }
+            $('#ExpTxt').focus();
+            $('#ExpTxt').on('blur', function () {
+                if (localStorage.getItem('lstCommentcurrentindex') == vTableRow.index) {
+                    vParentText.val($('#ExpTxt').val());
+                    vParentText.focus();
+                    vTableRow = '';
+                }
+            })
+        })
+
+            // Focus
+            //$('#CommentDataModal').on('shown.bs.modal', function () {
+            //    //$('.txtSearch').focus();
+            //    // Select Comment
+            //    $('body').on('click', '.divCommentSelect', function () {
+            //        if (localStorage.getItem('lstCommentcurrentindex') == vTableRow.index) {
+            //            //$('.txtSearch').focus();
+            //            // Modal Show
+            //            $('#CommentDataModal').modal('hide');
+            //            vTableRow = '';
+            //        }
+
+
+
+            //    })
+            //})
+        //}
+    })
+
+    ////////////////NEw Delete
+            $('body').on('click', '.btnVehicleDelete', function (event) {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vTableRow = $(this).closest('.tblRow');
+        //var vDataId = $(this).attr('data-id');
+        //var vDataName = $(this).attr('data-name');
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.VecDescL1').val();
+        console.log('vDataId' + vDataId);
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        var vrrow = vTableRow.index;
+        localStorage.setItem('lstdel', vTableRow.index)
+        var yyyyy = 0;
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+
+                    console.log('gggg' +(yyyyy+ 1).toString())
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+                        //localStorage.setItem('lstdel', vrrow)
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        if (localStorage.getItem('lstdel') == vTableRow.index) {
+
+
+                            console.log('gggg' + (yyyyy + 1).toString())
+                            //// Delete Action URL
+                            //var vDeleteActionURL = '/api/APIINVInvoice/INVInvoiceGET';
+                            //// Delete
+                            //$.get(vDeleteActionURL, { pdInvDTLId: vDataId, pdIsDeleted: true, ppType: 2, pQueryTypeId: '300' }, function () {
+                            //    vElement.closest('tr').remove();
+                            //    // Check If IT The Last Row
+                            //    var vLastRow = $('.tblDtlBody').find('tr').attr('data-id')
+                            //    console.log(vLastRow)
+
+                            //    // Add Row If Empty
+                            //    if (vLastRow == undefined) {
+                            //        funAddDTLEmptyRow($('.tblDtlBody'))
+                            //    }
+
+                            //});
+
+
+                            $.post('/Vehicle/DeleteVehicle',
+                                {
+                                    pVehicleId: vTableRow.attr('data-id')
+                                }, function (data, status) {
+                                    vElement.closest('tr').remove();
+                                    // Check If IT The Last Row
+                                    var vLastRow = $('.tblVehicleBody').find('tr').attr('data-id')
+                                    console.log(vLastRow)
+
+                                    funNotification('@appResource.msgDelete', 1);
+
+                                    // Add Row If Empty
+                                    if (vLastRow == undefined) {
+                                        //funAddDTLEmptyRow($('.tblVehicleBody'))
+
+                                       var vRowToAdd = funFillSelectList();
+                                        $('.tblVehicleBody').append(vRowToAdd);
+                                    }
+                                    //funNotification('تم الحذف بنجاح', 1);
+                                    //fnGetVehicles();
+                                })
+                            //localStorage.setItem('lstdel', 0)
+                            vTableRow = '';
+
+
+                        }
+
+                            });
+
+
+                    });
+
+
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblVehicleBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //funAddDTLEmptyRow($('.tblVehicleBody'))
+                        var vRowToAdd = funFillSelectList();
+                        $('.tblVehicleBody').append(vRowToAdd);
+                    }
+                }
+                    });
+                event.stopImmediatePropagation();
+        //vTableRow = '';
+        //vElement = '';
+    }); // End of Click Event [Delete Button]
+
+
+
+
+
+    //$('body').on('click', '.btnVehicleDelete', function () {
+    //    // Get Closest Row
+    //    var vTableRow = $(this).closest('.tblRow');
+    //    //// Get Unit Data
+    //    //var vCustomerIdElement = vTableRow.find('.CustomerTelId');
+    //    // Id - NameAr - NameEn
+    //    var vDataId = vTableRow.attr('data-id');
+    //    var vDataName = vTableRow.find('.VecDescL1').val();
+    //    // URL
+    //    var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/'
+    //    // Get HTML Content of [Confirm Delete] Partial View
+    //    $.get(
+    //        // URL
+    //        vDataURL,
+    //        // Parameters
+    //        {
+    //            id: vDataId,
+    //            pName: vDataName,
+    //        },
+    //        // Function
+    //        function (data, status) {
+    //            // Modal
+    //            $('#confirmDeleteModalContent').html(data);
+    //            $('#confirmDeleteModal').modal('show');
+    //            // Click Event [Delete Confirm]
+    //            $("body").on("click", "#btnDeleteConfirm", function () {
+    //                // Delete Action URL
+    //                var vDeleteActionURL = '/Account/DataModel/';
+    //                // Delete
+    //                //$.post(vDeleteActionURL, { id: vDataId, pIsDelete: true }, function () {
+    //                //    window.location.href = '/Account';
+    //                //});
+    //                $.post('/Vehicle/DeleteVehicle',
+    //                    {
+    //                        pVehicleId: vTableRow.attr('data-id')
+    //                    }, function (data, status) {
+    //                        window.location.href = '/Vehicle';
+    //                        fnGetVehicles();
+    //                    })
+    //                funNotification('تم الحذف بنجاح', 1);
+    //            });
+    //        });
+
+    //    $.post('/Vehicle/DeleteVehicle',
+    //        {
+    //            pVehicleId: vTableRow.attr('data-id')
+    //        }, function (data, status) {
+    //            fnGetVehicles();
+    //        })
+    //    funNotification('تم الحذف بنجاح', 1);
+
+    //})
+
+    function GetSelectLists()
+    {
+
+        $.post('/Vehicle/GetVecStatus', {}, function (data, status) {
+            if (data != undefined && data != '') {
+
+                var vDataResult = JSON.parse(data);
+                vSelectListData = vDataResult
+
+            }
+        })
+    }
+
+    function funFillSelectList() {
+        var vLastIndex = $('.tblVehicle>tbody>tr ').length
+        var vTableBody = $('.tblVehicleBody');
+        var VSelectListVecStatus2 = '';
+        //$.post('/Vehicle/GetVecStatus', {}, function (data, status) {
+        //    if (data != undefined && data != '') {
+        //        var vDataResult = JSON.parse(data);
+        //        VSelectListVecStatus2 = '<select   data-val="0"  class="VecStatus form-control select" id = "VecStatus" name = "VecStatus" >';
+        //        $.each(vDataResult, function (i, VecStatus) {
+        //            VSelectListVecStatus2 += '<option  value = "' + VecStatus.LookupDtlSeq + '" > ' + VecStatus.LookupDtlDesc + '</option >'
+
+        //        })
+        //        VSelectListVecStatus2 += '</select >'
+        //        var today = new Date();
+        //        var dd = String(today.getDate()).padStart(2, '0');
+        //        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        //        var yyyy = today.getFullYear();
+
+        //        today = yyyy + '-' + mm + '-' + dd;
+
+        //        vSelectListEmpty = VSelectListVecStatus2
+        //        var vLastIndex = $('.tblVehicle>tbody>tr ').length
+        //        var vTableBody = $('.tblVehicleBody');
+
+
+
+        //        var vRowContent = '<tr class="tblRow" data-id="0" style="height:70px;">' +
+        //            '<td><button class="btn btn-sm btn-light btnVehicleAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        //            '<td width="2%"><input type="text" class="form-control VehicleCode" disabled  /></td>' +
+        //            '<td><input type="text" class="form-control VecDescL1"   /></td>' +
+        //            '<td><input type="text" class="form-control VecDescL2"   /></td>' +
+        //            '<td width="3%"><input type="date" class="form-control InitialDate" value="' + today + '"    style="width:140px;" /></td>' +
+        //            '<td  width="5%"><input type="text" class="form-control PanelNumber"   /></td>' +
+        //            '<td width="5%"><input type="text" class="form-control VecModelId"   /></td>' +
+        //            '<td width="7%"><input type="text" class="form-control VecVINNO"   /></td>' +
+
+        //            '<td>' +
+        //            '<div>' +
+        //            vSelectListEmpty
+        //            + '</div>'
+        //            + '</td>' +
+        //            '<td  width="2%"><input type="text" class="form-control VecTypeId" data-id="0"    /></td>' +
+        //            '<td width="5%"><input type="text" class="form-control vTypeDesc"   disabled /></td>' +
+        //            '<td  width="2%"><input type="text" class="form-control BrandId" data-id="0"  /></td>' +
+        //            '<td width="5%"><input type="text" class="form-control vBrandDesc"   disabled /></td>' +
+        //            '<td width="2%"><input type="text" class="form-control ColorId" data-id="0"  /></td>' +
+        //            '<td width="5%"><input type="text" class="form-control vColorDesc"   disabled /></td>' +
+        //            '<td><input type="text" class="form-control Comments"   />' +
+        //            '</td > ' +
+        //            '<td align="center">' +
+        //            '<div align="center">' +
+        //            '<form id = "uploader" align="center" >' +
+        //            '<input name="pFile' + vLastIndex + '" id="pFile' + vLastIndex + '" type="file" multiple="multiple" accept="image/*" onchange="funShowImage2(this,' + vLastIndex + ')" />' +
+        //            '</form >' +
+        //            '</div>' +
+        //            ' <a href = " https://www.freelogodesign.org/Content/img/logo-ex-7.png " >' +
+        //            '<img id="img' + vLastIndex + '" class="img-thumbnail imgData clsimg" src = "https://www.freelogodesign.org/Content/img/logo-ex-7.png" width = "80" style = "height:50px;" data-src="" data-src-basic="" data-filename=""   /></a ></td > ' +
+
+
+        //            '<td><button class="btn btn-light btn-sm btnVehicleDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+        //            '</tr>';
+
+
+        //        vTableBody.append(vRowContent);
+
+
+
+
+        //    }
+
+        //})
+
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        console.log('vSelectListDataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' + vSelectListData);
+        VSelectListVecStatus2 = '<select   data-val="0"  class="VecStatus form-control select" id = "VecStatus" name = "VecStatus" >';
+        for (var m = 0; m < vSelectListData.length; m++) {
+
+            VSelectListVecStatus2 += '<option  value = "' + vSelectListData[m].LookupDtlId + '" > ' + vSelectListData[m].LookupDtlDesc + '</option >'
+        }
+        VSelectListVecStatus2 += '</select >';
+        vSelectListEmpty = VSelectListVecStatus2;
+
+                   var vRowContent = '<tr class="tblRow" data-id="0" style="height:70px;">' +
+                    '<td><button class="btn btn-sm btn-light btnVehicleAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                    '<td width="2%"><input type="text" class="form-control VehicleCode" disabled  /></td>' +
+                    '<td><input type="text" class="form-control VecDescL1"   /></td>' +
+                    '<td><input type="text" class="form-control VecDescL2"   /></td>' +
+                    '<td width="3%"><input type="date" class="form-control InitialDate" value="' + today + '"    style="width:140px;" /></td>' +
+                    '<td  width="5%"><input type="text" class="form-control PanelNumber"   /></td>' +
+                    '<td width="5%"><input type="text" class="form-control VecModelId"   /></td>' +
+                    '<td width="7%"><input type="text" class="form-control VecVINNO"   /></td>' +
+
+                    '<td>' +
+                    '<div>' +
+                    vSelectListEmpty
+                    + '</div>'
+                    + '</td>' +
+                    '<td  width="2%"><input type="text" class="form-control VecTypeId" data-id="0"    /></td>' +
+                    '<td width="5%"><input type="text" class="form-control vTypeDesc"   disabled /></td>' +
+                    '<td  width="2%"><input type="text" class="form-control BrandId" data-id="0"  /></td>' +
+                    '<td width="5%"><input type="text" class="form-control vBrandDesc"   disabled /></td>' +
+                    '<td width="2%"><input type="text" class="form-control ColorId" data-id="0"  /></td>' +
+                    '<td width="5%"><input type="text" class="form-control vColorDesc"   disabled /></td>' +
+                    '<td><input type="text" class="form-control Comments"   />' +
+                    '</td > ' +
+                   '<td align="center">' +
+        //            '<div align="center">' +
+        //            '<form id = "uploader" align="center" >' +
+        //            '<input name="pFile' + vLastIndex + '" id="pFile' + vLastIndex + '" type="file" multiple="multiple" accept="image/*" onchange="funShowImage2(this,' + vLastIndex + ')" />' +
+        //            '</form >' +
+        //            '</div>' +
+        //            ' <a href = " https://www.freelogodesign.org/Content/img/logo-ex-7.png " >' +
+        //    '<img id="img' + vLastIndex + '" class="img-thumbnail imgData clsimg" src = "https://www.freelogodesign.org/Content/img/logo-ex-7.png" width = "80" style = "height:50px;" data-src="" data-src-basic="" data-filename=""   /></a >'
+        //+
+                       '<div align="center">' +
+                       '<form id = "uploader" align="center" >' +
+                        '<input name="pFile' + vLastIndex + '" id="pFile' + vLastIndex + '" type="file" class="ImageUploader" multiple="multiple" accept="image/*" onchange="funShowImage2(this,' + vLastIndex + ')" style = "display: none;" />'
+                       + '<input type="button" class="btn btn-light btn-sm btnUploadImage"  value="..."  />'
+                        +'</form >'
+                       + '</div>'
+                       + '<a href = " https://www.freelogodesign.org/Content/img/logo-ex-7.png " >' +
+                        '<img id="img' + vLastIndex + '" class="img-thumbnail imgData clsimg" src = "https://www.freelogodesign.org/Content/img/logo-ex-7.png" width = "80" style = "height:50px;" data-src="" data-src-basic="" data-filename=""   /></a >'
+                       + '</td >' +
+
+
+                    '<td><button class="btn btn-light btn-sm btnVehicleDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>';
+
+        return vRowContent;
+
+    }
+    $('body').on('click', '.btnUploadImage', function () {
+        var vElement = $(this);
+        var vTableRow = $(this).closest('.tblRow');
+        var VImageUpload = vTableRow.find('.ImageUploader');
+        VImageUpload.trigger("click")
+
+
+    })
+
+    //funFillSelectList()
+    $('body').on('click', '.btnVehicleAddRow', function () {
+        var vTableRow = $(this).closest('.tblRow');
+        var vCurrentRowIndex = vTableRow.index();
+        var vRowContent = funFillSelectList()
+        $('.tblVehicleBody > tr').eq(vCurrentRowIndex).after(vRowContent);
+
+
+    })
+
+    $('body').on('blur', '.VecTypeId ', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get VecType Data
+        var vVecTypeIdElement = vTableRow.find('.VecTypeId');
+        var vVecTypeNameElement = vTableRow.find('.vTypeDesc');
+        if (vVecTypeIdElement.val() != undefined && vVecTypeIdElement.val() != '') {
+            $.post('/Vehicle/GetVehType',
+                { pCodeId : vVecTypeIdElement.val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, VecType) {
+                            vVecTypeIdElement.attr('data-id', VecType.LookupDtlId );
+                            vVecTypeNameElement.val(VecType.LookupDtlDesc);
+                        });
+                    }
+                    else {
+                        vVecTypeIdElement.attr('data-id', '0');
+                        vVecTypeNameElement.val('');
+                    }
+                })
+
+        }
+        vTableRow = '';
+
+    })
+    $('body').on('blur', '.BrandId ', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get VecBrand Data
+        var vVecBrandIdElement = vTableRow.find('.BrandId');
+        var vVecBrandNameElement = vTableRow.find('.vBrandDesc');
+        if (vVecBrandIdElement.val() != undefined && vVecBrandIdElement.val() != '') {
+            $.post('/Vehicle/GetVehBrand',
+                { pCodeId: vVecBrandIdElement.val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, VecBrand) {
+                            vVecBrandIdElement.attr('data-id', VecBrand.LookupDtlId);
+                            vVecBrandNameElement.val(VecBrand.LookupDtlDesc);
+                        });
+                    }
+                    else {
+                        vVecBrandIdElement.attr('data-id', '0');
+                        vVecBrandNameElement.val('');
+                    }
+                })
+
+        }
+        vTableRow = '';
+
+    })
+    $('body').on('blur', '.ColorId ', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get VecColor Data
+        var vVecColorIdElement = vTableRow.find('.ColorId');
+        var vVecColorNameElement = vTableRow.find('.vColorDesc');
+        if (vVecColorIdElement.val() != undefined && vVecColorIdElement.val() != '') {
+            $.post('/Vehicle/GetVehColor',
+                { pCodeId: vVecColorIdElement.val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, VecColor) {
+                            vVecColorIdElement.attr('data-id', VecColor.LookupDtlId);
+                            vVecColorNameElement.val(VecColor.LookupDtlDesc);
+                        });
+                    }
+                    else {
+                        vVecColorIdElement.attr('data-id', '0');
+                        vVecColorNameElement.val('');
+                    }
+                })
+
+        }
+        vTableRow = '';
+
+    })
+
+    $('body').on('blur', '.VecModelId ', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get VecModel Data
+        var vVecModelIdElement = vTableRow.find('.VecModelId');
+        if (vVecModelIdElement.val() != undefined && vVecModelIdElement.val() != '') {
+            $.post('/Vehicle/GetVehModel',
+                { pCodeId: vVecModelIdElement.val() },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $.each(vDataResult, function (i, VecModel) {
+                            vVecModelIdElement.attr('data-id', VecModel.LookupDtlId);
+                            console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaa-id model' + vVecModelIdElement.attr('data-id'));
+                        });
+                    }
+                    else {
+                        vVecModelIdElement.attr('data-id', '0');
+                        vVecModelNameElement.val('');
+                    }
+                })
+
+        }
+        vTableRow = '';
+
+    })
+
+</script>
+<script>
+    function initImageUpload(box) {
+        let uploadField = box.querySelector('.image-upload');
+
+        uploadField.addEventListener('change', getFile);
+
+        function getFile(e) {
+            let file = e.currentTarget.files[0];
+            console.log('imageeeeeeee' + e.currentTarget.files[0].name)
+            checkType(file);
+        }
+
+        function previewImage(file) {
+            let thumb = box.querySelector('.js--image-preview'),
+                reader = new FileReader();
+
+            reader.onload = function () {
+                thumb.style.backgroundImage = 'url(' + reader.result + ')';
+            }
+            reader.readAsDataURL(file);
+            thumb.className += ' js--no-default';
+        }
+
+        function checkType(file) {
+            let imageType = /image.*/;
+            if (!file.type.match(imageType)) {
+                throw 'Datei ist kein Bild';
+            } else if (!file) {
+                throw 'Kein Bild gewählt';
+            } else {
+                previewImage(file);
+            }
+        }
+
+    }
+    setTimeout(function () {
+        // initialize box-scope
+        var boxes = document.querySelectorAll('.box');
+        console.log('boxesssss' + boxes);
+        for (let i = 0; i < boxes.length; i++) {
+            //if (window.CP.shouldStopExecution(1)) { break; }
+            let box = boxes[i];
+            console.log('box1' + box);
+            initDropEffect(box);
+            initImageUpload(box);
+        }
+        //window.CP.exitedLoop(1);
+    }, 2000);
+
+
+
+
+
+    /// drop-effect
+    function initDropEffect(box) {
+        let area, drop, areaWidth, areaHeight, maxDistance, dropWidth, dropHeight, x, y;
+
+        // get clickable area for drop effect
+        area = box.querySelector('.js--image-preview');
+        area.addEventListener('click', fireRipple);
+
+        function fireRipple(e) {
+            area = e.currentTarget
+            // create drop
+            if (!drop) {
+                drop = document.createElement('span');
+                drop.className = 'drop';
+                this.appendChild(drop);
+            }
+            // reset animate class
+            drop.className = 'drop';
+
+            // calculate dimensions of area (longest side)
+            areaWidth = getComputedStyle(this, null).getPropertyValue("width");
+            areaHeight = getComputedStyle(this, null).getPropertyValue("height");
+            maxDistance = Math.max(parseInt(areaWidth, 10), parseInt(areaHeight, 10));
+
+            // set drop dimensions to fill area
+            drop.style.width = maxDistance + 'px';
+            drop.style.height = maxDistance + 'px';
+
+            // calculate dimensions of drop
+            dropWidth = getComputedStyle(this, null).getPropertyValue("width");
+            dropHeight = getComputedStyle(this, null).getPropertyValue("height");
+
+            // calculate relative coordinates of click
+            // logic: click coordinates relative to page - parent's position relative to page - half of self height/width to make it controllable from the center
+            x = e.pageX - this.offsetLeft - (parseInt(dropWidth, 10) / 2);
+            y = e.pageY - this.offsetTop - (parseInt(dropHeight, 10) / 2) - 30;
+
+            // position drop and animate
+            drop.style.top = y + 'px';
+            drop.style.left = x + 'px';
+            drop.className += ' animate';
+            e.stopPropagation();
+
+        }
+    }
+
+    //# sourceURL=pen.js
+
+</script>
+<script>
+    // Print
+    $('.btnPrint').on('click', function () {
+        @*location.href = '/Account/ChartAccountReport?pCompanyId=' + '@clsUser.vUserCompanyId'*@
+        var url = '/Vehicle/VehicleReport'
+        var popupWindow = window.open(url);
+    });
+    //SimpleInSameWin()
+
+
+</script>
+
+
+

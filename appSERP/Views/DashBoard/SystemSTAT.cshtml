@@ -1,0 +1,323 @@
+﻿
+@using appSERP.appCode.dbCode.GD
+@using appSERP.appCode.dbCode.SEC
+@using appSERP.appCode.dbCode.ACC
+
+@model System.Data.DataTable
+@using System.Data
+@{
+    /**/
+
+    ViewBag.Title = "SystemSTAT";
+}
+@{
+    Layout = null;
+}
+
+
+@{ int vCompaniesCount = dbDashBoard.funCompanyBranchStat(pIsHolding: true, pIsDeleted: false).Rows.Count;
+
+    if (vCompaniesCount == 0)
+    {
+        vCompaniesCount = 1;
+    }
+}
+@{ int vBranchesCount = dbDashBoard.funCompanyBranchStat(pIsHolding: false, pIsDeleted: false).Rows.Count;
+
+    if (vBranchesCount == 0)
+    {
+        vBranchesCount = 1;
+    }
+}
+@{ int vUsersCount = dbDashBoard.funUserStat(pIsDeleted: false).Rows.Count;
+
+    if (vUsersCount == 0)
+    {
+        vUsersCount = 1;
+    }
+}
+@{ int vAccountsCount = dbDashBoard.funAccountStat(pIsDeleted: false).Rows.Count;
+
+    if (vAccountsCount == 0)
+    {
+        vAccountsCount = 1;
+    }
+}
+@{ int vCustomersCount = dbDashBoard.funCustomerSupplierStat(pCSIsCustomer: true, pIsDeleted: false).Rows.Count;
+
+    if (vCustomersCount == 0)
+    {
+        vCustomersCount = 1;
+    }
+}
+@{ int vSuppliersCount = dbDashBoard.funCustomerSupplierStat(pCSIsCustomer: false, pIsDeleted: false).Rows.Count;
+
+    if (vSuppliersCount == 0)
+    {
+        vSuppliersCount = 1;
+    }
+}
+@{ int vCostCentersCount = dbDashBoard.funCostCenterStat(pIsDeleted: false).Rows.Count;
+
+    if (vCostCentersCount == 0)
+    {
+        vCostCentersCount = 1;
+    }
+}
+@{ int vMainCashDesksCount = dbDashBoard.funMainCashDeskStat(pIsDeleted: false).Rows.Count;
+
+    if (vMainCashDesksCount == 0)
+    {
+        vMainCashDesksCount = 1;
+    }
+}
+@{ int vCashDesksCount = dbDashBoard.funCashDeskStat(pIsDeleted: false).Rows.Count;
+
+    if (vCashDesksCount == 0)
+    {
+        vCashDesksCount = 1;
+    }
+}
+
+<!-- Data -->
+<div class="header bg-gradient-primary pb-8 pt-md-8 mt-1" id="divStat">
+    <div class="container-fluid">
+        <div class="header-body">
+            <!-- Card stats -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Companies</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@vCompaniesCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-white h3 text-success rounded-circle">
+                                                <i class="fa fa-check"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">@appResource.LastDay</span>
+                                            <span class="text-success mr-2">@vAttendanceCountY</span>
+                                        </p>*@
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Branches</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@vBranchesCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-white h3  text-warning rounded-circle">
+                                                <i class="fa fa-exclamation-triangle"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-danger mr-2">LastDay</span>
+                                            <span class="text-danger mr-2">@vLateCountY</span>
+                                        </p>*@
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Users</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@vUsersCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-danger rounded-circle">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-warning mr-2">@appResource.LastDay</span>
+                                            <span class="text-warning mr-2">@vAbsentCountY</span>
+                                        </p>*@
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Accounts</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@vAccountsCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-danger rounded-circle">
+                                                <i class="fa fa-users"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-warning mr-2">@appResource.LastDay</span>
+                                            <span class="text-warning mr-2">@vPermissionCountY</span>
+                                        </p>*@
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">Customers</h6>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@vCustomersCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-success rounded-circle">
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">@appResource.LastDay</span>
+                                            <span class="text-success mr-2">@vAttendancePercentY%</span>
+                                        </p>*@
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Suppliers</h5>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@vSuppliersCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-success rounded-circle">
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">@appResource.LastDay</span>
+                                            <span class="text-success mr-2">@vLatePercentY%</span>
+                                        </p>*@
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col" style="width:100px">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">CostCenters</h6>
+                                            <span class="h2 font-weight-bold mb-0 appDarkColor">@vCostCentersCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-danger rounded-circle">
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">@appResource.LastDay</span>
+                                            <span class="text-success mr-2">@vAbsentPercentY%</span>
+                                        </p>*@
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">MainCashDesk</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@vMainCashDesksCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">@appResource.LastDay</span>
+                                            <span class="text-success mr-2">@vPermissionPercentY%</span>
+                                        </p>*@
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!--Second Row-->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3">
+
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-title text-uppercase text-muted mb-0">CashDesks</h6>
+                                            <span class="h4 font-weight-bold mb-0 appDarkColor">@vCashDesksCount</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape  bg-white h3 text-info rounded-circle">
+
+                                                <i class="fa fa-percent"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">@appResource.LastDay</span>
+                                            <span class="text-success mr-2">@vPermissionPercentY%</span>
+                                        </p>*@
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

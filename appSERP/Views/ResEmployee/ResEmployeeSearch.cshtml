@@ -1,0 +1,391 @@
+﻿@using appSERP.Views.Shared.appResource;
+@{
+    Layout = null;
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+@*<div class="divContainer bg-light">
+    <div class="divFormDtl">
+        <table class="table table-bordered table-hover tblResEmployeeSearch">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>الكود</th>
+                    <th>الاسم</th>
+
+
+                </tr>
+            </thead>
+
+            <tbody class="tblResEmployeeBodySearch"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>*@
+<div class="divContainer bg-light">
+    <div class="w-100 bg-white border font-weight-bold p-4">الموظفين</div>
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>@appResource._Code<input type="text" class="form-control txtCode" /></div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-md-2">
+                                الجنسية
+                                <select id="selectNat" multiple class="selectNat form-control" name="NatId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-2">
+                                نوع البطاقة
+                                <select id="selectIdentityType" multiple class="selectIdentityType form-control" name="IdentityTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-2">
+                                حالة الموظف
+                                <select id="selectStatus" multiple class="selectStatus form-control" name="StatusId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-2">
+                                نوع القيمة
+                                <select id="selectValueType" multiple class="selectValueType form-control" name="ValueTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-2">
+                                طريقة الخروج
+                                <select id="selectExitType" multiple class="selectExitType form-control" name="ExitTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @appResource._Phone<input type="text" class="form-control txtMobile" />
+
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class=" col-sm-2">
+
+                    </div>*@
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearch btnSearchh">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblResEmployeeSearch">
+            <thead>
+                <tr>
+                    <th class="btnCheckAll" data-checked="false">
+                        تحديد الكل
+                        <input type="checkbox" class="btnCheckAll">
+
+                    </th>
+                    <th>الكود</th>
+                    <th>الاسم</th>
+                    <th> @appResource._Phone</th>
+
+                </tr>
+            </thead>
+
+            <tbody class="tblResEmployeeBodySearch"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+<script>
+    // Actione Load
+    $(document).ready(function () {
+        $('#selectNat').append('<option data-id="" value="" sort-id="">-</option>');
+
+        $('#selectIdentityType').append('<option data-id="" value="" sort-id="">-</option>');
+
+        $('#selectStatus').append('<option data-id="" value="" sort-id="">-</option>');
+
+        $('#selectValueType').append('<option data-id="" value="" sort-id="">-</option>');
+
+        $('#selectExitType').append('<option data-id="" value="" sort-id="">-</option>');;
+
+        funGetSelectLists()
+        // Get Row
+        //funGetResEmployees();
+    });
+
+
+    //function Append
+    function funResEmployeeRowConfig(pResEmployeeRow) {
+        // Content
+        var RowContent = '<tr data-id="' + pResEmployeeRow.ResEmployeeId + '"  data-code="' + pResEmployeeRow.ResEmployeeCode + '">' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pResEmployeeRow.ResEmployeeId + '"/></td> ' +
+            '<td align="center">' + pResEmployeeRow.ResEmployeeCode + '</td>' +
+            '<td align="center">' + pResEmployeeRow.ResEmployeeNameL1 + '</td>' +
+            '<td align="center">' + pResEmployeeRow.Mobile + '</td>' +
+            +'</tr > '
+
+
+        return RowContent
+    }
+    function funGetResEmployees() {
+        //$.get('/api/APIResEmployee/ResEmployeeGET',
+        $.post('/ResEmployee/GetResEmployee',
+            {
+                pIsResEmployee: true,
+                // Query Type Id
+                pQueryTypeId: '401',
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, ResEmployeeData) {
+                        // GET Cash Desk Row Content
+
+                        var vResEmployeeRowContent = funResEmployeeRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblResEmployeeBodySearch').append(vResEmployeeRowContent);
+                    });
+
+                }
+            })
+
+    }
+    function funGetSelectLists()
+    {
+      
+        //$.get('/api/APIVehicle/VehicleGET',
+        $.post('/ResEmployee/GetSelectLists',
+            {
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    var vSelectListNationality = '';
+                    var vSelectListIdentityType = '';
+                    var vSelectListEmpStatus = '';
+                    var vSelectListValueType = '';
+                    var vSelectListExitType = '';
+                    for (var m = 0; m < vDataResult[0].VNationality.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListNationality += '<option  value = "' + vDataResult[0].VNationality[m].CodeId + '"  sort-id="' + m + '" > ' + vDataResult[0].VNationality[m].LookupDtlDesc + '</option >'
+
+                    }
+                    for (var m = 0; m < vDataResult[0].VIdentityType.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListIdentityType += '<option  value = "' + vDataResult[0].VIdentityType[m].CodeId + '"  sort-id="' + m + '" > ' + vDataResult[0].VIdentityType[m].LookupDtlDesc + '</option >'
+
+                    }
+                    for (var m = 0; m < vDataResult[0].VEmpStatus.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListEmpStatus += '<option  value = "' + vDataResult[0].VEmpStatus[m].CodeId + '"  sort-id="' + m + '" > ' + vDataResult[0].VEmpStatus[m].LookupDtlDesc + '</option >'
+
+                    }
+                    for (var m = 0; m < vDataResult[0].VValueType.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListValueType += '<option  value = "' + vDataResult[0].VValueType[m].CodeId + '"  sort-id="' + m + '" > ' + vDataResult[0].VValueType[m].LookupDtlDesc + '</option >'
+
+                    }
+                    for (var m = 0; m < vDataResult[0].VExitType.length; m++) {
+                        var vSelected = '';
+
+                        vSelectListExitType += '<option  value = "' + vDataResult[0].VExitType[m].CodeId + '"  sort-id="' + m + '" > ' + vDataResult[0].VExitType[m].LookupDtlDesc + '</option >'
+
+                    }
+
+                    
+
+                    $('#selectNat').append(vSelectListNationality);
+                    $('#selectNat').selectpicker('refresh');
+            
+                    $('#selectIdentityType').append(vSelectListIdentityType);
+                                $('#selectIdentityType').selectpicker('refresh');
+            
+                    $('#selectStatus').append(vSelectListEmpStatus);
+                                $('#selectStatus').selectpicker('refresh');
+            
+                    $('#selectValueType').append(vSelectListValueType);
+                                $('#selectValueType').selectpicker('refresh');
+            
+                    $('#selectExitType').append(vSelectListExitType);
+                                $('#selectExitType').selectpicker('refresh');
+                            }
+                        })
+            
+            
+    }
+
+    function funFilterEmp(pResEmployeeCode, pLstNationality, pLstIdentityType, pLstEmpStatus, pLstValueType, pLstExitType,pMobile) {
+        var vLstNationality = [];
+        var vLstIdentityType = [];
+        var vLstEmpStatus = [];
+        var vLstValueType = [];
+        var vLstExitType = [];
+        if (pLstNationality == null) {
+
+
+        }
+        else if (pLstNationality.indexOf(',')) {
+            for (i = 0; i < pLstNationality.length; i++) {
+                vLstNationality.push(pLstNationality[i]);
+            }
+            pLstNationality = vLstNationality.toString();
+
+        }
+        else {
+
+        }
+        if (pLstIdentityType == null) {
+
+
+        }
+        else if (pLstIdentityType.indexOf(',')) {
+            for (i = 0; i < pLstIdentityType.length; i++) {
+                vLstIdentityType.push(pLstIdentityType[i]);
+            }
+            pLstIdentityType = vLstIdentityType.toString();
+
+        }
+        else {
+
+        }
+        if (pLstEmpStatus == null) {
+
+
+        }
+        else if (pLstEmpStatus.indexOf(',')) {
+            for (i = 0; i < pLstEmpStatus.length; i++) {
+                vLstEmpStatus.push(pLstEmpStatus[i]);
+            }
+            pLstEmpStatus = vLstEmpStatus.toString();
+
+        }
+        else {
+
+        }
+        if (pLstValueType == null) {
+
+
+        }
+        else if (pLstValueType.indexOf(',')) {
+            for (i = 0; i < pLstValueType.length; i++) {
+                vLstValueType.push(pLstValueType[i]);
+            }
+            pLstValueType = vLstValueType.toString();
+
+        }
+        else {
+
+        }
+        if (pLstExitType == null) {
+
+
+        }
+        else if (pLstExitType.indexOf(',')) {
+            for (i = 0; i < pLstExitType.length; i++) {
+                vLstExitType.push(pLstExitType[i]);
+            }
+            pLstExitType = vLstExitType.toString();
+
+        }
+        else {
+
+        }
+      
+        $.post('/ResEmployee/FilterEmp',
+            {
+               
+                pResEmployeeCode: pResEmployeeCode,
+                pLstNationality: pLstNationality,
+                pLstIdentityType: pLstIdentityType,
+                pLstEmpStatus: pLstEmpStatus,
+                pLstValueType: pLstValueType,
+                pLstExitType: pLstExitType,
+                pMobile:pMobile
+
+
+            }, function (data, status) {
+                $('.tblResEmployeeBodySearch').html('');
+                if (data != undefined && data != '') {
+                    // JSON Parse
+                    vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (m, ResEmployeeData) {
+                        // GET Cash Desk Row Content
+
+                        var vResEmployeeRowContent = funResEmployeeRowConfig(vDataResult[m]);
+
+                        // Append Row Content
+                        $('.tblResEmployeeBodySearch').append(vResEmployeeRowContent);
+                    });
+                }
+
+                })
+
+    }
+
+
+
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+            
+</script>
+
+
+

@@ -1,0 +1,173 @@
+﻿<style>
+    .divSecHeader {
+        padding: 0.5rem;
+        padding-right: 1rem;
+        padding-left: 1rem;
+        background-color: var(--white-color);
+        border: 1px solid var(--border-color);
+        box-shadow: var(--boxShadow);
+    }
+
+    .divSecRoleDtl {
+        max-height: 85vh;
+        overflow-y: scroll;
+    }
+</style>
+@*<div class="row">
+<div class="col-sm-6">
+    </div>
+    <div class="col-sm-6"
+
+</div>*@
+
+<div class="divSecHeader form-inline bg-light row">
+    <div class="co-sm-6">
+
+        <label> قواعد الامان </label>  <select class="" id="selectSecurityRole"></select>
+    </div>
+
+    <div class="col-sm-6">
+
+        <label> المستخدم </label>  <select class="" id="selectUser"></select>
+    </div>
+</div>
+
+<div class="divSecRoleDtl">
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th class="btnCheckAll" data-checked="false">اختيار</th>
+            <th>العناصر</th>
+            <th>العمليات</th>
+        </tr>
+        <tbody class="tblRoleBody">
+            @foreach (var vDrwObject in ViewBag.vbDataObject)
+            {
+                //var IsobjectRole = vDrwObject["ISObjectRole"];
+
+                <tr class="tblRoleRow" data-id="@vDrwObject["ObjectId"]" data-SecurityRoleObjectId="@vDrwObject["SecurityRoleObjectId"]"  data-changed="0">
+                    <td width="7%" style="text-align:center"><input type="checkbox" class="chkObject" name="chkIsValid" @vDrwObject["ISObjectRole"] data-checked="@vDrwObject["ObjectId"]"></td>
+                    <td style="text-align:center">@vDrwObject["ObjectNameL1"]</td>
+                    <td style="text-align:center" class="DevChk">
+                        عرض
+                        <input type="checkbox" name="1" @vDrwObject["IsView"] class=" chkView">
+                        جديد
+                        <input type="checkbox" name="2" @vDrwObject["IsNew"] class="chkNew">
+                        حفظ
+                        <input type="checkbox" name="3" @vDrwObject["IsSave"] class="chkSave">
+                        تعديل
+                        <input type="checkbox" name="4" @vDrwObject["IsEdit"] class="chkEdit">
+                        حذف
+                        <input type="checkbox" name="5" @vDrwObject["IsDelete"]  class="chkDelete">
+                        طباعه
+                        <input type="checkbox" name="6" @vDrwObject["IsPrint"] class="chkPrint">
+                    </td>
+
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <input type="button" class="btn btn-success btnSave" value="حفظ">
+</div>
+<script>
+    // List GetMainGroup
+    $.get('/api/APISecurityRole/SecurityRoleGET',
+        {
+            pIsMaster: true
+        },
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, SecurityRole) {
+                $('#selectSecurityRole').append('<option data-id="' + SecurityRole.SecurityRoleId + '"  value="' + SecurityRole.SecurityRoleId + '" sort-id="' + i + '" >' + SecurityRole.SecurityRoleNameL1 + '</option>')
+
+            })
+            // Refresh Select Picker
+            $('#selectSecurityRole').selectpicker('refresh');
+        }
+    )
+
+    // List GetMainGroup
+    $.get('/api/APIUser/UserGET',
+        {
+        },
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, User) {
+                $('#selectUser').append('<option data-id="' + User.UserId + '" value="' + User.UserId + '" sort-id="' + i + '" >' + User.UserFullName + '</option>')
+
+            })
+            // Refresh Select Picker
+            $('#selectUser').selectpicker('refresh');
+        }
+    )
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+    // Get CheckBoxes Data
+    $(document).ready(function () {
+        $('.btnSave').click(function () {
+
+            // Role
+            var arrRole = [];
+
+            $('table > tbody > tr').each(function () {
+
+                // Selected Row
+                var arrSelectedRow = [];
+                var vSelected = '';
+                // Row Id
+                var vObjectId = $(this).attr('data-id');
+                //arrSelectedRow.push(vObjectId);
+
+
+                $(this).find('.DevChk input:checked').each(function () {
+
+                    // Current Object Id
+                    var vCurrentObjectActionId = $(this).attr('name');
+                    arrSelectedRow.push(vCurrentObjectActionId);
+                    vSelected += vCurrentObjectActionId + ','
+
+                })
+                console.log(vSelected)
+                var DataChanged = $(this).attr('data-changed');
+                var SecurityRoleObjectId=$(this).attr('data-SecurityRoleObjectId');
+                if (DataChanged === '1') {
+                    $.get('/api/APISecurityRole/SecurityRoleGET',
+                        { pSecurityRoleObjectId: SecurityRoleObjectId, pObjectId: vObjectId, pObjectAction: vSelected, pIsMaster: false, pQueryTypeId: '100' },
+                        function (data, status) {
+                            // Notification
+                            $(this).attr('data-changed','0')
+                        })
+                }
+                    arrRole.push(arrSelectedRow);
+                
+            })
+            funNotification('تم الحفظ بنجاح', '1');
+        });
+
+
+    });
+
+
+    // Data Changed
+    // Check UnitAdd
+    $('.tblRoleBody').on('keyup keydown click', '.tblRoleRow', function (e) {
+        // Error Class Validation
+        $(this).attr('data-changed', '1');
+
+    })
+</script>

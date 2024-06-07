@@ -1,0 +1,122 @@
+﻿@using appSERP.Views.Shared.appResource;
+@using appSERP.appCode.Setting.Company;
+@using appSERP.appCode.Setting.GD;
+@using appSERP.appCode.dbCode.SYSSETT;
+<!doctype html>
+<html dir="@(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft? "rtl" : "ltr")">
+<head class="">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @*<title>@ViewBag.DevCompanySetting.DevCompanyNameL1</title>*@
+    <title>@ViewBag.Title</title>
+    <!-- Add the slick-theme.css if you want default styling -->
+    @*<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick.css" />*@
+    <!-- Add the slick-theme.css if you want default styling -->
+    @*<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />*@
+    <link href="~/Content/Slick/Slick.css" rel="stylesheet" />
+    <link href="~/Content/Slick/SlickThem.css" rel="stylesheet" />
+
+    <!-- Include Libraries - Style -->
+    @if (System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft)
+    {
+        <!-- Right to Left -->
+        @Styles.Render("~/Content/css_rtl")
+    }
+    else
+    {
+        <!-- Right to  -->
+        @Styles.Render("~/Content/css_ltr")
+    }
+    @{
+        HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+        FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+        string name = ticket.Name;
+
+        string CashierId = string.Empty;
+        if (Request.Cookies["CashierId"] != null)
+        { CashierId = Request.Cookies["CashierId"].Value; };
+        string CashierName = string.Empty;
+        if (Request.Cookies["CashierName"] != null)
+        { CashierName = Request.Cookies["CashierName"].Value; };
+
+        string dftCredit = string.Empty;
+        if (Request.Cookies["Credit"] != null)
+        { dftCredit = Request.Cookies["Credit"].Value; };
+
+        int UserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+
+    }
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+
+
+
+    <!--SELECT LIST -->
+    <link href="~/Content/List/bootstrap-select.css" rel="stylesheet" />
+    <!-- DataTable -->
+    <link href="~/Content/Notification/jquery.toast.css" rel="stylesheet" />
+    <!--jquery -->
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+    <!-- Import Scripts -->
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAs0A2KxExYBGE6-KUsfd_LYTbjCPGH4KA&libraries=places&language=ar&region=EG"></script>-->
+    <!--Moveing Marker-->
+    <!--   <script src="~/Scripts/AnimateMarker/jquery.easing.1.3.js"></script>
+        <script src="~/Scripts/AnimateMarker/markerAnimate.js"></script>
+        <script src="~/Scripts/AnimateMarker/SlidingMarker.js"></script>-->
+
+    <script src="~/Scripts/Slick/slick.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick.min.js"></script>
+</head>
+
+
+
+    <body class="w-100" style="padding-top:inherit;">
+        <div id="loading">
+            <img src="~/Image/PreloaderImage/WhiteCloud.gif" class="loader" />
+        </div>
+
+        <div class="appMainContent">
+
+            <!-- App Body - Dynamic Content -->
+    <div class="appBodyContent">
+        <div class="divViewContent">
+
+            <!-- Dynamic Content -->
+            @RenderBody()
+
+        </div>
+    </div>
+
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample08" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        
+    </nav>
+
+    <!-- Main Scripts -->
+    @Scripts.Render("~/bundles/popper")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <!--SELECT LIST -->
+    <script src="~/Scripts/List/bootstrap-select.js"></script>
+    <script src="~/Scripts/List/defaults-ar.js"></script>
+    <script src="../../Scripts/Notification/jsNotifications.js"></script>
+    <script src="~/Scripts/Notification/jquery.toast.js"></script>
+
+    <script src="~/Scripts/appScript/jsAppScript.js"></script>
+    <script src="~/Scripts/file-explore.js"></script>
+
+
+
+    <!-- Map Scripts -->
+    </body>
+</html>

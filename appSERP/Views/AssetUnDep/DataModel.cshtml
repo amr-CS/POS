@@ -1,0 +1,58 @@
+﻿@model appSERP.Models.FA.AssetUnDepModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.AssetUnDep, pId = Model.AssetUnDepId })
+        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.HiddenFor(model => model.AssetUnDepId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.AssetUnDepId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AssetUnDepId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetLastDepDate, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AssetLastDepDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = @Model.AssetLastDepDate.ToString("yyyy-MM-dd") } })
+                @Html.ValidationMessageFor(model => model.AssetLastDepDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetUnDepDate, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AssetUnDepDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = @Model.AssetUnDepDate.ToString("yyyy-MM-dd") } })
+                @Html.ValidationMessageFor(model => model.AssetUnDepDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.AssetUnDepIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "AssetUnDepIsActive" } })
+                @Html.LabelFor(model => model.AssetUnDepIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "AssetUnDepIsActive" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+    </div>
+}
+

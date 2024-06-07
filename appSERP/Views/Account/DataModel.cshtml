@@ -1,0 +1,255 @@
+﻿@model appSERP.Models.ACC.AccountModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <!-- Header -->
+    <div class="container-fluid">
+        @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._Account, pId = Model.AccountId })
+    </div>
+   
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.AccountId, new { htmlAttributes = new { @class = "form-control" } })
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.AccountNo, htmlAttributes: new { @class = "custom-control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.AccountNo, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AccountNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.AccountNameL1, htmlAttributes: new { @class = "custom-control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.AccountNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AccountNameL1, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.AccountNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.AccountNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AccountNameL2, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.AccountParentId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.AccountParentId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AccountParentId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.AccountLevel, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.AccountLevel, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AccountLevel, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CurrencyId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    <select id="selectCurrency" class="selectpicker form-control" name="CurrencyId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CurrencyFactorId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    <select id="selectCurrencyFactor" class="selectpicker form-control" name="CurrencyFactorId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    @Html.ValidationMessageFor(model => model.CurrencyFactorId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecurityGradeId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    <select id="selectSecurityGrade" class="selectpicker form-control" name="SecurityGradeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    @Html.ValidationMessageFor(model => model.SecurityGradeId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="m-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="AccountIsDebit" id="customCheck1">
+                    @Html.EditorFor(model => model.AccountIsDebit, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                    @Html.LabelFor(model => model.AccountIsDebit, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.AccountTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    <select id="selectAccountType" class="selectpicker form-control" name="AccountTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    @Html.ValidationMessageFor(model => model.AccountTypeId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.AccountingReportId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.AccountingReportId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AccountingReportId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="m-3">
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox col-md-12">
+                        @Html.EditorFor(model => model.AccountIsCumulative, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck12" } })
+                        @Html.LabelFor(model => model.AccountIsCumulative, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck12" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.CashFlowTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    <select id="selectCashFlowType" class="selectpicker form-control" name="CashFlowTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    @Html.ValidationMessageFor(model => model.CashFlowTypeId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="m-3">
+                <div class="form-group">
+
+
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" name="AccountIsDebit" id="customCheck71">
+                        @Html.EditorFor(model => model.AccountIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck71" } })
+                        @Html.LabelFor(model => model.AccountIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck71" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+            <div class="form-group divModalFooter">
+                <div class="col-md-offset-2 col-md-12">
+                    <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                    <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+                </div>
+            </div>
+
+            }
+            <script>
+    var vAccountTypeId = 0;
+    var vCurrencyId = 0;
+    var vCurrencyFactorId = 0;
+    var vSecurityGradeId = 0;
+    var vCashFlowTypeId = 0;
+    // List GetAccountType
+    $.post('/Home/GetAccountType',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, AccountType) {
+                $('#selectAccountType').append('<option data-id="' + AccountType.AccountTypeId + '" value="' + AccountType.AccountTypeId + '" sort-id="' + i + '">' + AccountType.AccountTypeNameL1 + '</option>')
+                if (i == 0) {
+                    vAccountTypeId = AccountType.AccountTypeId;
+                }
+            })
+            if (parseInt('@ViewBag.vbcAccountTypeId') > 0) {
+                vAccountTypeId = parseInt('@ViewBag.vbcAccountTypeId');
+            }
+            $('#selectAccountType').val(vAccountTypeId);
+            // Refresh Select Picker
+            $('#selectAccountType').selectpicker('refresh');
+        }
+    )
+    // List GetCurrency
+    $.post('/Home/GetCurrency',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Currency) {
+                $('#selectCurrency').append('<option data-id="' + Currency.CurrencyId + '" value="' + Currency.CurrencyId + '" sort-id="' + i + '">' + Currency.CurrencyNameL1 + '</option>')
+                if (i == 0) {
+                    vCurrencyId = Currency.CurrencyId;
+                }
+            })
+             if (parseInt('@ViewBag.vbcCurrencyId') > 0) {
+                 vCurrencyId = parseInt('@ViewBag.vbcCurrencyId')
+            }
+            $('#selectCurrency').val(vCurrencyId);
+            // Refresh Select Picker
+            $('#selectCurrency').selectpicker('refresh');
+        }
+    )
+    // List GetCurrencyFactor
+    $.post('/Home/GetCurrencyFactor',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, CurrencyFactor) {
+                $('#selectCurrencyFactor').append('<option data-id="' + CurrencyFactor.CurrencyFactorId + '" value="' + CurrencyFactor.CurrencyFactorId + '" sort-id="' + i + '">' + CurrencyFactor.CurrencyFactorNameL1 + '</option>')
+                if (i == 0) {
+                    vCurrencyFactorId = CurrencyFactor.CurrencyFactorId;
+                }
+            })
+            if (parseInt('@ViewBag.vbcCurrencyFactorId') > 0) {
+                vCurrencyFactorId = parseInt('@ViewBag.vbcCurrencyFactorId')
+            }
+            $('#selectCurrencyFactor').val(vCurrencyFactorId);
+            // Refresh Select Picker
+            $('#selectCurrencyFactor').selectpicker('refresh');
+        }
+    )
+    // List GetSecurityGrade
+    $.post('/Home/GetSecurityGrade',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, SecurityGrade) {
+                $('#selectSecurityGrade').append('<option data-id="' + SecurityGrade.SecurityGradeId + '" value="' + SecurityGrade.SecurityGradeId + '" sort-id="' + i + '">' + SecurityGrade.SecurityGradeNameL1 + '</option>')
+                if (i == 0) {
+                    vSecurityGradeId = SecurityGrade.SecurityGradeId;
+                }
+            })
+            if (parseInt('@ViewBag.vbcSecurityGradeId') > 0) {
+                vSecurityGradeId = parseInt('@ViewBag.vbcSecurityGradeId');
+            }
+            $('#selectSecurityGrade').val(vSecurityGradeId);
+            // Refresh Select Picker
+            $('#selectSecurityGrade').selectpicker('refresh');
+        }
+    )
+    // List GetCashFlowType
+    $.post('/Home/GetCashFlowType',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, CashFlowType) {
+                $('#selectCashFlowType').append('<option data-id="' + CashFlowType.CashFlowTypeId + '" value="' + CashFlowType.CashFlowTypeId + '" sort-id="' + i + '">' + CashFlowType.CashFlowTypeNameL1 + '</option>')
+                if (i == 0) {
+                    vCashFlowTypeId = CashFlowType.CashFlowTypeId;
+                }
+            })
+            if (parseInt('@ViewBag.vbcCashFlowTypeId') > 0) {
+                vCashFlowTypeId = parseInt('@ViewBag.vbcCashFlowTypeId');
+            }
+            $('#selectCashFlowType').val(vCashFlowTypeId);
+            // Refresh Select Picker
+            $('#selectCashFlowType').selectpicker('refresh');
+        }
+    )
+            </script>

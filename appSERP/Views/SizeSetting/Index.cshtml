@@ -1,0 +1,723 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.INV;
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblUnit, pIsNew = false })
+</div>
+
+<style>
+    .divTableContainer {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .divUnit, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }
+
+    .divSectionTitle {
+        background-color: rgba(41, 128, 185, 0.04);
+        font-weight: bold;
+        color: #2980b9;
+    }
+</style>
+<!-- Size Type -->
+<div class="divTableContainer">
+    <!-- Utlity -->
+    <div class="divUtilityBar d-flex ">
+        @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+    </div>
+    <!-- Cash Desk Header -->
+    <div class="w-100 divSectionTitle p-2 px-4"> @appResource.lblUnit</div>
+
+
+    <!-- Cash Desks Data -->
+    <div class="divUnit bg-white border p-2">
+        <table class="table tblUnit">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th width="20px"></th>
+                    <th>@appResource._Code</th>
+                    <th> @appResource.UnitId</th>
+                    <th>  @appResource.UnitId</th>
+                    <th>@appResource._IsActive</th>
+                    <th class="thActions">@appResource._Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblUnitBody"></tbody>
+        </table>
+
+    </div>
+
+    <!--Size Type Save -->
+    <div class=" bg-white border p-2 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1">
+            @*<button class="btn btn-success btnUnitSave">@appResource.btnSave</button>*@
+        </div>
+    </div>
+</div>
+<div class="divTableContainer">
+    <!-- Account Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">@appResource.lblSize</div>
+
+    <!-- Account Data -->
+    <div class="divAccount bg-white border p-2">
+        <table class="table tblSize">
+            <!-- Head -->
+            <thead class="">
+                <tr>
+                    <th width="20px"></th>
+                    <th>@appResource._Code</th>
+                    <th>@appResource.SizeId</th>
+                    <th>@appResource.SizeId</th>
+                    <th>@appResource._IsActive</th>
+                    <th class="thActions">@appResource._Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblSizeBody">
+                <tr class="tblSizeRow"></tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Size Save -->
+    <div class=" bg-white border p-3 d-flex">
+        <div class="w-100"></div>
+        <div class="flex-shrink-1 p-1">
+            @*<button class="btn btn-success btnSizeSave">@appResource.btnSave</button>*@
+        </div>
+    </div>
+</div>
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+
+
+<!-- Cash Desk Scripts -->
+<!-- Cash Desk -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Drop Down  Font Size
+       
+
+        // Wait 2 Seconds
+        setTimeout( function () {
+            // GET Font Size By Selected List
+            funGETUnitBySelectedList();
+        },1000);
+    })
+
+    $('.btnSave').on('click', function () {
+        funSaveUnit();
+        funSaveSize();
+
+    })
+    function funSaveUnit() {
+                // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblUnitBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get Unit Id
+            var vUnitId = vRowData.attr('data-id');
+            // Code
+            var vUnitCode = vRowData.find('.UnitCode').val();
+            // Name L1
+            var vUnitNameL1 = vRowData.find('.UnitNameL1').val();
+            // Name L2
+            var vUnitNameL2 = vRowData.find('.UnitNameL2').val();
+            // Is Active
+            var vUnitIsActive = vRowData.find('.UnitIsActive').prop('checked');
+
+            // Check Cash Desk If Empty
+            if (vUnitNameL1 != '') {
+
+                // Save
+                $.post('/SizeSetting/UnitGET',
+                    {
+                        pUnitId: vUnitId,
+                        pUnitCode: vUnitCode,
+                        pUnitNameL1: vUnitNameL1,
+                        pUnitNameL2: vUnitNameL2,
+                        pUnitIsActive: vUnitIsActive,
+                        pIsDeleted: false,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+
+                     
+                   
+
+                        // GET Cash Desk By Selected List
+                        funGETUnitBySelectedList();
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+             funNotification('@appResource.msgSave', '1');
+        }
+    }
+
+        // Save - Click
+
+    $('.btnUnitSave').on('click', function () {
+
+        funSaveUnit();
+
+    }); // End of Save Click
+    function funSaveSize()
+    {
+        
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblSizeBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get Unit Id
+            var vUnitId = localStorage.getItem('vUnitId');
+            // Id
+            var vSizeId = vRowData.attr('data-size-id');
+
+            // Code
+            var vSizeCode = vRowData.find('.SizeCode').val();
+            // Name L1
+            var vSizeNameL1 = vRowData.find('.SizeNameL1').val();
+            // Name L2
+            var vSizeNameL2 = vRowData.find('.SizeNameL2').val();
+            // Is Active
+            var vSizeIsActive = vRowData.find('.SizeIsActive').prop('checked');
+
+            console.log(vSizeIsActive)
+            // Check Cash Desk If Empty
+            if (vSizeNameL1 != '') {
+
+                // Save
+                $.post('/SizeSetting/SizeGET',
+                    {
+                        pSizeId: vSizeId,
+                        pSizeCode: vSizeCode,
+                        pSizeNameL1: vSizeNameL1,
+                        pSizeNameL2: vSizeNameL2,
+                        pSizeIsActive: vSizeIsActive,
+                        pUnitId: vUnitId,
+                        pIsDetail: false,
+                        pIsDeleted: false,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+                        // GET Cash Desk By Selected List
+                        funGETUnitDTl(vUnitId);
+
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+            funNotification('@appResource.msgSave', 1);
+        }
+    }
+
+       // Save - Click
+
+    $('.btnSizeSave').on('click', function () {
+        funSaveSize();
+
+    }); // End of Save Click
+
+
+    $('body').on('click', '.btnUnitDelete', function () {
+        // Get Unit Id
+        var vUnitIdDelete = $(this).attr('data-id');
+        // Save
+        $.post('/SizeSetting/UnitGET',
+            {
+                pUnitId: vUnitIdDelete,
+                pUnitCode: null,
+                pUnitNameL1: null,
+                pUnitNameL2: null,
+                pUnitIsActive: null,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+
+                //// Drop Down Main Cash Desk
+                //funFillUnit(null, 0, null, null, null, null, 1, null, null, false);
+
+                // GET Cash Desk By Selected List
+                funGETUnitBySelectedList();
+                funGETUnitDTl(0);
+
+            });
+
+        // Notification
+        funNotification('@appResource.msgSave', 1);
+
+    })
+    $('body').on('click', '.btnSizeDelete', function () {
+        // Get Unit Id
+        var vUnitIdDelete = $(this).attr('data-id');
+          // Get Size Id
+        var vSizeIdDelete = $(this).attr('data-size-id');
+        // Save
+        $.post('/SizeSetting/SizeGET',
+            {
+                pSizeId: vSizeIdDelete,
+                pSizeCode: null,
+                pSizeNameL1: null,
+                pSizeNameL2: null,
+                pSizeIsActive: null,
+                pIsDetail: false,
+                pIsUnitDetail: true,
+                pIsDeleted: true,
+                pQueryTypeId: 300
+            },
+            function (data, status) {
+                var vUnitId = localStorage.getItem('vUnitId');
+                // GET Cash Desk By Selected List
+                funGETUnitDTl(vUnitId);
+
+            });
+
+        // Notification
+        funNotification('@appResource.msgDelete', 1);
+    })
+    // Add New Row
+    $('body').on('click', '.btnUnitAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funUnitAddRow(vCurrentRow);
+    })
+
+    // GET Cash Desk By Selected List
+    function funGETUnitBySelectedList() {
+
+        // Get Value [Id]
+        var vSelectedUnit = $('#selectUnitMain').val();
+
+        // GET Data
+        $.get('/SizeSetting/UnitGET',
+            {
+                pUnitId: null,
+                pUnitCode: '',
+                pUnitNameL1: '',
+                pUnitNameL2: '',
+                pUnitIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (UnitData, status) {
+
+                // Table Body
+                var vUnitTableBody = $('.tblUnitBody');
+                // HTML CLEAR
+                vUnitTableBody.html('');
+
+                // JSON
+                var vUnitDataResult = JSON.parse(UnitData);
+
+                // For Each Cash Desk - Main
+                $.each(vUnitDataResult, function (m, UnitSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vUnitRowContent = funUnitRowConfig(vUnitDataResult[m]);
+                    // Append Row Content
+                    vUnitTableBody.append(vUnitRowContent);
+
+                })
+                //funUnitRow();
+            }) }
+    // Cash Desk Add Row
+    function funUnitAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+        {
+            "UnitIsActive": true,
+            "UnitId": 0,
+            "UnitCode": '',
+            "UnitNameL1": '',
+            "UnitNameL2": '',
+        }
+
+        var vRowContent = funUnitRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+
+    // Cash Desk Row Config
+    function funUnitRowConfig(pUnitDataResult) {
+
+        // Checked
+        var vChecked = null;
+        if (pUnitDataResult.UnitIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vUnitId = pUnitDataResult.UnitId;
+        if (vUnitId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        var vRowContent = '<tr class="tblRow" data-id="' + pUnitDataResult.UnitId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnUnitAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control UnitCode" disabled value="' + pUnitDataResult.UnitCode + '" /></td>' +
+            '<td><input type="text" class="form-control UnitNameL1" value="' + pUnitDataResult.UnitNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control UnitNameL2" value="' + pUnitDataResult.UnitNameL2 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  UnitIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnUnitDelete" data-id="' + pUnitDataResult.UnitId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+
+    // Row Select
+    $('.tblUnitBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divUnit').on('click', 'table tr', function () {
+        var vUnitId = $(this).attr('data-id')
+        localStorage.setItem('vUnitId', vUnitId);
+        funGETUnitDTl(vUnitId)
+    });
+
+
+    // GET Cash Desk By Selected List
+    function funGETUnitDTl(pUnit) {
+
+
+        // GET Data
+        $.get('/SizeSetting/SizeGET',
+            {
+                pSizeId: null,
+                pSizeCode: '',
+                pSizeNameL1: '',
+                pSizeNameL2: '',
+                pUnitId: pUnit,
+                pSizeIsActive: null,
+                pIsDetail: false,
+                pIsUnitDetail: true,
+                pQueryTypeId: 400
+            },
+            function (UnitData, status) {
+
+                // Table Body
+                var vUnitTableBody = $('.tblSizeBody');
+                // HTML CLEAR
+                vUnitTableBody.html('');
+
+                // JSON
+                var vUnitDataResult = JSON.parse(UnitData);
+
+                // For Each Cash Desk - Main
+                $.each(vUnitDataResult, function (m, UnitSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vUnitRowContent = funUnitDTlRowConfig(vUnitDataResult[m]);
+                    // Append Row Content
+                    vUnitTableBody.append(vUnitRowContent);
+
+                })
+
+                // Cash Desk Add Row
+                funAccountAddRow()
+            })
+    }
+
+
+
+</script>
+<!-- Account Scripts -->
+<!-- Add Row -->
+<script>
+
+
+    // Add Row
+    $('.btnSizeAddRow').on('click', function () {
+        // Cash Desk Add Row
+        funAccountAddRow();
+        // Cash Desk Scroll
+        funAccountScroll();
+    })
+
+    // Account Scroll
+    function funAccountScroll() {
+        // Scroll To Bottom
+        $('.divSize').animate({ scrollTop: $('.divSize').prop("scrollHeight") }, 1000);
+    }
+</script>
+
+<script>
+
+    // Cash Desk Row Config
+    function funUnitDTlRowConfig(pBankDataResult) {
+        // Checked
+        var vChecked = null;
+        if (pBankDataResult.SizeIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vBankTypeId = pBankDataResult.BankTypeId;
+        if (vBankTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+    
+        var vRowContent = '<tr class="tblRow" data-id="' + pBankDataResult.UnitId + '" data-Size-id="' + pBankDataResult.SizeId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnSizeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control SizeCode" disabled value="' + pBankDataResult.SizeCode + '" /></td>' +
+            '<td><input type="text" class="form-control SizeNameL1" value="' + pBankDataResult.SizeNameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control SizeNameL2" value="' + pBankDataResult.SizeNameL2 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  SizeIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnSizeDelete" data-id="' + pBankDataResult.UnitId + '" data-Size-id="' + pBankDataResult.SizeId + '" ><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+    ////////// Account Add Row
+    // Add New Row
+    $('body').on('click', '.btnSizeAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funSizeAddRow(vCurrentRow);
+    })
+
+
+    // Cash Desk Add Row
+    function funSizeAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+            {
+                "UnitIsActive": true,
+                "SizeCode": '',
+                "SizeId": 0,
+                "SizeNameL1": '',
+                "SizeNameL2": '',
+
+            }
+
+        var vRowContent = funUnitDTlRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+    // Add Row On Load Page
+    function funBankRow() {
+
+        // Table Body
+        var vUnitTableBody = $('.tblUnitBody');
+        // Append
+        vUnitTableBody.append('<tr class="tblRow" data-id="0">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnUnitAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control UnitCode" disabled  /></td>' +
+            '<td><input type="text" class="form-control UnitNameL1"  /></td>' +
+            '<td><input type="text" class="form-control UnitNameL2" /></td>' +
+            '<td><input type="checkbox" class="form-control  UnitIsActive"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnUnitDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>');
+    }
+
+
+    // Account Add Row
+    function funAccountAddRow() {
+
+        // Table Body
+        var vSizeTableBody = $('.tblSizeBody');
+        // Append
+
+        vSizeTableBody.append('<tr class="tblRow" data-Size-id="0">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnSizeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control SizeCode" disabled  /></td>' +
+            '<td><input type="text" class="form-control SizeNameL1"  /></td>' +
+            '<td><input type="text" class="form-control SizeNameL2" /></td>' +
+            '<td><input type="checkbox" class="form-control  SizeIsActive"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnSizeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>'
+        );
+    }
+
+</script>
+
+<!-- SizeData Modal -->
+<div id="SizeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="SizeDataModalContent"></div>
+    </div>
+</div>
+<!--Above Checked-->
+<!-- Get Account -->
+<script>
+
+    // Account Code, Name - F9
+    $('body').on('keydown dblclick', '.SizeNameL1,.SizeCode', function (e) {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+
+            // Get Account Data
+            var vAccountIdElement = vTableRow.find('.SizeId');
+            var vAccountCodeElement = vTableRow.find('.SizeCode');
+            var vAccountNameElement = vTableRow.find('.SizeNameL1');
+            var vAccountCurrencyFactorElement = vTableRow.find('.txtAccountCurrencyFactor');
+
+            // Search Account
+            var vURL = '/SizeSetting/SizeGET';
+            // Load Content of Account Search
+            $('#SizeDataModalContent').load(vURL);
+            // Modal Show
+            $('#sizeDataModal').modal('show');
+
+            // Select Account
+            $('body').on('click', '.divSizeSelect', function () {
+
+                // Account Id
+                var vSizeId = $(this).attr('data-id');
+
+                // Get Values
+                var vSizeCodeValue = $(this).find('.divSizeCode').text();
+                var vSizeNameValue = $(this).find('.divSizeName').text();
+
+
+
+                // Set Value
+                vAccountIdElement.val(vSizeId);
+                vAccountCodeElement.val(vSizeCodeValue);
+                vAccountNameElement.val(vSizeNameValue);
+
+                // Modal Show
+                $('#AccountDataModal').modal('hide');
+
+            })
+        }
+    })
+</script>
+<script>
+    // When Change Value Of Id
+    $('body').on('keydown', '.SizeCode', function (e) {
+        $('input').on('blur', function () {
+            var row = $(this).closest('tr');
+            var vAccountNo = row.find('.SizeCode').val();
+            // List GetAccount
+            $.post('/SizeSetting/SizeGET',
+                { AccountNo: vAccountNo },
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Size) {
+                        // Account Name
+                        row.find('.SizeNameL1').val(Size.SizeNameL1);
+                        // AccountId
+                        row.find('.SizeId').val(Size.SizeId);
+                    })
+                });
+
+        });
+    });
+</script>
+<script>
+    $('body').on('keydown', 'input', function (e) {
+             $('input').on('blur', function () {
+                 if ($(this).attr('class').indexOf('NameL1') > -1) {
+                     // Get The Current Row
+                     var row = $(this).closest('tr');
+                     // substring the first part of the element class name
+                     var vElementNameL1Partial = $(this).attr('class').substring($(this).attr('class').indexOf(' ') , $(this).attr('class').indexOf('NameL1') )
+                      // get the class name of the element that contains NameL2
+                     var vElementNameL2 = vElementNameL1Partial + 'NameL2'
+                       // check if the value of NameL2 Element Is not Empty
+                     if (row.find('.' + vElementNameL2.trim()).val() == undefined || row.find('.' + vElementNameL2.trim()).val() == '') {
+                               // change of the element Name
+                         row.find('.' + vElementNameL2.trim()).val($(this).val());
+                     }
+
+                 }
+
+        });
+
+    });
+</script>
+

@@ -1,0 +1,334 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "SearchCustomerModal";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+<style>
+     .btnSubmit {
+        position: absolute;
+        bottom: 0;
+        /*right: 0;*/
+    }
+    .divCustomer,.divSite {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divCustomerSelect, .divSite {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divCustomerSelect:hover, .divSiteSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+    .clsCustSelected,.clsSiteSelected {
+        background-color: #2980b9;
+    }
+    .divCustomerNo {
+        width: 60px;
+    }
+    .list-group-item.active {
+        color: #fff;
+        background-color: #2980b9 !important;
+        border-color: #2980b9 !important;
+    }
+</style>
+
+<body class="CustomerBody">
+
+
+    <!-- Header -->
+    <div class="">
+        <div class="w-100 bg-white border font-weight-bold p-2"><div class="float-right btnClose"><div><i class="fa fa-close"></i></div></div>@appResource._Customer</div>
+
+    </div>
+
+
+    <div class="row">
+
+        <div class="divCustomer col-sm-8">
+            <!-- Search -->
+            <div class="">
+                <div class="w-100 bg-white border p-4">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered tblData border">
+                <thead>
+                </thead>
+                <tbody class="tblBodyCustomer">
+                    <tr>
+                        <th>الكود</th>
+                        <th>العميل</th>
+                        <th>عدد النقاط</th>
+                        <th> يعادل</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="divSite col-sm-4">
+            <div class="card">
+                <h5 class="card-header">نوع الطلب</h5>
+                <div class="card-body">
+                    <div class="list-group" id="myList" role="tablist">
+                        <a class="list-group-item list-group-item-action active" data-toggle="list" href="#home" role="tab">استلام عميل</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#profile" role="tab">توصيل</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="pt-5">
+                <div class="w-100 bg-white border p-4">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control txtSiteSearch" placeholder="@appResource.btnSearch">
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered tblSite border">
+                <thead>
+                </thead>
+                <tbody class="tblSiteBody"></tbody>
+            </table>
+            <div>
+                <input type="button" class=" btn btn-secondary btn-block" value="ادراج المواقع المختارة" />
+            </div>
+
+            <div>
+                <input type="button" class=" btn btn-success btn-block mt-5 btnSubmit" value="موافق" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer GET -->
+    <script>
+    $('#myList a').on('click', function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Customer GET
+        funCustomerGET();
+        // Site Get
+        funGetSite();
+    })
+
+    // Customer GET
+    function funCustomerGET() {
+        //$.get('/api/APIGLCustomer/GLCustomerGET',
+        //    {
+        //        pIsCustomer: true,
+        //        // Query Type Id
+        //        pQueryTypeId: '450',
+
+        //    }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(Customer);
+
+                console.log(vDataResult)
+                // Table Body
+                var vTableBody = $('.tblBodyCustomer');
+
+
+                // Customers
+                $.each(vDataResult, function (i, CustomerData) {
+
+                    var vRowContent = '<tr class="divCustomerSelect divCSSelect" data-id="' + vDataResult[i].CustomerId + '">';
+
+                    var vCustomerName = vDataResult[i].CustomerNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCustomerName = vDataResult[i].CustomerNameL2; }
+                    vRowContent += '<td data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divCustomerSelect  d-flex p-2" data-id="' + vDataResult[i].CustomerId + '">';
+                    vRowContent += '<div class="divCustomerNo text-center px-4">' + vDataResult[i].CustomerCode + '</div>';
+                    vRowContent += '<div class=" px-4 d-none" >' + vCustomerName + '</div>';
+                    vRowContent += '<div class=" px-4 d-none" >' + vDataResult[i].Points + '</div>';
+                    vRowContent += '<div class="divCustomerNameL2  d-none px-4">' + vDataResult[i].CustomerNameL2 + '</div>';
+                    vRowContent += '<div class="divCustomerPhoneNumber d-none  px-4">' + vDataResult[i].CustomerPhoneNumber + '</div>';
+                    vRowContent += '<div class="divCustomerAddress d-none  px-4">' + vDataResult[i].CustomerAddress + '</div>';
+                    vRowContent += '</div>';
+                    vRowContent += '</td>';
+                    vRowContent += '<td data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divCustomerName text-center divCSSelect  px-4" >' + vCustomerName +'</div>';
+                    vRowContent += '</div>';
+                    vRowContent += '</td>';
+                    vRowContent += '<td data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divPoints text-center divCSSelect   px-4" >' + vDataResult[i].Points + '</div>';
+                    vRowContent += '</div>';
+                    vRowContent += '</td>';
+                    vRowContent += '<td data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divEquavilant text-center divCSSelect  px-4" >' + vDataResult[i].Equavilant + '</div>';
+                    vRowContent += '<td data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divDelivaryCompanyType text-center divCSSelect  px-4" >' + vDataResult[i].DelivaryCompanyType + '</div>';
+                    vRowContent += '</div>';
+                    vRowContent += '</td>';
+                    vRowContent += '<td data-id="' + vDataResult[i].CSId + '">';
+                    vRowContent += '<div class="divDelivaryCompanyValue text-center divCSSelect  px-4" >' + vDataResult[i].DelivaryCompanyValue + '</div>';
+                    vRowContent += '</td>';
+
+
+                    vRowContent += '</div>';
+                    vRowContent += '</td>';
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+            //})
+    }
+    </script>
+
+    <!-- Search Customer -->
+    <script>
+
+
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divCustomerSelect').each(function () {
+
+                // Get Customer Code
+                var vCustomerCode = $(this).find('.divCustomerNo').text();
+                var vCustomerName = $(this).find('.divCustomerName').text();
+
+                // Check Result
+                if (vCustomerCode.search(vSearchInput) != -1 || vCustomerName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('table-success');
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).removeClass('table-success');
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $('.divCustomerSelect').removeClass('table-success');
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+            $('.divCustomerSelect').each(function () {
+                // Show Results
+                $(this).addClass('d-flex');
+                $(this).removeClass('d-none');
+            })
+        }
+    })
+
+    function funGetSite() {
+
+
+                // JSON
+                var vDataResult = JSON.parse(CustomerSite);
+                // Table Body
+                var vTableBody = $('.tblSiteBody');
+
+
+                // Sites
+                $.each(vDataResult, function (i, SiteData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].SiteId + '">';
+
+                    var vSiteName = vDataResult[i].SiteNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vSiteName = vDataResult[i].SiteNameL2;
+                        }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].SiteId + '">';
+                    vRowContent += '<div class="divSiteSelect divCSSelect d-flex p-2" data-id="' + vDataResult[i].SiteId + '">';
+                    vRowContent += '<div class="divSiteName px-4">' + vSiteName + '</div>';
+                    vRowContent += '<div class="divSiteNameL2  d-none px-4">' + vDataResult[i].SiteNameL2 + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+
+
+
+    }
+
+    // Search
+    $('.txtSiteSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divSiteSelect').each(function () {
+
+                // Get Site Code
+                var vSiteCode = $(this).find('.divSiteNo').text();
+                var vSiteName = $(this).find('.divSiteName').text();
+
+                if (vSiteCode.search(vSearchInput) != -1 || vSiteName.search(vSearchInput) != -1) {
+
+                    $(this).addClass('table-success');
+                    $(this).hide();
+                }
+                else {
+                    $(this).removeClass('table-success');
+                    $(this).show();
+                }
+
+            })
+
+        }
+        else {
+            $('.divSiteSelect').removeClass('table-success');
+            $(this).show();
+        }
+    })
+    // Selected Element
+    $('.tblBodyCustomer').on('click', '.divCustomerSelect', function () {
+        $('tr').removeClass('clsCustSelected');
+        $(this).closest('tr').addClass('clsCustSelected');
+    })
+    $('.tblSiteBody').on('click', '.divSiteSelect', function () {
+        $('tr').removeClass('clsSiteSelected');
+        $(this).closest('tr').addClass('clsSiteSelected');
+    })
+    //Close
+    $('.btnClose,.btnSubmit').on('click', function () {
+        $('#AccountDataModal').modal('hide');
+    })
+    </script>
+</body>

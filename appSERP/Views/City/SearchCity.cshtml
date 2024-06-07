@@ -1,0 +1,162 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "CitySearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divCity {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divCitySelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divCitySelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divCityNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._City</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divCity">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyCity"></tbody>
+    </table>
+</div>
+
+
+<!-- City GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // City GET
+        funCityGET();
+    })
+
+    // City GET
+    function funCityGET() {
+
+        $.get('/api/APICity/CityGET',
+            {
+                pCountryId:'@ViewBag.vbcCountryId'
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyCity');
+
+
+                // Citys
+                $.each(vDataResult, function (i, CityData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].CityId + '">';
+
+                        var vCityName = vDataResult[i].CityNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCityName = vDataResult[i].CityNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].CityId + '">';
+                            vRowContent += '<div class="divCitySelect d-flex p-2" data-id="' + vDataResult[i].CityId + '">';
+                    vRowContent += '<div class="divCityNo px-4">' + vDataResult[i].CityCode + '</div>';
+                                vRowContent += '<div class="divCityName px-4">' + vCityName + '</div>';
+                                //vRowContent += '<div class="divCityCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search City -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divCitySelect').each(function () {
+
+                // Get City Code
+                var vCityCode = $(this).find('.divCityNo').text();
+                var vCityName = $(this).find('.divCityName').text();
+
+                if (vCityCode.search(vSearchInput) != -1 || vCityName.search(vSearchInput) != -1) {
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                    console.log('found')
+                }
+                else {
+                    //$(this).removeClass('table-success');
+                    //$(this).show();
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            $('.divCitySelect').each(function () {
+
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+               
+
+            })
+        }
+    })
+</script>
+

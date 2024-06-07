@@ -1,0 +1,100 @@
+﻿@using appSERP.appCode.dbCode.SETT;
+@using System.Data
+
+@{
+    Layout = null;
+
+}
+<!doctype html>
+<html dir="@(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft? "rtl" : "ltr")">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <title>@ViewBag.Title</title>
+    <!-- Include Libraries - Style -->
+    @if (System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft)
+    {
+        <!-- Right to Left -->
+        @Styles.Render("~/Content/css_rtl")
+    }
+    else
+    {
+        <!-- Right to  -->
+        @Styles.Render("~/Content/css_ltr")
+    }
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+    <!-- Include Control Style -->
+    <link href="~/Content/ControlStyle/controlStyle.css" rel="stylesheet" />
+
+    <style>
+        html, body {
+            width: 100vw !important;
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+
+        <!-- Dynamic Content -->
+        @RenderBody()
+
+    </div>
+
+    <!-- Main Scripts -->
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    @RenderSection("scripts", required: false)
+
+
+    <!-- AutoComplete Off -->
+    <script>
+        $(document).ready(function () {
+            $("input:text").attr("autocomplete", "off");
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            var vDivBody = $('.divLang')
+            $.post('/Home/funGetLanguages',
+                {},
+                function (data, status) {
+                    // Get Result
+                    var vDataJSON = JSON.parse(data);
+                    // Get Result
+                    $.each(vDataJSON, function (i, LanguageData) {
+                        vDivBody.append(`<a href="#" class="dropdown-item btnLanguageChoose" data-id=` + LanguageData.LanguageId + ` data-culture-name=` + LanguageData.CultureName + `>` + LanguageData.LanguageNameL1 + ` </a>`)
+
+                    })
+
+                    $('.btnLanguageChoose').on('click', function (e) {
+
+                        // Prevent Default
+                        e.preventDefault;
+
+                        // Get Data
+                        var vLanguageId = $(this).attr('data-id');
+                        var vLanguageCulture = $(this).attr('data-culture-name');
+
+                        $.post('/Home/funChangeLogInCulture', {
+                            pLanguageId: vLanguageId,
+                            pCultureName: vLanguageCulture
+                        }, function (data) {
+                            // Get Result
+                            window.location.reload();
+
+                        })
+
+                    })
+
+                });
+        })
+    </script>
+
+</body>
+
+</html>

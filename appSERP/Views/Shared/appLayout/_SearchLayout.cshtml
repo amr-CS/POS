@@ -1,0 +1,88 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html dir="rtl" style="width:100%">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_LayoutForData</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <!-- JQUERY -->
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <!-- DataTable -->
+    <link href="~/Content/DataTable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/popper.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <!-- DataTable -->
+    <script src="~/Scripts/DataTable/jquery.dataTables.js"></script>
+    <script src="~/Scripts/DataTable/dataTables.bootstrap4.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Table Variable
+            var t = null;
+            // Initiate
+            t = $('#tblDataSchool').DataTable(
+
+                {
+                    "oLanguage": {
+                        "sSearch": "بحث ",
+                        "sInfo": "عرض _START_ إلى _END_ من أصل _TOTAL_ بيان",
+                        "sInfoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
+                        "sEmptyTable": "لا يوجد بيانات",
+                        "sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+                        "sLengthMenu": "عرض _MENU_ بيانات",
+                        "oPaginate": {
+                            "sFirst": "الأول",
+                            "sPrevious": "السابق",
+                            "sNext": "التالي",
+                            "sLast": "الأخير"
+                        }
+
+                    },
+                    'stateSave': true,
+
+                },
+            );
+
+        });
+
+        $(document).ready(function () {
+            var table = $('#example').DataTable({
+                dom: 'Bfrtip',
+                select: true,
+                buttons: [
+                    {
+                        text: 'Select all',
+                        action: function () {
+                            table.rows().select();
+                        }
+                    },
+                    {
+                        text: 'Select none',
+                        action: function () {
+                            table.rows().deselect();
+                        }
+                    }
+                ]
+            });
+        });
+
+    </script>
+</body>
+</html>
+

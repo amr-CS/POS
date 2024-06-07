@@ -1,0 +1,303 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    //Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+    Layout = null;
+}
+@{
+    DateTime dateTimeFrom = ViewBag.DateFrom;
+    DateTime dateTimeTo = ViewBag.DateTo;
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+    .divFormDtl, .divDtl {
+        height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+    .clsSelected {
+        background-color: #e5e5e5;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div>@appResource.GLVoucherNo<input type="text" class="form-control txtDocSearchNo" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-5">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @appResource.dtFrom
+                                <input type="Date" class="form-control txtDateFrom" disabled value="@dateTimeFrom.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="col-md-6">
+                                @appResource.dtTo
+                                <input type="Date" class="form-control txtDateTo" disabled value="@dateTimeTo.ToString("yyyy-MM-dd")" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-sm-4 bg-white">
+                        <div class="card-footer bg-white">
+                            <button type="button" class="btn btn-secondary btn-block btnSearch">@appResource.btnSearch</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="divFormDtl">
+                <table class="table table-bordered table-hover tblGlVoucher">
+                    <thead>
+                        <tr>
+                            <th>رقم الفاتورة</th>
+                            <th>@appResource._Date</th>
+                            <th>@appResource._Branch</th>
+                            <th>قيمة الفاتورة</th>
+                            <th>العميل</th>
+                            <th>الرقم</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tblGlVoucherBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="card row">
+        <div class="card-body row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 row">
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-secondary btn-block btnChoose"> اختيار </button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-secondary btn-block btnDel"> حذف </button>
+                </div>
+
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+</div>
+<script>
+    //function Append
+    function funGlVoucherRowConfig(pGLVoucherRow) {
+        var InvoiceDtl = JSON.stringify(pGLVoucherRow.InvoiceDTL)
+        var GLVoucherRow = JSON.stringify(pGLVoucherRow)
+        var Total = pGLVoucherRow.Total
+        // Content
+        var RowContent = '<tr class="tblGlVoucherRow" data-id="' + pGLVoucherRow.InvId + '">' +
+            //'<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pGLVoucherRow.InvId + '"/></td> ' +
+            '<td class="d-none clsData">' + InvoiceDtl + '</td>' +
+            '<td class="d-none clsDataHead">' + GLVoucherRow + '</td>' +
+            '<td class="code">' + pGLVoucherRow.InvId + '</td>' +
+            '<td>' + pGLVoucherRow.InvDate + '</td>' +
+            '<td>' + pGLVoucherRow.CompanyId + '</td>' +
+            '<td>' + (Total) + '</td>' +
+            '<td>' + pGLVoucherRow.CustomerName + '</td>' +
+            '<td>' + pGLVoucherRow.InvPhoneNo + '</td>' +
+            +'</tr > '
+        return RowContent
+    }
+    function funGetGLVoucherData(DocNo, psDateFrom, psDateTo, phGLVoucherRef, phGLVoucherRefDate, phGLVoucherNote, phNumbers, phInvType) {
+        var vDataResult;
+        $.get('/api/APIINVInvoice/INVInvoiceGET',
+            {
+                // Head Parameters
+                phInvId: DocNo,
+                psDateFrom: psDateFrom,
+                psDateTo: psDateTo,
+                phInvRef: phGLVoucherRef,
+                phNotes: phGLVoucherNote,
+                phNumbers: phNumbers,
+                phInvIsWait: true,
+                phIsDeleted: false,
+                // Query Type Id
+                pQueryTypeId: '400',
+                phInvtype: 33,
+    branchId:@BranchId
+            },
+            function (data, status) {
+
+
+                // JSON Parse
+                vDataResult = JSON.parse(data);
+
+                $('.tblGlVoucherBody').html('');
+                $.each(vDataResult, function (m, GLVoucherData) {
+
+                    // GET Cash Desk Row Content
+                    var vAccountRowContent = funGlVoucherRowConfig(vDataResult[m]);
+
+                    // Append Row Content
+                    $('.tblGlVoucherBody').append(vAccountRowContent);
+                });
+
+            })
+
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearch').on('click', function () {
+        var vDocSearchNo = $('.txtDocSearchNo').val();
+        var vDateFrom = $('.txtDateFrom').val();
+        var vDateTo = $('.txtDateTo').val();
+        var vRefNum = $('.txtRefNum').val();
+        var vRefDate = $('.txtRefDate').val();
+        var vText = $('#txtNote').val();
+        var vhInvTypeId = $('.txtInvType').val();
+
+        // Get Row
+        funGetGLVoucherData(vDocSearchNo, vDateFrom, vDateTo, vRefNum, vRefDate, vText, null, vhInvTypeId)
+    })
+    // Actione Load
+    $(document).ready(function () {
+       var vhInvTypeId = $('.txtInvType').val();
+        var vDateFrom = $('.txtDateFrom').val();
+        var vDateTo = $('.txtDateTo').val();
+       
+        // Get Row
+        funGetGLVoucherData(null, vDateFrom, vDateTo, null, null, null, null, vhInvTypeId)
+    });
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+</script>
+<!--ON CLICK ROW-->
+<script>
+    $('.tblGlVoucherBody').on('click', '.tblGlVoucherRow', function () {
+        $('.tblGlVoucherRow').removeClass('clsSelected')
+        $(this).addClass('clsSelected')
+
+        var Element = $(this).attr('data-id')
+        var Data = $(this).find('.clsData').text()
+
+        var vDataResult = JSON.parse(Data)
+        var TableRow = $('.tblDtlBody')
+        TableRow.html('')
+        $.each(vDataResult, function (i, Dtl) {
+            TableRow.append(funDtlRowConfig(Dtl))
+        })
+    })
+    function funDtlRowConfig(pGLVoucherRow) {
+
+        // Content
+        var RowContent = '<tr class="tblGlVoucherRow" data-id="' + pGLVoucherRow.InvId + '">' +
+            '<td class="d-none clsData">' + pGLVoucherRow + '</td>' +
+            '<td class="text-center">' + pGLVoucherRow.InvItemName + '</td>' +
+            '<td class="text-center">' + pGLVoucherRow.Qty + '</td>' +
+            '<td class="text-center">' + pGLVoucherRow.Price + '</td>' +
+            +'</tr > '
+        return RowContent
+    }
+
+
+    $('.btnSelect').on('click', function () {
+        var InvId = $('.clsSelected').attr('data-id')
+        if (InvId) {
+            $.get('/POS/GetReport',
+                {
+                    pInvId: InvId
+                }, function () {
+
+
+                })
+        }
+    })
+
+
+    //Cancel Order
+    //$('.btnDel').on('click', function () {
+    //    // Id - NameAr - NameEn
+    //    var vElement = $(this)
+    //    var vDataId = $('.clsSelected').attr('data-id')
+    //    var vDataName = $('.clsSelected').attr('data-id')
+    //    // URL
+    //    var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+    //    // Get HTML Content of [Confirm Delete] Partial View
+
+
+        
+
+    //    //$.get(
+    //    //    // URL
+    //    //    vDataURL,
+    //    //    // Parameters
+    //    //    {
+    //    //        id: vDataId,
+    //    //        pName: vDataName,
+    //    //    },
+    //    //    // Function
+    //    //    function (data, status) {
+    //    //        if (vDataId > 0) {
+    //    //            // Modal
+    //    //            $('#confirmDeleteModalContent').html(data);
+    //    //            $('#confirmDeleteModal').modal('show');
+    //    //            // Click Event [Delete Confirm]
+    //    //            $("body").on("click", "#btnDeleteConfirm", function () {
+    //    //                // Delete Action URL
+    //    //                var vDeleteActionURL = '/api/APIINVInvoice/INVInvoiceGET';
+    //    //                // Delete
+    //    //                $.get(vDeleteActionURL, { phInvId: vDataId, pdIsDeleted: true, ppType: 1, pQueryTypeId: '300' }, function (data) {
+
+    //    //                    $('.clsSelected').closest('tr').remove();
+    //    //                    // Check If IT The Last Row
+    //    //                    var vLastRow = $('.tblItemBody').find('tr').attr('data-id')
+
+
+    //    //                    // Notification
+    //    //                    funNotification('تم الحذف بنجاح', 1);
+    //    //                });
+    //    //            });
+    //    //        }
+    //    //        else {
+    //    //            // Only Delete The Row
+    //    //            $('.clsSelected').closest('tr').remove();
+    //    //            // Check If IT The Last Row
+
+    //    //        }
+    //    //    });
+
+
+
+    //});
+</script>

@@ -1,0 +1,84 @@
+﻿@model appSERP.Models.SYSSETT.SystemMessageModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.lblSystemMessage, pId = Model.SystemMessageId })
+        </div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.HiddenFor(model => model.SystemMessageId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SystemMessageId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SystemMessageTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.SystemMessageTypeId, new { htmlAttributes = new { @class = "form-control" ,@min="0"} })
+                @Html.ValidationMessageFor(model => model.SystemMessageTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LanguageId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectLanguage" class="selectpicker form-control" name="LanguageId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group m-3">
+            @Html.LabelFor(model => model.SystemMessageText, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.SystemMessageText, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SystemMessageText, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+    </div>
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+
+}
+
+
+<script>
+    var vLanguageId = 0;
+    // List selectLanguage
+    $.post('/Home/GetLanguage',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Language) {
+                $('#selectLanguage').append('<option data-id="' + Language.LanguageId + '" value="' + Language.LanguageId + '" sort-id="' + i + '">' + Language.LanguageNameL1 + '</option>')
+                if (i == 0) {
+
+                    vLanguageId = Language.LanguageId;
+                }
+            })
+             if (parseInt('@ViewBag.vbcLanguageId') >0 ) {
+                    vLanguageId = parseInt('@ViewBag.vbcLanguageId')
+                }
+            $('#selectLanguage').val(vLanguageId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+</script>

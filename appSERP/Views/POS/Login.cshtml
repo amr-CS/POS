@@ -1,0 +1,344 @@
+﻿@using appSERP.Views.Shared.appResource.loginResource
+@using appSERP.appCode.Setting.User
+@{
+    Layout = "~/Views/Shared/LoginLayout/_LoginLayout.cshtml";
+}
+
+<style>
+</style>
+
+
+<!-- Style -->
+<style>
+    body, html {
+        background: #4B79A1; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #283E51, #4B79A1); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #283E51, #4B79A1); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        height: 100%;
+    }
+
+    body {
+        padding-top: 0px !important;
+    }
+
+    .divLoginBox {
+        width: 350px !important;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 75px;
+    }
+
+    /* Main Container */
+    .divMainConatainer {
+        border-radius: 7px;
+        top: 0px;
+        height: auto;
+        padding: 30px;
+        -webkit-transition: width 0.5s; /* Safari */
+        -webkit-transition-timing-function: linear; /* Safari */
+        transition: width 0.5s;
+        transition-timing-function: linear;
+        background-color: #f0f6fa;
+    }
+    /* Main Container */
+    .divLogoConatainer {
+        height: auto;
+        padding: 30px;
+        -webkit-transition: width 0.5s; /* Safari */
+        -webkit-transition-timing-function: linear; /* Safari */
+        transition: width 0.5s;
+        transition-timing-function: linear;
+    }
+
+    .divLogin {
+        color: #808080;
+    }
+
+    .lblLogin {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-size: 110%;
+        font-weight: 600;
+    }
+
+
+    .divLogoBox {
+        text-align: center;
+    }
+
+    .divLoginRow {
+        display: flex;
+    }
+
+    .divLoginContent {
+        overflow: hidden;
+        padding: 10px;
+        align-content: center;
+    }
+
+    .divLoginContentData {
+        text-align: center;
+    }
+
+    .imgLogo {
+        margin: 5% auto;
+        text-align: center;
+    }
+
+    .divCompayLogo {
+        margin: 10% auto;
+        text-align: center;
+    }
+
+    .divAppLogo {
+        text-align: center;
+    }
+
+    .appLogo {
+        font-size: 35px;
+        font-weight: 900;
+    }
+
+    @@media(max-width:1200px) {
+        .divLoginBox {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+    @@media(max-width:1000px) {
+        .divLoginBox {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+    @@media(max-width:700px) {
+        .divLoginBox {
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .divLoginRow {
+            display: block;
+        }
+
+        .loginContainer {
+            display: block;
+        }
+    }
+
+    .appDarkColorbgl {
+        background-color: #f5f6fa;
+    }
+
+    #txtUserName, #txtUserPassword {
+        text-align: center;
+    }
+
+    #btnLogin {
+        background-color: #0072ba !important;
+        color: #FFF;
+    }
+
+        #btnLogin:hover {
+            background-color: #005b94 !important;
+        }
+
+    .divMainConatainer, .imgCompanyLogo {
+        animation: imgZoom 0.5s linear;
+    }
+
+    @@-webkit-keyframes imgZoom {
+        from {
+            transform: scale(0.5);
+        }
+
+        to {
+            transform: scale(1);
+        }
+    }
+</style>
+
+<!-- Login -->
+<div class="divLoginBox mx-auto">
+
+    <div class=" imgLogo p-4 mx-auto">
+        <img src="~/Image/WhiteCloudLogo/logo_350_175_db.PNG" width="180" />
+    </div>
+
+    <div class="divMainConatainer border">
+        <!-- Login -->
+        <div class="divLogin">
+
+            <div class="imgLogo">
+                @*<img src="data:image/gif;base64, @clsDevCompany.DevAppImage" width="100" />*@
+            </div>
+
+            <div class="lblLogin">شاشة الدخول</div>
+
+            <div class="form-group">
+                <label for="txtUserName">@loginResource.UserName</label>
+                <input type="text" class="form-control form-control-sm" id="txtUserName" required autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="txtUserPassword">@loginResource.UserPassword</label>
+                <input type="password" class="form-control form-control-sm" id="txtUserPassword" required autocomplete="off">
+            </div>
+
+            <div class="form-group mt-3">
+                <button type="button" id="btnLogin" class="btn btn-primary btn btn-block">@loginResource.Login</button>
+
+            </div>
+
+            <div class="alert alert-danger divResult" style="display:none"></div>
+
+        </div> <!-- End of Login -->
+
+
+
+    </div> <!-- End of Main Container -->
+</div> <!-- End of Login Box -->
+<!-- JQUERY INCLUDE -->
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+
+
+
+<!-- Login -->
+<script>
+    function fnLogIn() {
+
+        // Get Values
+        var vUserName = $('#txtUserName').val();
+        var vUserPassword = $('#txtUserPassword').val();
+
+        // Check User Input
+        if (vUserName != '' && vUserPassword != '') {
+
+            @*$.post('/Login/CheckLogin/',
+                {
+                    pUserName: vUserName,
+                    pUserPassword: btoa(vUserPassword)
+                },
+                function (data, status) {
+
+                    // JSON
+                    var vDataResult = JSON.parse(data);
+
+                    // No Message or Error - Login Valid
+                    if (!vDataResult.length) {
+
+                        // Go to Home/Index
+                        window.location.href = "/POS/Index";
+                    }
+                    else {
+
+                        // GET LOGIN RESULT CODE
+                        var vLoginResultCode = vDataResult[0];
+                        // GET LOGIN RESULT MESSAGE
+                        var vLoginResultMessage = vDataResult[1];
+
+                        // Check Code
+                        if (vLoginResultCode == @clsUser.vLoginIsAdmin) {
+
+                            // Admin
+                            window.location.href = "/CPanel/Admin";
+                        }
+                        else if (vLoginResultCode == @clsUser.vLoginIsLocked) {
+
+                            // Locked
+                            funLoginResultMessageShow(vLoginResultMessage);
+                        }
+                        else if (vLoginResultCode == @clsUser.vLoginIsInValid) {
+
+                            // InValid
+                            funLoginResultMessageShow(vLoginResultMessage);
+                        }
+
+                    }
+
+                    // Login Result Message Show
+                    function funLoginResultMessageShow(pMessage) {
+                        // Message
+                        $('.divResult').text(pMessage);
+                        $('.divResult').fadeIn().delay(3500).fadeOut();
+                    }
+
+                });*@
+
+
+
+
+            ///////////////////////////////////////////
+            $.post('/Cashier/CheckLogin/',
+                {
+                    pUserName: vUserName,
+                    pUserPassword: btoa(vUserPassword)
+                },
+                function (data, status) {
+
+                    // JSON
+                    var vDataResult = JSON.parse(data);
+                    // No Message or Error - Login Valid
+                    if (!vDataResult.length) {
+
+                        // Go to Home/Index
+                        window.location.href = "/POS/Index";
+                    }
+                    else {
+
+                        // GET LOGIN RESULT CODE
+                        var vLoginResultCode = vDataResult[0];
+                        // GET LOGIN RESULT MESSAGE
+                        var vLoginResultMessage = vDataResult[1];
+
+                        // Check Code
+                        if (vLoginResultCode == @clsUser.vLoginIsAdmin) {
+
+                            // Admin
+                            window.location.href = "/CPanel/Admin";
+                        }
+                        else if (vLoginResultCode == @clsUser.vLoginIsLocked) {
+
+                            // Locked
+                            funLoginResultMessageShow(vLoginResultMessage);
+                        }
+                        else if (vLoginResultCode == @clsUser.vLoginIsInValid) {
+
+                            // InValid
+                            funLoginResultMessageShow(vLoginResultMessage);
+                        }
+
+                    }
+
+                    // Login Result Message Show
+                    function funLoginResultMessageShow(pMessage) {
+                        // Message
+                        $('.divResult').text(pMessage);
+                        $('.divResult').fadeIn().delay(3500).fadeOut();
+                    }
+
+                });
+
+            //////////////////////////////////////////
+
+        }
+    }
+
+    $('#btnLogin').on('click', function () {
+
+        fnLogIn();
+
+    });
+    $("#txtUserPassword").keyup(function (e) {
+        var code = e.which; // recommended to use e.which, it's normalized across browsers
+        if (code == 13) e.preventDefault();
+        if (code == 13) {
+            fnLogIn();
+        }
+    });
+</script>

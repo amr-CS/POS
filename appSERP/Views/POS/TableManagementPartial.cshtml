@@ -1,0 +1,15 @@
+﻿@model IEnumerable<appSERP.Models.RES.Floor>
+
+@foreach (var item in Model)
+{
+    <button type="button" class="   overflow-visible m-2 btnTable  @item.Tablestatue" name="@item.TableName" value=" @item.TableId">
+        @item.TableName
+    </button>
+}
+<script>
+    $('.btnTable').on('click', function () {
+        var tableValue = $(this).attr('value');
+        var tableVName = $(this).attr('name');
+        window.location = "Index?tableId=" + tableValue + '&&tableName=' + tableVName
+    })
+</script>

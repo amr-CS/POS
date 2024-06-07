@@ -1,0 +1,190 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <script src="~/Scripts/shieldui-all.min.js"></script>
+</head>
+<body>
+
+
+    <div class=" bg-white row container-fluid">
+
+        <div class="col-sm-6 border" id="shieldui-chart2"></div>
+        <div class="col-sm-6 border">
+            <canvas id="canvasChart" class="canvasChartPie " style="font-family:Cairo !important;"></canvas>
+        </div>
+    </div>
+
+    @Html.Action("ChartBandwidth", "Home");
+    <!-- /#wrapper -->
+    <script type="text/javascript">
+        jQuery(function ($) {
+            var performance = [12, 43, 34, 22, 12, 33, 4, 17, 22, 34, 54, 67],
+                visits = [123, 323, 443, 32],
+                traffic = [
+                    {
+                        Source: "Direct", Amount: 323, Change: 53, Percent: 23, Target: 600
+                    },
+                    {
+                        Source: "Refer", Amount: 345, Change: 34, Percent: 45, Target: 567
+                    },
+                    {
+                        Source: "Social", Amount: 567, Change: 67, Percent: 23, Target: 456
+                    },
+                    {
+                        Source: "Search", Amount: 234, Change: 23, Percent: 56, Target: 890
+                    },
+                    {
+                        Source: "Internal", Amount: 111, Change: 78, Percent: 12, Target: 345
+                    }];
+
+
+
+            $("#shieldui-chart2").shieldChart({
+                theme: "",
+                primaryHeader: {
+                    text: "Traffic Per week"
+                },
+                exportOptions: {
+                    image: false,
+                    print: false
+                },
+                dataSeries: [{
+                    seriesType: "pie",
+                    collectionAlias: "traffic",
+                    data: visits
+                }]
+            });
+
+        });
+
+        $('.Segoe').addClass('d-none')
+    </script>
+    <script src="~/Scripts/Chart/Chart.js"></script>
+    <!-- Chart Load -->
+    <script>
+
+        // Chart [Line]
+        funChartLoad('bar', "canvasChart");
+        // Chart [Pie]
+        funChartLoad('bar', "canvasChartPie");
+
+        // Chart Load
+        function funChartLoad(pChartType, pElementName) {
+
+            // Clear Contents
+            $('#canvasChart').html(``);
+            $('#canvasChartPie').html(``);
+
+            //// Arrays
+            // Attendance
+            var vArrDateAttendance = [];
+            var vArrCountAttendance = [];
+
+            // Late
+            var vArrDateLate = [];
+            var vArrCountLate = [];
+
+            // Absent
+            var vArrDateAbsent = [];
+            var vArrCountAbsent = [];
+
+            // Permission
+            var vArrDatePermission = [];
+            var vArrCountPermission = [];
+            var vURL;
+            vURL = '/AttendanceReport/StudentAttendanceDaysReportStats';
+            if (pElementName == 'canvasChartPie') {
+                vURL = '/AttendanceReport/StudentAttendanceDaysReportStatsToday';
+            }
+            vArrDateAttendance.push(1)
+            vArrDateAttendance.push(2)
+            vArrDateAttendance.push('11/12/2019')
+            vArrCountLate.push(1)
+            vArrCountAbsent.push(1);
+            vArrCountPermission.push(1);
+
+
+
+            var canvas = document.getElementById(pElementName);
+            var ctx = canvas.getContext("2d");
+            Chart.defaults.global.defaultFontFamily = 'Cairo';
+
+            var dat = {
+                labels: vArrDateAttendance,
+                datasets: [
+                    {
+                        label: 'المبيعات',
+                        fill: false,
+                        data: vArrCountAttendance,
+                        backgroundColor: 'rgb(7, 151, 10, 0.15)',
+                        borderColor: '#28a745',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'الارباح',
+                        fill: false,
+                        data: vArrCountLate,
+                        backgroundColor: 'rgb(255,159,28, 0.15)',
+                        borderColor: '#FF9F1C',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'الخصومات',
+                        fill: false,
+                        data: vArrCountAbsent,
+                        backgroundColor: 'rgb(220,53,69, 0.15)',
+                        borderColor: '#dc3545',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'التأمين',
+                        fill: false,
+                        data: vArrCountPermission,
+                        backgroundColor: 'rgb(23,162,184, 0.15)',
+                        borderColor: '#17A2B8',
+                        borderWidth: 1
+                    }
+                ],
+                options: {
+                    responsive: true,
+                    gridLines: {
+                        display: false
+                    },
+                    legend: {
+                        labels: {
+                            fontFamily: "'Cairo'",
+                            defaultFontFamily: "Cairo"
+                        }
+                    },
+                    global: {
+                        defaultFont: 'Cairo',
+                        defaultFontFamily: "Cairo"
+                    },
+                    spanGaps: true
+                }
+            };
+
+
+            var myNewChart = new Chart(ctx, {
+                type: pChartType,
+                data: dat,
+            });
+
+
+            setTimeout(function () { myNewChart.update(); }, 1000);
+        }
+
+
+
+    </script>
+
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,165 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "AreaSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divArea {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divAreaSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divAreaSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divAreaNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Area</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divArea">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyArea"></tbody>
+    </table>
+</div>
+
+
+<!-- Area GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Area GET
+        funAreaGET();
+    })
+
+    // Area GET
+    function funAreaGET() {
+
+        $.get('/api/APIArea/AreaGET',
+            {
+                pCityId:'@ViewBag.vbcCityId'
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyArea');
+
+
+                // Areas
+                $.each(vDataResult, function (i, AreaData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].AreaId + '">';
+
+                        var vAreaName = vDataResult[i].AreaNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vAreaName = vDataResult[i].AreaNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].AreaId + '">';
+                            vRowContent += '<div class="divAreaSelect d-flex p-2" data-id="' + vDataResult[i].AreaId + '">';
+                    vRowContent += '<div class="divAreaNo px-4">' + vDataResult[i].AreaCode + '</div>';
+                                vRowContent += '<div class="divAreaName px-4">' + vAreaName + '</div>';
+                                //vRowContent += '<div class="divAreaCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search Area -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divAreaSelect').each(function () {
+
+                // Get Area Code
+                var vAreaCode = $(this).find('.divAreaNo').text();
+                var vAreaName = $(this).find('.divAreaName').text();
+
+                if (vAreaCode.search(vSearchInput) != -1 || vAreaName.search(vSearchInput) != -1) {
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                    console.log('found')
+                }
+                else {
+                    //$(this).removeClass('table-success');
+                    //$(this).show();
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            //$('.divAreaSelect').removeClass('table-success');
+            //$(this).show();
+            $('.divAreaSelect').each(function () {
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+             
+
+            })
+        }
+    })
+</script>
+

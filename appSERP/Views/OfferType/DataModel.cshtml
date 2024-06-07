@@ -1,0 +1,73 @@
+﻿@model appSERP.Models.INV.OfferTypeModel
+@using appSERP.Views.Shared.appResource
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.lblOfferType, pId = Model.OfferTypeId })
+        </div>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.OfferTypeId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OfferTypeCode, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.OfferTypeCode, new { htmlAttributes = new { @class = "form-control", @disabled = "true" } })
+                @Html.ValidationMessageFor(model => model.OfferTypeCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OfferTypeNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.OfferTypeNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OfferTypeNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OfferTypeNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.OfferTypeNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OfferTypeNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Abbr, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.Abbr, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Abbr, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12 m-3">
+                @Html.EditorFor(model => model.IsDefault, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.IsDefault, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12 m-3">
+                @Html.EditorFor(model => model.OfferTypeIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck12" } })
+                @Html.LabelFor(model => model.OfferTypeIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck12" })
+            </div>
+        </div>
+
+        <div class="form-group divModalFooter">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+
+    </div>
+}

@@ -1,0 +1,17 @@
+﻿@using System.Data
+@{
+    Layout = null;
+}
+@{ DataTable vDtObject = ViewBag.vbObject; }
+
+
+<!-- Sidebar  -->
+<nav class="divSideBar">
+
+    <!-- Object -->
+    @foreach (DataRow vDrwObject in vDtObject.Rows)
+    {
+        <a href="@vDrwObject["ObjectURL"]" class="divSidebarItem">@vDrwObject["ObjectName"]</a>
+    }
+
+</nav>

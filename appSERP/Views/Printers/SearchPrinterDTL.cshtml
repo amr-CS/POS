@@ -1,0 +1,165 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "PrinterSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divPrinterDTL {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divPrinterDTLSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divPrinterDTLSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divPrinterDTLNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource.Printers</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divPrinterDTL">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyPrinter"></tbody>
+    </table>
+
+</div>
+
+
+<!-- Printer GET -->
+<script>
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Printer GET
+        funPrinterDTLGET();
+    })
+
+    // Printer GET
+    function funPrinterDTLGET() {
+
+        $.get('/api/APIPrinter/PrinterGET',
+            {
+             
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyPrinter');
+
+                console.log(vDataResult)
+                // Printers
+                $.each(vDataResult, function (i, PrinterData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].PrinterId + '">';
+
+                
+ 
+                    vRowContent += '<td data-id="' + vDataResult[i].PrinterDTLId + '">';
+                    vRowContent += '<div class="divPrinterDTLSelect d-flex p-2" data-id="' + vDataResult[i].PrinterId + '">';
+                    vRowContent += '<div class="divPrinterDTLId d-none px-4">' + vDataResult[i].PrinterId + '</div>';
+                    vRowContent += '<div class="divPrinterDTLCode px-4 ">' + vDataResult[i].PrinterCode + '</div>';
+                    vRowContent += '<div class="divPrinterDTLName px-4">' + vDataResult[i].ReportNameL1 + '</div>';
+
+
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+
+
+
+
+    }
+
+</script>
+
+<!-- Search Printer -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divPrinterDTLSelect').each(function () {
+
+                // Get Printer Code
+                var vPrinterCode = $(this).find('.divPrinterDTLId').text();
+                var vPrinterName = $(this).find('.divPrinterDTLName').text();
+
+                // Check Result
+                if (vPrinterCode.search(vSearchInput) != -1 || vPrinterName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Check All
+            $('.divPrinterDTLSelect').each(function () {
+                // Show All
+                $(this).removeClass('d-none');
+                $(this).addClass('d-flex');
+            })
+        }
+    })
+</script>

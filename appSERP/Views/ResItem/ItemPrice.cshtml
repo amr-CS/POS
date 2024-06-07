@@ -1,0 +1,73 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+@if (Model.Rows.Count > 0)
+{
+    foreach (DataRow pData in Model.Rows)
+    {
+        <tr class="tblPriceRow " data-changed="0" data-id="@pData["PriceId"]">
+            <td>
+                <button class="btn btn-light btn-sm border btnAddPriceRow" type="submit">
+                    <i class="fa fa-plus-circle"></i>
+                </button>
+            </td>
+            <td class="">
+                <div class="d-flex">
+                    <div class="col-sm-4 p-0">
+                        <input class="form-control form-control-sm text-center  d-none txtPriceCatId" value="@pData["PriceCat"]" type="text" required />
+                        <input class="form-control form-control-sm text-center d-none txtPriceCatCode" value="@pData["PriceCatCode"]" type="text" required />
+                    </div>
+                    <div class="col-sm-8 p-0">
+                        <input class="form-control form-control-sm text-center  txtPriceCatDesc" value="@pData["PriceCatName"]" type="text" required disabled />
+                    </div>
+                </div>
+            </td>
+            <td class="" width="">
+                <input class="form-control form-control-sm text-center txtPrice" value="@pData["Price"]" required />
+            </td>
+            <td class="" style=" padding-right:1rem !important;">
+                <div class="custom-control custom-checkbox ">
+                    <input type="checkbox" class="custom-control-input  chkIsActive" vIsActive id="chkIsActive2@pData[" PriceId">
+                    <label class="custom-control-label small" for="chkIsActive2@pData[" PriceId"></label>
+                </div>
+            </td>
+            <td><button class="btn btn-light btn-sm btnPriceDelete " data-id="@pData["PriceId"]"><i class="fa fa-trash"></i></button></td>
+        </tr>;
+    }
+}
+else
+{
+    <tr class="tblPriceRow " data-changed="0" data-id="">
+        <td>
+            <button class="btn btn-light btn-sm border btnAddPriceRow" type="submit">
+                <i class="fa fa-plus-circle"></i>
+            </button>
+        </td>
+        <td class="">
+            <div class="d-flex">
+                <div class="col-sm-4 p-0">
+                    <input class="form-control form-control-sm text-center  d-none txtPriceCatId" value="" type="text" required />
+                    <input class="form-control form-control-sm text-center d-none txtPriceCatCode" value="" type="text" required />
+                </div>
+                <div class="col-sm-8 p-0">
+                    <input class="form-control form-control-sm text-center  txtPriceCatDesc" value="" type="text" required disabled />
+                </div>
+            </div>
+        </td>
+        <td class="" width="">
+            <input class="form-control form-control-sm text-center txtPrice" value="" required />
+        </td>
+        <td class="" style=" padding-right:1rem !important;">
+            <div class="custom-control custom-checkbox ">
+                <input type="checkbox" class="custom-control-input  chkIsActive" vIsActive id="chkIsActive2@pData[" PriceId">
+                <label class="custom-control-label small" for="chkIsActive2@pData[" PriceId"></label>
+            </div>
+        </td>
+        <td><button class="btn btn-light btn-sm btnPriceDelete " data-id=""><i class="fa fa-trash"></i></button></td>
+    </tr>;
+}
+
+
+
+<script>
+          $(".tblPriceBody tr:first").addClass('selectedPrice');
+</script>

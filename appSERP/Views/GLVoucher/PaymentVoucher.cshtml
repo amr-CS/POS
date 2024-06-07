@@ -1,0 +1,3727 @@
+﻿
+@using appSERP.appCode.Setting.User
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType;
+@{
+    ViewBag.Title = "سند صرف";
+}
+<style>
+    body {
+        font-family: Cairo;
+    }
+
+    .fullHeightInput {
+        height: 50px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .divCashBox, .divChkStat {
+        background-color: #eef1f5;
+        padding: 5px;
+        border: 1px solid #d4d4d4;
+        border-radius: 3px;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <!-- Title -->
+    <div class="bg-light border rounded p-3 mb-3">@appResource.PaymentVoucher</div>
+    <!-- Utlity -->
+    <div class="divUtilityBar d-flex ">
+        @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+    </div>
+
+    <!-- Head -->
+    <div class="bg-white border rounded p-3 mb-3">
+
+        <div class="row">
+            <!-- Main Inputs -->
+            <div class="col-sm-12">
+
+                <!-- 1st Row Input -->
+                <div class="row">
+
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-sm w-25 txtDocId d-none" value="0" />
+                        <input type="number" class="form-control form-control-sm w-25 txtVoucherType d-none" value="4" />
+                        <input type="text" class="form-control form-control-sm w-25 txtDateCheck d-none" value="0" />
+                    </div>
+                    <!-- Right Controls [Doc No, Ref, ..] -->
+                    <div class="col-sm-4 mt-3">
+
+                        <!-- Doc No -->
+                        <div class="row mt-3">
+                            <div class="col-sm-2">
+                                <label class="small float-right pt-2">@appResource.ReceivedFrom</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm txtPerson" />
+                            </div>
+                        </div>
+
+                        <!-- Doc Date -->
+                        <div class="row mt-2">
+                            <div class="col-sm-2">
+                                <label class="small float-right pt-2">@appResource.CategoryCode</label>
+                            </div>
+                            <div class="col-sm-6 d-flex">
+                                <input type="text" class="form-control form-control-sm w-25 txtCategoryId" />
+                                <input type="text" class="form-control form-control-sm w-75 txtCategoryName" value="" disabled />
+                            </div>
+                        </div>
+                        <!-- Source -->
+                        <div class="row mt-2">
+                            <div class="col-sm-2 ">
+                                <label class="small float-right pt-2">@appResource._CustomerNo</label>
+                            </div>
+                            <div class="col-sm-6 d-flex">
+                                <input type="text" class="form-control form-control-sm w-25 txtCSId" />
+                                <input type="text" class="form-control form-control-sm w-75 txtCSName" value="" disabled />
+                            </div>
+                        </div>
+                        <!-- Ref Doc Date -->
+                        <!-- Source -->
+                        <div class="row mt-2">
+                            <div class="col-sm-2">
+                                <label class="small float-right pt-2"> @appResource._Salesman </label>
+                            </div>
+                            <div class="col-sm-6 d-flex">
+                                <input type="text" class="form-control form-control-sm w-25 txtSalesId" onblur="funFoucus('txtDocNote')" />
+                                <input type="text" class="form-control form-control-sm w-75 txtSalesName" value="" disabled />
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-4 mt-3 ">
+
+                        <div class="divCashBox PayTypeId mt-2">
+                            <div class="row m-1">
+                                <div class="form-check m-2 custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input chkIsCash" checked id="chkIsCash" value="1">
+                                    <label class="custom-control-label small" for="chkIsCash">@appResource.Monetary</label>
+                                </div>
+                                <div class="form-check m-2  custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input chkIsCheck" id="chkIsCheck" value="2">
+                                    <label class="custom-control-label small" for="chkIsCheck">@appResource.Check</label>
+                                </div>
+                                <div class="form-check m-2 custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input chkIsMasterCard" id="chkIsMasterCard" value="3">
+                                    <label class="custom-control-label small" for="chkIsMasterCard">@appResource.CreditCard</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divChkStat mt-2">
+                            <div class="row m-1">
+                                <div class="form-check m-2 custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input chkIsDocWait" id="IsComplete" value="option1">
+                                    <label class="custom-control-label small" for="IsComplete">@appResource.InComplete</label>
+                                </div>
+                                <div class="form-check m-2  custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input chkIsDocCancelled" id="IsCancelled" value="option2">
+                                    <label class="custom-control-label small" for="IsCancelled">@appResource.Canceled</label>
+                                </div>
+                                <div class="form-check m-2 custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input chkIsDocPosted" disabled id="IsPosted" value="option3">
+                                    <label class="custom-control-label small" for="IsPosted">@appResource.Posted</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div>
+                                <label>البيان</label>
+                            </div>
+                            <div>
+                                <input type="text" class="form-control txtDocNote">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Left Controls [Doc No, Ref, ..] -->
+                    <div class="col-sm-4 mt-3">
+                        <!-- Doc No -->
+                        <div class="row controlRow">
+                            <div class="col-sm-4">
+                                <label class="small float-right pt-2">@appResource._No</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control form-control-sm txtDocNo" disabled />
+                            </div>
+                        </div>
+                        <!-- Doc Date -->
+                        <div class="row controlRow">
+                            <div class="col-sm-4">
+                                <label class="small float-right pt-2">@appResource._Date</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control form-control-sm dtpDocDate" />
+                            </div>
+                        </div>
+                        <!-- Ref Doc No -->
+                        <div class="row controlRow">
+                            <div class="col-sm-4">
+                                <label class="small float-right pt-2">@appResource.RefrenceNo</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control form-control-sm txtDocRefNo" />
+                            </div>
+                        </div>
+                        <!-- Ref Doc Date -->
+                        <div class="row controlRow">
+                            <div class="col-sm-4">
+                                <label class="small float-right pt-2">@appResource.RefrenceDate</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control form-control-sm dtpDocRefDate" onblur="funFoucus('txtCashDeskId')" value="@DateTime.Now.ToShortDateString()" />
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End of 1st Row of Main Inputs -->
+            </div>
+        </div>
+    </div>
+    <div class=" mb-3">
+        <div class="bg-white border rounded p-3">
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                <li class="nav-item divCash" id="divCash">
+                    <a class="nav-link  clsCashDesk" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">@appResource.Monetary</a>
+                </li>
+
+                <li class="nav-item divCheck" id="divCheck">
+                    <a class="nav-link" id="profile-tab" disabled data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">@appResource.Check</a>
+                </li>
+                <li class="nav-item divMaster" id="divMaster">
+                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">@appResource.CreditCard</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade  divCash" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="container-fluid ">
+                            <table class="table table-bordered table-hover">
+                                <!--CashDesk-->
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        <div class="d-flex">
+                                            <div class="col-sm-3">
+                                                <div>@appResource.CashBoxNo</div>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div>@appResource.CashDesk</div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div>@appResource._Currency</div>
+                                        <div>@appResource._Amount</div>
+                                    </th>
+                                    <th>
+
+                                        <div> @appResource.ExchangeRate</div>
+                                        <div>@appResource.AmountbyAccountCurrency</div>
+                                    </th>
+                                    <th>
+                                        <div> @appResource.ExchangeRate</div>
+                                        <div>@appResource.AmountBase</div>
+                                    </th>
+                                    <th>@appResource._Note</th>
+                                    <th>
+
+                                        <div class="d-flex">
+
+                                            <div class="col-sm-3">
+                                                <div>@appResource._CostCenter</div>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div>@appResource.CostCenterName</div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th></th>
+                                </tr>
+                                <!--CashDesk-->
+                                <tbody class="tblCashDeskBody">
+                                    <tr class="trBaseRow tblCashDeskRow" data-id="0">
+                                        <td class="">
+                                            <button class="btn btn-light btn-sm border btnCashDeskAddRow" type="submit">
+                                                <i class="fa fa-plus-circle"></i>
+                                            </button>
+                                        </td>
+                                        <td class="">
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput d-none " type="text" required />
+                                                    <input class="form-control form-control-sm text-center  txtCashDeskId" onblur="funFoucus('txtCashCurrencyId')" title="@appResource.ChoseBoxTitle" type="text" required />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center  txtCashDeskName" type="text" required readonly />
+                                                </div>
+                                            </div>
+                                            <div class="d-flex">
+
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountId" type="text" required />
+                                                    <input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountIsCostCenter" type="text" required />
+                                                    <input type="text" class=" form-control form-control-sm text-center txtAccountNo" disabled>
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center font-weight-bold txtAccountName" disabled type="text" min=0 required />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="" width="10%">
+
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <input type="text" class=" form-control form-control-sm text-center txtAccountCurrencyId txtCashCurrencyId">
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center font-weight-bold txtAccountCurrencyName" disabled type="text" min=0 required />
+                                                </div>
+                                            </div>
+                                            <input class="form-control form-control-sm text-center font-weight-bold txtDtlPayCredit" type="text" min=0 required />
+
+                                        </td>
+                                        <td class="">
+                                            <input class="form-control form-control-sm text-center font-weight-bold txtPayCurrencyValue" value="0" type="text" min=0 disabled />
+                                            <input class="form-control form-control-sm text-center font-weight-bold txtCredit" type="text" value="0" min=0 required disabled />
+
+                                        </td>
+                                        <td class="">
+                                            <input class="form-control form-control-sm text-center font-weight-bold txtBaseCurrencyValue" value="0" type="text" min=0 disabled />
+                                            <input class="form-control form-control-sm text-center font-weight-bold txtBaseCredit" type="text" value="0" min=0 required disabled />
+                                            @*<input class="form-control form-control-sm text-center font-weight-bold txtBaseTotal" type="text" value="0" min=0 required disabled />*@
+                                        </td>
+                                        <td class="">
+                                            <textarea class="form-control form-control-sm text-center txtNote" style="height:50px" required></textarea>
+                                        </td>
+                                        <td class="">
+
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput d-none txtCashCostCenterId" type="text" required />
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCashCostCenterCode" onblur="funFoucus('txtAccountCode')" title="@appResource.ChoseCostCenterTitle" type="text" required />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCashCostCenterName" type="text" required readonly />
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td><button class="btn btn-light btn-sm btnCashDelete"><i class="fa fa-trash"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- Details Footer -->
+                            <table class="table table-sm  border-0">
+                                <tbody class="">
+                                    <tr class="d-flex mr-4">
+                                        <td class="col-sm-3"></td>
+                                        <td class="col-sm-2"></td>
+
+                                        <td class="col-sm-2"></td>
+                                        <td class="col-sm-3">
+                                            <label class="small float-right mx-1 pt-2">@appResource._Total</label>
+                                        </td>
+                                        <td class="col-sm-2">
+                                            <input class="form-control form-control-sm text-center disabled font-weight-bold txtCashTotal" value="0" disabled type="number" min=0 required />
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade divCheck" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="container-fluid ">
+                            <table class="table table-bordered table-hover ">
+                                <!--Check    -->
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        <div>  @appResource.DrawnOnABank</div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex">
+                                            <div class="col-sm-4">
+                                                <div>   @appResource.BranchCode</div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div>@appResource._Bank</div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex">
+
+                                            <div class="col-sm-4">
+                                                <div>@appResource.RefrenceNo</div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div>
+                                                    @appResource.RefrenceDate
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>@appResource._Amount</th>
+                                    <th>
+                                        <div>@appResource.ExchangeRate </div>
+                                        <div>@appResource.AmountBase</div>
+                                    </th>
+                                    <th>@appResource._Note</th>
+                                    <th>
+                                        <div class="d-flex">
+                                            <div class="col-sm-3">
+                                                <div>@appResource._CostCenter</div>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div>@appResource.CostCenterName</div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th></th>
+                                </tr>
+                                <tbody class="tblCheckBody">
+                                    <!------  Check ----->
+                                    <tr class="trBaseRow tblCheckRow" data-id="0">
+                                        <td class="">
+                                            <button class="btn btn-light btn-sm border btnCheckAddRow" type="submit">
+                                                <i class="fa fa-plus-circle"></i>
+                                            </button>
+                                        </td>
+                                        <td width="10%">
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <div class="d-none">
+                                                        <input class="form-control form-control-sm text-center fullHeightInput txtCheckAccountId" type="text" />
+                                                        <input class="form-control form-control-sm text-center fullHeightInput txtCheckAccountNo" type="text" />
+                                                        <input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountIsCostCenter" type="text" />
+                                                    </div>
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckBankId" title="@appResource.ChoseBankTitle" type="text" required />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckBankName" type="text" required readonly />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckBankBranchId" title="@appResource.ChoseBankTitle" type="text" required />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckBankBranchName" type="text" required readonly />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="" width="25%">
+                                            <div class="d-flex">
+                                                <input class="form-control form-control-sm text-center fullHeightInput font-weight-bold txtCheckNo" type="text" min=0 />
+                                                <input class="form-control form-control-sm text-center fullHeightInput font-weight-bold txtCheckDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" />
+                                            </div>
+                                        </td>
+                                        <td class="" width="15%">
+                                            <input type="text" class=" form-control fullHeightInput form-control-sm text-center txtCheckCredit">
+                                            @*<div class="">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    الاجمالي
+                                                </div>*@
+                                        </td>
+                                        <td class="">
+                                            <input class="form-control form-control-sm text-center font-weight-bold txtCheckCurrencyValue" value="0" type="text" min=0 disabled />
+                                            <input class="form-control form-control-sm text-center font-weight-bold txtCheckBaseCredit" disabled type="text" value="0" min=0 required />
+                                            @*<input class="form-control form-control-sm text-center font-weight-bold txtCheckTotal" type="text" value="0" min=0 required disabled />*@
+                                        </td>
+                                        <td class="">
+                                            <textarea class="form-control form-control-sm text-center txtCheckNote" style="height:50px" required></textarea>
+                                        </td>
+                                        <td class="">
+
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput d-none txtCheckCostCenterId" type="text" required />
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckCostCenterCode" title="@appResource.ChoseCostCenterTitle" type="text" required />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckCostCenterName" type="text" required readonly />
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                        <td><button class="btn btn-light btn-sm btnCashDelete"><i class="fa fa-trash"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- Details Footer -->
+                            <table class="table table-sm  border-0">
+                                <tbody class="">
+                                    <tr class="d-flex mr-4">
+                                        <td class="col-sm-3"></td>
+                                        <td class="col-sm-2"></td>
+
+                                        <td class="col-sm-2"></td>
+                                        <td class="col-sm-3">
+                                            <label class="small float-right mx-1 pt-2">@appResource._Total</label>
+                                        </td>
+                                        <td class="col-sm-2">
+                                            <input class="form-control form-control-sm text-center disabled font-weight-bold txtCheckTotal" value="0" disabled type="number" min=0 required />
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade divMaster" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+
+                        <div class="container-fluid">
+                            <table class="table table-bordered table-hover ">
+                                <!--Check    -->
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        <div>  @appResource.DrawnOnABank</div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex">
+                                            <div class="col-sm-4">
+                                                <div>   @appResource.BranchCode</div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div>@appResource._Bank</div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex">
+
+                                            <div class="col-sm-4">
+                                                <div>@appResource.RefrenceNo</div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div>
+                                                    @appResource.RefrenceDate
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>@appResource._Amount</th>
+                                    <th>
+                                        <div>@appResource.ExchangeRate </div>
+                                        <div>@appResource.AmountBase</div>
+                                    </th>
+                                    <th>@appResource._Note</th>
+                                    <th>
+                                        <div class="d-flex">
+                                            <div class="col-sm-3">
+                                                <div> </div>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div>@appResource.CreditCardType</div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th></th>
+                                </tr>
+                                <tbody class="tblMasterBody">
+                                    <!------  Check ----->
+                                    <tr class="trBaseRow tblMasterRow" data-id="0">
+                                        <td class="">
+                                            <button class="btn btn-light btn-sm border btnCheckAddRow" type="submit">
+                                                <i class="fa fa-plus-circle"></i>
+                                            </button>
+                                        </td>
+                                        <td width="10%">
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <div class="d-none">
+                                                        <input class="form-control form-control-sm text-center fullHeightInput txtCheckAccountId" type="text" />
+                                                        <input class="form-control form-control-sm text-center fullHeightInput txtCheckAccountNo" type="text" />
+                                                        <input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountIsCostCenter" type="text" />
+                                                    </div>
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckBankId" title="@appResource.ChoseBankTitle" type="text" required />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckBankName" type="text" required readonly />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckBankBranchId" title="@appResource.ChoseCostCenterTitle" type="text" required />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput txtCheckBankBranchName" type="text" required readonly />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="" width="25%">
+                                            <div class="d-flex">
+                                                <input class="form-control form-control-sm text-center fullHeightInput font-weight-bold txtCheckNo" type="text" min=0 />
+                                                <input class="form-control form-control-sm text-center fullHeightInput font-weight-bold txtCheckDate" type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" min=0 required />
+                                            </div>
+                                        </td>
+                                        <td class="" width="15%">
+                                            <input type="text" class=" form-control fullHeightInput form-control-sm text-center txtCheckDebit">
+                                            @*<div class="">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    الاجمالي
+                                                </div>*@
+                                        </td>
+                                        <td class="">
+                                            <input class="form-control form-control-sm text-center font-weight-bold txtCheckCurrencyValue" value="0" type="text" min=0 disabled />
+                                            <input class="form-control form-control-sm text-center font-weight-bold txtCheckBaseCredit txtCheckBaseCreditMaster" disabled type="text" value="0" min=0 required />
+                                            @*<input class="form-control form-control-sm text-center font-weight-bold txtCheckTotal" type="text" value="0" min=0 required disabled />*@
+                                        </td>
+                                        <td class="">
+                                            <textarea class="form-control form-control-sm text-center txtCheckNote" style="height:50px" required></textarea>
+                                        </td>
+                                        <td class="">
+
+                                            <div class="d-flex">
+                                                <div class="col-sm-4 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput   txtEPaymentTypeId" type="text" required />
+                                                    <input class="form-control form-control-sm text-center fullHeightInput  txtEPaymentTypeCode d-none" title="@appResource.ChoseCostCenterTitle" type="text" required />
+                                                </div>
+                                                <div class="col-sm-8 p-0">
+                                                    <input class="form-control form-control-sm text-center fullHeightInput  txtEPaymentTypeName" type="text" required readonly />
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                        <td><button class="btn btn-light btn-sm btnCashDelete"><i class="fa fa-trash"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- Details Footer -->
+                            <table class="table table-sm  border-0">
+                                <tbody class="">
+                                    <tr class="d-flex mr-4">
+                                        <td class="col-sm-3"></td>
+                                        <td class="col-sm-2"></td>
+
+                                        <td class="col-sm-2"></td>
+                                        <td class="col-sm-3">
+                                            <label class="small float-right mx-1 pt-2">@appResource._Total</label>
+                                        </td>
+                                        <td class="col-sm-2">
+                                            <input class="form-control form-control-sm text-center disabled font-weight-bold txtMasterTotal" value="0" disabled type="number" min=0 required />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Details Main -->
+        <div class="bg-white border rounded p-3 mt-3 divGlVoucher">
+            <!-- Details -->
+            <table class="table table-sm table-responsive-sm">
+                <thead>
+                    <tr class="tblHead">
+                        <th class=""></th>
+                        <th class="" width="7%">
+                            <div>@appResource.AccountNo</div>
+                        </th>
+                        <th class="" width="15%">
+                            <div>@appResource.AccountDesc</div>
+                        </th>
+                        <th class="" width="5%">
+                            <div>@appResource._Currency</div>
+                            <div>@appResource._Amount</div>
+                        </th>
+                        <th class="">
+                            <div>@appResource.ExchangeRate</div>
+                            <div>@appResource.AmountbyAccountCurrency</div>
+                        </th>
+                        <th class="">
+                            <div>@appResource.ExchangeRate</div>
+                            <div>@appResource.AmountBase</div>
+                        </th>
+                        <th class="" width="20%">
+                            <div class="d-flex">
+
+                                <div class="col-sm-3">
+                                    <div>@appResource._CostCenter</div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div>@appResource.CostCenterName</div>
+                                </div>
+
+                            </div>
+
+                        </th>
+                        <th class="">
+                            <div>@appResource._Note</div>
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody class="tblBody" id="journal-entry">
+                    <tr class="trBaseRow tblRow" data-id="0">
+                        <td class="">
+                            <button class="btn btn-light btn-sm border btnAddRow" type="submit">
+                                <i class="fa fa-plus-circle"></i>
+                            </button>
+                        </td>
+
+                        <td class="">
+                            <input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountId" type="text" required />
+                            <input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountIsCostCenter" type="text" required />
+                            <input class="form-control form-control-sm text-center fullHeightInput txtAccountCode" onblur="funFoucus('txtAccountCurrencyId')" type="text" title="@appResource.ChoseAccountTitle" required />
+                        </td>
+                        <td class="">
+                            <textarea class="form-control form-control-sm text-center fullHeightInput txtAccountName txtDTLAccountName" type="text" required readonly></textarea>
+                        </td>
+                        <td class="" width="15%">
+                            <div class="d-flex">
+                                <div class="col-sm-4 p-0">
+                                    <input type="text" class=" form-control form-control-sm text-center txtAccountCurrencyId txtDTLAccountCurrencyId">
+                                </div>
+                                <div class="col-sm-8 p-0">
+                                    <input class="form-control form-control-sm text-center font-weight-bold txtAccountCurrencyName txtDTLAccountCurrencyName" disabled type="text" min=0 required />
+                                </div>
+                            </div>
+                            <input class="form-control form-control-sm text-center font-weight-bold txtPayCredit" type="text" min=0 required />
+
+                        </td>
+                        <td class="">
+                            <input class="form-control form-control-sm text-center font-weight-bold txtPayCurrencyValue txtDTLPayCurrencyValue" value="0" type="text" min=0 required disabled />
+                            <input class="form-control form-control-sm text-center font-weight-bold txtDebit" type="text" value="0" min=0 required disabled />
+                        </td>
+                        <td class="">
+                            <input class="form-control form-control-sm text-center font-weight-bold txtBaseCurrencyValue txtDTLBaseCurrencyValue" value="0" type="text" min=0 required disabled />
+                            <input class="form-control form-control-sm text-center font-weight-bold txtDebitBase" value="0" type="text" min=0 required disabled />
+                        </td>
+                        <td class="">
+
+                            <div class="d-flex">
+                                <div class="col-sm-4 p-0">
+                                    <input class="form-control form-control-sm text-center fullHeightInput d-none txtCostCenterId" type="text" required />
+                                    <input class="form-control form-control-sm text-center fullHeightInput  txtCostCenterCode" onblur="funFoucus('txtNote')" data-id="1" title="@appResource.ChoseCostCenterTitle" type="text" required />
+                                </div>
+                                <div class="col-sm-8 p-0">
+                                    <input class="form-control form-control-sm text-center fullHeightInput txtCostCenterName" data-id="1" type="text" required readonly />
+                                </div>
+                            </div>
+                        </td>
+                        <td class="">
+                            <textarea class="form-control form-control-sm text-center txtNote txtDTLNote" onblur="funFoucus('btnSave')" style="height:50px" required></textarea>
+                        </td>
+                        <td><button class="btn btn-light btn-sm btnCashDelete"><i class="fa fa-trash"></i></button></td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <!-- Details Footer -->
+            <table class="table table-sm tblFooter border-0">
+                <tbody class="">
+                    <tr class="d-flex mr-4">
+                        <td class="col-sm-3">
+                            <label class="small float-right mx-1 pt-2">@appResource._Total</label>
+                        </td>
+                        <td class="col-sm-2">
+                            <input class="form-control form-control-sm text-center disabled font-weight-bold txtTotalDebit" disabled type="number" min=0 required />
+                        </td>
+
+                        <td class="col-sm-2">
+                            <div class="d-flex">
+                                <label class="small mx-1 pt-2">@appResource._Diff</label>
+                                <input class="form-control form-control-sm text-center disabled txtDiff font-weight-bold" disabled type="text" required />
+                            </div>
+
+                        </td>
+                        <td class="col-sm-3">
+                            <label class="small float-right mx-1 pt-2">@appResource.SumCashAndCheques</label>
+                        </td>
+                        <td class="col-sm-2">
+                            <input class="form-control form-control-sm text-center disabled font-weight-bold txtTotalCredit" disabled type="number" value=".00" min=0 required />
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <!-- AccountData Modal -->
+    <div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="AccountDataModalContent"></div>
+        </div>
+    </div>
+
+    <!-- CostCenterData Modal -->
+    <div id="CostCenterDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="CostCenterDataModalContent"></div>
+        </div>
+    </div>
+    <script>
+    // Check If IT Check Or CashDesk
+    var vIsCashDesk = $('.clsCashDesk').attr('aria-selected');
+    $('body').on('click', '#myTab', function () {
+        vIsCashDesk = $('.clsCashDesk').attr('aria-selected');
+        })
+        // Save All Vouchers
+        function funSaveALL() {
+            // Get GLVoucherId
+            var vDocId = $('.txtDocId').val();
+            // Get Person
+            var vPerson = $('.txtPerson').val();
+            // Get CategoryId
+            var vCategoryId = $('.txtCategoryId').val();
+            // Get CSId
+            var vCSId = $('.txtCSId').val();
+            // Get SalesId
+            var vSalesId = $('.txtSalesId').val();
+            // Check Payment Type
+            var vPayTypeId = $('input[type="radio"][name=inlineRadioOptions]:checked').attr('data-id')
+            // PayMentType
+            var vEpaymentType = '';
+            $('.divCashBox input:checked').each(function () {
+                // Current Object Id
+                var vCurrentObjectActionId = $(this).val();
+                vEpaymentType += vCurrentObjectActionId + ','
+            })
+            // Doc Is IsComplete
+            var IsComplete = $('.chkIsDocWait').prop('checked');
+
+            // Is IsCancelled
+            var IsCancelled = $('.chkIsDocCancelled').prop('checked');
+            // Is IsPosted
+            var IsPosted = $('.chkIsDocPosted').prop('checked');
+
+            // Get DocNote
+            var DocNote = $('.txtDocNote').val();
+            // Doc Ref No
+            var vDocRefNo = $('.txtDocRefNo').val();
+            // Doc Ref Date
+            var vDocRefDate = $('.dtpDocRefDate').val();
+            // Get Doc Id
+            var vDocId = $('.txtDocId').val();
+            // Get Doc Date
+            var vDocDate = $('.dtpDocDate').val();
+            // Valid Date
+            var vDateCheck = $('.txtDateCheck').val();
+
+             if ($('.txtDiff').eq(0).val()!=0)
+                funNotification('القيد غير متزن!', '2');
+            // Check Date
+            else if (vDateCheck == 'true') {
+                // Save Voucher Head
+                funSaveGLVoucher(vDocId, 4, null, 1, null, vDocDate, null, vDocRefNo, vDocRefDate, vPayTypeId, IsPosted, null, null, DocNote, null, IsCancelled, IsComplete, null, vEpaymentType, vCategoryId,
+                    null, null, null, null, null, vCSId, null, vPerson, vSalesId, true, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null
+                    , null, null, null, null, null, null, null, null, false, '@clsQueryType.qInsert')
+            }
+            else {
+
+                funNotification('@appResource.msgCheckFinancialYear', '2');
+            }
+
+        }
+
+    // Save Using button
+        $('.btnSave').on('click', function () {
+            // Save  ALL
+            funSaveALL()
+
+    }) // End BtnSave
+
+    // Save Using F10
+        $('body').on('keyup', function (e) {
+            // Check F10
+            if (e.keyCode == 121) {
+                // Save  ALL
+                funSaveALL()
+            }
+        })
+
+
+    // Save VoucherBoxCheck
+    function funSaveVoucherBoxCheck(
+        pVoucherBoxCheckId,
+        pGLVoucherId,
+        pCashDeskId,
+        pCurrencyId,
+        pAccountId,
+        pPayDebit,
+        pPayCurrencyValue,
+        pDebit,
+        pBaseCurrencyValue,
+        pBaseDebit,
+        pCredit,
+        pBaseCredit,
+        pNote,
+        pCostCenterId,
+        pVoucherIsCheck,
+        pCheckBankId,
+        pCheckNo,
+        pCheckDate,
+        pCheckDebit,
+        pCheckCurrencyValue,
+        pCheckBaseDebit,
+        pCheckNote,
+        pCheckCostCenterId,
+        pCheckBankBranchId,
+        pPayTypeId,
+        pEPayTypeId,
+        pIsDeleted,
+        pQueryTypeId) {
+        // Get Api VoucherBoxCheck
+        $.post('/GLVoucher/funSaveVoucherBoxCheck',
+            {
+                pVoucherBoxCheckId: pVoucherBoxCheckId,
+                pGLVoucherId: pGLVoucherId,
+                pCashDeskId: pCashDeskId,
+                pCurrencyId: pCurrencyId,
+                pAccountId: pAccountId,
+                pPayDebit: pPayDebit,
+                pPayCurrencyValue: pPayCurrencyValue,
+                pDebit: pDebit,
+                pBaseCurrencyValue: pBaseCurrencyValue,
+                pBaseDebit: pBaseDebit,
+                pCredit: pCredit,
+                pBaseCredit: pBaseCredit,
+                pNote: pNote,
+                pCostCenterId: pCostCenterId,
+                pVoucherIsCheck: pVoucherIsCheck,
+                pCheckBankId: pCheckBankId,
+                pCheckNo: pCheckNo,
+                pCheckDate: pCheckDate,
+                pCheckDebit: pCheckDebit,
+                pCheckCurrencyValue: pCheckCurrencyValue,
+                pCheckBaseDebit: pCheckBaseDebit,
+                pCheckNote: pCheckNote,
+                pCheckCostCenterId: pCheckCostCenterId,
+                pCheckBankBranchId: pCheckBankBranchId,
+                pPayTypeId: pPayTypeId,
+                pEPayTypeId:pEPayTypeId,
+                pIsDeleted: pIsDeleted,
+                pQueryTypeId: pQueryTypeId
+            }, function () {
+              //  funNotification('تم الحفظ بنجاح', '1')
+            })
+    }
+
+    </script>
+
+    <!--function  Save GL Voucher Head -->
+    <script>
+    function funSaveGLVoucher(
+        // Head Parameters
+        phGLVoucherId,
+        phVoucherTypeId,
+        phFinancialYearId,
+        phSystemId,
+        phCashDeskId,
+        phGLVoucherDate,
+        phGLVoucherTime,
+        phGLVoucherRef,
+        phGLVoucherRefDate,
+        phPaymentTypeId,
+        phIsPosted,
+        phIsIssued,
+        phIsOpps,
+        phGLVoucherNote,
+        phUserId,
+        phDocIsCancelled,
+        phDocIsWait,
+        phGLVoucherIsRepeated,
+        phGLIdPayType,
+        phGLVoucherCategoryId,
+        phGLOppsVoucherValue,
+        phGLOppsVoucherId,
+        phGLOppsVoucherYearId,
+        phStoreId,
+        phInvTransactionTypeId,
+        phCSId,
+        phVoucherSeq,
+        phPerson,
+        phSalesId,
+        phGLVoucherIsActive,
+        phIsDeleted,
+        phNumbers,
+        // Detail Parameters
+        pdGLVoucherDtlId,
+        pdGLVoucherId,
+        pdGLVoucherTypeId,
+        pdFinancialYearId,
+        pdAccountId,
+        pdCashDeskId,
+        pdCurrencyId,
+        pdGLVoucherDtlDebit,
+        pdGLVoucherDtlCredit,
+        pdGLVoucherDtlDebitBase,
+        pdGLVoucherDtlCreditBase,
+        pdBaseCurrencyValue,
+        pdGLVoucherDtlPayDebit,
+        pdGLVoucherDtlPayCredit,
+        pdPayCurrencyValue,
+        pdGLVoucherDtlNote,
+        pdCostCenterId,
+        pdIsPosted,
+        pdUserId,
+        pdGLVoucherDtlTransSeq,
+        pdIsDeleted,
+        // Search Parameters
+        psGLVoucherNo,
+        psDateFrom,
+        psDateTo,
+        // Main Parameters
+        pIsGLVoucherDetail,
+        pQueryTypeId) {
+        if (phPerson ) {
+            // API Save
+           // $.get('/api/APIGLVoucher/GLVoucherGET',
+            $.post('/GLVoucher/funSaveGLVoucher',
+                {
+                    // Head Parameters
+                    phGLVoucherId: phGLVoucherId,
+                    phVoucherTypeId: phVoucherTypeId,
+                    phFinancialYearId: phFinancialYearId,
+                    phSystemId: phSystemId,
+                    phCashDeskId: phCashDeskId,
+                    phGLVoucherDate: phGLVoucherDate,
+                    phGLVoucherTime: phGLVoucherTime,
+                    phGLVoucherRef: phGLVoucherRef,
+                    phGLVoucherRefDate: phGLVoucherRefDate,
+                    phPaymentTypeId: phPaymentTypeId,
+                    phIsPosted: phIsPosted,
+                    phIsIssued: phIsIssued,
+                    phIsOpps: phIsOpps,
+                    phUserId: phUserId,
+                    phGLVoucherNote: phGLVoucherNote,
+                    phDocIsCancelled: phDocIsCancelled,
+                    phDocIsWait: phDocIsWait,
+                    phGLVoucherIsRepeated: phGLVoucherIsRepeated,
+                    phGLIdPayType: phGLIdPayType,
+                    phGLVoucherCategoryId: phGLVoucherCategoryId,
+                    phGLOppsVoucherValue: phGLOppsVoucherValue,
+                    phGLOppsVoucherId: phGLOppsVoucherId,
+                    phGLOppsVoucherYearId: phGLOppsVoucherYearId,
+                    phStoreId: phStoreId,
+                    phInvTransactionTypeId: phInvTransactionTypeId,
+                    phCSId: phCSId,
+                    phVoucherSeq: phVoucherSeq,
+                    phGLVoucherIsActive: phGLVoucherIsActive,
+                    phPerson: phPerson,
+                    phSalesId: phSalesId,
+                    phIsDeleted: phIsDeleted,
+                    //Detail
+                    phNumbers: phNumbers,
+                    // Detail Parameters
+                    pdGLVoucherDtlId: pdGLVoucherDtlId,
+                    pdGLVoucherId: pdGLVoucherId,
+                    pdGLVoucherTypeId: pdGLVoucherTypeId,
+                    pdFinancialYearId: pdFinancialYearId,
+                    pdAccountId: pdAccountId,
+                    pdCashDeskId: pdCashDeskId,
+                    pdCurrencyId: pdCurrencyId,
+                    pdGLVoucherDtlDebit: pdGLVoucherDtlDebit,
+                    pdGLVoucherDtlCredit: pdGLVoucherDtlCredit,
+                    pdGLVoucherDtlDebitBase: pdGLVoucherDtlDebitBase,
+                    pdGLVoucherDtlCreditBase: pdGLVoucherDtlCreditBase,
+                    pdBaseCurrencyValue: pdBaseCurrencyValue,
+                    pdGLVoucherDtlPayDebit: pdGLVoucherDtlPayDebit,
+                    pdGLVoucherDtlPayCredit: pdGLVoucherDtlPayCredit,
+                    pdPayCurrencyValue: pdPayCurrencyValue,
+                    pdGLVoucherDtlNote: pdGLVoucherDtlNote,
+                    pdCostCenterId: pdCostCenterId,
+                    pdIsPosted: pdIsPosted,
+                    pdUserId: pdUserId,
+                    pdGLVoucherDtlTransSeq: pdGLVoucherDtlTransSeq,
+                    pdIsDeleted: pdIsDeleted,
+                    // Search Parameters
+                    psGLVoucherNo: psGLVoucherNo,
+                    psDateFrom: psDateFrom,
+                    psDateTo: psDateTo,
+                    // Query Type Id
+                    pIsGLVoucherDetail: false,
+                    pQueryTypeId: pQueryTypeId
+                }, function (data) {
+                    // JSON Parse
+                    var vDataResult = JSON.parse(data);
+                    // Row Id
+                    var vGLVoucherId = vDataResult[0].GlVoucherId
+
+                    // Save Voucher Check And Cash
+                    // Check Payment Type
+                    var vCheckedValue = $('input[type="radio"][name=inlineRadioOptions]:checked').val()
+                    // Save Check
+                    $('.tblCheckRow').each(function () {
+                        // Id
+                        var vRowId = $(this).attr('data-id');
+                        // CheckBank
+                        var vCheckBankId = $(this).find('.txtCheckBankId').val();
+                        // CheckNo
+                        var vCheckNo = $(this).find('.txtCheckNo').val();
+                        // CheckDate
+                        var vCheckDate = $(this).find('.txtCheckDate').val();
+                        // vCheckDebit
+                        var vCheckCredit = $(this).find('.txtCheckCredit').val();
+                        // vCheckCurrencyValue
+                        var vCheckCurrencyValue = $(this).find('.txtCheckCurrencyValue').val();
+                        // vCheckBaseDebit
+                        var vCheckBaseCredit = $(this).find('.txtCheckBaseCredit').val();
+                        // vCheckNote
+                        var vCheckNote = $(this).find('.txtCheckNote').val();
+                        // vCheckCostCenterId
+                        var vCheckCostCenterId = $(this).find('.txtCheckCostCenterCode').val();
+                        // vBankBranchId
+                        var vBankBranchId = $(this).find('.txtCheckBankBranchId').val();
+                        // AccountNo
+                        var vAccountNo = $(this).find('.txtCheckAccountNo').val();
+                        if (vCheckBankId) {
+                            // Function Save
+                            funSaveVoucherBoxCheck(vRowId, vGLVoucherId, null, null, vAccountNo, null, null, vCheckCurrencyValue, null, null, vCheckCredit, vCheckBaseCredit, vCheckNote, vCheckCostCenterId, false, vCheckBankId, vCheckNo, vCheckDate, null, vCheckCurrencyValue, null, vCheckNote, vCheckCostCenterId, vBankBranchId, 2, null, false, '100');
+
+                        }
+                    })
+                    // Save Check
+                    $('.tblCashDeskRow').each(function () {
+                        var vRowId = $(this).attr('data-id');
+                        // Cash Desk
+                        var vCashDeskId = $(this).find('.txtCashDeskId').val();
+                        // Currency
+                        var vCurrencyId = $(this).find('.txtAccountCurrencyId').val();
+                        // PayDebit
+                        var vPayDebit = $(this).find('.txtDtlPayCredit').val();
+                        // Pay Currency Value
+                        var vPayCurrencyValue = $(this).find('.txtPayCurrencyValue').val();
+                        // Debit
+                        var vCredit = $(this).find('.txtCredit').val();
+                        // BaseCurrencyValue
+                        var vBaseCurrencyValue = $(this).find('.txtBaseCurrencyValue').val();
+                        // BaseDebit
+                        var vBaseCredit = $(this).find('.txtBaseCredit').val();
+                        // Note
+                        var vNote = $(this).find('.txtNote').val();
+                        // CostCenterId
+                        var vCostCenterId = $(this).find('.txtCashCostCenterCode').val();
+                        // AccountNo
+                        var vAccountNo = $(this).find('.txtAccountNo').val();
+
+                        // Function Save
+                        if (vCashDeskId) {
+                            funSaveVoucherBoxCheck(vRowId, vGLVoucherId, vCashDeskId, vCurrencyId, vAccountNo, vPayDebit, vPayCurrencyValue, null, vBaseCurrencyValue, null, vCredit, vBaseCredit, vNote, vCostCenterId, false, null, null, null, null, null, null, null, null, null, 1, null, false, '100')
+                        }
+                    })
+
+                    // Save Master
+                    $('.tblMasterRow').each(function () {
+                        // Id
+                        var vRowId = $(this).attr('data-id');
+                        // CheckBank
+                        var vCheckBankId = $(this).find('.txtCheckBankId').val();
+                        // CheckNo
+                        var vCheckNo = $(this).find('.txtCheckNo').val();
+                        // CheckDate
+                        var vCheckDate = $(this).find('.txtCheckDate').val();
+                        // vCheckDebit
+                        var vCheckCredit = $(this).find('.txtCheckCredit').val();
+                        // BaseCurrencyValue
+                        var vBaseCurrencyValue = $(this).find('.txtBaseCurrencyValue').val();
+                        // vCheckCurrencyValue
+                        var vCheckCurrencyValue = $(this).find('.txtCheckCurrencyValue').val();
+                        // vCheckBaseDebit
+                        var vCheckBaseCredit = $(this).find('.txtCheckBaseCredit').val();
+                        // vCheckNote
+                        var vCheckNote = $(this).find('.txtCheckNote').val();
+                        // vCheckCostCenterId
+                        var vCheckCostCenterId = $(this).find('.txtCheckCostCenterCode').val();
+                        // vBankBranchId
+                        var vBankBranchId = $(this).find('.txtCheckBankBranchId').val();
+                        // Master Id
+                        var vEPayType = $(this).find('.txtEPaymentTypeId').val();
+                        // AccountNo
+                        var vAccountNo = $(this).find('.txtCheckAccountNo').val();
+
+
+                        if (vEPayType) {
+                            // Function Save
+                          //  funSaveVoucherBoxCheck(vRowId, vGLVoucherId, null, null, vAccountNo, null, vCheckCurrencyValue, null, vBaseCurrencyValue, null, vCheckCredit, vCheckBaseCredit, vCheckNote, vCheckCostCenterId, false, vCheckBankId, vCheckNo, vCheckDate, vCheckDebit, vCheckCurrencyValue, vCheckBaseDebit, vCheckNote, vCheckCostCenterId, vBankBranchId, 3, vEPayType, false, '100');
+                            funSaveVoucherBoxCheck(vRowId, vGLVoucherId, null, null, vAccountNo, null, null, vCheckCurrencyValue, null, null, vCheckCredit, vCheckBaseCredit, vCheckNote, vCheckCostCenterId, false, vCheckBankId, vCheckNo, vCheckDate, null, vCheckCurrencyValue, null, vCheckNote, vCheckCostCenterId, vBankBranchId, 3, vEPayType, false, '100');
+
+                        }
+                    })
+                    // Save GL  Voucher DTl
+                    $('.tblRow').each(function () {
+
+                        // Id
+                        var vId = $(this).attr('data-id')
+                        // Cash Desk
+                        var vAccountId = $(this).find('.txtAccountId').val();
+                        // Currency
+                        var vCurrencyId = $(this).find('.txtAccountCurrencyId').val();
+                        //PayDebit
+                        var vPayCredit = $(this).find('.txtPayCredit').val();
+                        //PayDebit
+                        var vDebit = $(this).find('.txtDebit').val();
+                        console.log(vDebit)
+                        //Pay Currency Value
+                        var vPayCurrencyValue = $(this).find('.txtPayCurrencyValue').val();
+                        //BaseCurrencyValue
+                        var vBaseCurrencyValue = $(this).find('.txtBaseCurrencyValue').val();
+                        //BaseDebit
+                        var vBaseDebit = $(this).find('.txtDebitBase').val();
+                        console.log(vBaseDebit)
+                        //Note
+                        var vNote = $(this).find('.txtNote').val();
+                        //CostCenterId
+                        var vCostCenterId = $(this).find('.txtCostCenterId').val();
+
+                        // Check Exist Value
+                        if (vAccountId != '') {
+
+                            vIsValidData = true;
+                            //Save Row Deatil Voucher
+                            //$.get('/api/APIGLVoucher/GLVoucherGET',
+                            $.post('/GLVoucher/funSaveGLVoucher',
+                                {
+                                    // Detail Parameters
+                                    pdGLVoucherDtlId: vId,
+                                    pdGLVoucherId: vGLVoucherId,
+                                    pdGLVoucherTypeId: 3,
+                                    pdAccountId: vAccountId,
+                                    pdCurrencyId: vCurrencyId,
+                                    pdGLVoucherDtlPayCredit: vPayCredit,
+                                    pdPayCurrencyValue: vPayCurrencyValue,
+                                    pdGLVoucherDtlDebit: vDebit,
+                                    pdGLVoucherDtlDebitBase: vBaseDebit,
+                                    pdBaseCurrencyValue: vBaseCurrencyValue,
+                                    pdGLVoucherDtlNote: vNote,
+                                    pdCostCenterId: vCostCenterId,
+                                    pdIsDeleted: false,
+                                    // Query Type Id
+                                    pIsGLVoucherDetail: true,
+                                    pQueryTypeId: '@clsQueryType.qInsert'
+                                },
+                                function (data, status) {
+                                    //funNotification('تم الحفظ بنجاح', '1')
+                                }) // End Of Save Detail
+                        }
+                    })// End Check Account
+
+                    funNotification('@appResource.msgSave', '1')
+
+                });
+        } else {
+
+            $('.txtPerson').addClass('errorClass')
+            funNotification('@appResource.msgCompleteData', '2')
+
+        }
+    }
+    </script>
+    <!-- Add New Row -->
+    <script>
+        // Add Row - F6
+        $('body').on('keydown', function (e) {
+            if (e.keyCode == '117') {
+                // Add Row
+                funAddRow();
+            }
+        })
+        // Add Row - Button Click
+        $('.tblCheckBody').on('click', '.btnCheckAddRow', function () {
+            vRow = $('.tblCheckRow')[0];
+            vBody = $('.tblCheckBody')
+            // Add Row
+            funAddRow(vRow, vBody);
+        })
+        // Add Row - Button Click
+        $('.tblMasterBody').on('click', '.btnCheckAddRow', function () {
+
+            vRow = $('.tblMasterRow')[0];
+            vBody = $('.tblMasterBody')
+            // Add Row
+            funAddRow(vRow, vBody);
+        })
+        $('body').on('click', '.btnCashDeskAddRow', function () {
+            vRow = $('.tblCashDeskRow')[0];
+            vBody = $('.tblCashDeskBody')
+            // Add Row
+            funAddRow(vRow, vBody);
+        })
+        // Add Row
+        function funAddRow(pRow, pBody) {
+            var vRow = pRow;
+            var vBody = pBody;
+            // Cloned Row
+            var vRowCloned = $(vRow).clone();
+            // Clear
+            vRowCloned.find(':input').val('');
+            vRowCloned.closest('tr').attr('data-id', '0')
+            // Append
+            vBody.append(vRowCloned);
+            // Get Index
+            var vIndex = vRowCloned.index();
+        }
+
+        // Add Row - Button Click
+        $('body').on('click', '.btnAddRow', function () {
+            // Add Row
+            funAddAccountRow();
+        })
+        // Add Row
+        function funAddAccountRow() {
+            if (!$('#journal-entry').find('.txtAccountId:invalid').length) {
+                var vRow = $('.tblRow');
+                var vBody = $('.tblBody');
+                // Cloned Row
+                var vRowCloned = $(vRow).clone().last();
+                // Clear
+                vRowCloned.find(':input').val('');
+                vRowCloned.closest('tr').attr('data-id', '0')
+                // Append
+                vBody.append(vRowCloned);
+                // Get Index
+                //var vIndex = vRowCloned.index();
+
+                // Fill Note Of DTl
+                var vValue = $('.txtDocNote').val();
+                $('.txtDTLNote').val(vValue)
+            }
+        }
+        // Add New Empty Cash Row
+        function funAddDTLEmptyRow(pTableBody) {
+            var vRowContent = {
+                'BoxCashDeskId': '',
+                'BoxCashDeskName': '',
+                'AccountId': '',
+                'AccountNo': '',
+                'AccountNameL1': '',
+                'CurrencyId': '',
+                'CurrencyNameL1': '',
+                'BoxPayDebit': '',
+                'BoxBaseCurrencyValue': '',
+                'BoxDebit': '',
+                'BoxBaseCurrencyValue': '',
+                'BoxBaseDebit': '',
+                'BoxNote': '',
+                'BoxCostCenterId': '',
+                'CostCenterCode': '',
+                'CostCenterNameL1': '',
+            }
+            var vData = funGlVoucherBoxCheckConfig(vRowContent)
+            pTableBody.append(vData)
+        }
+
+        // Add New Empty Cash Row
+        function funAddCashEmptyRow(pTableBody) {
+            var vRowContent = {
+                'BoxCashDeskId': '',
+                'BoxCashDeskName': '',
+                'AccountId': '',
+                'AccountNo': '',
+                'AccountNameL1': '',
+                'CurrencyId': '',
+                'CurrencyNameL1': '',
+                'BoxPayDebit': '',
+                'BoxBaseCurrencyValue': '',
+                'BoxDebit': '',
+                'BoxBaseCurrencyValue': '',
+                'BoxBaseDebit': '',
+                'BoxNote': '',
+                'BoxCostCenterId': '',
+                'CostCenterCode': '',
+                'CostCenterNameL1': '',
+            }
+            var vData = funGlVoucherBoxCheckConfig(vRowContent)
+            pTableBody.append(vData)
+        }
+
+        // Add New Empty CHECK Row
+        function funAddCheckEmptyRow(pTableBody) {
+            var vRowContent = {
+                'AccountId': '',
+                'CheckBankId': '',
+                'CheckBankName': '',
+                'CheckBankBranchId': '',
+                'CheckBankName': '',
+                'CheckNo': '',
+                'CheckDate': '',
+                'CheckDebit': '',
+                'CheckCurrencyValue': '',
+                'CheckBaseDebit': '',
+                'CheckNote': '',
+                'CheckCostCenterId': '',
+                'CheckCostCenterId': '',
+                'CostCenterNameL1': '',
+                'VoucherBoxCheckId': 0
+            }
+            var vData = funGlVoucherCheckConfig(vRowContent)
+            pTableBody.append(vData)
+        }
+        // Add New Empty Master Row
+        function funAddMasterEmptyRow(pTableBody) {
+            var vRowContent = {
+                'VoucherBoxCheckId': 0,
+                'AccountId': '',
+                'CheckBankId': '',
+                'CheckBankName': '',
+                'CheckBankBranchId': '',
+                'CheckBankName': '',
+                'CheckNo': '',
+                'CheckDate': '',
+                'CheckDebit': '',
+                'CheckCurrencyValue': '',
+                'CheckBaseDebit': '',
+                'CheckNote': '',
+                'EPaymentTypeNameL1': '',
+                'EPayTypeId': '',
+                'EPayTypeId': '',
+
+            }
+            var vData = funGlVoucherMasterConfig(vRowContent)
+            pTableBody.append(vData)
+        }
+    </script>
+    <!-- Totals -->
+    <script>
+        // Total Debit, Credit and Diff
+        function funTotalDebitCreditDiff() {
+            // Total Debit
+            var vTotalDebit = 0;
+            $('.txtDebit').each(function () {
+                // Get Value
+                var vDebitValue = $(this).val();
+                // Check Value
+                if (vDebitValue == '' || vDebitValue == null || vDebitValue == undefined) {
+                    vDebitValue = 0;
+                }
+                // Add Value
+                vTotalDebit += parseFloat(vDebitValue);
+            })
+            // Total Credit
+            var vTotalCreditBase = 0;
+            $('.txtDebitBase').each(function () {
+                // Get Value
+                var vCreditValue = $(this).val();
+                // Check Value
+                if (vCreditValue == '' || vCreditValue == null || vCreditValue == undefined) {
+                    vCreditValue = 0;
+                }
+                // Add Value
+                vTotalCreditBase += parseFloat(vCreditValue);
+            })
+            // Total Cash
+            var vTotalCash = $('.txtCashTotal').val()
+            if (vTotalCash == '') { $('.txtCashTotal').val('0') }
+            //Total Check
+            var vTotalCheck = $('.txtCheckTotal').val()
+            if (vTotalCheck == '') { $('.txtCheckTotal').val('0') }
+            // Total Master
+            var vMasterCash = $('.txtMasterTotal').val()
+            if (vMasterCash == '') { $('.txtMasterTotal').val('0') }
+            // Total PayMent Type
+            var vTotalPay = parseFloat(vTotalCash) + parseFloat(vTotalCheck) + parseFloat(vMasterCash)
+            console.log('vTotalCash  ' + vTotalCash)
+            console.log('vTotalCheck  ' + vTotalCheck)
+            console.log('vMasterCash  ' + vMasterCash)
+            // Diff
+            var vDiff = parseFloat(vTotalCreditBase) - parseFloat(vTotalPay);
+
+            // SET Values
+            $('.txtTotalDebit').val(vTotalCreditBase);
+            $('.txtTotalCredit').val(vTotalPay.toFixed(2));
+            $('.txtDiff').val(vDiff.toFixed(2));
+            // Check Diff
+            $('.txtDiff').addClass('text-white');
+            if (vDiff != 0) {
+                $('.txtDiff').addClass('bg-danger');
+                $('.txtDiff').removeClass('bg-success');
+            }
+            else {
+                $('.txtDiff').addClass('bg-success');
+                $('.txtDiff').removeClass('bg-danger');
+            }
+        }
+        function funTotalCash() {
+            var vTotalDebit;
+
+            $('.txtBaseDebit').each(function () {
+                // Get Value
+                var vCreditValue = $(this).val();
+
+                // Check Value
+                if (vCreditValue == '' || vCreditValue == null || vCreditValue == undefined) {
+                    vCreditValue = 0;
+                }
+
+                // Add Value
+                vTotalDebit += parseFloat(vCreditValue);
+
+            })
+
+            $('.txtCashTotal').val(vTotalDebit)
+        }
+    </script>
+    <script>
+        // Debit Factor Calculate
+        function funFactorCalculate(pTableRow) {
+            // GET Value
+            var vPayValue = pTableRow.find('.txtPayCredit').val();
+            // Factor
+            var vPayCurrencyValue = pTableRow.find('.txtPayCurrencyValue').val();
+            // Value
+            var vValue = (vPayValue * vPayCurrencyValue).toFixed(3);
+            // Base
+            var vBaseCurrencyFactor = pTableRow.find('.txtBaseCurrencyValue').val();
+            // Value
+            var vBaseValue = (vPayValue * vBaseCurrencyFactor).toFixed(3);
+            // SET Value to Base
+            pTableRow.find('.txtCredit').val(vValue);
+            // SET Value to Base
+            pTableRow.find('.txtCreditBase').val(vBaseValue);
+        }
+        // Debit Change
+        $('body').on('change', '.txtPayCredit', function () {
+
+            // Table Row
+            var vTableRow = $(this).closest('.tblRow');
+            // GET Value
+            var vValue = $(this).val();
+            // Factor
+            var vPayCurrencyValue = vTableRow.find('.txtPayCurrencyValue').val();
+            // Value
+            var vPayValue = (vValue * vPayCurrencyValue).toFixed(3);
+
+            // Base
+            var vBaseCurrencyFactor = vTableRow.find('.txtBaseCurrencyValue').val();
+            // Value
+            var vBaseValue = (vValue * vBaseCurrencyFactor).toFixed(3);
+            // SET Value to Base
+            vTableRow.find('.txtDebit').val(vPayValue);
+            // SET Value to Base
+            vTableRow.find('.txtDebitBase').val(vBaseValue);
+            // Total Debit, Credit and Diff
+            funTotalDebitCreditDiff();
+        })
+
+        // Cash Change
+        $('.tblCheckBody').on('change', '.txtCheckCredit', function () {
+            // Table Row
+            var vTableRow = $(this).closest('.tblCheckRow');
+            // GET Value
+            var vValue = $(this).val();
+            // Factor
+            var vCurrencyFactor = vTableRow.find('.txtCheckCurrencyValue').val();
+
+            // Value
+            var vPayValue = (vValue * vCurrencyFactor).toFixed(3);
+
+            // SET Value
+            $(this).closest('tr').find('.txtCheckTotal').val(vPayValue);
+            // SET Value
+            $(this).closest('tr').find('.txtCheckBaseCredit').val(vPayValue);
+            // Total Debit, Credit and Diff
+            funTotalCashDesk();
+            //txtDtlPayCredit()
+            funTotalCheck()
+            // Calculate Diffrence
+            funTotalDebitCreditDiff();
+        })
+
+        // Master Change
+        $('.tblMasterBody').on('change', '.txtCheckCredit', function () {
+
+            // Table Row
+            var vTableRow = $(this).closest('.tblMasterRow');
+            // GET Value
+            var vValue = $(this).val();
+            // Factor
+            var vCurrencyFactor = vTableRow.find('.txtCheckCurrencyValue').val();
+
+            // Value
+            var vPayValue = (vValue * vCurrencyFactor).toFixed(3);
+
+            // SET Value
+            $(this).closest('tr').find('.txtCheckTotal').val(vPayValue);
+            // SET Value
+            $(this).closest('tr').find('.txtCheckBaseCredit').val(vPayValue);
+            // Total Debit, Credit and Diff
+            funTotalCashDesk();
+            //Total Master
+            funTotalMaster()
+            //Diff
+            funTotalDebitCreditDiff();
+        })
+
+        // Cash Change
+        $('body').on('change', '.txtDtlPayCredit', function () {
+
+            // Table Row
+            var vTableRow = $(this).closest('.tblCashDeskRow');
+            // GET Value
+            var vValue = $(this).val();
+            // Factor
+            var vCurrencyFactor = vTableRow.find('.txtPayCurrencyValue').val();
+            // base Factor
+            var vBaseCurrencyFactor = vTableRow.find('.txtBaseCurrencyValue').val();
+            // Value
+            var vPayValue = (vValue * vCurrencyFactor).toFixed(1);
+
+            // Base Value
+            var vBasePayValue = (vValue * vBaseCurrencyFactor).toFixed(3);
+
+            // SET Value
+            $(this).closest('tr').find('.txtCredit').val(vPayValue);
+            // SET Value to Base
+            $(this).closest('tr').find('.txtBaseCredit').val(vBasePayValue);
+            // Total Debit, Credit and Diff
+            funTotalCashDesk();
+            // funTotalCash()
+            //Diff
+            funTotalDebitCreditDiff();
+        })
+        // Calculate cash
+        function funTotalCashDesk() {
+            // Total Debit
+            var vTotalDebit = 0;
+            $('.txtBaseCredit').each(function () {
+                // Get Value
+                var vDebitValue = $(this).val();
+
+                // Check Value
+                if (vDebitValue == '' || vDebitValue == null || vDebitValue == undefined) {
+                    vDebitValue = 0;
+                }
+
+                // Add Value
+                vTotalDebit += parseFloat(vDebitValue);
+            })
+            if (vTotalDebit) {
+                $('.txtCashTotal').val(vTotalDebit)
+            }
+            else {
+                $('.txtCashTotal').val(0)
+            }
+
+        }
+        // Calculate cash
+        function funTotalCheck() {
+            // Total Debit
+            var vTotalDebit = 0;
+            $('.tblCheckBody .txtCheckBaseCredit').each(function () {
+                // Get Value
+                var vDebitValue = $(this).val();
+
+                // Check Value
+                if (vDebitValue == '' || vDebitValue == null || vDebitValue == undefined) {
+                    vDebitValue = 0;
+                }
+
+                // Add Value
+                vTotalDebit += parseFloat(vDebitValue);
+            })
+            if (vTotalDebit) {
+                $('.txtCheckTotal').val(vTotalDebit)
+            }
+            else {
+                $('.txtCheckTotal').val(0)
+            }
+        }
+        // Calculate cash
+        function funTotalMaster() {
+
+            // Total Debit
+            var vTotalDebit = 0;
+            $('.tblMasterBody .txtCheckBaseCredit').each(function () {
+                // Get Value
+                var vDebitValue = $(this).val();
+
+                // Check Value
+                if (vDebitValue == '' || vDebitValue == null || vDebitValue == undefined) {
+                    vDebitValue = 0;
+                }
+                // Add Value
+                vTotalDebit += parseFloat(vDebitValue);
+            })
+            if (vTotalDebit) {
+                $('.txtMasterTotal').val(vTotalDebit)
+            }
+            else {
+                $('.txtMasterTotal').val(0)
+            }
+        }
+
+
+
+    </script>
+    <script>
+        // Date Today SET
+        function funDateTodaySET(pDateElement) {
+            pDateElement.val('@DateTime.Now.Date.ToString("yyyy-MM-dd")')
+        }
+
+
+        funDateTodaySET($('.dtpDocDate'));
+        funDateTodaySET($('.dtpDocRefDate'));
+        // Check Payment Type
+        var vChecked = [];
+        // Loop On PayType
+        $('.divCashBox  input:checked').each(function () {
+            var vCurrentValue = $(this).val()
+            vChecked.push(vCurrentValue)
+        })
+         $('.divCashBox').on('click', '.custom-control-label', function (e) {
+            if ($('.divCashBox').find('input:checked').length == 1 && $(this).siblings('input').prop('checked'))
+                e.preventDefault();
+        });
+        // Call Funchtion On Load
+        funChkPayType(vChecked)
+        // On Change Pay Type
+        $('.divCashBox').on('change', 'input[type=checkbox]', function () {
+            vChecked = []
+            $('.divCashBox  input:checked').each(function () {
+                var vCurrentValue = $(this).val()
+                vChecked.push(vCurrentValue)
+            })
+            funChkPayType(vChecked)
+        })
+        // Diable And Enabeld Tabs
+        function funChkPayType(pValue) {
+            $('.divCheck').addClass('d-none')
+            $('.divMaster').addClass('d-none')
+            $('.divCash').addClass('d-none')
+            $.each(pValue, function (i, value) {
+                if (pValue[i] == 1) {
+                    $('.divCash').removeClass('d-none')
+                    $('#contact').removeClass('Active show active')
+                    $('#profile').removeClass('Active show active')
+                    $('#home').addClass('Active show active')
+                    $('#profile-tab').removeClass('active')
+                    $('#contact-tab').removeClass('active')
+                    $('.clsCashDesk').addClass('active')
+                }
+                if (pValue[i] == 2) {
+                    $('.divCheck').removeClass('d-none')
+                    $('#home').removeClass('Active show active')
+                    $('#contact').removeClass('Active show active')
+                    $('#profile').addClass('Active show active')
+                    $('.clsCashDesk').removeClass('active')
+                    $('#contact-tab').removeClass('active')
+                    $('#profile-tab').addClass('active')
+                }
+                if (pValue[i] == 3) {
+                    $('.divMaster').removeClass('d-none')
+                    $('#home').removeClass('Active show active')
+                    $('#profile').removeClass('Active show active')
+                    $('#contact').addClass('Active show active')
+                    $('.clsCashDesk').removeClass('active')
+                    $('#profile-tab').removeClass('active')
+                    $('#contact-tab').addClass('active')
+                }
+            })
+
+        }
+    </script>
+
+    <!-- Get Account -->
+    <script>
+        // Account Code, Name - F9 - Double Click
+        $('table').on('keyup dblclick', '.txtAccountCode', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+
+                // Search Account
+                var vURL = '/GLVoucher/AccountSearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+                    // Select Account
+                    $('body').on('click', '.divAccountSelect', function () {
+
+                        // Get Values
+                        var vAccountId = $(this).attr('data-id');
+                        var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                        var vAccountNameValue = $(this).find('.divAccountName').text();
+                        var vAccountCurrencyFactor = $(this).find('.divAccountCurrencyFactor').text();
+                        var vAccountIsCostCenter = $(this).find('.divAccountIsCostCenter').text();
+                        var vAccountCurrency = $(this).find('.divAccountCurrency').text();
+                        var vAccountCurrencyName = $(this).find('.divAccountCurrencyName').text();
+                        var vCostCenterName = $(this).find('.divCostCenterName').text();
+                        var vCostCenterId = $(this).find('.divCostCenterId').text();
+                        var vCostCenterCode = $(this).find('.divCostCenterCode').text();
+
+                        // Get Account Data
+                        var vAccountIdElement = vTableRow.find('.txtAccountId');
+                        var vAccountCodeElement = vTableRow.find('.txtAccountCode');
+                        var vAccountNameElement = vTableRow.find('.txtAccountName');
+                        var vAccountCurrencyFactorElement = vTableRow.find('.txtPayCurrencyValue');
+                        var vAccountBaseCurrencyFactorElement = vTableRow.find('.txtBaseCurrencyValue');
+                        var vAccountIsCostCenterElement = vTableRow.find('.txtAccountIsCostCenter');
+                        var vAccountCurrencyElement = vTableRow.find('.txtAccountCurrencyId');
+                        var vAccountCurrencyNameElement = vTableRow.find('.txtAccountCurrencyName');
+                        var vCostCenterNameElement = vTableRow.find('.txtCostCenterName');
+                        var vCostCenterIdElement = vTableRow.find('.txtCostCenterId');
+                        var vCostCenterCodeElement = vTableRow.find('.txtCostCenterCode');
+
+                        // Set Value
+                        vAccountIdElement.val(vAccountId);
+                        vAccountCodeElement.val(vAccountCodeValue);
+                        vAccountNameElement.val(vAccountNameValue);
+                        vAccountCurrencyFactorElement.val(vAccountCurrencyFactor);
+                        vAccountBaseCurrencyFactorElement.val(vAccountCurrencyFactor);
+                        vAccountIsCostCenterElement.val(vAccountIsCostCenter);
+                        vAccountCurrencyElement.val(vAccountCurrency);
+                        vAccountCurrencyNameElement.val(vAccountCurrencyName);
+                        //vCostCenterNameElement.val(vCostCenterName)
+                        //vCostCenterIdElement.val(vCostCenterId);
+                        //vCostCenterCodeElement.val(vCostCenterCode);
+                        // Factor
+                        funFactorCalculate(vTableRow);
+                        // Credit Factor
+                        //   funCreditFactorCalculate(vTableRow);
+
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                        vTableRow.removeClass('table-info');
+
+                        vTableRow = '';
+                        // Add New Row
+                        funAddAccountRow();
+
+                    });
+                });
+
+            }
+        })
+    </script>
+    <!-- Get CostCenter -->
+    <script>
+        $(document).ready(function () {
+
+            // Get Closest Row
+            var vTableRow = '';
+            // CostCenter Code, Name - F9
+            $('.tblBody').on('keydown dblclick', '.txtCostCenterCode', function (e) {
+                // Check F9
+                if (e.keyCode == 120 || e.type == 'dblclick') {
+                    // Get Closest Row
+                    vTableRow = $(this).closest('.tblRow');
+
+
+                    // GET AccountId
+                    var vAccountId = vTableRow.find('.txtAccountId').val();
+                    var vAccountIsCostCenter = vTableRow.find('.txtAccountIsCostCenter').val();
+
+
+                    if (vAccountId) {
+                        // Check If Account Is Cost Center
+                        if (vAccountIsCostCenter == '1') {
+
+                            // Search CostCenter
+                            var vURL = '/GLVoucher/AccountCostCenter/?pAccountId=' + vAccountId;
+                            // Load Content of CostCenter Search
+                            $('#CostCenterDataModalContent').load(vURL);
+                            // Modal Show
+                            $('#CostCenterDataModal').modal('show');
+
+                            // Get CostCenter Data
+                            var vCostCenterIdElement = vTableRow.find('.txtCostCenterId');
+                            var vCostCenterCodeElement = vTableRow.find('.txtCostCenterCode');
+                            var vCostCenterNameElement = vTableRow.find('.txtCostCenterName');
+                            // Focus
+                            $('#CostCenterDataModal').on('shown.bs.modal', function () {
+
+                                // Focuse
+                                $('.txtSearch').focus();
+
+
+                                // Select CostCenter
+                                $('body').on('click', '.divAccountCostCenterSelect', function () {
+
+                                    // CostCenter Id
+                                    var vCostCenterId = $(this).attr('data-id');
+
+                                    // Get Values
+                                    var vCostCenterCodeValue = $(this).find('.divAccountCostCenterCode').text();
+                                    var vCostCenterNameValue = $(this).find('.divAccountCostCenterName').text();
+
+
+                                    // Set Value
+                                    vCostCenterIdElement.val(vCostCenterId);
+                                    vCostCenterCodeElement.val(vCostCenterCodeValue);
+                                    vCostCenterNameElement.val(vCostCenterNameValue);
+
+                                    // Modal Show
+                                    $('#CostCenterDataModal').modal('hide');
+
+                                    // Table Row Clear
+                                    vTableRow = '';
+
+                                })
+
+                            })// End of Modal Shown event
+                        }
+                        else {
+
+                            funNotification('@appResource.msgNoCostCenters', 2);
+                        }
+                    }
+                    else {
+                        funNotification('@appResource.msgChooseAccountFirst', 2);
+                    }
+                }
+            })
+        })
+    </script>
+    <!-- Get CostCenter For Cash Desk -->
+    <script>
+        $(document).ready(function () {
+
+            // Get Closest Row
+            var vTableRow = '';
+            // CostCenter Code, Name - F9
+            $('.tblCashDeskBody').on('keydown dblclick', '.txtCashCostCenterCode', function (e) {
+                // Check F9
+                if (e.keyCode == 120 || e.type == 'dblclick') {
+
+
+                    // Get Closest Row
+                    vTableRow = $(this).closest('.tblCashDeskRow');
+
+
+                    // GET AccountId
+                    var vAccountId = vTableRow.find('.txtAccountId').val();
+                    var vAccountIsCostCenter = vTableRow.find('.txtAccountIsCostCenter').val();
+
+
+                    if (vAccountId) {
+                        //// Check If Account Is Cost Center
+                        if (vAccountIsCostCenter == '1') {
+
+                            // Search CostCenter
+                            var vURL = '/GLVoucher/AccountCostCenter/?pAccountId=' + vAccountId;
+                            // Load Content of CostCenter Search
+                            $('#CostCenterDataModalContent').load(vURL);
+                            // Modal Show
+                            $('#CostCenterDataModal').modal('show');
+
+                            // Get CostCenter Data
+                            var vCostCenterIdElement = vTableRow.find('.txtCostCenterId');
+                            var vCostCenterCodeElement = vTableRow.find('.txtCashCostCenterCode');
+                            var vCostCenterNameElement = vTableRow.find('.txtCashCostCenterName');
+                            // Focus
+                            $('#CostCenterDataModal').on('shown.bs.modal', function () {
+
+                                // Focuse
+                                $('.txtSearch').focus();
+
+
+                                // Select CostCenter
+                                $('body').on('click', '.divAccountCostCenterSelect', function () {
+
+                                    // CostCenter Id
+                                    var vCostCenterId = $(this).attr('data-id');
+
+                                    // Get Values
+                                    var vCostCenterCodeValue = $(this).find('.divAccountCostCenterCode').text();
+                                    var vCostCenterNameValue = $(this).find('.divAccountCostCenterName').text();
+
+
+
+                                    // Set Value
+                                    vCostCenterIdElement.val(vCostCenterId);
+                                    vCostCenterCodeElement.val(vCostCenterCodeValue);
+                                    vCostCenterNameElement.val(vCostCenterNameValue);
+
+                                    // Modal Show
+                                    $('#CostCenterDataModal').modal('hide');
+
+                                    // Table Row Clear
+                                    vTableRow = '';
+
+                                })
+
+                            }) //End of Modal Shown event
+                        }
+                        else {
+
+                           funNotification('@appResource.msgNoCostCenters', 2);
+                        }
+                    }
+                    else {
+                           funNotification('@appResource.msgChooseAccountFirst', 2);
+                    }
+                }
+            })
+        })
+    </script>
+    <!-- Get CostCenter For Check -->
+    <script>
+        $(document).ready(function () {
+
+            // Get Closest Row
+            var vTableRow = '';
+            // CostCenter Code, Name - F9
+            $('body').on('keydown dblclick', '.txtCheckCostCenterCode', function (e) {
+
+                // Check F9
+                if (e.keyCode == 120 || e.type == 'dblclick') {
+
+
+                    // Get Closest Row
+                    vTableRow = $(this).closest('.tblCheckRow');
+
+                    // GET AccountId
+                    var vAccountId = vTableRow.find('.txtCheckAccountId').val();
+                    if (vAccountId) {
+
+                        // Search CostCenter
+                        var vURL = '/GLVoucher/AccountCostCenter/?pAccountId=' + vAccountId;
+                        // Load Content of CostCenter Search
+                        $('#CostCenterDataModalContent').load(vURL);
+                        // Modal Show
+                        $('#CostCenterDataModal').modal('show');
+
+                        // Focus
+                        $('#CostCenterDataModal').on('shown.bs.modal', function () {
+
+                            // Focuse
+                            $('.txtSearch').focus();
+
+
+                            // Select CostCenter
+                            $('body').on('click', '.divAccountCostCenterSelect', function () {
+
+                                // CostCenter Id
+                                var vCostCenterId = $(this).attr('data-id');
+
+                                // Get Values
+                                var vCostCenterCodeValue = $(this).find('.divAccountCostCenterCode').text();
+                                var vCostCenterNameValue = $(this).find('.divAccountCostCenterName').text();
+
+                                // Get CostCenter Data
+                                var vCostCenterIdElement = vTableRow.find('.txtCheckCostCenterId');
+                                var vCostCenterCodeElement = vTableRow.find('.txtCheckCostCenterCode');
+                                var vCostCenterNameElement = vTableRow.find('.txtCheckCostCenterName');
+
+                                // Set Value
+                                vCostCenterIdElement.val(vCostCenterId);
+                                vCostCenterCodeElement.val(vCostCenterCodeValue);
+                                vCostCenterNameElement.val(vCostCenterNameValue);
+
+                                // Modal Show
+                                $('#CostCenterDataModal').modal('hide');
+
+                                // Table Row Clear
+                                vTableRow = '';
+
+                            })
+
+                        }) //End of Modal Shown event
+                    }
+                    else {
+                        funNotification('@appResource.msgChooseBankFirst', 2);
+                    }
+                }
+
+
+            })
+        })
+    </script>
+    <!-- Get Customer Supplier -->
+    <script>
+        // Open Customer Supplier Modal
+        $('body').on('keyup dblclick', '.txtCSId', function (e) {
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                // Search Account
+
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load('/GLVoucher/Customers');
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divCSSelect', function () {
+
+                        // Get Values
+                        var vCSId = $(this).attr('data-id');
+                        var vCSNameValue = $(this).find('.divCSName').text();
+                        var vAccountId = $(this).find('.divAccountId').text();
+                        var vAccountNo = $(this).find('.divAccountNo').text();
+                        var vAccountName = $(this).find('.divAccountName').text();
+                        var vCurrencyName = $(this).find('.divCurrencyName').text();
+                        var vCurrencyId = $(this).find('.divCurrencyId').text();
+                        var vCurrencyExchange = $(this).find('.divCurrencyExchange').text();
+
+
+                        // Get CS Data
+                        var vCSIdElement = $('.txtCSId');
+                        var vCSNameElement = $('.txtCSName');
+                        var vAccountIdElement = $('.txtAccountId')
+                        var vAccountCodeElement = $('.txtAccountCode')
+                        var vAccountNameElement = $('.txtDTLAccountName')
+                        var vCurrencyNameElement = $('.txtDTLAccountCurrencyName');
+                        var vCurrencyIdElement = $('.txtDTLAccountCurrencyId');
+                        var vCurrencyExchangeElement = $('.txtDTLPayCurrencyValue');
+                        var vCurrencyBaseExchangeElement = $('.txtDTLBaseCurrencyValue');
+
+                        // Set Value
+                        vCSIdElement.val(vCSId);
+                        vCSNameElement.val(vCSNameValue);
+                        vAccountIdElement.val(vAccountId)
+                        vAccountCodeElement.val(vAccountNo)
+                        vAccountNameElement.val(vAccountName)
+                        vCurrencyNameElement.val(vCurrencyName)
+                        vCurrencyIdElement.val(vCurrencyId)
+                        vCurrencyExchangeElement.val(vCurrencyExchange)
+                        vCurrencyBaseExchangeElement.val(vCurrencyExchange)
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+
+                    })
+                })
+            }
+        })
+    </script>
+    <!--Currency-->
+    <script>
+        // Account Code, Name - F9 - Double Click
+        $('table').on('keyup dblclick', '.txtAccountCurrencyId, .txtDtlCurrencyId', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+
+                // Search Account
+                var vURL = '/GLVoucher/CurrencySearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divCurrencySelect', function () {
+
+                        // Get Values
+                        var vCurrencyId = $(this).attr('data-id');
+                        var vCurrencyNameValue = $(this).find('.divCurrencyName').text();
+
+
+                        // Get Account Data
+                        var vAccountCurrencyIdElement = vTableRow.find('.txtAccountCurrencyId');
+                        var vAccountCurrencyElement = vTableRow.find('.txtAccountCurrencyName');
+
+
+                        // Set Value
+                        vAccountCurrencyIdElement.val(vCurrencyId);
+                        vAccountCurrencyElement.val(vCurrencyNameValue);
+
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                    });
+
+                })
+            }
+        })
+    </script>
+    <!--CashDesk-->
+    <script>
+        // Account Code, Name - F9 - Double Click
+        $('table').on('keyup dblclick', '.txtCashDeskId', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+
+                // Search Account
+                var vURL = '/GLVoucher/CashDeskSearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divCashDeskSelect', function () {
+
+                        // Get Values
+                        var vCashDeskId = $(this).attr('data-id');
+                        var vCashDeskNameValue = $(this).find('.divCashDeskName').text();
+                        var vAccountNoValue = $(this).find('.divAccountNo').text();
+                        var vAccountIdValue = $(this).find('.divAccountId').text();
+                        var vdivAccountNameValue = $(this).find('.divAccountName').text();
+                        var vCurrencyIdValue = $(this).find('.divCurrencyId').text();
+                        var vCurrencyNameValue = $(this).find('.divCurrencyName').text();
+                        var vCurrencyFactorValue = $(this).find('.divCurrencyFactorValue').text();
+                        var vAccountIsCostCenter = $(this).find('.divAccountIsCostCenter').text();
+                        var vCostCenterName = $(this).find('.divCostCenterName').text();
+                        var vCostCenterId = $(this).find('.divCostCenterId').text();
+                        var vCostCenterCode = $(this).find('.divCostCenterCode').text();
+
+                        // Get Account Data
+                        var vAccountCashDeskIdElement = vTableRow.find('.txtCashDeskId');
+                        var vAccountCashDeskElement = vTableRow.find('.txtCashDeskName');
+                        var vAccountNoElement = vTableRow.find('.txtAccountNo');
+                        var vAccountIdElement = vTableRow.find('.txtAccountId');
+                        var vAccountNameElement = vTableRow.find('.txtAccountName');
+                        var vCurrencyIdElement = vTableRow.find('.txtAccountCurrencyId');
+                        var vCurrencyNameElement = vTableRow.find('.txtAccountCurrencyName');
+                        var vCurrencyFactorElement = vTableRow.find('.txtPayCurrencyValue');
+                        var vBaseCurrencyFactorElement = vTableRow.find('.txtBaseCurrencyValue');
+                        var vAccountIsCostCenterElement = vTableRow.find('.txtAccountIsCostCenter');
+                        var vCostCenterNameElement = vTableRow.find('.txtCashCostCenterName');
+                        var vCostCenterIdElement = vTableRow.find('.txtCashCostCenterId');
+                        var vCostCenterCodeElement = vTableRow.find('.txtCashCostCenterCode');
+
+
+                        // Set Value
+                        vAccountCashDeskIdElement.val(vCashDeskId);
+                        vAccountCashDeskElement.val(vCashDeskNameValue);
+                        vAccountNoElement.val(vAccountNoValue);
+                        vAccountIdElement.val(vAccountIdValue)
+                        vAccountNameElement.val(vdivAccountNameValue);
+                        vCurrencyIdElement.val(vCurrencyIdValue);
+                        vCurrencyNameElement.val(vCurrencyNameValue);
+                        vCurrencyFactorElement.val(vCurrencyFactorValue);
+                        vBaseCurrencyFactorElement.val(vCurrencyFactorValue);
+                        vAccountIsCostCenterElement.val(vAccountIsCostCenter)
+                        //vCostCenterNameElement.val(vCostCenterName)
+                        //vCostCenterIdElement.val(vCostCenterId);
+                        //vCostCenterCodeElement.val(vCostCenterCode);
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                    });
+
+
+                })
+            }
+        })
+    </script>
+    <!--Bank-->
+    <script>
+        // Account Code, Name - F9 - Double Click
+        $('table').on('keyup dblclick', '.txtCheckBankId', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+
+                // Search Account
+                var vURL = '/GLVoucher/MainBankSearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divMainBankSelect', function () {
+
+                        // Get Values
+                        var vBankId = $(this).attr('data-id');
+                        var vBankNameValue = $(this).find('.divMainBankName').text();
+
+                        // Get Account Data
+                        var vAccountBankIdElement = vTableRow.find('.txtCheckBankId');
+                        var vAccountBankElement = vTableRow.find('.txtCheckBankName');
+
+                        // Set Value
+                        vAccountBankIdElement.val(vBankId);
+                        vAccountBankElement.val(vBankNameValue);
+
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                    });
+                })
+            }
+        })
+    </script>
+    <!--BankBranch-->
+    <script>
+        // Account Code, Name - F9 - Double Click
+        $('table').on('keyup dblclick', '.txtCheckBankBranchId', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+
+                // Get Account Data
+                var vAccountBankIdElement = vTableRow.find('.txtCheckBankBranchId');
+                var vAccountBankElement = vTableRow.find('.txtCheckBankBranchName');
+                var vCurrencyExchangeElement = vTableRow.find('.txtCheckCurrencyValue');
+                var vAccountIdELment = vTableRow.find('.txtCheckAccountId')
+                var vAccountNoELment = vTableRow.find('.txtCheckAccountNo')
+                var vCostCenterNameElement = vTableRow.find('.txtCheckCostCenterName');
+                var vCostCenterIdElement = vTableRow.find('.txtCheckCostCenterId');
+                var vCostCenterCodeElement = vTableRow.find('.txtCheckCostCenterCode');
+
+                //Get Main Bank
+                var vMainBankId = vTableRow.find('.txtCheckBankId').val()
+                console.log(vMainBankId)
+                if (vMainBankId == '') {
+                    // Set Value
+                    vAccountBankIdElement.val('');
+                    vAccountBankElement.val('');
+                    vCurrencyExchangeElement.val('')
+                    vAccountIdELment.val('');
+                    vAccountNoELment.val('')
+                    vCostCenterNameElement.val('')
+                    vCostCenterIdElement.val('');
+                    vCostCenterCodeElement.val('');
+                    funNotification('@appResource.msgChooseMainBankFirst', 2)
+                } else {
+                    // Search Account
+                    var vURL = '/GLVoucher/BankSearch';
+                    // Load Content of Account Search
+                    $('#AccountDataModalContent').load(vURL);
+                    // Modal Show
+                    $('#AccountDataModal').modal('show');
+                    // Focus
+                    $('#AccountDataModal').on('shown.bs.modal', function () {
+                        $('.txtSearch').focus();
+
+                        // Select Account
+                        $('body').on('click', '.divBankSelect', function () {
+
+                            // Get Values
+                            var vBankId = $(this).attr('data-id');
+                            var vBankNameValue = $(this).find('.divBankName').text();
+                            var vCurrencyExchangeValue = $(this).find('.divCurrencyExchange').text();
+                            var vAccountNoValue = $(this).find('.divAccountNo').text();
+                            var vAccountIdValue = $(this).find('.divAccountId').text();
+                            var vCostCenterName = $(this).find('.divCostCenterName').text();
+                            var vCostCenterId = $(this).find('.divCostCenterId').text();
+                            var vCostCenterCode = $(this).find('.divCostCenterCode').text();
+
+                            // Set Value
+                            vAccountBankIdElement.val(vBankId);
+                            vAccountBankElement.val(vBankNameValue);
+                            vCurrencyExchangeElement.val(vCurrencyExchangeValue)
+                            vAccountIdELment.val(vAccountIdValue);
+                            vAccountNoELment.val(vAccountNoValue)
+                            //vCostCenterNameElement.val(vCostCenterName)
+                            //vCostCenterIdElement.val(vCostCenterId);
+                            //vCostCenterCodeElement.val(vCostCenterCode);
+                            // Modal Show
+                            $('#AccountDataModal').modal('hide');
+                        });
+                    })
+                }
+            }
+        })
+    </script>
+    <!-- Get Voucher Category -->
+    <script>
+        // Open Voucher Category Modal
+        $('body').on('keyup dblclick', '.txtCategoryId', function (e) {
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                // Search Account
+                var vURL = '/GLVoucher/VoucherCategorySearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+                    // Select Account
+                    $('body').on('click', '.divGLVoucherCategorySelect', function () {
+                        // Get Values
+                        var vGLVoucherCategoryId = $(this).attr('data-id');
+                        var vGLVoucherCategoryNameValue = $(this).find('.divGLVoucherCategoryName').text();
+                        // Get GLVoucherCategory Data
+                        var vGLVoucherCategoryIdElement = $('.txtCategoryId');
+                        var vGLVoucherCategoryNameElement = $('.txtCategoryName');
+                        // Set Value
+                        vGLVoucherCategoryIdElement.val(vGLVoucherCategoryId);
+                        vGLVoucherCategoryNameElement.val(vGLVoucherCategoryNameValue);
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                    })
+                })
+            }
+        })
+    </script>
+    <!-- Get Master Card -->
+    <script>
+        // Open Voucher Category Modal
+        $('body').on('keyup dblclick', '.txtEPaymentTypeCode,.txtEPaymentTypeId ', function (e) {
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                // Search Account
+                var vURL = '/GLVoucher/EPaymentTypeSearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+                    // Select Account
+                    $('body').on('click', '.divEPaymentTypeSelect', function () {
+                        // Get Values
+                        var vEPaymentTypeId = $(this).attr('data-id');
+                        var vEPaymentTypeNameValue = $(this).find('.divEPaymentTypeName').text();
+                        // Get EPaymentType Data
+                        var vEPaymentTypeIdElement = $('.txtEPaymentTypeId');
+                        var vEPaymentTypeCodeElement = $('.txtEPaymentTypeCode');
+                        var vEPaymentTypeNameElement = $('.txtEPaymentTypeName');
+                        // Set Value
+                        vEPaymentTypeIdElement.val(vEPaymentTypeId);
+                        // Set Value
+                        vEPaymentTypeCodeElement.val(vEPaymentTypeId);
+                        vEPaymentTypeNameElement.val(vEPaymentTypeNameValue);
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                    })
+                })
+            }
+        })
+    </script>
+    <!--Search-->
+    <script>
+        var vDataSearch;
+        var vCount = 0;
+        $('.btnSearch').on('click', function () {
+            // Search CostCenter
+            var vURL = '/GLVoucher/GLVoucherSearch';
+            // Load Content of CostCenter Search
+            $('#CostCenterDataModalContent').load(vURL);
+            // Modal Full
+            $('#CostCenterDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#CostCenterDataModal').modal('show');
+        })
+        // PRINT
+        $('body').on('click', '.btnSelect', function () {
+            var count = $("input[name='chkIsValid']:checked").length;
+            if (count == 0) {
+                // alert("No rows selected to Print");
+                return false;
+            }
+            else {
+                // Selected Permissions
+                var vSelected = '';
+
+                // Check If All True Or False
+                $('table > tbody > tr ').each(function () {
+                    // Element
+                    var vElement = $(this).find('.clsChk')
+                    var vSelectedChk = vElement.prop('checked')
+                    // Check
+                    if (vSelectedChk) {
+                        // Get Id
+                        var vGlVoucherId = vElement.attr('data-id');
+                        // Add Selected Action
+                        vSelected += vGlVoucherId + ',';
+                        vCount += $(this).length
+
+                    }
+                });
+                $('.txtTotalCount').text(vCount)
+                // close The Modal
+                $('#CostCenterDataModal').modal('hide');
+                // Get Data From Gl Voucher After Select
+                $.get('/api/APIGLVoucher/GLVoucherGET',
+                    {
+                        // Head Parameters
+                        phNumbers: vSelected,
+                        phIsDeleted: false,
+                        // Query Type Id
+                        pQueryTypeId: '400'
+                    },
+                    function (data, status) {
+                        // JSON Parse
+                        vDataResult = JSON.parse(data);
+                        vDataSearch = vDataResult
+                        displayData(vDataSearch[0])
+                    })
+            }
+        });
+        //Next-Previous-First-Last
+        var index = 0;
+        $('#btnNext').click(function () {
+            if (index <= vDataSearch.length) {
+                // Call Function Display Data
+
+                displayData(vDataSearch[++index]);
+                $('.txtCount').text(index)
+            }
+        });
+        $('#btnPrev').click(function () {
+            if (index > 0) {
+                // Call Function Display Data
+                displayData(vDataSearch[--index])
+                $('.txtCount').text(index)
+            }
+        });
+        $('#btnFirst').click(function () {
+            $('.txtCount').text(1)
+            displayData(vDataSearch[0])
+        });
+        $('#btnLast').click(function () {
+            $('.txtCount').text(vDataSearch.length)
+            displayData(vDataSearch[vDataSearch.length - 1])
+        });
+        // Get Data
+        function displayData(pData) {
+            var vGlVoucherDataResult = pData
+            $('.tblCashDeskBody').html('');
+            $('.tblMasterBody').html('')
+            $('.tblCheckBody').html('')
+
+            // For Each DocDetail  - Main
+            if (pData.DocDetail) {
+                $('.tblBody').html('')
+                for (var i = 0; i <= pData.DocDetail.length - 1; i++) {
+
+                    // GET Cash Desk Row Content
+                    var vContent = funGlVoucherConfig(vGlVoucherDataResult.DocDetail[i]);
+                    // Append Row Content
+                    $('.tblBody').append(vContent);
+
+                }
+            }
+            // For Each VoucherBoxCheck  - Main
+            for (var i = 0; i <= pData.VoucherBoxCheck.length - 1; i++) {
+                var vIsCheck = vGlVoucherDataResult.VoucherBoxCheck[i].VoucherIsCheck;
+                var vPayTypeId = vGlVoucherDataResult.VoucherBoxCheck[i].PayTypeId;
+                // Check Is CHeck
+                if (vPayTypeId == 2) {
+
+                    // GET Check Row Content
+                    var vContent2 = funGlVoucherCheckConfig(vGlVoucherDataResult.VoucherBoxCheck[i]);
+                    // Append Row Content
+                    $('.tblCheckBody').append(vContent2);
+                }
+                else if (vPayTypeId == 1) {
+
+                    // GET Cash Desk Row Content
+                    var vContent = funGlVoucherBoxCheckConfig(vGlVoucherDataResult.VoucherBoxCheck[i]);
+                    // Append Row Content
+                    $('.tblCashDeskBody').append(vContent);
+                    funTotalCash();
+                }
+                else {
+
+                    // GET Check Row Content
+                    var vContent2 = funGlVoucherMasterConfig(vGlVoucherDataResult.VoucherBoxCheck[i]);
+                    // Append Row Content
+                    $('.tblMasterBody').append(vContent2);
+                }
+            }
+            // Add NEw Row If Empty
+            var vCashRow = $('.tblCashDeskBody .tblCashDeskRow').length
+            if (vCashRow == 0) {
+                funAddCashEmptyRow($('.tblCashDeskBody'))
+            }
+            var vCheckRow = $('.tblCheckBody .tblCheckRow').length
+            if (vCheckRow == 0) {
+                funAddCheckEmptyRow($('.tblCheckBody'))
+            }
+            var vMasterRow = $('.tblMasterBody .tblMasterRow').length
+
+            if (vMasterRow == '0') {
+
+                funAddMasterEmptyRow($('.tblMasterBody'))
+            }
+            var vRow = $('.tblBody .tblRow').length
+            if (vRow < 0) {
+
+            }
+            // Fill Head
+            funGlVoucherHead(pData)
+            // Check Date
+            funCheckDate()
+            // Call Funchtion On Load
+            var vChecked = pData.GLIdPayType
+
+            var vSchecked = vChecked.split(',')
+            funChkPayType(vSchecked)
+            // Call Function Check Box
+            var vChecked = [];
+            // Loop On PayType
+            $('.divCashBox  input:checked').each(function () {
+                var vCurrentValue = $(this).val()
+                vChecked.push(vCurrentValue)
+            })
+            // Call Function CHECKBOX On Load
+            funChkPayType(vChecked)
+            // Calclate Total Cash On LOad Data
+            funTotalCashDesk();
+            // Total Check
+            funTotalCheck()
+            //Total Master
+            funTotalMaster()
+            // Disable All Until Click Edit
+            funDisabledAllInput();
+            // CalCulate Dif
+            funTotalDebitCreditDiff();
+        }
+    </script>
+    <!--Fill VoucherHead-->
+    <script>
+
+        function funGlVoucherHead(pGLVoucherHead) {
+            // Get Doc Id
+            $('.txtDocId').val(pGLVoucherHead.GLVoucherId);
+            // Get Doc Id
+            $('.txtDocNo').val(pGLVoucherHead.GLVoucherNo);
+            // Get Doc Date
+            $('.dtpDocDate').val(pGLVoucherHead.GLVoucherDate);
+            // Get Vocher Type
+            $('.txtVoucherType').val(pGLVoucherHead.VoucherTypeId);
+            //// Is Posted
+            //$('.chkDocIsPosted').prop('checked');
+            // Doc Note
+            $('.txtDocNote').val(pGLVoucherHead.GLVoucherNote);
+            // Doc Is Wait
+            $('.chkIsDocWait').prop('checked', pGLVoucherHead.DocIsWait);
+            // Doc Is Cancelled
+            $('.chkIsDocCancelled').prop('checked', pGLVoucherHead.DocIsCancelled);
+            // Posted
+            $('.chkIsDocPosted').prop('checked', pGLVoucherHead.IsPosted);
+
+            // Doc Ref No
+            $('.txtDocRefNo').val(pGLVoucherHead.GLVoucherRef);
+            // Doc Ref Date
+            $('.dtpDocRefDate').val(pGLVoucherHead.GLVoucherRefDate);
+            // Transaction Source - Voucher Category
+            $('.txtTransactionSource').val(pGLVoucherHead.GLVoucherCategoryNameL1);
+            // Customer Supplier
+            $('.txtCSId').val(pGLVoucherHead.CSId);
+            $('.txtCSName').val(pGLVoucherHead.CSNameL1);
+            // Person
+            $('.txtPerson').val(pGLVoucherHead.Person);
+            // Category
+            $('.txtCategoryId').val(pGLVoucherHead.GLVoucherCategoryId);
+            $('.txtCategoryName').val(pGLVoucherHead.GLVoucherCategoryNameL1);
+            // Sales
+            $('.txtSalesId').val(pGLVoucherHead.SalesId);
+            $('.txtSalesName').val(pGLVoucherHead.SalesId);
+
+            // Check Payment Type
+            var vPayType = pGLVoucherHead.GLIdPayType;
+            var vSinglePayType = vPayType.split(',');
+            for (var i = 0; i <= vSinglePayType.length; i++) {
+                $('.divCashBox input').each(function () {
+                    // Current Object Id
+                    var vCurrentId = $(this).val();
+
+                    if (vCurrentId == vSinglePayType[i]) {
+                        $(this).prop("checked", true);
+                    }
+                })
+            }
+            // Doc Is Cancelled
+            // $('.divCashBox input[type:checkbox][value:1] ').prop('checked', true);
+        }
+
+    </script>
+    <!-- Fill Voucher DTL-->
+    <script>
+        //function Append
+        function funGlVoucherConfig(pGLVoucherRow) {
+            // Content
+            var RowContent = ' <tr class="trBaseRow tblRow" data-id="' + pGLVoucherRow.GLVoucherDtlId + '">' +
+                '<td class="">' +
+                '<button class="btn btn-light btn-sm border btnAddRow" type="submit">' +
+                '  <i class="fa fa-plus-circle"></i>' +
+                '</button>' +
+                ' </td>' +
+                ' <td class="">' +
+                ' <input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountId" value="' + pGLVoucherRow.AccountId + '" type="text" required />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountIsCostCenter" value="' + pGLVoucherRow.IsCostCenter + '" type="text" required />' +
+                ' <input class="form-control form-control-sm text-center fullHeightInput txtAccountCode" value="' + pGLVoucherRow.AccNo + '" type="text" title="إضغط F9 لإختيار الحساب" required />' +
+                '</td>' +
+                '<td class="">' +
+                ' <textarea class="form-control form-control-sm text-center fullHeightInput txtAccountName" type="text" required readonly> ' + pGLVoucherRow.AccountNameL1 + '</textarea>' +
+                '</td>' +
+                ' <td class="" width="15%">' +
+                '<div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                ' <input type="text" class=" form-control form-control-sm text-center   txtAccountCurrencyId txtDTLAccountCurrencyId" value="' + pGLVoucherRow.CurrencyId + '">' +
+                '</div>' +
+                ' <div class="col-sm-8 p-0">' +
+                ' <input class="form-control form-control-sm text-center font-weight-bold txtAccountCurrencyName txtDTLAccountCurrencyName" value="' + pGLVoucherRow.CurrencyNameL1 + '" disabled type="text" min=0 required />' +
+                '</div>' +
+                '</div>' +
+                ' <input class="form-control form-control-sm text-center font-weight-bold txtPayCredit" type="text" value="' + pGLVoucherRow.GLVoucherDtlPayCredit + '" min=0 required />' +
+
+                ' </td>' +
+                ' <td class="">' +
+                '<input class="form-control form-control-sm text-center font-weight-bold txtPayCurrencyValue txtDTLPayCurrencyValue" value="' + pGLVoucherRow.PayCurrencyValue + '" type="text" min=0 required  disabled/>' +
+                '<input class="form-control form-control-sm text-center font-weight-bold txtDebit" value="' + pGLVoucherRow.GLVoucherDtlDebit + '" type="text" min=0 required  disabled/>' +
+                '</td>' +
+                ' <td class="">' +
+                ' <input class="form-control form-control-sm text-center font-weight-bold txtBaseCurrencyValue txtDTLBaseCurrencyValue" value="' + pGLVoucherRow.BaseCurrencyValue + '" type="text" min=0 required disabled />' +
+                ' <input class="form-control form-control-sm text-center font-weight-bold txtDebitBase" value="' + pGLVoucherRow.GLVoucherDtlDebitBase + '" type="text" min=0 required disabled />' +
+                '   </td>' +
+                ' <td class="">' +
+                '  <div class="d-flex">' +
+                ' <div class="col-sm-4 p-0">' +
+                ' <input class="form-control form-control-sm text-center fullHeightInput d-none txtCostCenterId" value="' + pGLVoucherRow.CostCenterId + '" type="text" required />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput  txtCostCenterCode" data-id="1" value="' + pGLVoucherRow.CostCenterId + '" title="إضغط F9 لإختيار مركز التكلفة" type="text" required />' +
+                '</div>' +
+                ' <div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCostCenterName" data-id="1" value="' + pGLVoucherRow.CostCenterNameL1 + '" type="text" required readonly />' +
+                ' </div>' +
+                '</div>' +
+                '</td>' +
+                '<td class="">' +
+                '<textarea class="form-control form-control-sm text-center txtNote" style="height:50px" required>' + pGLVoucherRow.GLVoucherDtlNote + '</textarea>' +
+                '</td>' +
+                '<td><button class="btn btn-light btn-sm btnGLVoucherDtlDelete" data-id="' + pGLVoucherRow.GLVoucherDtlId + '"><i class="fa fa-trash"></i></button></td>' +
+                ' </tr>';
+            return RowContent
+        }
+    </script>
+    <!--Fill VOucher Box -->
+    <script>
+        //function Append
+        function funGlVoucherBoxCheckConfig(pGLVoucherBoxCheckRow) {
+            console.log(pGLVoucherBoxCheckRow)
+            // Content
+            var RowContent =
+                '<tr class="trBaseRow tblCashDeskRow"  data-id="' + pGLVoucherBoxCheckRow.VoucherBoxCheckId + '">' +
+                ' <td class="">' +
+                '<button class="btn btn-light btn-sm border btnCashDeskAddRow" type="submit">' +
+                '<i class="fa fa-plus-circle"></i>' +
+                ' </button>' +
+                ' </td>' +
+                '<td class="">' +
+                '<div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput d-none " value="' + pGLVoucherBoxCheckRow.BoxCashDeskId + '" type="text" required />' +
+                '<input class="form-control form-control-sm text-center  txtCashDeskId" value="' + pGLVoucherBoxCheckRow.BoxCashDeskId + '" title="إضغط F9 لإختيار الصندوق" type="text" required />' +
+                '</div>' +
+                '  <div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center  txtCashDeskName" value="' + pGLVoucherBoxCheckRow.BoxCashDeskName + '" type="text" required readonly />' +
+                ' </div>' +
+                '</div>' +
+                '<div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountId" value="' + pGLVoucherBoxCheckRow.AccountId + '" type="text" required />' +
+                ' <input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountIsCostCenter" value="' + pGLVoucherBoxCheckRow.IsCostCenter + '" type="text" required />' +
+                '<input type="text" class=" form-control form-control-sm text-center txtAccountNo" value="' + pGLVoucherBoxCheckRow.AccountNo + '" disabled>' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center font-weight-bold txtAccountName" value="' + pGLVoucherBoxCheckRow.AccountNameL1 + '" disabled type="text" min=0 required />' +
+                '</div>' +
+                '  </div>' +
+                '<td class="" width="10%">' +
+                '<div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<input type="text" value="' + pGLVoucherBoxCheckRow.CurrencyId + '" class=" form-control form-control-sm text-center txtAccountCurrencyId">' +
+                '</div>' +
+                ' <div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center font-weight-bold txtAccountCurrencyName" value="' + pGLVoucherBoxCheckRow.CurrencyNameL1 + '" disabled type="text" min=0 required />' +
+                ' </div>' +
+                ' </div>' +
+                '<input class="form-control form-control-sm text-center font-weight-bold txtDtlPayCredit" value="' + pGLVoucherBoxCheckRow.BoxPayDebit + '" type="text" min=0 required />' +
+                '</td>' +
+                '<td class="">' +
+                ' <input class="form-control form-control-sm text-center font-weight-bold txtPayCurrencyValue" value="' + pGLVoucherBoxCheckRow.BoxBaseCurrencyValue + '"  type="text" min=0 disabled />' +
+                ' <input class="form-control form-control-sm text-center font-weight-bold txtCredit" type="text" value="' + pGLVoucherBoxCheckRow.BoxCredit + '" min=0 required disabled />' +
+
+                ' </td>' +
+                '<td class="">' +
+                ' <input class="form-control form-control-sm text-center font-weight-bold txtBaseCurrencyValue" value="' + pGLVoucherBoxCheckRow.BoxBaseCurrencyValue + '" type="text" min=0 disabled />' +
+                ' <input class="form-control form-control-sm text-center font-weight-bold txtBaseCredit" type="text" value="' + pGLVoucherBoxCheckRow.BoxBaseCredit + '" min=0 required disabled />' +
+                ' </td>' +
+                '<td class="">' +
+                ' <textarea class="form-control form-control-sm text-center txtNote"  value="' + pGLVoucherBoxCheckRow.BoxNote + '" style="height:50px" required>' + pGLVoucherBoxCheckRow.BoxNote + '</textarea>' +
+                '  </td>' +
+                '<td class="">' +
+                ' <div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '   <input class="form-control form-control-sm text-center fullHeightInput d-none txtCostCenterId" value="' + pGLVoucherBoxCheckRow.BoxCostCenterId + '" type="text" required />' +
+                ' <input class="form-control form-control-sm text-center fullHeightInput txtCashCostCenterCode" title="إضغط F9 لإختيار مركز التكلفة" value="' + pGLVoucherBoxCheckRow.CostCenterCode + '" type="text" required />' +
+                ' </div>' +
+                '<div class="col-sm-8 p-0">' +
+                '  <input class="form-control form-control-sm text-center fullHeightInput txtCheckCostCenterName" value="' + pGLVoucherBoxCheckRow.CostCenterNameL1 + '" type="text" required readonly />' +
+                '</div>' +
+                ' </div>' +
+                ' </td>' +
+                '<td><button class="btn btn-light btn-sm btnCashDelete" data-id="' + pGLVoucherBoxCheckRow.VoucherBoxCheckId + '"><i class="fa fa-trash"></i></button></td>' +
+                ' </tr>';
+            return RowContent
+        }
+    </script>
+
+    <!--Fill Voucher Check-->
+    <script>
+        //function Append
+        function funGlVoucherCheckConfig(pGLVoucherCheckRow) {
+            console.log(pGLVoucherCheckRow)
+            // Content
+            var RowContent =
+                '<tr class="trBaseRow tblCheckRow" data-id="' + pGLVoucherCheckRow.VoucherBoxCheckId + '">' +
+                ' <td class="">' +
+                '    <button class="btn btn-light btn-sm border btnCheckAddRow" type="submit">' +
+                '<i class="fa fa-plus-circle"></i>' +
+                '</button>' +
+                '</td>' +
+                '<td width="10%">' +
+                '<div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<div class="d-none">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckAccountId" value="' + pGLVoucherCheckRow.AccountId + '" type="text" />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckAccountNo" value=' + pGLVoucherCheckRow.AccountNo + ' type="text" />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountIsCostCenter" type="text" value="' + pGLVoucherCheckRow.IsCostCenter + '" />' +
+                '</div>' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckBankId" value="' + pGLVoucherCheckRow.CheckBankId + '" title="إضغط F9 لإختيار البنك" type="text" required />' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckBankName" value="' + pGLVoucherCheckRow.CheckBankName + '" type="text" required readonly />' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td width="15%">' +
+                ' <div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckBankBranchId" value="' + pGLVoucherCheckRow.CheckBankBranchId + '" title="إضغط F9 لإختيار مركز التكلفة" type="text" required />' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckBankBranchName"  value="' + pGLVoucherCheckRow.CheckBankName + '" type="text" required readonly />' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td class="" width="25%">' +
+                '<div class="d-flex">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput font-weight-bold txtCheckNo"  value="' + pGLVoucherCheckRow.CheckNo + '" type="text" min=0 />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput font-weight-bold txtCheckDate" value="' + pGLVoucherCheckRow.CheckDate + '" type="date" min=0 required />' +
+                '</div>' +
+                '</td>' +
+                '<td class="" width="15%">' +
+                '<input type="text" class=" form-control fullHeightInput form-control-sm text-center txtCheckCredit" value="' + pGLVoucherCheckRow.BoxBaseCredit + '">' +
+                '</td>' +
+                '<td class="">' +
+                '<input class="form-control form-control-sm text-center font-weight-bold txtCheckCurrencyValue" value="' + pGLVoucherCheckRow.CheckCurrencyValue + '" type="text" min=0 disabled />' +
+                '<input class="form-control form-control-sm text-center font-weight-bold txtCheckBaseCredit" disabled type="text"  value="' + pGLVoucherCheckRow.BoxCredit + '" min=0 required />' +
+                '</td>' +
+                '<td class="">' +
+                '   <textarea class="form-control form-control-sm text-center txtCheckNote" value="' + pGLVoucherCheckRow.CheckNote + '" style="height:50px" required>' + pGLVoucherCheckRow.BoxNote + '</textarea>' +
+                '</td>' +
+                '<td class="">' +
+                '<div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput d-none txtCheckCostCenterId" value="' + pGLVoucherCheckRow.CostCenterId + '" type="text" required />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckCostCenterCode"  value="' + pGLVoucherCheckRow.CostCenterCode + '" title="إضغط F9 لإختيار مركز التكلفة" type="text" required />' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckCostCenterName"  value="' + pGLVoucherCheckRow.CostCenterNameL1 + '" type="text" required readonly />' +
+                '</div>' +
+                '</div>' +
+
+                '</td>' +
+                '<td><button class="btn btn-light btn-sm btnCheckDelete" data-id="' + pGLVoucherCheckRow.VoucherBoxCheckId + '"><i class="fa fa-trash"></i></button></td>' +
+                '           </tr>';
+            return RowContent;
+        }
+    </script>
+    <!--Fill Voucher Master-->
+    <script>
+        //function Append
+        function funGlVoucherMasterConfig(pGLVoucherCheckRow) {
+            // Content
+            var RowContent =
+                '<tr class="trBaseRow tblMasterRow" data-id="' + pGLVoucherCheckRow.VoucherBoxCheckId + '">' +
+                ' <td class="">' +
+                '    <button class="btn btn-light btn-sm border btnCheckAddRow" type="submit">' +
+                '<i class="fa fa-plus-circle"></i>' +
+                '</button>' +
+                '</td>' +
+                '<td width="10%">' +
+                '<div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<div class="d-none">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckAccountId" value=' + pGLVoucherCheckRow.AccountId + ' type="text" />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckAccountNo" value=' + pGLVoucherCheckRow.AccountNo + ' type="text" />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput d-none txtAccountIsCostCenter" value="' + pGLVoucherCheckRow.IsCostCenter + '" type="text" />' +
+                '</div>' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckBankId" value="' + pGLVoucherCheckRow.CheckBankId + '" title="إضغط F9 لإختيار البنك" type="text" required />' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckBankName" value="' + pGLVoucherCheckRow.CheckBankName + '" type="text" required readonly />' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td width="15%">' +
+                ' <div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckBankBranchId" value="' + pGLVoucherCheckRow.CheckBankBranchId + '" title="إضغط F9 لإختيار مركز التكلفة" type="text" required />' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtCheckBankBranchName"  value="' + pGLVoucherCheckRow.CheckBankName + '" type="text" required readonly />' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td class="" width="25%">' +
+                '<div class="d-flex">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput font-weight-bold txtCheckNo"  value="' + pGLVoucherCheckRow.CheckNo + '" type="text" min=0 />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput font-weight-bold txtCheckDate" value="' + pGLVoucherCheckRow.CheckDate + '" type="date" min=0 required />' +
+                '</div>' +
+                '</td>' +
+                '<td class="" width="15%">' +
+                '<input type="text" class=" form-control fullHeightInput form-control-sm text-center txtCheckCredit txtMasterDebit" value="' + pGLVoucherCheckRow.BoxCredit + '">' +
+                '</td>' +
+                '<td class="">' +
+                '<input class="form-control form-control-sm text-center font-weight-bold txtCheckCurrencyValue" value="' + pGLVoucherCheckRow.CheckCurrencyValue + '" type="text" min=0 disabled />' +
+                '<input class="form-control form-control-sm text-center font-weight-bold txtCheckBaseCredit" disabled  type="text"  value="' + pGLVoucherCheckRow.BoxBaseCredit + '" min=0 required />' +
+                '</td>' +
+                '<td class="">' +
+                '   <textarea class="form-control form-control-sm text-center txtCheckNote"  style="height:50px" required>' + pGLVoucherCheckRow.BoxNote + '</textarea>' +
+                '</td>' +
+                '<td class="">' +
+                '<div class="d-flex">' +
+                '<div class="col-sm-4 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput d-none txtEPaymentTypeId" value="' + pGLVoucherCheckRow.EPayTypeId + '" type="text" required />' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtEPaymentTypeCode"  value="' + pGLVoucherCheckRow.EPayTypeId + '" title="إضغط F9 لإختيار مركز التكلفة" type="text" required />' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                '<input class="form-control form-control-sm text-center fullHeightInput txtEPaymentTypeName"  value="' + pGLVoucherCheckRow.EPaymentTypeNameL1 + '" type="text" required readonly />' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td><button class="btn btn-light btn-sm btnMasterDelete" data-id="' + pGLVoucherCheckRow.VoucherBoxCheckId + '"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+            return RowContent;
+        }
+    </script>
+    <!--Deleted-->
+    <script>
+        // Delete Cash
+        $('body').on('click', '.btnCashDelete', function () {
+            //Element
+            var vElement = $(this)
+            var vId = $(this).attr('data-id')
+            // Save Row
+            if (vElement.closest('tbody').find('tr').length > 1)
+                $.get('/api/APIVoucherBoxCheck/VoucherBoxCheckGET',
+                    {
+                        // Detail Parameters
+                        pVoucherBoxCheckId: vId,
+                        pIsDeleted: true,
+                        // Query Type Id
+                        pQueryTypeId: '300'
+                    },
+                    function (data, status) {
+                        var vResultData = JSON.parse(data)
+                        vElement.closest('tr').remove();
+                        // Notification
+                        funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                    });
+        })
+        //Delete Check
+        $('body').on('click', '.btnCheckDelete', function () {
+            //Element
+            var vElement = $(this)
+            var vId = $(this).attr('data-id')
+            // Save Row
+            if (vElement.closest('tbody').find('tr').length > 1)
+                $.get('/api/APIVoucherBoxCheck/VoucherBoxCheckGET',
+                    {
+                        // Detail Parameters
+                        pVoucherBoxCheckId: vId,
+                        pIsDeleted: true,
+                        // Query Type Id
+                        pQueryTypeId: '300'
+                    },
+                    function (data, status) {
+                        var vResultData = JSON.parse(data)
+                        vElement.closest('tr').remove();
+                        // Notification
+                        funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                    });
+        })
+        // Delete Master Card
+        $('body').on('click', '.btnMasterDelete', function () {
+            //Element
+            var vElement = $(this)
+            var vId = $(this).attr('data-id')
+            // Save Row
+            if (vElement.closest('tbody').find('tr').length > 1)
+                $.get('/api/APIVoucherBoxCheck/VoucherBoxCheckGET',
+                    {
+                        // Detail Parameters
+                        pVoucherBoxCheckId: vId,
+                        pIsDeleted: true,
+                        // Query Type Id
+                        pQueryTypeId: '300'
+                    },
+                    function (data, status) {
+                        var vResultData = JSON.parse(data)
+                        vElement.closest('tr').remove();
+                        // Notification
+                        funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                    });
+        })
+        // Delete DTL
+        $('body').on('click', '.btnGLVoucherDtlDelete', function () {
+            //Element
+            var vElement = $(this)
+            var vId = $(this).attr('data-id')
+            //Save Row
+            if (vElement.closest('tbody').find('tr').length > 1)
+                $.get('/api/APIGLVoucher/GLVoucherGET',
+                    {
+                        // Detail Parameters
+                        pdGLVoucherDtlId: vId,
+                        pdIsDeleted: true,
+                        // Query Type Id
+                        pQueryTypeId: '300'
+                    },
+                    function (data, status) {
+                        var vResultData = JSON.parse(data)
+                        vElement.closest('tr').remove();
+                        // Notification
+                        funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                    });
+        })
+    </script>
+    <!--Year Check-->
+    <script>
+        // Change Date - Check
+        funCheckDate()
+        $('.dtpDocDate').on('blur', function (e) {
+            // Check Date
+            funCheckDate()
+        })
+        // Fun Check Finanical Year
+        function funCheckDate() {
+            // Get Current Date
+            var vDate = $('.dtpDocDate').val();
+            var vDatePicker = $('.dtpDocDate');
+            var vDateValid;
+            // Check Date
+            var fun = $.get('/GLVoucher/funFinancialDateCheckGET', { pDate: vDate }, function (data, status) {
+
+                // JSON parse
+                var vDataResult = JSON.parse(data);
+
+                // Is Date Valid
+                var vIsDateValid = vDataResult[0].vIsFullValid;
+                localStorage.setItem('vIsDateValid', vIsDateValid)
+
+                // Check Date
+                if (!vIsDateValid) {
+
+                    // Doc Date InValid
+                    funDocDateValid(vDatePicker, false);
+                    // Notification
+                    //  funNotification('لا يمكن إختيار التاريخ الحالى', 2);
+                    $('.txtDateCheck').val('false')
+                }
+                else {
+
+                    // Doc Date Valid
+                    funDocDateValid(vDatePicker, true);
+                    $('.txtDateCheck').val('true')
+                }
+                return data
+            })
+            //return vDateValid
+        }
+        // Doc Date Valid
+        function funDocDateValid(pDatePickerElement, pIsValid) {
+
+            // White Text - For Valid and InValid
+            pDatePickerElement.addClass('text-white');
+
+            // Check If Invalid
+            if (pIsValid) {
+
+                pDatePickerElement.removeClass('bg-danger');
+                pDatePickerElement.addClass('bg-success');
+            }
+            else {
+
+                pDatePickerElement.addClass('bg-danger');
+                pDatePickerElement.removeClass('bg-success');
+            }
+        }
+
+        //Edit
+        //Edit
+        //$('.btnVEdit').on('click', function () {
+        $('#btnEdit').on('click', function () {
+            // Is Posted
+            var vDocIsPosted = $('#IsPosted').prop('checked');
+            if (!vDocIsPosted) {
+                funUnDisabledAllInput()
+            }
+            else {
+                funNotification('لا يمكن تعديل قيد مرحل', '2')
+            }
+        })
+
+        // Disabled All Input Execpt Click Edit
+        function funDisabledAllInput() {
+            //$(':input').not('.btnVEdit,.btnSearch,.btnUtility,.btnCairo,.btnDubai').attr('disabled', true)
+            $(':input').not('.btnSearch,.btnUtility,.btnCairo,.btnDubai').attr('disabled', true)
+        }
+
+        function funUnDisabledAllInput() {
+            $(':input').not('.txtCategoryName,.txtCSName,.txtCheckCurrencyValue,.txtCheckBaseCredit,.txtSalesName,.txtAccountCurrencyName,.txtPayCurrencyValue,.txtCredit,.txtBaseCurrencyValue,.txtCreditBase,.txtDebit,.txtBaseDebit,.txtCashTotal,.txtCashTotal,.txtMasterTotal,.txtAccountName,.txtTotalCredit,.txtTotalDebit,.txtCheckTotal,.txtAccountNo,#IsPosted').attr('disabled', false)
+        }
+    </script>
+    <!--ON Change Value-->
+    <script>
+    // When Change Value Of Id Cash
+    $('body').on('change', '.txtCashCostCenterCode', function () {
+        var vTableRow = $(this).closest('tr');
+        // Get AccountID
+        var vAccountId = vTableRow.find('.txtAccountId').val();
+        console.log(vAccountId)
+        var vElement = $(this)
+        var vCostCenterNo = $(this).val();
+        var vCostCenterName = vTableRow.find('.txtCashCostCenterName');
+        var vCostCenterId = vTableRow.find('.txtCashCostCenterId');
+        if (vAccountId == '') {
+            // Empty Fileds
+            $(this).val('');
+            vCostCenterName.val('')
+            vCostCenterId.val('')
+            funNotification('@appResource.msgChooseAccountFirst', 2);
+        } else {
+            // List GetCostCenter
+            $.get('/api/APIGLVoucher/AccountCostCenterGET',
+                {
+                    pAccountId: vAccountId,
+                    pCostCenterCode: vCostCenterNo,
+                    pQueryTypeId: 400
+
+                },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vElement.val('');
+                        vCostCenterName.val('')
+                        vCostCenterId.val('')
+                        funNotification('@appResource.msgWrongCostCenter', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+
+                        $.each(vDataJSON, function (i, CostCenter) {
+                            vCostCenterName.val(CostCenter.CostCenterNameL1)
+                            vCostCenterId.val(CostCenter.CostCenterId)
+                        });
+                    }
+                });
+        }
+    });
+    // When Change Value Of  Check
+    $('body').on('change', '.txtCheckCostCenterCode', function () {
+        var vTableRow = $(this).closest('tr');
+        // Get AccountID
+        var vAccountId = vTableRow.find('.txtCheckAccountId').val();
+        console.log(vAccountId)
+        var vElement = $(this)
+        var vCostCenterNo = $(this).val();
+        var vCostCenterName = vTableRow.find('.txtCheckCostCenterName');
+        var vCostCenterId = vTableRow.find('.txtCheckCostCenterId');
+        if (vAccountId == '') {
+            // Empty Fileds
+            $(this).val('');
+            vCostCenterName.val('')
+            vCostCenterId.val('')
+            funNotification('@appResource.msgChooseAccountFirst', 2);
+        } else {
+            // List GetCostCenter
+            $.get('/api/APIGLVoucher/AccountCostCenterGET',
+                {
+                    pAccountId: vAccountId,
+                    pCostCenterCode: vCostCenterNo,
+                    pQueryTypeId: 400
+
+                },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vElement.val('');
+                        vCostCenterName.val('')
+                        vCostCenterId.val('')
+                        funNotification('@appResource.msgWrongCostCenter', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+
+                        $.each(vDataJSON, function (i, CostCenter) {
+                            vCostCenterName.val(CostCenter.CostCenterNameL1)
+                            vCostCenterId.val(CostCenter.CostCenterId)
+                        });
+                    }
+                });
+        }
+    });
+
+    // When Change Value Of  Check
+    $('body').on('change', '.txtCashDeskId', function () {
+        var vTableRow = $(this).closest('tr');
+        // Get Account Data
+        var vCashDeskId = $(this).val()
+        var vAccountCashDeskIdElement = vTableRow.find('.txtCashDeskId');
+        var vAccountCashDeskElement = vTableRow.find('.txtCashDeskName');
+        var vAccountNoElement = vTableRow.find('.txtAccountNo');
+        var vAccountIdElement = vTableRow.find('.txtAccountId');
+        var vAccountNameElement = vTableRow.find('.txtAccountName');
+        var vCurrencyIdElement = vTableRow.find('.txtAccountCurrencyId');
+        var vCurrencyNameElement = vTableRow.find('.txtAccountCurrencyName');
+        var vCurrencyFactorElement = vTableRow.find('.txtPayCurrencyValue');
+        var vBaseCurrencyFactorElement = vTableRow.find('.txtBaseCurrencyValue');
+        var vAccountIsCostCenterElement = vTableRow.find('.txtAccountIsCostCenter');
+        var vCostCenterNameElement = vTableRow.find('.txtCashCostCenterName');
+        var vCostCenterIdElement = vTableRow.find('.txtCashCostCenterId');
+        var vCostCenterCodeElement = vTableRow.find('.txtCashCostCenterCode');
+
+            // List GetCostCenter
+            $.get('/api/APICashDesk/CashDeskGET',
+                {
+                    pIsAccountDetail: true,
+                    pCashDeskId:vCashDeskId,
+                   pQueryTypeId: '@clsQueryType.qSelect',
+
+                },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vAccountCashDeskIdElement.val('')
+                        vAccountCashDeskElement.val('')
+                        vAccountNoElement.val('')
+                        vAccountIdElement.val('')
+                        vAccountNameElement.val('')
+                        vCurrencyIdElement.val('')
+                        vCurrencyNameElement.val('')
+                        vCurrencyFactorElement.val('')
+                        vBaseCurrencyFactorElement.val('')
+                        vAccountIsCostCenterElement.val('')
+                        vCostCenterNameElement.val('')
+                        vCostCenterIdElement.val('')
+                        vCostCenterCodeElement.val('')
+                        funNotification('@appResource.msgWrongCashBox', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        console.log(vDataJSON)
+                        $.each(vDataJSON, function (i, CostCenter) {
+                            // Set Value
+                            vAccountCashDeskIdElement.val(CostCenter.CashDeskId);
+                            vAccountCashDeskElement.val(CostCenter.CashDeskNameL1);
+                            vAccountNoElement.val(CostCenter.AccountNo);
+                            vAccountIdElement.val(CostCenter.AccountId)
+                            vAccountNameElement.val(CostCenter.AccountNameL1);
+                            vCurrencyIdElement.val(CostCenter.CurrencyId);
+                            vCurrencyNameElement.val(CostCenter.CurrencyNameL1);
+                            vCurrencyFactorElement.val(CostCenter.CurrencyExchange);
+                            vBaseCurrencyFactorElement.val(CostCenter.CurrencyExchange);
+                            vAccountIsCostCenterElement.val(CostCenter.IsCostCenter)
+                            //vCostCenterNameElement.val(CostCenter.CostCenterNameL1)
+                            //vCostCenterIdElement.val(CostCenter.CostCenterId);
+                            //vCostCenterCodeElement.val(CostCenter.CostCenterCode);
+                        });
+                    }
+                });
+    });
+    // When Change Value Of  Check
+    $('body').on('change', '.txtAccountCurrencyId', function () {
+        var vTableRow = $(this).closest('tr');
+        var vCurrencyId = $(this).val();
+        // Get Account Data
+        var vAccountCurrencyIdElement = vTableRow.find('.txtAccountCurrencyId');
+        var vAccountCurrencyElement = vTableRow.find('.txtAccountCurrencyName');
+        var vAccountId = vTableRow.find('.txtAccountNo').val()
+        if (vAccountId == '') {
+            // Empty Fileds
+            $(this).val('');
+            vAccountCurrencyIdElement.val('');
+            vAccountCurrencyElement.val('');
+            funNotification('@appResource.msgChooseAccountFirst', 2);
+        } else {
+            // List GetCostCenter
+            $.get('/api/APICurrency/CurrencyGET',
+                {
+                    pCurrencyId: vCurrencyId,
+                    pQueryTypeId: 400
+                },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vAccountCurrencyIdElement.val('');
+                        vAccountCurrencyElement.val('');
+                        funNotification('@appResource.msgWrongCurrency', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+
+                        $.each(vDataJSON, function (i, CostCenter) {
+                            // Set Value
+                            vAccountCurrencyIdElement.val(CostCenter.CurrencyId);
+                            vAccountCurrencyElement.val(CostCenter.CurrencyNameL1);
+                        });
+                    }
+                });
+        }
+    });
+    // When Change Value Of  Check
+    $('body').on('change', '.txtCheckBankId', function () {
+        var vTableRow = $(this).closest('tr');
+        var vBankId = $(this).val();
+        // Get Account Data
+        var vAccountBankIdElement = vTableRow.find('.txtCheckBankId');
+        var vAccountBankElement = vTableRow.find('.txtCheckBankName');
+            // List GetCostCenter
+           $.get('/api/APIBank/BankGET',
+            {
+                pIsAccountDetail: false,
+                pBankId: vBankId,
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vAccountBankIdElement.val('');
+                        vAccountBankElement.val('');
+                        funNotification('@appResource.msgChooseBankFirst', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, MainBank) {
+                            // Set Value
+                            vAccountBankIdElement.val(MainBank.BankId);
+                            vAccountBankElement.val(MainBank.BankNameL1);
+                        });
+                    }
+                });
+    });
+    // When Change Value Of  Check
+    $('body').on('change', '.txtCheckBankBranchId', function () {
+        var vTableRow = $(this).closest('tr');
+        var vBankAccountId = $(this).val();
+        // Get Account Data
+        var vAccountBankIdElement = vTableRow.find('.txtCheckBankBranchId');
+        var vAccountBankElement = vTableRow.find('.txtCheckBankBranchName');
+        var vCurrencyExchangeElement = vTableRow.find('.txtCheckCurrencyValue');
+        var vAccountIdELment = vTableRow.find('.txtCheckAccountId')
+        var vAccountNoELment = vTableRow.find('.txtCheckAccountNo')
+        var vCostCenterNameElement = vTableRow.find('.txtCheckCostCenterName');
+        var vCostCenterIdElement = vTableRow.find('.txtCheckCostCenterId');
+        var vCostCenterCodeElement = vTableRow.find('.txtCheckCostCenterCode');
+        // Check Bank
+        var vMainBankId = vTableRow.find('.txtCheckBankId').val()
+        if (vMainBankId == '') {
+            // Empty Fileds
+            $(this).val('');
+            vAccountBankIdElement.val('');
+            vAccountBankElement.val('');
+            vCurrencyExchangeElement.val('')
+            vAccountIdELment.val('');
+            vAccountNoELment.val('')
+            vCostCenterNameElement.val('')
+            vCostCenterIdElement.val('');
+            vCostCenterCodeElement.val('');
+            funNotification('@appResource.msgChooseMainBankFirst', 2);
+        } else {
+            // List GetCostCenter
+            $.get('/api/APIBank/BankGET',
+                {
+                pIsAccountDetail: true,
+                pBankAccountId: vBankAccountId,
+                pBankId: vMainBankId,
+                pQueryTypeId: '@clsQueryType.qSelect',
+                },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vAccountBankIdElement.val('');
+                        vAccountBankElement.val('');
+                        vCurrencyExchangeElement.val('')
+                        vAccountIdELment.val('');
+                        vAccountNoELment.val('')
+                        vCostCenterNameElement.val('')
+                        vCostCenterIdElement.val('');
+                        vCostCenterCodeElement.val('');
+                        funNotification('@appResource.msgChooseBankFirst', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+
+                        $.each(vDataJSON, function (i, Bank) {
+                            console.log(vDataJSON)
+                            // Set Value
+                            vAccountBankIdElement.val(Bank.BankAccountId);
+                            vAccountBankElement.val(Bank.BankNameL1);
+                            vCurrencyExchangeElement.val(Bank.CurrencyExchange)
+                            vAccountIdELment.val(Bank.AccountId);
+                            vAccountNoELment.val(Bank.AccountNo)
+                            //vCostCenterNameElement.val(Bank.CostCenterNameL1)
+                            //vCostCenterIdElement.val(Bank.CostCenterId);
+                            //vCostCenterCodeElement.val(Bank.CostCenterCode);
+                        });
+                    }
+                });
+        }
+    });
+        // When Change Value Of  Check
+    $('body').on('change', '.txtEPaymentTypeId', function () {
+        var vTableRow = $(this).closest('tr');
+        // Get EPaymentType Data
+        var vEPaymentTypeIdElement = vTableRow.find('.txtEPaymentTypeId');
+        var vEPaymentTypeCodeElement = vTableRow.find('.txtEPaymentTypeCode');
+        var vEPaymentTypeNameElement = vTableRow.find('.txtEPaymentTypeName');
+        var vId = $(this).val()
+            // List GetCostCenter
+        $.get('/api/APIEPaymentType/EPaymentTypeGET',
+            {
+                pEPaymentTypeId: vId,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vEPaymentTypeIdElement.val('');
+                        // Set Value
+                        vEPaymentTypeCodeElement.val('');
+                        vEPaymentTypeNameElement.val('');
+                        funNotification('@appResource.msgChooseCorrectPay', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        console.log(vDataJSON)
+                        $.each(vDataJSON, function (i, Type) {
+                            vEPaymentTypeIdElement.val(Type.EPaymentTypeId);
+                            // Set Value
+                            vEPaymentTypeCodeElement.val(Type.EPaymentTypeId);
+                            vEPaymentTypeNameElement.val(Type.EPaymentTypeNameL1);
+                        });
+                    }
+                });
+    });
+
+    // Open Voucher Category Modal
+    $('body').on('change', '.txtCategoryId', function (e) {
+
+      // Get GLVoucherCategory Data
+      var vGLVoucherCategoryIdElement = $('.txtCategoryId');
+        var vGLVoucherCategoryNameElement = $('.txtCategoryName');
+        var vId = $(this).val();
+        console.log(vId)
+              // List GetCostCenter
+        $.get('/api/APIGLVoucherCategory/GLVoucherCategoryGET',
+            {
+                pGLVoucherCategoryId: vId,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vGLVoucherCategoryIdElement.val('');
+                        vGLVoucherCategoryNameElement.val('');
+                        funNotification('@appResource.msgChooseCorrectType', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        console.log(vDataJSON)
+                        $.each(vDataJSON, function (i, Category) {
+                            // Set Value
+                            vGLVoucherCategoryIdElement.val(Category.GLVoucherCategoryId);
+                            vGLVoucherCategoryNameElement.val(Category.GLVoucherCategoryNameL1);
+                        });
+                    }
+                });
+    })
+     // Open Voucher CSID Modal
+    $('body').on('change', '.txtCSId', function (e) {
+
+        // Get CS Data
+        var vCSIdElement = $('.txtCSId');
+        var vCSNameElement = $('.txtCSName');
+        var vAccountIdElement = $('.txtAccountId')
+        var vAccountCodeElement = $('.txtAccountCode')
+        var vAccountNameElement = $('.txtDTLAccountName')
+        var vCurrencyNameElement = $('.txtDTLAccountCurrencyName');
+        var vCurrencyIdElement = $('.txtDTLAccountCurrencyId');
+        var vCurrencyExchangeElement = $('.txtDTLPayCurrencyValue');
+        var vCurrencyBaseExchangeElement = $('.txtDTLBaseCurrencyValue');
+
+        var vId = $(this).val();
+        console.log(vId)
+              // List GetCostCenter
+        $.get('/api/APICustomerSupplier/CustomerSupplierGET',
+            {
+                pCSId: vId,
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            },
+                function (data, status) {
+                    if (data == '') {
+                        // Empty Fileds
+                        vCSIdElement.val('');
+                        vCSNameElement.val('');
+                        funNotification('@appResource.msgChooseCorrectCustomer', 2);
+                    } else {
+                        var vDataJSON = JSON.parse(data);
+                        console.log(vDataJSON)
+                        $.each(vDataJSON, function (i, CS) {
+
+                            // Set Value
+                            vCSIdElement.val(CS.CSId);
+                            vCSNameElement.val(CS.CSNameL1);
+                            vAccountIdElement.val(CS.AccountId)
+                            vAccountCodeElement.val(CS.AccountNo)
+                            vAccountNameElement.val(CS.AccountNameL1)
+                            vCurrencyNameElement.val(CS.CurrencyNameL1)
+                            vCurrencyIdElement.val(CS.CurrencyId)
+                            vCurrencyExchangeElement.val(CS.CurrencyExchange)
+                            vCurrencyBaseExchangeElement.val(CS.CurrencyExchange)
+                        });
+                    }
+                });
+    })
+    </script>
+    <!--onchange DTL-->
+    <script>
+        // When Change Value Of Id
+        $('body').on('change', '.txtAccountCode', function () {
+            var vAccountNo = $(this).val();
+            console.log(vAccountNo)
+            var vAccountName = $(this).closest('tr').find('.txtAccountName');
+            var vAccountId = $(this).closest('tr').find('.txtAccountId');
+            var vTableRow = $(this).closest('tr');
+            // Get Account Data
+            var vAccountIdElement = vTableRow.find('.txtAccountId');
+            var vAccountCodeElement = vTableRow.find('.txtAccountCode');
+            var vAccountNameElement = vTableRow.find('.txtAccountName');
+            var vAccountCurrencyFactorElement = vTableRow.find('.txtPayCurrencyValue');
+            var vAccountBaseCurrencyFactorElement = vTableRow.find('.txtBaseCurrencyValue');
+            var vAccountIsCostCenterElement = vTableRow.find('.txtAccountIsCostCenter');
+            var vAccountCurrencyElement = vTableRow.find('.txtAccountCurrencyId');
+            var vAccountCurrencyNameElement = vTableRow.find('.txtAccountCurrencyName');
+            var vCostCenterNameElement = vTableRow.find('.txtCostCenterName');
+            var vCostCenterIdElement = vTableRow.find('.txtCostCenterId');
+            var vCostCenterCodeElement = vTableRow.find('.txtCostCenterCode');
+            // List GetAccount
+            $.get('/api/APIGLVoucher/AccountLastChildGET',
+                {
+                    pAccountNo: vAccountNo,
+                    pQueryTypeId: 400
+                },
+                function (data, status) {
+                    if (data == '') {
+                        funNotification('@appResource.msgChooseCorrectAccount', '2')
+                        // Set Value
+                        vAccountIdElement.val('');
+                        vAccountCodeElement.val('');
+                        vAccountNameElement.val('');
+                        vAccountCurrencyFactorElement.val('');
+                        vAccountIsCostCenterElement.val('');
+                        vAccountCurrencyElement.val('');
+                        vAccountCurrencyNameElement.val('');
+                        vCostCenterNameElement.val('')
+                        vCostCenterIdElement.val('');
+                        vCostCenterCodeElement.val('');
+                    }
+                    else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Account) {
+                            console.log(Account)
+                            // Set Value
+                            vAccountName.val(Account.AccountNameL1)
+                            vAccountId.val(Account.AccountId)
+                            vAccountIdElement.val(Account.AccountId);
+                            vAccountCodeElement.val(Account.AccountNo);
+                            vAccountNameElement.val(Account.AccountNameL1);
+                            vAccountCurrencyFactorElement.val(Account.CurrencyExchange);
+                            vAccountBaseCurrencyFactorElement.val(Account.CurrencyExchange);
+                            vAccountIsCostCenterElement.val(Account.AccountIsCostCenter);
+                            vAccountCurrencyElement.val(Account.CurrencyId);
+                            vAccountCurrencyNameElement.val(Account.CurrencyNameL1);
+                            //vCostCenterNameElement.val(Account.CostCenterNameL1)
+                            //vCostCenterIdElement.val(Account.CostCenterId);
+                            //vCostCenterCodeElement.val(Account.CostCenterCode);
+
+                            // Add New Row
+                            funAddAccountRow();
+                        });
+                    }
+                });
+        });
+
+        // When Change Value Of Id
+        $('body').on('change', '.txtCostCenterCode', function () {
+            var vTableRow = $(this).closest('tr');
+            // Get AccountID
+            var vAccountId = vTableRow.find('.txtAccountId').val();
+            console.log(vAccountId)
+            var vElement = $(this)
+            var vCostCenterNo = $(this).val();
+            var vCostCenterName = vTableRow.find('.txtCostCenterName');
+            var vCostCenterId = vTableRow.find('.txtCostCenterId');
+            if (vAccountId == '') {
+                // Empty Fileds
+                $(this).val('');
+                vCostCenterName.val('')
+                vCostCenterId.val('')
+                funNotification('@appResource.msgChooseAccountFirst', 2);
+            } else {
+                // List GetCostCenter
+                $.get('/api/APIGLVoucher/AccountCostCenterGET',
+                    {
+                        pAccountId: vAccountId,
+                        pCostCenterCode: vCostCenterNo,
+                        pQueryTypeId: 400
+
+                    },
+                    function (data, status) {
+                        if (data == '') {
+                            // Empty Fileds
+                            vElement.val('');
+                            vCostCenterName.val('')
+                            vCostCenterId.val('')
+                            funNotification('@appResource.msgWrongCostCenter', 2);
+                        } else {
+                            var vDataJSON = JSON.parse(data);
+
+                            $.each(vDataJSON, function (i, CostCenter) {
+                                vCostCenterName.val(CostCenter.CostCenterNameL1)
+                                vCostCenterId.val(CostCenter.CostCenterId)
+                            });
+                        }
+                    });
+            }
+        });
+    </script>
+    <script>
+        // To Move Between Inputs Using Tabs
+        function funFoucus(pElement) {
+            $('.' + pElement).focus();
+        }
+
+        // Fill Notes In DTLS
+        $('.txtDocNote').on('blur', function () {
+            var vValue = $(this).val();
+            $('.txtDTLNote').val(vValue)
+        })
+        $('.btnPrint').on('click', function () {
+            var url = '/GLVoucher/GlVoucherPaymentReport?pGLVoucherNo=' + $('.txtDocNo').val()
+            var popupWindow = window.open(url);
+        });
+
+
+    </script>

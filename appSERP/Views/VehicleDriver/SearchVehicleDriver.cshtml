@@ -1,0 +1,507 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    Layout = null;
+}
+
+<style>
+    /*.divVehicleDriver {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divVehicleDriverSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divVehicleDriverSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divVehicleDriverNo {
+        width: 60px;
+    }*/
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblBodyVehicleDriver {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+
+
+<!-- Header -->
+@*<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">سائقي المركبات</div>
+</div>
+<div class="card">
+    <div class="card-header ">
+        خيارات البحث
+    </div>
+    <div class="card-body">
+        <div class="divFormControl">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div></div>
+                </div>
+                <div class="col-sm-2">
+                    <div>@appResource._Code<input type="text" class="form-control txtCode" /></div>
+                </div>
+                <div class="col-sm-2">
+                    <div>
+                        السائق
+                       
+                        <select id="selectDriver" class="selectDriver form-control" name="ResEmployeeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div>
+                        المركبة
+                        <select id="selectVehicle" class="selectVehicle form-control" name="VehicleId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div>
+                        التاريخ
+                        <input type="text" class="form-control txtDate" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-muted">
+        <button type="button" class="btn btn-secondary btnSearch">@appResource.btnSearch</button>
+
+    </div>
+</div>
+
+ Search 
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="divVehicleDriver">
+    <table class="table table-bordered tblData border tblVehicleDriverSearch">
+        <thead>
+            <tr>
+                <th class="btnCheckAll" data-checked="false">
+                    تحديد الكل
+                    <input type="checkbox" class="btnCheckAll">
+
+                </th>
+                <th>الكود</th>
+                <th>السائق</th>
+                <th>المركبة</th>
+                <th>التاريخ</th>
+                <th>العداد</th>
+            </tr>
+        </thead>
+
+        <tbody class="tblBodyVehicleDriver"></tbody>
+    </table>
+</div>
+<div class="card">
+    <div class="card-body">
+        <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+    </div>
+</div>*@
+<div class="divContainer bg-light">
+    <div class="w-100 bg-white border font-weight-bold p-4">سائقي المركبات</div>
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>@appResource._Code<input type="text" class="form-control txtCode" /></div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                السائق
+                                <select id="selectDriver" multiple class="selectDriver form-control" name="ResEmployeeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                            <div class="col-md-6">
+                                المركبة
+                                <select id="selectVehicle" multiple class="selectVehicle form-control" name="VehicleId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                التاريخ
+                                <input type="text" class="form-control txtDate" />
+                            </div>
+                            <div class="col-md-6">
+                               
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary btnSearch">@appResource.btnSearch</button>
+
+        </div>
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered tblData border tblVehicleDriverSearch">
+            <thead>
+                <tr>
+                    <th class="btnCheckAll" data-checked="false">
+                        تحديد الكل
+                        <input type="checkbox" class="btnCheckAll">
+
+                    </th>
+                    <th>الكود</th>
+                    <th>السائق</th>
+                    <th>المركبة</th>
+                    <th>التاريخ</th>
+                    <th>العداد</th>
+                </tr>
+            </thead>
+
+            <tbody class="tblBodyVehicleDriver"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- VehicleDriver GET -->
+<script>
+    funGetVehiclesAndDrivers() 
+    function funGetTodayDate() {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        return today;
+
+    }
+
+    // On Load
+    $(document).ready(function () {
+        $('#selectDriver').append('<option data-id="" value="" sort-id="">-</option>');
+        $('#selectVehicle').append('<option data-id="" value="" sort-id="">-</option>');
+        //// Focus on Search
+        //$('.txtSearch').focus();
+
+        // VehicleDriver GET
+        //funVehicleDriverGET();
+
+        //var vTodayDate = funGetTodayDate();
+        //$('.txtDate').val(vTodayDate);
+    })
+
+    // VehicleDriver GET
+    function funVehicleDriverGET() {
+        $.get('/api/APIVehicleDriver/VehicleDriverGET',
+            {
+                pQueryTypeId: '400',
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyVehicleDriver');
+
+
+                // VehicleDrivers
+                $.each(vDataResult, function (i, VehicleDriverData) {
+                    //for (var m = 0; m < Vehicle.tblVAll.length; m++) {
+                    //    var vSelected = '';
+                    //    //if (Vehicle.tblStatus[m].LookupDtlSeq == Vehicle.VecStatus) {
+                    //    //    vSelected = "selected";
+                    //    //    vSelectList += '<option selected="' + vSelected + '" value = "' + Vehicle.tblStatus[m].LookupDtlSeq + '" > ' + Vehicle.tblStatus[m].LookupDtlDesc + '</option >'
+                    //    //}
+                    //    //else {
+                    //    vSelectList += '<option  value = "' + Vehicle.tblVAll[m].VehicleCode + '" > ' + Vehicle.tblVAll[m].VecDescL1 + '</option >'
+                    //    //}
+                    //}
+               
+
+
+                    var vVehicleName = VehicleDriverData.VecDescL1;
+                    var vDriverName = VehicleDriverData.ResEmployeeNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vVehicleName = VehicleDriverData.VecDescL2;
+                            vDriverName = VehicleDriverData.ResEmployeeNameL2;
+                        }
+                    var RowContent = '<tr data-id="' + vDataResult[i].VehicleDriverId  + '">' +
+                        '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + VehicleDriverData.VehicleDriverId  + '"/></td> ' +
+                        '<td align="center">' + VehicleDriverData.VehicleDriverCode + '</td>' +
+                        '<td align="center">' + vDriverName + '</td>' +
+                        '<td align="center">' + vVehicleName + '</td>' +
+                        '<td align="center">' + VehicleDriverData.TransactionDate + '</td>' +
+                        '<td align="center">' + VehicleDriverData.Counter  + '</td>' +
+                        '</tr > '
+                    console.log('RowContent' + RowContent)
+                    // Append Row Content
+                    vTableBody.append(RowContent);
+                })
+
+            })
+    }
+
+    function funGetVehiclesAndDrivers() {
+        var vSelectList = '';
+        var vSelectListEmp = '';
+        $.post('/VehicleDriver/GetVehiclesAndDrivers',
+            {
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    for (var m = 0; m < vDataResult[0].tblVeh.length; m++) {
+                        var vSelected = '';
+                        //if (Vehicle.tblStatus[m].LookupDtlSeq == Vehicle.VecStatus) {
+                        //    vSelected = "selected";
+                        //    vSelectList += '<option selected="' + vSelected + '" value = "' + Vehicle.tblStatus[m].LookupDtlSeq + '" > ' + Vehicle.tblStatus[m].LookupDtlDesc + '</option >'
+                        //}
+                        //else {
+                        vSelectList += '<option  value = "' + vDataResult[0].tblVeh[m].VehicleCode + '"  sort-id="'+m+'" > ' + vDataResult[0].tblVeh[m].VecDescL1 + '</option >'
+                        //}
+                    }
+                    for (var m = 0; m < vDataResult[0].tblResEmp.length; m++) {
+                        var vSelected = '';
+                        //if (Vehicle.tblStatus[m].LookupDtlSeq == Vehicle.VecStatus) {
+                        //    vSelected = "selected";
+                        //    vSelectList += '<option selected="' + vSelected + '" value = "' + Vehicle.tblStatus[m].LookupDtlSeq + '" > ' + Vehicle.tblStatus[m].LookupDtlDesc + '</option >'
+                        //}
+                        //else {
+                        vSelectListEmp += '<option  value = "' + vDataResult[0].tblResEmp[m].ResEmployeeCode + '" sort-id="' + m +'" > ' + vDataResult[0].tblResEmp[m].ResEmployeeNameL1 + '</option >'
+                        //}
+                    }
+
+                    $('#selectVehicle').append(vSelectList);
+                    $('#selectVehicle').selectpicker('refresh');
+                   
+                    $('#selectDriver').append(vSelectListEmp);
+                    $('#selectDriver').selectpicker('refresh');
+
+                }
+            })
+    }
+
+</script>
+
+<!-- Search VehicleDriver -->
+<script>
+    $('.btnSearch').on('click', function () {
+
+       
+        var vVehicleDriverCode = null;
+        var vpResEmployeeCode = null;
+        var vVehicleCode = null;
+        var vpTransactionDate = null;
+
+        if ($('.txtCode').val().trim() !='') {
+            vVehicleDriverCode = $('.txtCode').val()
+        }
+        else {
+            vVehicleDriverCode = null
+        }
+        //if ($('.txtDriver').val().trim() != '') {
+        if ($('#selectDriver').prop('selectedIndex') > 0)
+        {
+            vpResEmployeeCode = $('#selectDriver').val()
+            //console.log('selectDriver' + vpResEmployeeCode)
+        }
+        else {
+            vpResEmployeeCode = null
+        }
+        //if ($('.txtVehicle').val().trim() != '') {
+        if ($('#selectVehicle').prop('selectedIndex') > 0)
+        {
+            vVehicleCode = $('#selectVehicle').val()
+            //console.log('selectVehicle' + vVehicleCode)
+        }
+        else {
+            vVehicleCode = null
+        }
+        if ($('.txtDate').val().trim() != '') {
+            vpTransactionDate = $('.txtDate').val()
+        }
+        else {
+            vpTransactionDate = null
+        }
+      
+
+        funGetVehicleDrivers(vVehicleDriverCode, vpResEmployeeCode, vVehicleCode, vpTransactionDate)
+
+    })
+    function funGetVehicleDrivers(pVehicleDriverCode, pResEmployeeCode, pVehicleCode, pTransactionDate)
+    {
+        var vLstDrivers = [];
+        var vLstVeh = [];
+        var vDriver;
+        var optionVal = [];
+        console.log('pResEmployeeCode' + pResEmployeeCode)
+        console.log('pVehicleCode' + pVehicleCode)
+        if (pResEmployeeCode == null) {
+
+        }
+        else if (pResEmployeeCode.indexOf(',')) {
+            for (i = 0; i < pResEmployeeCode.length; i++) {
+                vLstDrivers.push(pResEmployeeCode[i]);
+            }
+            pResEmployeeCode = vLstDrivers.toString();
+        }
+        else {
+          
+        }
+        if (pVehicleCode == null) {
+        
+
+        }
+        else if (pVehicleCode.indexOf(',')) {
+            for (i = 0; i < pVehicleCode.length; i++) {
+                vLstVeh.push(pVehicleCode[i]);
+            }
+            pVehicleCode = vLstVeh.toString();
+
+        }
+        else {
+          
+        }
+       
+        // Table Body
+        var vTableBody = $('.tblBodyVehicleDriver');
+        $.post('/VehicleDriver/FilterVehicleDriver',
+            {
+                pVehicleDriverCode: pVehicleDriverCode,
+                pResEmployeeCode: pResEmployeeCode,
+                pVehicleCode: pVehicleCode,
+                pSearchedDate: pTransactionDate
+
+            }, function (data, status) {
+                vTableBody.html('');
+                if (data != '') {
+                      // JSON
+                var vDataResult = JSON.parse(data);
+                // VehicleDrivers
+                $.each(vDataResult, function (i, VehicleDriverData) {
+
+
+                    var vVehicleName = VehicleDriverData.VecDescL1;
+                    var vDriverName = VehicleDriverData.ResEmployeeNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vVehicleName = VehicleDriverData.VecDescL2;
+                            vDriverName = VehicleDriverData.ResEmployeeNameL2;
+                        }
+                    var RowContent = '<tr data-id="' + vDataResult[i].VehicleDriverId  + '">' +
+                        '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + VehicleDriverData.VehicleDriverId  + '"/></td> ' +
+                        '<td align="center">' + VehicleDriverData.VehicleDriverCode + '</td>' +
+                        '<td align="center">' + vDriverName + '</td>' +
+                        '<td align="center">' + vVehicleName + '</td>' +
+                        '<td align="center">' + VehicleDriverData.TransactionDate + '</td>' +
+                        '<td align="center">' + VehicleDriverData.Counter  + '</td>' +
+                        '</tr > '
+                    console.log('RowContent' + RowContent)
+                    // Append Row Content
+                    vTableBody.append(RowContent);
+                })
+                }
+              
+
+            })
+    }
+        //// Search
+        //$('.txtSearch').on('keyup', function () {
+
+        //    // Search Input
+        //    var vSearchInput = $(this).val();
+
+        //    if (vSearchInput) {
+
+        //        // Check All
+        //        $('.divVehicleDriverSelect').each(function () {
+
+        //            // Get VehicleDriver Code
+        //            var vVehicleDriverCode = $(this).find('.divVehicleDriverNo').text();
+        //            var vVehicleDriverName = $(this).find('.divVehicleDriverName').text();
+
+        //            if (vVehicleDriverCode.search(vSearchInput) != -1 || vVehicleDriverName.search(vSearchInput) != -1) {
+
+        //                $(this).addClass('table-success');
+        //                $(this).hide();
+
+        //                console.log('found')
+        //            }
+        //            else {
+        //                $(this).removeClass('table-success');
+        //                $(this).show();
+        //            }
+
+        //        })
+
+        //    }
+        //    else {
+        //        $('.divVehicleDriverSelect').removeClass('table-success');
+        //        $(this).show();
+        //    }
+        //})
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+</script>
+

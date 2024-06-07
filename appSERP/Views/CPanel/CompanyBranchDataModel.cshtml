@@ -1,0 +1,290 @@
+﻿@model appSERP.Models.GD.CompanyBranchModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._Company, pId = Model.CompanyBranchId })
+        </div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.CompanyBranchId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanyBranchCode, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CompanyBranchCode, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CompanyBranchCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanyBranchNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CompanyBranchNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CompanyBranchNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanyBranchNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CompanyBranchNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CompanyBranchNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanyBranchLevel, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CompanyBranchLevel, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CompanyBranchLevel, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.IsHolding, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.IsHolding, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountCodeHierarchy, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.AccountCodeHierarchy, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AccountCodeHierarchy, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastClosedYear, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.LastClosedYear, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastClosedYear, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastClosedMonth, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.LastClosedMonth, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastClosedMonth, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.RefNumberIsVisible, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck61" } })
+                @Html.LabelFor(model => model.RefNumberIsVisible, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck61" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CostCenterIsRequired, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck15" } })
+                @Html.LabelFor(model => model.CostCenterIsRequired, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck15" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.PostIsSerialized, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck14" } })
+                @Html.LabelFor(model => model.PostIsSerialized, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck14" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.DepositIsSentDirectToBank, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck13" } })
+                @Html.LabelFor(model => model.DepositIsSentDirectToBank, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck13" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.IsPostZeroEntry, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck12" } })
+                @Html.LabelFor(model => model.IsPostZeroEntry, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck12" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.DefaultCurrencyId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectCurrency" class="selectpicker" name="DefaultCurrencyId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.DefaultCurrencyId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PLAccountId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectPLAccount" class="selectpicker" name="PLAccountId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.PLAccountId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RDAccountId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectRDAccount" class="selectpicker" name="RDAccountId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.RDAccountId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FinancialYearId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectFinancialYear" class="selectpicker" name="FinancialYearId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.FinancialYearId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Language1Id, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectLanguage" class="selectpicker" name="Language1Id" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.Language1Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Language2Id, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectLanguage2" class="selectpicker" name="Language2Id" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.Language2Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CompanyBranchIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck12" } })
+                @Html.LabelFor(model => model.CompanyBranchIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck12" })
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+}
+
+<script>
+
+        var vPLAccountId = 0;
+        var vRDAccountId = 0;
+        var vLanguageId = 0;
+        var vLanguage2Id = 0;
+        var vFinancialYearId = 0;
+        var vCurrencyId = 0;
+    // List GetAccount
+    $.post('/Home/GetAccount',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Account) {
+                $('#selectPLAccount').append('<option data-id="' + Account.AccountId + '" value="' + Account.AccountId + '" sort-id="' + i + '">' + Account.AccountNameL1 + '</option>')
+                $('#selectRDAccount').append('<option data-id="' + Account.AccountId + '" value="' + Account.AccountId + '" sort-id="' + i + '">' + Account.AccountNameL1 + '</option>')
+                if (i == 0) {
+
+                    vPLAccountId = Account.AccountId;
+                    vRDAccountId = Account.AccountId;
+                }
+            })
+               if (parseInt('@ViewBag.vbcPLAccountId') >0 ) {
+                   vPLAccountId = parseInt('@ViewBag.vbcPLAccountId')
+            }
+            if (parseInt('@ViewBag.vbcRDAccountId') > 0) {
+                 vRDAccountId = parseInt('@ViewBag.vbcRDAccountId')
+            }
+            $('#selectPLAccount').val(vPLAccountId);
+            $('#selectRDAccount').val(vRDAccountId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+        )
+
+
+        // List selectLanguage
+        $.post('/Home/GetLanguage',
+            null,
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, Language) {
+                    $('#selectLanguage').append('<option data-id="' + Language.LanguageId + '" value="' + Language.LanguageId + '" sort-id="' + i + '">' + Language.LanguageNameL1 + '</option>')
+                    $('#selectLanguage2').append('<option data-id="' + Language.LanguageId + '" value="' + Language.LanguageId + '" sort-id="' + i + '">' + Language.LanguageNameL1 + '</option>')
+                    if (i == 0) {
+                        vLanguageId = Language.LanguageId;
+                        vLanguage2Id = Language.LanguageId;
+                    }
+                })
+                   if (parseInt('@ViewBag.vbcLanguageId') >0 ) {
+                       vLanguageId = parseInt('@ViewBag.vbcLanguageId')
+                }
+                   if (parseInt('@ViewBag.vbcLanguage2Id') >0 ) {
+                       vLanguage2Id = parseInt('@ViewBag.vbcLanguage2Id')
+                }
+                $('#selectLanguage').val(vLanguageId);
+                $('#selectLanguage2').val(vLanguage2Id);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+            }
+        )
+        // List GetFinancialYear
+        $.post('/Home/GetFinancialYear',
+            null,
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, FinancialYear) {
+                    $('#selectFinancialYear').append('<option data-id="' + FinancialYear.FinancialYearId + '" value="' + FinancialYear.FinancialYearId + '" sort-id="' + i + '">' + FinancialYear.FinancialYear + '</option>')
+                    if (i == 0) {
+                        vFinancialYearId = FinancialYear.FinancialYearId;
+                    }
+                })
+                 if (parseInt('@ViewBag.vbcFinancialYearId') >0 ) {
+                     vFinancialYearId = parseInt('@ViewBag.vbcFinancialYearId')
+                }
+                $('#selectFinancialYear').val(vFinancialYearId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+            }
+        )
+        // List GetCurrency
+        $.post('/Home/GetCurrency',
+            null,
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, Currency) {
+                    $('#selectCurrency').append('<option data-id="' + Currency.CurrencyId + '" value="' + Currency.CurrencyId + '" sort-id="' + i + '">' + Currency.CurrencyNameL1 + '</option>')
+                    if (i == 0) {
+                        vCurrencyId = Currency.CurrencyId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcCurrencyId') >0 ) {
+                    vCurrencyId = parseInt('@ViewBag.vbcCurrencyId')
+                }
+                $('#selectCurrency').val(vCurrencyId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+            }
+        )
+</script>

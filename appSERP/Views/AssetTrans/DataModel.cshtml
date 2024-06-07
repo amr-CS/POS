@@ -1,0 +1,185 @@
+﻿@model appSERP.Models.FA.AssetTransModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    <!-- Header -->
+    <div class="container-fluid">
+        @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.AssetTrans, pId = Model.AssetTransId })
+    </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.HiddenFor(model => model.AssetTransId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.HiddenFor(model => model.AssetTransId, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.AssetTransId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetTransDate, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.AssetTransDate, "{0:yyyy-MM-dd}", new { htmlAttributes = new { @class = "form-control",@type="date",@Value=Model.AssetTransDate.ToString("yyyy-MM-dd") } })
+            @Html.ValidationMessageFor(model => model.AssetTransDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetTransValue, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.AssetTransValue, new { htmlAttributes = new { @class = "form-control",@min="0" } })
+            @Html.ValidationMessageFor(model => model.AssetTransValue, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetTransValueBase, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.AssetTransValueBase, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+            @Html.ValidationMessageFor(model => model.AssetTransValueBase, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CurrencyId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectCurrency" class="selectpicker form-control form-control" name="CurrencyId" value="" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetReasonTypeNote, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.AssetReasonTypeNote, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.AssetReasonTypeNote, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectAsset" class="selectpicker form-control form-control" name="AssetId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.AssetId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TransactionTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectTransactionType" class="selectpicker form-control form-control"  name="TransactionTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.TransactionTypeId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetReasonTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectAssetReasonType" class="selectpicker form-control form-control" name="AssetReasonTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.AssetReasonTypeId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group m-3">
+        <div class="custom-control custom-checkbox col-md-12">
+            @Html.EditorFor(model => model.AssetTransIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "AssetTransIsActive" } })
+            @Html.LabelFor(model => model.AssetTransIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "AssetTransIsActive" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+</div>
+}
+<script>
+            // List GetCurrency
+    $.post('/Home/GetCurrencyList',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Currency) {
+                $('#selectCurrency').append('<option data-id="' + Currency.CurrencyId + '" value="' + Currency.CurrencyId + '" sort-id="' + i + '">' + Currency.CurrencyNameL1 + '</option>')
+          
+            })
+            var vData = '@Model.CurrencyId'
+       
+            if (vData != "0") {
+                $('#selectCurrency').val(@Model.CurrencyId);
+            }
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+    </script>
+<script>
+     // List GetAsset
+    $.post('/Home/GetAsset',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Asset) {
+                $('#selectAsset').append('<option data-id="' + Asset.AssetId + '" value="' + Asset.AssetId + '" sort-id="' + i + '">' + Asset.AssetNameL1 + '</option>')
+            })
+                  if (vData != "0") {
+                $('#selectCurrency').val(@Model.AssetId);
+            }
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+
+     </script>
+<script>
+     // List GetTransactionType
+    $.post('/Home/GetTransactionType',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, TransactionType) {
+                $('#selectTransactionType').append('<option data-id="' + TransactionType.TransactionTypeId + '" value="' + TransactionType.TransactionTypeId + '" sort-id="' + i + '">' + TransactionType.TransactionTypeNameL1 + '</option>')
+            
+            })
+            var vData = '@Model.TransactionTypeId'
+                      if (vData != "0") {
+                $('#selectCurrency').val(@Model.TransactionTypeId);
+            }
+
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+
+</script>
+<script>
+     // List GetAssetReasonType
+    $.post('/Home/GetAssetReasonType',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, AssetReasonType) {
+                $('#selectAssetReasonType').append('<option data-id="' + AssetReasonType.AssetReasonTypeId + '" value="' + AssetReasonType.AssetReasonTypeId + '" sort-id="' + i + '">' + AssetReasonType.AssetReasonTypeNameL1 + '</option>')
+       
+            })
+        var vData = '@Model.AssetReasonTypeId'
+                      if (vData != "0") {
+                $('#selectCurrency').val(@Model.AssetReasonTypeId);
+            }
+
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+
+</script>

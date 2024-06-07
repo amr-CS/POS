@@ -1,0 +1,310 @@
+﻿@using appSERP.Views.Shared.appResource;
+@{ 
+    int UserId ;
+    //Convert.ToInt32(Request.Cookies["UserId"].Value);
+    if (Request.Cookies["UserId"] != null)
+    {
+        UserId = Convert.ToInt32(Request.Cookies["UserId"].Value); 
+    }
+}
+<!doctype html>
+<html dir="@(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft? "rtl" : "ltr")">
+<head class="">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <!-- Include Libraries - Style -->
+    @if (System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft)
+    {
+        <!-- Right to Left -->
+        @Styles.Render("~/Content/css_rtl")
+    }
+    else
+    {
+        <!-- Right to  -->
+        @Styles.Render("~/Content/css_ltr")
+    }
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+
+
+    <!--SELECT LIST -->
+    <link href="~/Content/List/bootstrap-select.css" rel="stylesheet" />
+    <!--Stop Moving HEader-->
+    <link href="~/Content/ControlStyle/controlStyle.css" rel="stylesheet" />
+    <!-- DataTable -->
+    <link href="~/Content/DataTable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/Content/Notification/jquery.toast.css" rel="stylesheet" />
+    <!--jquery -->
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+    <!--Moove Between Tables-->
+    <script src="~/Scripts/dist/arrow-table.js"></script>
+
+    <!-- Circle STAT Percentage Style -->
+    <link href="~/Content/CircleSTAT.css" rel="stylesheet" />
+    <!--jsModalCheckInput -->
+    <script src="~/Scripts/ModalValidation/jsModalCheckInput.js"></script>
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Include Control Style -->
+    @*<link href="~/Content/ControlStyle/controlStyle.css" rel="stylesheet" />*@
+
+    @Styles.Render("~/Content/DevExtremeBundle")
+    @Scripts.Render("~/Scripts/DevExtremeBundle")
+</head>
+
+<body class="w-100">
+    <!-- Details Main -->
+    <div id="loading">
+        <img src="~/Image/PreloaderImage/WhiteCloud.gif" class="loader" />
+    </div>
+    @if (!Request.IsAjaxRequest())
+    {
+        <!-- Navbar -->
+        @Html.Partial("~/Views/Shared/NavbarPartial/NavbarPartial.cshtml")
+    }
+
+
+    <div class="appMainContent">
+
+        <!-- Side Bar -->
+        <div class="appSideBar">
+            @Html.Action("ViewSettingSideBar", "ViewSetting")
+
+        </div>
+
+        <!-- App Body - Dynamic Content -->
+        <div class="appBodyContent">
+            <div class="divViewContent" id="divViewContentt">
+                <!-- Dynamic Content -->
+
+                @RenderBody()
+
+            </div>
+        </div>
+
+    </div>
+    <!-- Main Scripts -->
+    @Scripts.Render("~/bundles/popper")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <!--SELECT LIST -->
+    <script src="~/Scripts/List/bootstrap-select.js"></script>
+    <script src="~/Scripts/List/defaults-ar.js"></script>
+
+
+
+    <!-- DataTable Scripts Include -->
+    <script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/DataTable/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Scripts/DataTable/DataTableButtons/dataTables.buttons.min.js"></script>
+    <script src="~/Scripts/DataTable/DataTableButtons/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTable/DataTableButtons/jszip.min.js"></script>
+    <script src="~/Scripts/DataTable/DataTableButtons/buttons.html5.min.js"></script>
+
+
+
+    <script src="../../Scripts/Notification/jsNotifications.js"></script>
+    <script src="~/Scripts/Notification/jquery.toast.js"></script>
+
+    <script src="~/Scripts/appScript/jsAppScript.js"></script>
+    <script src="~/Scripts/file-explore.js"></script>
+
+    <script>
+    // DataTable Initiate
+    $(document).ready(function () {
+        funDataTableInit('@appResource.dtSearch', '@appResource.dtDisplay', '@appResource.dtTo', '@appResource.dtFrom', '@appResource.dtTotal', '@appResource.dtRecord'
+            , '@appResource.dtRecord', '@appResource.dtShowing', '@appResource.dtNoData', '@appResource.dtFilteredFrom', '@appResource.dtDisplay'
+            , '@appResource.dtFirst','@appResource.dtPrevious','@appResource.dtNext','@appResource.dtLast');
+    });
+    </script> <!-- End of DataTable Configuration -->
+
+
+
+    <script>
+        // VAR
+        var vlastFocused;
+        // DOCUMENT READY
+        $(document).ready(function () {
+            // On Blur
+            $('input').on('blur', function () {
+                // GET Focused
+                vlastFocused = $(this);
+            })
+        })
+
+        // Paste
+        function funPaste() {
+            // Paste
+            navigator.clipboard.readText().then(clipText =>
+                vlastFocused.val(clipText));
+        }
+
+
+    </script>
+
+
+
+
+    <!-- Dark / Light Mode -->
+    <script>
+        $(document).ready(function () {
+            $('.btnDelete').tooltip();
+            // Init
+            $('.appSideBar').addClass('LightTheme');
+
+            $('.btnDarkTheme').on('click', function () {
+                // Sidebar
+                $('.appSideBar').addClass('DarkTheme').removeClass('LightTheme');
+            })
+            $('.btnLightTheme').on('click', function () {
+                // Sidebar
+                $('.appSideBar').addClass('LightTheme').removeClass('DarkTheme');
+            })
+        })
+    </script>
+
+
+    <script>
+        $('.btnCairo').on('click', function () {
+            $('html, body').css('font-family', 'Cairo');
+        })
+        $('.btnDubai').on('click', function () {
+            $('html, body').css('font-family', 'Dubai');
+        })
+    </script>
+
+    <!-- Object Title -->
+    <script>
+        $('.btnDelete').tooltip();
+        // Object Title
+        var vObjectTitle = localStorage.getItem('lsSideBarItem');
+        // Text SET
+        $('.divViewHeaderTitleText').text(vObjectTitle);
+        //$('Title').text(vObjectTitle);
+
+        // GET Sidebar URL
+        funGETSidebarURL();
+
+        // GET Sidebar URL
+        function funGETSidebarURL() {
+            // Path Current
+            var vPathValue = window.location.pathname; // Returns path only (/path/example)
+
+            $('.divSidebarItem').each(function () {
+
+                // GET URL
+                var vObjectURL = $(this).attr('href');
+                // GET Title
+                var vObjectTitleText = $(this).children('.divSidebarItemTitle').text();
+                // Check If URL [ADDRESS BAR] == ANY IN SIDEBAR
+                if (vPathValue == vObjectURL) {
+
+                    // Text SET
+                    $('.divViewHeaderTitleText').text(vObjectTitleText);
+                }
+            })
+        }
+    </script>
+
+    <!-- Input Up and Down in Table -->
+    <script>
+
+
+
+        //Input Up and Down in Table
+        $('table').arrowTable();
+        $('#example').arrowTable({
+            enabledKeys: ['left', 'right', 'up', 'down']
+        });
+        //Close
+        $('.btnClose').on('click', function () {
+            $('#AccountDataModal').modal('hide');
+        })
+    </script>
+
+    <!-- Select Text on Click -->
+    <script>
+        $(document).ready(function () {
+
+            $('body').on('click focusin', 'input[type=text]', function () {
+
+                $(this).select();
+            })
+
+        })
+    </script>
+    <!-- Name - L1, L2 -->
+    <script>
+        //window.onhashchange = window.onload = function (evt) {
+        //    document.getElementById('divViewContentt').innerHTML = window.location.href + ' (' + window.location.pathname + ')';
+        //};
+
+        // Blur of Name [1st Language]
+        $('body').on('blur', 'input', function (e) {
+
+            // Current Input
+            var vCurrentInput = $(e.target).attr('id');
+            // GET Current Value
+            var vNameValue = $(e.target).val();
+            if (vCurrentInput == undefined || vCurrentInput == '') {
+            }
+            else {
+                // Check Target
+                if (vCurrentInput.indexOf("NameL1") >= 0) {
+
+                    // Find Input NameL2
+                    var vCurrentNameL2Value = $("input[id*='NameL2']").val();
+
+                    // Check If Value == '' OR Undefined
+                    if (vCurrentNameL2Value == undefined || vCurrentNameL2Value == '') {
+
+                        // Set Value of NameL2
+                        $("input[id*='NameL2']").val(vNameValue);
+
+                    } // Enf of Check If Value == '' OR Undefined
+
+                    //} // End of Check if NameL1
+                }
+            }
+
+        }) // End of Blur Event
+
+        $('.divSidebarItem').on('click', function (e) {
+
+            var vObjectId = $(this).attr('data-Object-id');
+
+
+            localStorage.setItem("lsElementOffset", vObjectId);
+
+            localStorage.setItem("pos", $('#sidebar-wrapper').scrollTop());
+
+        })
+
+        var vObjectId = localStorage.getItem('lsElementOffset');
+
+        var vElementToScrool = $('.divSidebarItem[data-Object-id="' + vObjectId + '"]');
+
+        //vElementToScrool.scrollTop();
+        var vposistion = localStorage.getItem('pos');
+
+        vElementToScrool.addClass('ItemSide');
+        var y = $(window).scrollTop();
+        $('#sidebar-wrapper').animate({ scrollTop: vposistion })
+
+        $(document).on('keyup', 'input', function (e) {
+            if (e.key === 'Enter') {
+                let inputs = $('select, input:visible').not(':disabled');
+                inputs.eq(inputs.index(this) + 1).focus();
+            }
+        });
+    </script>
+
+
+</body>
+</html>

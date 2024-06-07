@@ -1,0 +1,86 @@
+﻿@model appSERP.Models.SETT.AreaModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    <!-- Header -->
+    <div class="container-fluid">
+        @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._Area, pId = Model.AreaId })
+    </div>
+   
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.AreaId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AreaNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.AreaNameL1, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.AreaNameL1, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AreaNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.AreaNameL2, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.AreaNameL2, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-12">
+            <select id="selectCity" class="selectpicker form-control form-control" name="CityId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="custom-control custom-checkbox col-md-12">
+            @Html.EditorFor(model => model.AreaIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+            @Html.LabelFor(model => model.AreaIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+        </div>
+    </div>
+
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+
+</div>
+}
+<script>
+        var vCityId = 0;
+    // List GetCity
+    $.post('/Home/GetCity',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, City) {
+                $('#selectCity').append('<option data-id="' + City.CityId + '" value="' + City.CityId + '" sort-id="' + i + '">' + City.CityNameL1 + '</option>')
+                if (i == 0) {
+                    vCityId = City.CityId;
+                }
+            })
+              if (parseInt('@ViewBag.vbcCityId') >0 ) {
+                  vCityId = parseInt('@ViewBag.vbcCityId');
+            }
+            $('#selectCity').val(vCityId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+</script>

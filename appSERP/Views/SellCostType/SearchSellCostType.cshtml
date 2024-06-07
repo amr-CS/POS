@@ -1,0 +1,162 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "SellCostTypeSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divSellCostType {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divSellCostTypeSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divSellCostTypeSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divSellCostTypeNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Type</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divSellCostType">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodySellCostType"></tbody>
+    </table>
+</div>
+
+
+<!-- SellCostType GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // SellCostType GET
+        funSellCostTypeGET();
+    })
+
+    // SellCostType GET
+    function funSellCostTypeGET() {
+
+        $.get('/api/APISellCostType/SellCostTypeGET',
+            {
+
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodySellCostType');
+
+
+                // SellCostTypes
+                $.each(vDataResult, function (i, SellCostTypeData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].SellCostTypeId + '">';
+
+                        var vSellCostTypeName = vDataResult[i].SellCostTypeNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vSellCostTypeName = vDataResult[i].SellCostTypeNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].SellCostTypeId + '">';
+                            vRowContent += '<div class="divSellCostTypeSelect d-flex p-2" data-id="' + vDataResult[i].SellCostTypeId + '">';
+                    vRowContent += '<div class="divSellCostTypeNo px-4">' + vDataResult[i].SellCostTypeCode + '</div>';
+                                vRowContent += '<div class="divSellCostTypeName px-4">' + vSellCostTypeName + '</div>';
+                                //vRowContent += '<div class="divSellCostTypeCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search SellCostType -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divSellCostTypeSelect').each(function () {
+
+                // Get SellCostType Code
+                var vSellCostTypeCode = $(this).find('.divSellCostTypeNo').text();
+                var vSellCostTypeName = $(this).find('.divSellCostTypeName').text();
+
+                if (vSellCostTypeCode.search(vSearchInput) != -1 || vSellCostTypeName.search(vSearchInput) != -1) {
+
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+
+                    console.log('found')
+                }
+                else {
+                    //$(this).removeClass('table-success');
+                    //$(this).show();
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            //$('.divSellCostTypeSelect').removeClass('table-success');
+            //$(this).show();
+            $('.divSellCostTypeSelect').each(function () {
+                    //$(this).addClass('table-success');
+                    //$(this).hide();
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+            })
+        }
+    })
+</script>
+

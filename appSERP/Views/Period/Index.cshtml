@@ -1,0 +1,135 @@
+﻿<!-- Header -->
+<div class="divViewHeader">
+    <!-- Title -->
+    <div class="row d-flex">
+        <!-- Header Content -->
+        <div class="divViewHeaderTitle col-md-12">
+
+            <div class="p-2 w-100">
+
+                <!-- Sidebar Collapse -->
+                <button class="btn btn-ligt bg-white appMainColortext btnSidebarCollapse"><i class="fa fa-bars"></i></button>
+
+                <!-- Favorite -->
+                <button type="button" class=" btn bg-light btnFav"></button>
+                <!-- View Title -->
+                <span> اغلاق الفترات</span>
+            </div>
+            <div class="p-2 mt-1 flex-shrink-1">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="">
+    <div class="card mx-auto co-md-6 divPartial">
+        @Html.Partial("Period")
+    </div>
+    <div class="card mx-auto ">
+        <div class="card-body">
+            <div class=""  style="text-align:center"> 
+                <button type="button" class="btn btn-info btn-lg btnOpenPeriod">اقفال الفترة وفتح فترة جديده</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="">
+    <div class="card mx-auto co-md-6  alert-info">
+        <div class="card-body">
+
+            <div class="row" style="color:red;font-size:medium">
+                <div class="col-md-4">
+                    <div class="">
+                        <label class="">ارسال تقرير المبيعات عبر البريد الالكتروني لاخر فترة مغلقة</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div>
+
+                        <input type="datetime" disabled class="form-control" id="LastDateFrom" value="@ViewBag.LastDateFrom" readonly>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div>
+
+                        <input type="datetime" disabled class="form-control" id="LastDateTo" value="@ViewBag.LastDateTo" readonly>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div>
+                        <button type="button" class="btn btn-info btn-lg btnSend">
+                            <img src="~/Image/POS/send.png" style="width:20px" />
+                            ارسال
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="card mx-auto co-md-6  alert-info">
+        <div class="card-body">
+
+            <div class="row" style="color:red;font-size:medium">
+          
+                <div class="col-md-2">
+                    <div>
+                        <button type="button" class="btn btn-info btn-lg btnStorePost">
+                          
+                            ترحيل البيانات
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div id="loading">
+    <img src="~/Image/PreloaderImage/WhiteCloud.gif" class="loader" />
+</div>
+<script>
+    // List GetYear
+    $('.btnOpenPeriod').on('click', function () {
+        var PeriodId = $('.Period').attr('periodId');
+        var DateFrom = $('#DateFrom').val();
+        var DateTo = $('#DateTo').val();
+        $.post('/Period/SavePeriod', { PeriodId: PeriodId, DateFrom: DateFrom, DateTo: DateTo, IsPosted: false,pQueryTypeId:101 }, function (data) {
+            var Json = JSON.parse(data);
+            funNotification(Json.ItemArray[0],2 );
+            $('.divPartial').load('/Period/Period')
+        })
+    })
+    $('.btnStorePost').on('click', function () {
+        var PeriodId = $('.Period').attr('periodId');
+        var DateFrom = $('#DateFrom').val();
+        var DateTo = $('#DateTo').val();
+        $('#loading').show();
+        $.post('/Period/PostSorePeriod', { DateFrom: DateFrom, DateTo: DateTo }, function (data) {
+            console.log(data)
+            $('#loading').hide();
+
+            var Json = JSON.parse(data);
+            
+           funNotification(Json[0].msg,2 );
+        })
+    })
+    $('.btnSend').on('click', function () {
+      
+        var DateFrom = $('#DateFrom').val();
+        var DateTo = $('#DateTo').val();
+                        $('#loading').show();
+
+        $.post('/POS/SimplePOSHtmlReportForMail', {
+            pDateFrom: DateFrom,
+            pDateTo: DateTo
+        }, function () {
+            $('#loading').hide();
+             funNotification('تم الارسال بنجاح', 1)
+                //alert('تم الارسال بنجاح')
+        })
+    })
+</script>

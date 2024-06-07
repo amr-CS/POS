@@ -1,0 +1,143 @@
+﻿@model appSERP.Models.ACC.CurrencyModel
+@using appSERP.Views.Shared.appResource
+
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._Currency, pId = Model.CurrencyId })
+        </div>
+       
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.CurrencyId)
+        <div class="form-group">
+            @Html.LabelFor(model => model.CurrencyNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CurrencyNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CurrencyNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CurrencyNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CurrencyNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CurrencyNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CurrencyExchange, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CurrencyExchange, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CurrencyExchange, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CurrencyDecimal, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CurrencyDecimal, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                @Html.ValidationMessageFor(model => model.CurrencyDecimal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CurrencyFactorId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectCurrencyFactor" class="selectpicker form-control" name="CurrencyFactorId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.CurrencyFactorId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CurrencyIsDefault, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck12" } })
+                @Html.LabelFor(model => model.CurrencyIsDefault, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck12" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.CurrencyGenderId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectCurrencyGender" class="selectpicker form-control" name="CurrencyGenderId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.CurrencyGenderId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CurrencyIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.CurrencyIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+
+
+    </div>
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+
+}
+
+
+<script>
+        var vCurrencyGenderId = 0;
+        var vCurrencyFactorId = 0;
+    // List GetAccountType
+    $.post('/Home/GetCurrencyGender',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, CurrencyGender) {
+                $('#selectCurrencyGender').append('<option data-id="' + CurrencyGender.CurrencyGenderId + '" value="' + CurrencyGender.CurrencyGenderId + '" sort-id="' + i + '">' + CurrencyGender.CurrencyGenderNameL1 + '</option>')
+                if (i == 0) {
+                    vCurrencyGenderId = CurrencyGender.CurrencyGenderId;
+                }
+            })
+             if (parseInt('@ViewBag.vbcCurrencyGenderId') > 0) {
+                vCurrencyGenderId  = parseInt('@ViewBag.vbcCurrencyGenderId')
+            }
+            $('#selectCurrencyGender').val(vCurrencyGenderId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+        )
+
+
+        // List GetCurrencyFactor
+        $.post('/Home/GetCurrencyFactor',
+            null,
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, CurrencyFactor) {
+                    $('#selectCurrencyFactor').append('<option data-id="' + CurrencyFactor.CurrencyFactorId + '" value="' + CurrencyFactor.CurrencyFactorId + '" sort-id="' + i + '">' + CurrencyFactor.CurrencyFactorNameL1 + '</option>')
+                    if (i == 0) {
+                        vCurrencyFactorId = CurrencyFactor.CurrencyFactorId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcCurrencyFactorId ') > 0) {
+                vCurrencyFactorId  = parseInt('@ViewBag.vbcCurrencyFactorId')
+            }
+                $('#selectCurrencyFactor').val(vCurrencyFactorId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+            }
+        )
+</script>

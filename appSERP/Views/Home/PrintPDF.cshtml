@@ -1,0 +1,17 @@
+﻿@using System.Data
+@model DataTable
+<table cellpadding="5" cellspacing="5" border="1">
+    <tr style="background-color:aliceblue">
+        <th>Title</th>
+        <th>Author</th>
+        <th>Price</th>
+    </tr>
+    @foreach (DataRow dr in Model.Rows)
+    {
+        <tr>
+            <td>@dr["InvItemNameL1"]</td>
+            <td>@dr["InvItemNameL1"]</td>
+            <td>@dr["InvItemNameL1"]</td>
+        </tr>
+    }
+</table>

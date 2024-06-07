@@ -1,0 +1,339 @@
+﻿
+@using System.Data;
+
+@{
+    ViewBag.Title = "تقرير طلبات البيع";
+    Layout = "~/Views/Shared/appLayout/_LayoutOrder.cshtml";
+    DataTable Data = ViewBag.vDT;
+    DataRow Row = Data.Rows[0];
+    string IBAN = Row["IBAN"].ToString();
+    string Tafkeet = Row["Tafkeet"].ToString();
+    string orderremark = Row["orderremark"].ToString();
+    DateTime ORDER_DATE = Convert.ToDateTime(Row["ORDER_DATE"].ToString());
+    DateTime DELIVERY_DATE = Convert.ToDateTime(Row["DELIVERY_DATE"]);
+    string DELIVERY_TIME = Row["DELIVERY_TIME"].ToString();
+    string DayTime = Row["DayTime"].ToString();
+    string DayName = Row["DayName"].ToString();
+    string Customer_NameL1 = Row["CustomerNameL1"].ToString();
+    string CustomerPhoneNumber = Row["CustomerPhoneNumber"].ToString();
+    string ADDRESS = Row["ADDRESS"].ToString();
+    string OrderId = Row["OrderId"].ToString();
+    string InvId = Row["InvId"].ToString();
+    string InvCode = Row["InvCode"].ToString();
+    string CustomerTaxNumber = Row["CustomerTaxNumber"].ToString();
+    string CustomerEmail = Row["CustomerEmail"].ToString();
+    string Note = Row["Note"].ToString();
+
+    decimal Total = 0;
+    decimal Total_WithoutVat = 0;
+    decimal VatTotal = 0;
+    decimal Total_Price = 0;
+}
+
+<style>
+
+
+    .divleft {
+        float: left !important;
+        text-align: right;
+        width: 40%;
+    }
+
+    .divRight {
+        float: right !important;
+        text-align: right;
+        width: 40%;
+    }
+
+    .divCenter {
+        float: right !important;
+        text-align: right;
+        width: 25%;
+    }
+
+    .newcolor {
+        background-color: #3d3939;
+        color: #ffffff;
+    }
+
+    .periodWord {
+        position: absolute;
+        padding: 10px;
+        border-radius: 5px 5px 0 0;
+        float: right;
+        right: 3px;
+        top: 5px;
+        -moz-transform: rotate(270deg);
+        /* FF3.5+ */
+        -o-transform: rotate(270deg);
+        /* Opera 10.5 */
+        -webkit-transform: rotate(-90deg);
+        /* Saf3.1+, Chrome */
+        -moz-transform-origin: 100% 100%;
+        -o-transform-origin: 100% 100%;
+        -webkit-transform-origin: 100% 100%;
+    }
+
+    .vl {
+        border-left: 6px solid #000000;
+        height: 90%;
+        position: absolute;
+        right: 4%;
+        margin-left: -3px;
+        writing-mode: vertical-lr;
+        text-orientation: mixed;
+        top: 2%;
+    }
+
+    .box {
+        border: 1px solid black;
+        width: 100px;
+        height: 20px !important;
+        margin: auto;
+        text-align: center;
+        background-color: #D3D3D3;
+    }
+
+    .boxNote {
+        border: 1px solid black;
+        width: 100%;
+        height: 35px !important;
+        text-align: right;
+        margin: auto;
+    }
+
+    #qr {
+        font-size: 0;
+        line-height: 0;
+        display: block;
+        width: 152px;
+        height: 152px;
+        padding: 0;
+        cursor: pointer;
+        color: #000000;
+        border: none;
+        outline: none;
+        background: #000000;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<div class="periodWord">@IBAN</div>
+
+
+<div class="divRight">
+    <span>
+        تاريخ الفاتورة
+        :
+    </span>
+    <span>@DELIVERY_DATE.ToString("dd/MMM/yyyy")</span>
+    <br />
+    <span>
+        وقت التسليم
+        :
+        @DayTime
+
+    </span>
+    <br />
+
+    <span>
+        العميل
+        :
+        @Customer_NameL1
+    </span>
+    <br />
+    <span>
+        عنوان العميل
+        :
+        @ADDRESS
+    </span>
+    <br />
+
+
+
+</div>
+<div class="divleft">
+
+    <span>
+        رقم الطلب
+        :
+        @OrderId
+
+    </span>
+    <br />
+    <span>
+        تاريخ الطلب
+        :
+
+        @ORDER_DATE.ToString("dd/MMM/yyyy")
+
+    </span>
+    <br />
+    <span>
+        الرقم الضريبي للعميل
+        :
+        @CustomerTaxNumber
+    </span>
+    <br />
+    <span>
+        جوال العميل
+        :
+        @CustomerPhoneNumber
+    </span>
+    <br />
+    <span>
+        email
+        :
+        @CustomerEmail
+    </span>
+
+</div>
+
+<div class="box">
+    @*@InvId*@
+    @InvCode
+</div>
+<br />
+<br />
+<br />
+<br />
+<div class="boxNote">
+    ملاحظات
+    :
+    @Note
+</div>
+<table class="tblitem" dir="rtl" style=" margin-right: 15px; width: 100%">
+    <thead style="color:#ffffff">
+        <tr>
+            <th width="30%">الصنف/المادة </th>
+            <th>الكمية</th>
+            <th>وحدة القياس</th>
+            <th>سعر الوحدة بدون ضريبة </th>
+            <th>الاجمالي بدون ضريبة</th>
+            <th>vat 15% ضريبة</th>
+            <th>الصافي</th>
+        </tr>
+    </thead>
+    @if (Data != null)
+    {
+        foreach (DataRow item in Data.Rows)
+        {
+
+            decimal TotalRow = Convert.ToDecimal(item["TOTAL"].ToString());
+            Decimal TotalwithoutVat = Convert.ToDecimal(item["TOTALWithoutVat"].ToString());
+            Decimal VAT_Total = Convert.ToDecimal(item["VAT_Total"].ToString());
+            Decimal totalPrice = Convert.ToDecimal(item["PRICE"].ToString());
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">
+                    @item["InvItemNameL1"]
+                    <br />
+                </td>
+                <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                    @item["QTY"]
+                </td>
+                <td style="text-align:center; vertical-align: middle; ">
+                    @item["UnitName"]
+
+                </td>
+
+                <td style="text-align:center; vertical-align: middle; ">
+                    @Math.Round(Convert.ToDecimal(item["PRICE"].ToString()), 2, MidpointRounding.ToEven)
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    @Math.Round(Convert.ToDecimal(item["TotalWithoutVat"].ToString()), 2, MidpointRounding.ToEven)
+
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    @Math.Round(Convert.ToDecimal(item["Vat_TOTAL"]), 2, MidpointRounding.ToEven)
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+
+                    @Math.Round(Convert.ToDecimal(item["TOTAL"]), 2, MidpointRounding.ToEven)
+
+                </td>
+
+            </tr>
+
+
+            Total = Total + TotalRow;
+            Total_WithoutVat = Total_WithoutVat + TotalwithoutVat;
+            VatTotal = VAT_Total + VatTotal;
+            Total_Price = Total_Price + totalPrice;
+        }
+    }
+
+    <tr class="total">
+        <td style="text-align: center;font:bold; vertical-align: middle;">
+            الاجمالي :
+            <br />
+        </td>
+        <td style="text-align: center; vertical-align: middle;padding-right:20px">
+        </td>
+
+        <td style="text-align: center; vertical-align: middle;">
+        </td>
+
+        <td style="text-align:center;vertical-align: middle;">
+            @Math.Round(Total_Price, 2, MidpointRounding.ToEven)
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+            @Math.Round(Total_WithoutVat, 2, MidpointRounding.ToEven)
+
+        </td>
+
+        <td style="text-align: center; vertical-align: middle;">
+            @Math.Round(VatTotal, 2, MidpointRounding.ToEven)
+
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+            @Math.Round(Total, 2, MidpointRounding.ToEven)
+
+        </td>
+    </tr>
+</table>
+<div class="divider">
+    <hr width="97%" />
+</div>
+<div>
+    <table dir="rtl" style="border:1px solid #000000;width:30%;line-height:20px;float:right;margin-right:20px">
+        <thead>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="newcolor">اجمالي المبلغ بدون ضريبة</td>
+                <td>
+                    @Math.Round(Total_WithoutVat, 2, MidpointRounding.ToEven)
+                </td>
+            </tr>
+            <tr>
+                <td class="newcolor">اجمالي ضريبة القيمة المضافة %15</td>
+                <td>
+                    @Math.Round(VatTotal, 2, MidpointRounding.ToEven)
+                </td>
+            </tr>
+            <tr>
+                <td class="newcolor">صافي الفاتورة</td>
+                <td>
+                    @Math.Round(Total, 2, MidpointRounding.ToEven)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div style="float:left">
+    <img id="qr" src="@Url.Content(ViewBag.ImgPath)" />
+</div>
+@for (int i = 0; i < 7; i++)
+{
+    <br />
+}
+<div style="float:right;font-size:18px;font-weight:bold">
+    الصافي
+    :
+    @Tafkeet
+</div>
+<div class="divider">
+    <hr width="97%" />
+</div>
+<div class="vl"></div>

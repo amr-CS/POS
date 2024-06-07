@@ -1,0 +1,459 @@
+﻿
+
+@using System.Data;
+
+@{
+
+    // Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
+    Layout = null;
+    DataTable Data = ViewBag.vDT;
+    string InvId = "";
+    string InvCode = "";
+    string Store = "";
+    string Customer = "";
+    string CustomerCode = "";
+    string CustomerVatCode = "";
+    string InvRef = "";
+    string InvRefDate = "";
+    if (Data != null)
+    {
+        DataRow DRow = Data.Rows[0];
+        ViewBag.Title = DRow["InvType"];
+        InvId = DRow["InvId"].ToString();
+        InvCode = DRow["InvCode"].ToString();
+        Store = DRow["StoreNameL1"].ToString();
+        Customer = DRow["CustomerNameL1"].ToString();
+        CustomerCode = DRow["CustomerCode"].ToString();
+        CustomerVatCode = DRow["CustomerVatCode"].ToString();
+        InvRef = DRow["InvRef"].ToString();
+        InvRefDate = DRow["InvRefDate"].ToString();
+    }
+    decimal Total = 0;
+    decimal TotalSales = 0;
+    decimal TotalVatTotal = 0;
+}
+@{
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    string username = ticket.Name;
+    string Img = string.Empty;
+    if (Request.Cookies["Img"] != null)
+    { Img = Request.Cookies["Img"].Value; };
+    string CompanyName = string.Empty;
+    if (Request.Cookies["CompanyName"] != null)
+    { CompanyName = Request.Cookies["CompanyName"].Value; };
+
+    string BranchName = string.Empty;
+    if (Request.Cookies["BranchName"] != null)
+    { BranchName = Request.Cookies["BranchName"].Value; };
+
+    string BranchPhone = string.Empty;
+    if (Request.Cookies["BranchPhone"] != null)
+    { BranchPhone = Request.Cookies["BranchPhone"].Value; };
+}
+<title>@ViewBag.Title</title>
+<!--jquery -->
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/githack.js"></script>
+<script src="~/Scripts/script.js"></script>
+<link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+
+<style>
+
+    .newcolor {
+        background-color: #3d3939;
+        color: #ffffff;
+    }
+
+    .tblitem, th, td {
+        border-top: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 0.2px solid black;
+    }
+
+    th {
+        background-color: #0ca0e4;
+    }
+
+    .total {
+        background-color: #e1e1e1;
+    }
+
+    img {
+        font-size: 0;
+        line-height: 0;
+        position: absolute;
+        top: 10%;
+        left: 40%;
+        display: block;
+        width: 140px;
+        height: 80px;
+        padding: 0;
+        -webkit-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        cursor: pointer;
+        color: #000000;
+        border: none;
+        outline: none;
+        background: #000000;
+    }
+
+    .divRptTemplate {
+        background-color: #FFF;
+        padding: 1rem;
+        border: 1px solid #e1e1e1;
+    }
+
+    .divRptData {
+        padding: 1rem;
+    }
+
+    .divRptSchoolImage {
+        height: 100px;
+        width: 100px;
+    }
+
+    .divRptSchoolName {
+        margin-top: 37px;
+        font-size: 20px !important;
+    }
+
+    .divRptTitle {
+        font-size: 17px !important;
+        font-weight: 600;
+        padding-right: 2rem;
+        padding-left: 2rem;
+        text-align: center;
+    }
+
+    /*** Print Style ***/
+    @@media print {
+        .navbar {
+            display: none;
+        }
+
+        #sidebar-wrapper {
+            display: none;
+        }
+
+        .divViewHeader {
+            display: none;
+        }
+
+        #container {
+            display: none;
+        }
+
+        .divRptFooter {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .btnRptPrint {
+            display: none;
+        }
+
+        .divReportOptions {
+            display: none;
+        }
+
+        .divCompanyHeader {
+            display: none;
+        }
+
+        #chartCanvas {
+            width: 50% !important;
+            height: 50% !important;
+        }
+    }
+
+    .divleft {
+        float: left !important;
+        /* padding-left: 10rem;*/
+        text-align: center;
+        width: 40%;
+    }
+
+    .divRight {
+        /* width: 45%;
+            display: inline-block;*/
+        float: right !important;
+        /* padding-right: 20rem;*/
+        text-align: center;
+        width: 40%;
+    }
+
+    @@page {
+        size: auto;
+        margin: 5mm 5mm 5mm 5mm;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="d-flex p-2">
+        <div class="w-100">
+
+        </div>
+        <div class="flex-shrink-1">
+            <button class="btn btn-sm btn-success btnRptPrint">
+                طباعة
+                <span class="mx-2">
+                    <i class="fa fa-print"></i>
+                </span>
+            </button>
+            <button class="btn btn-sm btn-success btnPrintPDF" onclick="generatePDF()">
+                <span class="mx-2">
+                    <i class="fa fa-download"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Report Template -->
+<div id="invoice">
+    <div class="container-fluid">
+
+        <!-- Report Template Body -->
+        <div class="divRptTemplate">
+
+            <!-- School Data -->
+            <div class="divRptData d-flex">
+                <div class="divleft">
+                    <span> @CompanyName</span>
+                    <br />
+                    <span> @ViewBag.CompanyBranchNameL1</span>
+                    <br />
+                    <span>
+                        الجوال
+                        :
+                    </span>
+                    <br />
+                    <span>
+                        @BranchPhone
+                    </span>
+                </div>
+
+                <div class="divRight">
+                    <span> @CompanyName</span>
+                    <br />
+                    <span> @ViewBag.CompanyBranchNameL1</span>
+                    <br />
+                    <span>
+                        الجوال
+                        :
+
+                    </span>
+                    <br />
+                    <span>
+                        @BranchPhone
+                    </span>
+
+                </div>
+                <div class="divRptSchoolImage mx-2">
+                    <img src="@Img" width="100" />
+                </div>
+
+            </div> <!-- End of School Data -->
+            <!-- Divder -->
+            <div class="divider">
+                <hr width="97%" />
+            </div>
+            <!-- Report Title -->
+            <div class="divRptTitle my-3">
+                @ViewBag.ReportName
+                -
+                اجل
+
+                <br />
+
+            </div>
+
+            <!-- Divder -->
+            <div class="divider">
+                <hr width="97%" />
+            </div>
+
+            <table style="border:0px;width:100%" dir="rtl">
+                <tbody>
+                    <tr>
+                        <td style="border:0px">رقم الفاتورة</td>
+                        <td style="border:0px">@InvCode</td>
+                        <td style="border:0px">تاريخ الفاتورة</td>
+                        <td style="border:0px">
+                            @ViewBag.DateFrom
+                        </td>
+                        <td style="border:0px">المخزن</td>
+                        <td style="border:0px">@Store</td>
+                        <td style="border:0px"> رقم المورد</td>
+                        <td style="border:0px">@CustomerCode</td>
+                        <td style="border:0px">المورد</td>
+                        <td style="border:0px">@Customer</td>      
+                        <td style="border:0px">الرقم الضريبي للمورد</td>
+                        <td style="border:0px">@CustomerVatCode</td>
+                        <td style="border:0px">رقم المرجع</td>
+                        <td style="border:0px">
+                            @InvRef
+                        </td>
+                        <td style="border:0px">تاريخ المرجع</td>
+                        <td style="border:0px">
+                            @InvRefDate
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+                <thead style="">
+                    <tr>
+                        <th>رقم الصنف </th>
+                        <th width="30%">اسم الصنف</th>
+                        <th>الوحدة </th>
+
+                        <th>الكمية</th>
+                        <th>السعر </th>
+                        <th>
+                            الضريبة
+                            15%
+                        </th>
+                        <th>المبلغ </th>
+
+
+                    </tr>
+                </thead>
+                @if (Data != null)
+                {
+                    foreach (DataRow item in Data.Rows)
+                    {
+
+                        decimal TotalRow = Convert.ToDecimal(item["ItemQty"].ToString()) *
+                                  Convert.ToDecimal(item["ItemPrice"].ToString());
+                        /*decimal TotalVatRow = Convert.ToDecimal(item["ItemQty"].ToString()) * Convert.ToDecimal(item["VatAMT"].ToString());*/
+
+                        var vatamt = (Convert.ToDecimal(item["ItemPrice"].ToString()) * Convert.ToDecimal(0.15))  ;
+                        var totalvat = vatamt * Convert.ToDecimal(item["ItemQty"].ToString());
+                        decimal TotalVatRow = totalvat;
+                        decimal TotalPrice = TotalVatRow + TotalRow;
+                        <tr>
+                            <td style="text-align: center; vertical-align: middle;">
+                                @item["ItemId"]
+                                <br />
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                                @item["InvItemNameL1"]
+                            </td>
+                            <td style="text-align:center; vertical-align: middle; ">
+                                @item["LookupDtlDesc"]
+
+                            </td>
+                            <td style="text-align:center; vertical-align: middle; ">
+                                @item["ItemQty"]
+
+                            </td>
+
+
+
+
+                            <td style="text-align: center; vertical-align: middle;">
+                                @item["ItemPrice"]
+
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;">
+                                @Math.Round(TotalVatRow, 2, MidpointRounding.ToEven)
+
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;">
+                                @Math.Round(TotalRow, 2, MidpointRounding.ToEven)
+
+                            </td>
+
+
+                        </tr>
+
+                        Total = Total + TotalRow;
+                        TotalVatTotal = TotalVatTotal + TotalVatRow;
+                        TotalSales = Total + TotalVatTotal;
+                    }
+                }
+
+            </table>
+            <div>
+                <table dir="rtl" style="border:1px solid #000000;width:30%;line-height:20px;float:left;margin-right:20px">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="newcolor">اجمالي الفاتورة بدون ضريبة</td>
+                            <td>
+                                @Math.Round(Total, 2, MidpointRounding.ToEven)
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="newcolor">اجمالي ضريبة القيمة المضافة %15</td>
+                            <td>
+                                @Math.Round(TotalVatTotal, 2, MidpointRounding.ToEven)
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="newcolor">صافي الفاتورة</td>
+                            <td>
+                                @Math.Round(TotalSales, 2, MidpointRounding.ToEven)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Chart -->
+            <div class="divRptChart">
+                <div class="d-flex">
+                    <canvas id="chartCanvas" class="col-sm-12" style="font-family:Cairo !important;"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+    </div> <!-- End of Report Template -->
+
+</div> <!-- End of Container Fluid -->
+
+<div class="divRptFooter divViewFooter">
+
+    <table width="100%">
+        <tr>
+            <td width="33%">
+                التاريخ
+                :
+                @DateTime.Now.ToShortDateString()
+            </td>
+            <td width="33%">
+                الوقت
+                :
+                @DateTime.Now.ToShortTimeString()
+            </td>
+            <td width="33%">
+                المستخدم
+                :
+                @username
+            </td>
+        </tr>
+    </table>
+
+
+    <!-- Footer Content -->
+    <div class="row text-center">
+
+        <!--
+        <div class="divRptFooterUser">المستخدم</div>
+            User -->
+    </div> <!-- End of Footer Content -->
+
+</div> <!-- End of Footer -->

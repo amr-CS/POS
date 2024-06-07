@@ -1,0 +1,328 @@
+﻿@model appSERP.Models.SEC.UserModel
+@using appSERP.Views.Shared.appResource
+@{
+
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+
+
+@using (Html.BeginForm("DataModel", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <!-- Header -->
+    <div class="container-fluid">
+        @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.lblUser, pId = Model.UserId })
+    </div>
+   
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.UserId)
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserFullName, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.UserFullName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserCode, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.UserCode, new { htmlAttributes = new { @class = "form-control" }, @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.UserCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @*<div class="form-group">
+                @Html.LabelFor(model => model.UserAddress, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.UserAddress, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.UserAddress, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserPassword, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.PasswordFor(model => model.UserPassword, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.UserPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserPhone, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.UserPhone, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.UserPhone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserEmail, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.UserEmail, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.UserEmail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="m-3">
+                <div class="form-group mr-3">
+                    <div class="custom-control custom-checkbox col-md-12">
+                        @Html.EditorFor(model => model.IsUserLock, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck15" } })
+                        @Html.LabelFor(model => model.IsUserLock, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck15" })
+                    </div>
+                </div>
+            </div>
+            <div class="m-3">
+                <div class="custom-file col-md-12">
+                    <input type="file" class="custom-file-input form-control" id="customFile" name="pFile" accept="image/*" onchange="funShowImage(this)">
+                    <img id="imgData" width="100" src="@Model.UserImage" />
+                    @Html.HiddenFor(model => model.UserImage)
+                    @Html.LabelFor(model => model.UserImage, htmlAttributes: new { @class = "custom-file-label", @for = "customFile" })
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="m-3">
+                <div class="form-group mr-3">
+                    <div class="custom-control custom-checkbox col-md-12">
+                        @Html.EditorFor(model => model.UserIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck14" } })
+                        @Html.LabelFor(model => model.UserIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck14" })
+                    </div>
+                </div>
+            </div>
+            @*<div class="form-group">
+            @Html.LabelFor(model => model.UserTimeZoneId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectTimeZone" class="selectpicker form-control" name="UserTimeZoneId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.UserTimeZoneId, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+            <div class="m-3">
+                <div class="form-group mr-3">
+                    <div class="custom-control custom-checkbox col-md-12">
+                        @Html.EditorFor(model => model.UserTimeZoneIsDST, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck17" } })
+                        @Html.LabelFor(model => model.UserTimeZoneIsDST, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck17" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Printer, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.Printer, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Printer, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @*<div class="form-group">
+            @Html.LabelFor(model => model.SecurityGradeId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectSecurityGrade" class="selectpicker form-control" name="UserTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.SecurityGradeId, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+
+            @*<div class="form-group">
+            @Html.LabelFor(model => model.LanguageId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectLanguage" class="selectpicker form-control" name="LanguageId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+            @*<div class="form-group">
+            @Html.LabelFor(model => model.CountryId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectCountry" class="selectpicker form-control" name="CountryId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+
+            @*<div class="form-group">
+            @Html.LabelFor(model => model.FontSizeTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectFontSizeType" class="selectpicker form-control" name="FontSizeTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.FontSizeTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+            @*<div class="form-group">
+            @Html.LabelFor(model => model.UserTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectUserType" class="selectpicker form-control" name="UserTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.UserTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+        </div>
+    </div>
+</div>
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+
+    }
+
+
+
+    <script>
+
+        // Show Image [on Change]
+        function funShowImage(pElement) {
+            if (pElement.files && pElement.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#imgData').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(pElement.files[0]);
+            }
+        }
+
+    </script>
+    @* Select  List  *@
+    <script>
+    var vLanguageId = 0;
+    var vCountryId = 0;
+    var vUserTypeId = 0;
+    var vFontSizeTypeId = 0;
+    $(document).ready(function () {
+        // List Language
+        $.post('/Home/GetLanguage',
+            null,
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, Language) {
+                    $('#selectLanguage').append('<option data-id="' + Language.LanguageId + '" value="' + Language.LanguageId + '" sort-id="' + i + '">' + Language.LanguageNameL1 + '</option>')
+                    if (i == 0) {
+                        vLanguageId = Language.LanguageId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcLanguageId') > 0) {
+                vLanguageId = parseInt('@ViewBag.vbcLanguageId');
+            }
+            $('#selectLanguage').val(vLanguageId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+            }
+        )
+
+    // List Country
+    $.post('/Home/GetCountry',
+            null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Country) {
+                $('#selectCountry').append('<option data-id="' + Country.CountryId + '" value="' + Country.CountryId + '" sort-id="' + i + '">' + Country.CountryNameL1 + '</option>')
+                if (i == 0) {
+                    vCountryId = Country.CountryId;
+                }
+            })
+            if (parseInt('@ViewBag.vbcCountryId') > 0) {
+                vCountryId = parseInt('@ViewBag.vbcCountryId');
+            }
+            $('#selectCountry').val(vCountryId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+        )
+
+        // List UserType
+        $.post('/Home/GetUserType',
+                null,
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, UserType) {
+                    $('#selectUserType').append('<option data-id="' + UserType.UserTypeId + '" value="' + UserType.UserTypeId + '" sort-id="' + i + '">' + UserType.UserTypeNameL1 + '</option>')
+                    if (i == 0) {
+                        vUserTypeId = UserType.UserTypeId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcUserTypeId') > 0) {
+                vUserTypeId = parseInt('@ViewBag.vbcUserTypeId');
+            }
+            $('#selectUserType').val(vUserTypeId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+            }
+        )
+
+        // List Font Size
+        $.post('/Home/GetFontSize',
+         null,
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, FontSizeType) {
+                    $('#selectFontSizeType').append('<option data-id="' + FontSizeType.FontSizeTypeId + '" value="' + FontSizeType.FontSizeTypeId + '" sort-id="' + i + '">' + FontSizeType.FontSizeTypeNameL1 + '</option>')
+                    if (i == 0) {
+                        vFontSizeTypeId = FontSizeType.FontSizeTypeId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcFontSizeTypeId') > 0) {
+                vFontSizeTypeId = parseInt('@ViewBag.vbcFontSizeTypeId');
+            }
+            $('#selectFontSizeType').val(vFontSizeTypeId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+            }
+        )
+
+              // List Font Size
+        $.post('/Home/GetSecurityGrade',
+         null,
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, SecurityGrade) {
+                    $('#selectSecurityGrade').append('<option data-id="' + SecurityGrade.SecurityGradeId + '" value="' + SecurityGrade.SecurityGradeId + '" sort-id="' + i + '">' + SecurityGrade.SecurityGradeNameL1 + '</option>')
+                    if (i == 0) {
+                        vSecurityGradeId = SecurityGrade.SecurityGradeId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcSecurityGradeId') > 0) {
+                vSecurityGradeId = parseInt('@ViewBag.vbcSecurityGradeId');
+            }
+            $('#selectSecurityGrade').val(vSecurityGradeId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+            }
+        )
+
+
+
+              // List TimeZone
+        $.post('/Home/GetTimeZone',
+            null,
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, TimeZone) {
+                    $('#selectTimeZone').append('<option data-id="' + TimeZone.TimeZoneId + '" value="' + TimeZone.TimeZoneId + '" sort-id="' + i + '">' + TimeZone.TimeZoneName + '</option>')
+                    if (i == 0) {
+                        vTimeZoneId = TimeZone.TimeZoneId;
+                    }
+                })
+                if (parseInt('@ViewBag.vbcTimeZoneId') > 0) {
+                vTimeZoneId = parseInt('@ViewBag.vbcTimeZoneId');
+            }
+            $('#selectTimeZone').val(vTimeZoneId);
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+            }
+        )
+    });
+    </script>

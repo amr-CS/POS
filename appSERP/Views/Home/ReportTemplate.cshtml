@@ -1,0 +1,201 @@
+﻿
+
+@{
+    Layout = null;
+}
+
+<style>
+    .divRptTemplate {
+        background-color: #FFF;
+        padding: 1rem;
+        border: 1px solid #e1e1e1;
+    }
+
+    .divRptSchoolData {
+        padding: 1rem;
+    }
+
+    .divRptSchoolImage {
+        height: 100px;
+        width: 100px;
+    }
+
+    .divRptSchoolName {
+        margin-top: 37px;
+        font-size: 20px !important;
+    }
+
+    .divRptTitle {
+        font-size: 17px !important;
+        font-weight: 600;
+        padding-right: 2rem;
+        padding-left: 2rem;
+        text-align: center;
+    }
+
+
+
+    /*** Print Style ***/
+    @@media print {
+        .navbar {
+            display: none;
+        }
+
+        #sidebar-wrapper {
+            display: none;
+        }
+
+        .divViewHeader {
+            display: none;
+        }
+
+        #container {
+            display: none;
+        }
+
+        .divRptFooter {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .btnRptPrint {
+            display: none;
+        }
+
+        .divReportOptions {
+            display: none;
+        }
+
+        .divCompanyHeader {
+            display: none;
+        }
+
+        #chartCanvas {
+            width: 50% !important;
+            height: 50% !important;
+        }
+    }
+
+    @@page {
+        size: auto;
+        margin: 5mm 5mm 5mm 5mm;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="d-flex p-2">
+        <div class="w-100">
+
+        </div>
+        <div class="flex-shrink-1">
+            <button class="btn btn-sm btn-success btnRptPrint">
+                طباعة
+                <span class="mx-2">
+                    <i class="fa fa-print"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Report Template -->
+<div class="container-fluid">
+
+    <!-- Report Template Body -->
+    <div class="divRptTemplate">
+
+        <!-- School Data -->
+        <div class="divRptSchoolData d-flex">
+
+            <div class="divRptSchoolImage mx-2">
+                <img src="clsSchool.vSchoolImage" width="100" />
+            </div>
+
+            <div class="divRptSchoolName mx-2">
+              اسم الشركة
+            </div>
+
+
+        </div> <!-- End of School Data -->
+        <!-- Divder -->
+        <div class="divider">
+            <hr width="97%" />
+        </div>
+
+
+        <!-- Report Title -->
+        <div class="divRptTitle my-3">
+
+        </div>
+
+        <!-- Divder -->
+        <div class="divider">
+            <hr width="97%" />
+        </div>
+
+        <!-- Data -->
+        <div class="divRptData w-100">
+
+            <table class="table w-100 tblRpt">
+
+                <thead>
+
+                    <tr class="tblReportHead">
+                    </tr>
+
+                </thead>
+                <tbody class="tblReportData">
+                </tbody>
+
+            </table>
+
+            <!-- Chart -->
+            <div class="divRptChart">
+                <div class="d-flex">
+                    <canvas id="chartCanvas" class="col-sm-12" style="font-family:Cairo !important;"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+    </div> <!-- End of Report Template -->
+
+</div> <!-- End of Container Fluid -->
+<!-- Footer -->
+<div class="divRptFooter divViewFooter">
+
+    <table width="100%">
+        <tr>
+            <td width="33%">التاريخ</td>
+            <td width="33%">الوقت</td>
+            <td width="33%">المستخدم</td>
+        </tr>
+    </table>
+
+
+    <!-- Footer Content -->
+    <div class="row text-center">
+
+        <!-- User -->
+        <div class="divRptFooterUser">المستخدم</div>
+
+    </div> <!-- End of Footer Content -->
+
+</div> <!-- End of Footer -->
+<!-- Print -->
+<script>
+
+    // Click On Print
+    $('.btnRptPrint').on('click', function () {
+        // Print
+        funPrint();
+    })
+
+    // Print
+    function funPrint() {
+        // Print window [Print Style Applied]
+        window.print();
+    }
+</script>

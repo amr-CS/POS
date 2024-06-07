@@ -1,0 +1,111 @@
+﻿@using appSERP.Views.Shared.appResource;
+@{
+    Layout = null;
+}
+<!doctype html>
+<html dir="@(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft? "rtl" : "ltr")">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+    <!-- Include Libraries - Style -->
+    @if (System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft)
+    {
+        <!-- Right to Left -->
+        @Styles.Render("~/Content/css_rtl")
+    }
+    else
+    {
+        <!-- Right to  -->
+        @Styles.Render("~/Content/css_ltr")
+    }
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+    <!-- Include Control Style -->
+    <link href="~/Content/ControlStyle/controlStyle.css" rel="stylesheet" />
+
+    <!--SELECT LIST -->
+    <link href="~/Content/List/bootstrap-select.css" rel="stylesheet" />
+    <!-- DataTable -->
+    <link href="~/Content/DataTable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/Content/Notification/jquery.toast.css" rel="stylesheet" />
+    <!--jquery -->
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <!--jsModalCheckInput -->
+    <script src="~/Scripts/ModalValidation/jsModalCheckInput.js"></script>
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Include Control Style -->
+    <link href="~/Content/ControlStyle/controlStyle.css" rel="stylesheet" />
+
+
+    <style>
+        html, body {
+            width: 100vw !important;
+        }
+    </style>
+</head>
+<body class="w-100">
+
+    @if (!Request.IsAjaxRequest())
+    {
+        <!-- Navbar -->
+        @Html.Partial("~/Views/Shared/NavbarPartial/NavbarPartial.cshtml")
+    }
+
+    <div class="appMainContent">
+
+        <!-- Side Bar -->
+        <div class="appSideBar">
+            @Html.Action("ViewSettingSideBar", "ViewSetting")
+
+        </div>
+
+        <!-- App Body - Dynamic Content -->
+        <div class="appBodyContent">
+            <div class="divViewContent">
+                <!-- Dynamic Content -->
+                @RenderBody()
+            </div>
+        </div>
+
+    </div>
+    <!-- Main Scripts -->
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <!--SELECT LIST -->
+    <script src="~/Scripts/List/bootstrap-select.js"></script>
+    <script src="~/Scripts/List/defaults-ar.js"></script>
+
+    @RenderSection("scripts", required: false)
+
+    <!-- DataTable Scripts Include -->
+    <script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/DataTable/dataTables.bootstrap4.min.js"></script>
+    <script src="../../Scripts/Notification/jsNotifications.js"></script>
+    <script src="~/Scripts/Notification/jquery.toast.js"></script>
+
+    <script src="~/Scripts/appScript/jsAppScript.js"></script>
+    <script src="~/Scripts/file-explore.js"></script>
+    <script>
+    // DataTable Initiate
+    $(document).ready(function () {
+        funDataTableInit('@appResource.dtSearch', '@appResource.dtDisplay', '@appResource.dtTo', '@appResource.dtFrom', '@appResource.dtTotal', '@appResource.dtRecord'
+            , '@appResource.dtRecord', '@appResource.dtShowing', '@appResource.dtNoData', '@appResource.dtFilteredFrom', '@appResource.dtDisplay'
+            , '@appResource.dtFirst','@appResource.dtPrevious','@appResource.dtNext','@appResource.dtLast');
+    });
+    </script> <!-- End of DataTable Configuration -->
+    <!-- AutoComplete Off -->
+    <script>
+        $(document).ready(function () {
+            $("input:text").attr("autocomplete", "off");
+        })
+    </script>
+
+</body>
+
+</html>

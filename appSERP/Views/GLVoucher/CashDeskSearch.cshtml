@@ -1,0 +1,184 @@
+﻿
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "CashDeskSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divCashDesk {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divCashDeskSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divCashDeskSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divCashDeskNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource.lblCashDesk</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divCashDesk">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyCashDesk"></tbody>
+    </table>
+
+</div>
+
+
+<!-- CashDesk GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // CashDesk GET
+        funCashDeskGET();
+    })
+
+    // CashDesk GET
+    function funCashDeskGET() {
+
+        $.get('/api/APICashDesk/CashDeskGET',
+            {
+                pIsAccountDetail: true,
+                pQueryTypeId: '@clsQueryType.qSelect',
+                
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyCashDesk');
+
+                console.log(vDataResult)
+                // CashDesks
+                $.each(vDataResult, function (i, CashDeskData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].CashDeskId + '">';
+
+                    var vCashDeskName = vDataResult[i].CashDeskNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCashDeskName = vDataResult[i].CashDeskNameL2;
+                    }
+                    console.log(vDataResult[i].AccountIsCostCenter)
+                    vRowContent += '<td data-id="' + vDataResult[i].CashDeskId + '">';
+                    vRowContent += '<div class="divCashDeskSelect d-flex p-2" data-id="' + vDataResult[i].CashDeskId + '">';
+                    vRowContent += '<div class="divCashDeskId d-none px-4">' + vDataResult[i].CashDeskId + '</div>';
+                    vRowContent += '<div class="divCashDeskCode px-4">' + vDataResult[i].CashDeskCode + '</div>';
+                    vRowContent += '<div class="divAccountId px-4 d-none">' + vDataResult[i].AccountId + '</div>';
+                    vRowContent += '<div class="divAccountIsCostCenter px-4 d-none">' + vDataResult[i].IsCostCenter + '</div>';
+                    vRowContent += '<div class="divAccountNo px-4 d-none">' + vDataResult[i].AccountNo + '</div>';
+                    vRowContent += '<div class="divAccountName px-4 d-none">' + vDataResult[i].AccountNameL1 + '</div>';
+                    vRowContent += '<div class="divCurrencyId px-4 d-none">' + vDataResult[i].CurrencyId + '</div>';
+                    vRowContent += '<div class="divCurrencyName px-4 d-none">' + vDataResult[i].CurrencyNameL1 + '</div>';
+                    vRowContent += '<div class="divCurrencyFactorValue px-4 d-none">' + vDataResult[i].CurrencyExchange + '</div>';
+                    vRowContent += '<div class="divCashDeskName px-4">' + vCashDeskName + '</div>';
+                    vRowContent += '<div class="divCostCenterId d-none px-4">' + vDataResult[i].CostCenterId + '</div>';
+                    vRowContent += '<div class="divCostCenterName d-none px-4">' + vDataResult[i].CostCenterNameL1 + '</div>';
+                    vRowContent += '<div class="divCostCenterCode d-none px-4">' + vDataResult[i].CostCenterCode + '</div>';
+
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+
+
+
+
+    }
+
+</script>
+
+<!-- Search CashDesk -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divCashDeskSelect').each(function () {
+
+                // Get CashDesk Code
+                var vCashDeskCode = $(this).find('.divCashDeskId').text();
+                var vCashDeskName = $(this).find('.divCashDeskName').text();
+
+                // Check Result
+                if (vCashDeskCode.search(vSearchInput) != -1 || vCashDeskName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+            $('.divCashDeskSelect').each(function () {
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+             
+
+            })
+
+        }
+    })
+</script>

@@ -1,0 +1,335 @@
+﻿@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+<style>
+    .btnCalc1 input {
+        width: 160px;
+        height: 140px;
+        border-radius: 0rem !important;
+        border-color: #fff;
+        font-size: 20px;
+    }
+
+    .clsImgCur img {
+        width: 195px;
+        height: 80px;
+    }
+</style>
+<div>
+    <div class="row">
+        <div class="col-sm-5 ">
+            <div class="row p-2 bg-warning ml-0">
+                <div class="col-sm-3">
+                    <label class="small"><h3>نقدا</h3></label>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" id="txtCashM" class="form-control form-control-lg txtCashM  focus focus1" changed="0" onchange="this.value = minmax(this.value, 0.00,9999999999 )" value="0.00" autocomplete="off" />
+                </div>
+                <div class="col-sm-3">
+                    <label class="small"><h2>ريال</h2></label>
+                </div>
+            </div>
+            <div class="row p-2 bg-warning ml-0">
+                <div class="col-sm-3 ">
+
+                    <label class="small"><h3>النقاط</h3></label>
+                </div>
+                <div class="col-sm-6 d-flex">
+                    <div class=" flex-shrink-1">
+                        <input type="text" id="txtPointsM" class="form-control form-control-lg txtPointsM " changed="0" onkeyup="this.value = minmax(this.value, 0.00,9999999999 )" value="0.00" autocomplete="off" />
+                    </div>
+                    <div class=" w-100">
+                        <input type="text" id="txtPoints" class="form-control form-control-lg txtPoints " changed="0" value="0.00" autocomplete="off" disabled />
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <label class="small"><h2>ريال</h2></label>
+                </div>
+            </div>
+            @*<div class="row mt-5 ml-0">
+                    <select id="Driver" class="DriverId form-control " name="Driver" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required></select>
+                </div>*@
+            <div class="row mt-4 ml-0 bg-warning">
+                <table class="table table-bordered">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td><label class="small"><b><h4>المطلوب</h4></b></label></td>
+                            <td> <h1><label class="small txtReqM">00.00</label></h1></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                        <tr>
+                            <td></td>
+                            <td><label class="small"> <b><h4>نوع الخصم</h4></b></label></td>
+                            <td>
+                                <div>
+                                    <select class="SelectDisc" @ViewBag.Discount>
+                                        <option value="2">نسبة</option>
+                                        <option value="1">قيمة</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label class="small"> <b><h4>قيمة الخصم</h4></b></label></td>
+                            <td>
+                                <input type="text" class="form-control form-control-lg txtDiscountM" value="0.00" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label class="small"> <b><h4>بعد الخصم</h4></b></label></td>
+                            <td><h1><label class="small  txtAfterDisM"><b>00.00</b></label></h1></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label class="small"> <b><h4>المدفوع</h4></b></label></td>
+                            <td><h1><label class="small  txtCashTotalM"><b>00.00</b></label></h1></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label class="small"> <b><h4>الباقي</h4></b></label></td>
+                            <td><h1><label class="small  txtRemain"><b>00.00</b></label></h1></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row ml-0 pb-2">
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="submit" class="btn btn-lg btn-success btnOK" id="btnOK" value="موافق" />
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="button" class="btn btn-lg btn-danger btnExist" data-dismiss="modal" value="   خروج    " />
+                    </div>
+                    <div class="">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-7 alert-info">
+            <div class="btnCalc1">
+                <div class="">
+
+                    <div class="row ">
+                        <div><input type="button" class="btn btn-lg btn-info  button" value="1" /></div>
+                        <div><input type="button" class="btn btn-lg btn-info button" value="2" /></div>
+                        <div><input type="button" class="btn btn-lg btn-info button" value="3" /></div>
+                    </div>
+                    <div class="row">
+                        <div><input type="button" class="btn btn-lg btn-info button" value="4" /></div>
+                        <div><input type="button" class="btn btn-lg btn-info button" value="5" /></div>
+                        <div><input type="button" class="btn btn-lg btn-info button" value="6" /></div>
+                    </div>
+                    <div class="row">
+                        <div><input type="button" class="btn btn-lg btn-info button" value="7" /></div>
+                        <div><input type="button" class="btn btn-lg btn-info button" value="8" /></div>
+                        <div><input type="button" class="btn btn-lg btn-info button" value="9" /></div>
+                    </div>
+                    <div class="row">
+                        <div><input type="button" class="btn btn-lg btn-info button" value="0" /></div>
+                        <div><input type="button" class="btn btn-lg btn-info button" value="." /></div>
+                        <div><input type="button" class="btn btn-lg btn-info button" value="C" /></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="row clsImgCur ">
+            <div class="col-sm-3">
+                <img src="~/Image/Currency/50.png" value="50.00" />
+                <img src="~/Image/Currency/1.jpg" value="1.00" />
+            </div>
+            <div class="col-sm-3">
+                <img src="~/Image/Currency/100.png" value="100.00" />
+                <img src="~/Image/Currency/5.png" value="5.00" />
+            </div>
+            <div class="col-sm-3">
+                <img src="~/Image/Currency/200-1.jpg" value="200.00" />
+                <img src="~/Image/Currency/10.jpg" value="10.00" />
+            </div>
+            <div class="col-sm-3">
+                <img src="~/Image/Currency/500.jpg" value="500.00" />
+                <img src="~/Image/Currency/20f.jpg" value="20.00" />
+            </div>
+        </div>*@
+</div>
+<script>
+
+    if (IsDiscount!='') {
+        $('.txtDiscountM').prop('disabled', 'true');
+        $('.SelectDisc').prop('disabled', 'true');
+    } else {
+        /*$('.txtDiscountM').prop('disabled', 'false');
+        $('.SelectDisc').prop('disabled', 'false');*/
+    }
+    var vDriverId = 0
+
+
+    // Numbers CalCulator
+    $(document).ready(function () {
+        var currentEntry = '0';
+        $('.button').on('click', function () {
+            var buttonPressed = $(this).val();
+            console.log(buttonPressed)
+            if (buttonPressed === "C") {
+                currentEntry = '0';
+            } else if (buttonPressed === '.') {
+                currentEntry += '.';
+            } else if (isNumber(buttonPressed)) {
+                if (currentEntry === '0') currentEntry = buttonPressed;
+                else currentEntry = currentEntry + buttonPressed;
+            }
+            var Changed = $('.txtCashM').attr('changed');
+            if (Changed == '1') {
+                $('.focus1').val('')
+            }
+            updateScreen(currentEntry);
+            $('.txtCashM').attr('changed', '0')
+        })
+    })
+
+    updateScreen = function (displayValue) {
+        var displayValue = displayValue.toString();
+        console.log("displayValue")
+        $('.txtCashM').val(displayValue.substring(0, 10));
+    };
+
+
+    isNumber = function (value) {
+        return !isNaN(value);
+    }
+
+    $(":input").select(function () {
+        $(this).attr('changed', '1')
+    });
+
+
+
+    $('img').on('click', function () {
+        var value = $(this).attr('value')
+        $('.txtCashM').val(value)
+    })
+
+
+    $('body').on('focus', ':input[type=text]', function () {
+        $(':input').removeClass('focus1')
+        $(this).addClass('focus1')
+    })
+
+
+    funLabels()
+
+    function funLabels() {
+        var Required = $('.txtVouchTotal').text();
+        var Points = $('.clsPoint').attr('data-id');
+        $('.txtReqM').text(Required);
+        $('.txtCashM').val(Required);
+        //$('.txtCashTotalM').text(Required);
+        $('.txtPoints').val(Points);
+        $('.txtPoints').attr('data-value',0);
+    }
+
+    $('body').on('focus', '.btnExist', function () {
+        $('#AccountDataModal').modal('hide');
+    })
+
+    // Check For Points
+    var checked = false;
+    $('body').on('click', '#chkPoints', function () {
+        if ($(this).prop("checked") == true) {
+            checked = true;
+        } else {
+            checked = false;
+        }
+    })
+
+
+    $('.txtDiscountM,.SelectDisc').on('change keyup', function () {
+       /*var Dis = $('.txtDiscountM').val()
+        var Req = $('.txtReqM').text()
+        var TotaL = Req - Dis;
+        $('.txtAfterDisM').text(TotaL.toFixed(2))*/
+
+        GetDiscount()
+
+        // Total
+        GetTotal()
+
+
+
+    });
+    $('.txtDiscountM').on('click', function () {
+      $(this).select();
+
+
+    });
+
+    function GetDiscount() {
+        var Dis = $('.txtDiscountM').val()
+        var vat=1.15;
+     var value=parseFloat($('.txtReqM').text() )-parseFloat($('.txtInsurance').text() )
+    var Req=value
+
+       // var Req =value- withoutvat
+
+            var SelectDisc = $('.SelectDisc').val()
+            var TotaL = 0
+            var discount = 0
+            if (SelectDisc == '1') {
+                discount = Dis
+                TotaL = Req - Dis;
+
+                var DiscVal = ((Dis / Req) * 100).toFixed(2)
+                if (parseFloat('@ViewBag.DiscountMax') < DiscVal) {
+                    //funNotification('لا يمكن تجاوز نسبة الخصم المتاحة', 3)
+                    //$('.btnOK').prop('disabled', true);
+                } else {
+                    $('.btnOK').prop('disabled', false);
+                }
+            } else if (SelectDisc == '2') {
+                discount = ((Req * Dis) / 100);
+                TotaL = value- discount
+
+                if (parseFloat('@ViewBag.DiscountMax') < Dis) {
+                   // funNotification('لا يمكن تجاوز نسبة الخصم المتاحة', 3)
+                   // $('.btnOK').prop('disabled', true);
+                } else {
+                    $('.btnOK').prop('disabled', false);
+
+
+                }
+
+            }
+
+            $('.txtAfterDisM').attr('discount', discount)
+            $('.txtAfterDisM').text(TotaL.toFixed(2))
+            // $('.txtCashM ').val(TotaL.toFixed(2))
+            //$('.txtCashTotalM ').text(TotaL.toFixed(2))
+            // $('.txtReqM ').text(TotaL.toFixed(2))
+
+
+    }
+
+    function GetTotal() {
+        //Value
+        var AfterDiscount = $('.txtAfterDisM').text()
+        var Cash = $('.txtCashTotalM').text()
+        var Cashm = $('.txtCashM').val()
+       var total = (Cashm - AfterDiscount).toFixed(2)
+       $('.txtRemain').text(total) }
+    $(document).ready(function () {
+        $("#txtCashM").focus();
+    });
+</script>

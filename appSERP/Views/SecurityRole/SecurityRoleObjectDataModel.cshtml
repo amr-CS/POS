@@ -1,0 +1,128 @@
+﻿@model appSERP.Models.SEC.SecurityRoleModel
+@using appSERP.Views.Shared.appResource
+
+@{
+    ViewBag.Title = "SecurityRoleObjectDataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.HiddenFor(model => model.SecurityRoleId, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.SecurityRoleId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+
+
+    <div class="form-group">
+        @Html.HiddenFor(model => model.SecurityRoleObjectId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.HiddenFor(model => model.SecurityRoleObjectId, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.SecurityRoleObjectId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ObjectId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            <select id="selectObject" class="selectpicker selObject form-control" name="ObjectId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.ObjectId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ObjectAction, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ObjectAction, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ObjectAction, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+   @foreach (var vActions in ViewBag.vbDataA)
+   {
+    <div class="form-group m-3">
+        <div class="custom-control custom-checkbox DevChk">
+            <input type="checkbox" class="custom-control-input" @vActions["IsValid"] id="@vActions["ObjectActionId"]">
+            <label class="custom-control-label" for="@vActions["ObjectActionId"]">@vActions["ObjectActionName"]</label>
+        </div>
+    </div>
+   }
+    <div class="form-group ">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+</div>
+    <input type="button" id="someButton"/>
+}
+
+
+<script>
+
+         // List GetObject
+            $.post('/Home/GetObject',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Object) {
+                        $('#selectObject').append('<option data-id="' + Object.ObjectId + '" value="' + Object.ObjectId + '" sort-id="' + i + '">' + Object.ObjectNameL1 + '</option>')
+
+                    })
+                    var vData = '@Model.ObjectId'
+
+                    if (vData != "0") {
+                        $('#selectObject').val(@Model.ObjectId);
+                    }
+                    // Refresh Select Picker
+                    $('.selObject').selectpicker('refresh');
+                })
+
+    </script>
+
+<script>
+    ////  Get Value Of Checked
+    //var vActionSelected;
+
+    //// Get Class Name
+    //var vElementCheckBox = $('.DevChk')
+
+    //// Get Check
+    //var vIsChecked = vElementCheckBox.prop('checked');
+
+    //// Set Value If Checked
+    //// Check
+    //if (vIsChecked) {
+
+    //    // Get Id
+    //    var vActionId = vElementCheckBox.attr('id');
+
+    //    // Add Selected Action
+    //    vActionSelected += vActionId + ',';
+    //    console.log(vActionSelected)
+    //}
+
+
+    $(document).ready(function () {
+        $('#someButton').click(function () {
+            var names = [];
+            $('.DevChk input:checked').each(function () {
+                names.push(this.name);
+            });
+            console.log(names)
+            // now names contains all of the names of checked checkboxes
+            // do something with it
+        });
+    });
+    
+    </script>

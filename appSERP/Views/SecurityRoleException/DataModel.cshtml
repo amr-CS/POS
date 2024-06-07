@@ -1,0 +1,62 @@
+﻿@model appSERP.Models.SEC.SecurityRoleExceptionModel
+@using appSERP.Views.Shared.appResource
+@{
+
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.lblSecurityRoleException, pId = Model.SecurityRoleExceptionId })
+        </div>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.SecurityRoleExceptionId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SecurityRoleExceptionCode, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.SecurityRoleExceptionCode, new { htmlAttributes = new { @class = "form-control", @disabled = "true" } })
+                @Html.ValidationMessageFor(model => model.SecurityRoleExceptionCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SecurityRoleExceptionNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.SecurityRoleExceptionNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SecurityRoleExceptionNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SecurityRoleExceptionNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.SecurityRoleExceptionNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SecurityRoleExceptionNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12 m-3">
+                @Html.EditorFor(model => model.SecurityRoleExceptionIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.SecurityRoleExceptionIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+        <div class="form-group divModalFooter">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+
+    </div>
+}
+
+

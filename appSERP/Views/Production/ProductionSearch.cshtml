@@ -1,0 +1,269 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblProductionBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    
+                    <div class="col-sm-2">
+                        رقم الطلب
+                        <input type="text" class="form-control text-center txtCode" />
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="">
+                            تاريخ الطلب
+                            <input type="text" class="form-control txtTransDate text-center" />
+                        </div>
+
+                    </div>
+
+                    <div class=" col-sm-2">
+                        <div class="">
+                            خط الانتاج
+                            <div>
+                                <select id="selectProdLine" class="selectProdLine form-control" name="ProdLineId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+                                    <option data-id="" value="" sort-id="0">-</option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-2">
+                        <div class="">
+                            مخزن الانتاج
+                            <div>
+                                <select id="selectDestStore" class="selectDestStore form-control" name="DestStoreId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+                                    <option data-id="" value="" sort-id="0" selected>-</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-sm-2">
+                        <div class="">
+                            مخزن الاصناف
+                            <div>
+                                <select id="selectSourceStore" class="selectSourceStore form-control" name="SourceStoreId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+                                    <option data-id="" value="" sort-id="0">-</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        البحث
+                        <div>
+                            <button type="button" class="btn btn-secondary  btnSearch">@appResource.btnSearch</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+       
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblProduction">
+            <thead>
+                <tr>
+                    <th class=" " data-checked="false">
+                        <input type="checkbox" class="btnCheckAll">
+                        تحديد الكل
+                    </th>
+                    <th>رقم الطلب</th>
+                    @*<th>تاريخ الطلب</th>*@
+                    <th>خط الانتاج</th>
+                    <th> مخزن الانتاج</th>
+                    <th> مخزن الاصناف</th>
+                </tr>
+            </thead>
+
+            <tbody class="tblProductionBody"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    //function Append
+    function funProductionRowConfig(pProductionRow) {
+        console.log(pProductionRow);
+        // Content
+        var RowContent = '<tr>' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pProductionRow.ProductionId + '"/></td> ' +
+            '<td>' + pProductionRow.ProductionCode + '</td>' +
+            //'<td>' + pProductionRow.TransDate + '</td>' +
+            '<td>' + pProductionRow.ProdLineName + '</td>' +
+            '<td>' + pProductionRow.DestStoreName + '</td>' +
+            '<td>' + pProductionRow.SourceStoreName + '</td>' +
+            +'</tr > '
+        return RowContent
+    }
+    function funGetProductionData(pProductionCode, pTransDate, pProdLine, pDestStore, pSourceStore, phNumbers) {
+        var vDataResult;
+        $.get('/api/APIProduction/ProductionGet',
+            {
+                // search Parameters
+                pProductionCode: pProductionCode,
+                pTransDate: pTransDate,
+                pProdLine: pProdLine,
+                pDestStore: pDestStore,
+                pSourceStore: pSourceStore,
+                phNumbers: phNumbers,
+
+                pIsDeleted: false,
+                // Query Type Id
+                pQueryTypeId: '403',
+            },
+            function (data, status) {
+                console.log(data);
+                // JSON Parse
+                vDataResult = JSON.parse(data);
+               
+                $('.tblProductionBody').html('');
+                $.each(vDataResult, function (m, ProductionData) {
+                    // GET Cash Desk Row Content
+
+                    var vAccountRowContent = funProductionRowConfig(vDataResult[m]);
+                  
+                    // Append Row Content
+                    $('.tblProductionBody').append(vAccountRowContent);
+                });
+
+            })
+
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearch').on('click', function () {
+        var ProductionCode = $('.txtCode').val();
+        var TransDate = $('.txtTransDate').val();
+        var ProdLine = $('#selectProdLine').val();
+        var DestStore = $('#selectDestStore').val();
+        var SourceStore = $('#selectSourceStore').val();
+
+       
+        // Get Row
+        funGetProductionData(ProductionCode, TransDate, ProdLine, DestStore, SourceStore, null)
+    })
+    // Actione Load
+    $(document).ready(function () {
+        // Get Row
+        funGetProductionData(null, null, null, null, null, null, null)
+    });
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+    var vProdLineId=0
+     // List GetProdLine
+    $.get('/api/APILookup/LookupGET',
+             {
+                pIsDetail: true,
+                pLookupId: 136,
+                pQueryTypeId: '400',
+            },
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, ProdLine) {
+                    $('#selectProdLine').append('<option data-id="' + ProdLine.LookupDtlId + '" value="' + ProdLine.LookupDtlId + '" sort-id="' + i + '">' + ProdLine.LookupDtlDesc + '</option>')
+
+                    if (i == 0) {
+                        vProdLineId = ProdLine.LookupDtlId;
+                    }
+                })
+                // Refresh Select Picker
+                $('#selectProdLine').selectpicker('refresh');
+            })
+    
+    var vDestStoreId = 0
+    // List GetStore
+    $.get('/api/APIStore/StoreGET',
+            {
+                pIsAccountDetail: true,
+                pQueryTypeId: '400',
+
+            },
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Store) {
+                $('#selectDestStore').append('<option data-id="' + Store.StoreId + '" value="' + Store.StoreId + '" sort-id="' + i + '">' + Store.StoreNameL1 + '</option>')
+                if (i == 0) {
+                    vStoreId = Store.StoreId;
+                }
+            })
+    
+            // Refresh Select Picker
+            $('#selectDestStore').selectpicker('refresh');
+        })
+
+    var vSourceStoreId = 0
+    // List GetStore
+    $.get('/api/APIStore/StoreGET',
+        {
+            pIsAccountDetail: true,
+            pQueryTypeId: '400',
+
+        },
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Store) {
+                $('#selectSourceStore').append('<option data-id="' + Store.StoreId + '" value="' + Store.StoreId + '" sort-id="' + i + '">' + Store.StoreNameL1 + '</option>')
+                if (i == 0) {
+                    vStoreId = Store.StoreId;
+                }
+            })
+ 
+            // Refresh Select Picker
+            $('#selectSourceStore').selectpicker('refresh');
+        })
+</script>

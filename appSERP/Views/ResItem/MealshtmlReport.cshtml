@@ -1,0 +1,148 @@
+﻿
+@using System.Data;
+
+@{
+    ViewBag.Title = "تقرير المنتجات";
+    Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
+    DataTable Data = ViewBag.vDT;
+
+    decimal Total = 0;
+
+    var GroupData = Data.AsEnumerable().Select(x => new { col1 = x["InvItemId"], col2 = x["InvItemCode"], col3 = x["InvItemNameL1"], col4 = x["DefaultUnitName"] }).ToList().Distinct();
+}
+
+
+@foreach (var i in GroupData)
+{
+    decimal GroupTotal = 0;
+    decimal CostTotal = 0;
+
+
+
+    <table style="border:0px;width:100%" dir="rtl">
+        <tbody>
+            <tr>
+                <td style="border:0px"> @i.col2.ToString()</td>
+                <td style="border:0px"></td>
+                <td style="border:0px"> @i.col3.ToString()</td>
+                <td style="border:0px"></td>
+                <td style="border:0px"> @i.col4.ToString()</td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+        <thead style="">
+            <tr>
+                <th>الكود</th>
+                <th width="30%">اسم الصنف</th>
+                <th>الكمية</th>
+                <th>الوحدة</th>
+                <th>المبلغ </th>
+                <th>التكلفة </th>
+
+            </tr>
+        </thead>
+        @if (Data != null)
+        {
+
+            foreach (DataRow item in Data.Rows)
+            {
+                if (i.col1.ToString() == item["InvItemId"].ToString())
+                {
+
+                    decimal TotalRow = Convert.ToDecimal(item["Price"]);
+                    decimal CostRow = Convert.ToDecimal(item["Cost"]);
+
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @item["ContentCode"]
+                            <br />
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @item["ContentName"]
+                            <br />
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                            @item["Qty"]
+                        </td>
+                        <td style="text-align:center; vertical-align: middle; ">
+                            @item["UnitName"].ToString()
+
+                        </td>
+                        <td style="text-align:center; vertical-align: middle; ">
+                            @item["price"].ToString()
+                        </td>
+                        <td style="text-align:center; vertical-align: middle; ">
+                            @item["Cost"].ToString()
+
+                        </td>
+
+                    </tr>
+
+
+                    Total = Total + TotalRow;
+
+                    GroupTotal = GroupTotal + CostRow;
+                    CostTotal = CostTotal + CostRow;
+
+
+                }
+            }
+        }
+        <tr class="total">
+            <td style="text-align: center;font:bold; vertical-align: middle;">
+                الاجمالي  :
+                <br />
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-right:20px">
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-right:20px">
+            </td>
+            <td style="text-align: center; vertical-align: middle;">
+            </td>
+
+            <td style="text-align:center;vertical-align: middle;">
+                @Math.Round(GroupTotal, 2, MidpointRounding.ToEven)
+
+            </td>
+            <td style="text-align:center;vertical-align: middle;">
+                @Math.Round(CostTotal, 2, MidpointRounding.ToEven)
+
+            </td>
+
+        </tr>
+    </table>
+
+
+}
+<table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+    <thead>
+
+    </thead>
+    <tbody>
+        <tr class="total">
+            <td style="text-align: center;font:bold; vertical-align: middle;" width="30%">
+
+                الكلي
+                :
+                <br />
+            </td>
+
+            <td style="text-align:center;vertical-align: middle;">
+            </td>
+            <td style="text-align: center; vertical-align: middle;">
+            </td>
+
+            <td style="text-align: center; vertical-align: middle;">
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-left:30px">
+                @Math.Round(Total, 2, MidpointRounding.ToEven)
+
+            </td>
+            <td style="text-align: center; vertical-align: middle;padding-left:30px">
+            </td>
+        </tr>
+    </tbody>
+</table>
+

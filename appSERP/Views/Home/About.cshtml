@@ -1,0 +1,224 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+@{
+    Layout = null;
+}
+<style>
+    img {
+        width: 114px;
+        height: 125px;
+    }
+        .box{
+        position: relative;
+        display: inline-block; /* Make the width of box same as image */
+        box-sizing: border-box;
+    }
+    .darkColor {
+        background-color: #808080 !important;
+        color: #fff;
+    }
+    .GrayColor {
+        background-color: #e9ecef !important;
+    }
+
+    .text {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        bottom: 0;
+        background: rgb(0, 0, 0); /* Fallback color */
+        background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+        color: #fff;
+        height: 20%;
+    }
+    .topText {
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 0;
+        background: rgb(0, 0, 0); /* Fallback color */
+        background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+        /*background: #0094ff;*/
+        color: #fff;
+        height: 20%;
+    }
+    .clsButton {
+        overflow: hidden;
+        height: 60px;
+        width: 80px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .overflow-visible {
+        white-space: initial;
+    }
+    .clsMid .btnCalc {
+        position: absolute;
+        bottom: 0;
+        /*right: 0;*/
+    }
+    .btnCalc input {
+        width: 43px;
+        height: 35px;
+        border-radius: 0rem !important;
+        border-color: #fff;
+    }
+    .clr {
+        background: rgb(0, 0, 0); /* Fallback color */
+        background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+        color: #ffffff;
+    }
+
+    .clsButton {
+        white-space: nowrap;
+        overflow: hidden;
+        /*     width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        height: 55px;
+        width: 60px*/
+    }
+    .clsarrow {
+       width: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        height: 55px;
+    }
+    .slick-prev, .slick-next {
+        font-size: 0;
+        line-height: 0;
+        position: absolute;
+        top: 50%;
+        display: block;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        -webkit-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        cursor: pointer;
+        color: #000000;
+        border: none;
+        outline: none;
+        background: #000000;
+    }
+
+    .btn-lg, .btn-group-lg > .btn {
+      /*  padding: 0.5rem 1rem;
+        font-size: 1.00rem;
+        line-height: 1.5;*/
+        border-radius: 0.3rem;
+    }
+
+    .arrow-next {
+        position: absolute;
+        top: 0.5%;
+        left: 32%;
+    }
+
+    .arrow-prev {
+        position: absolute;
+        top: 0.5%;
+        right: 15%;
+    }
+    .overflow-visible {
+        white-space: initial;
+    }
+</style>
+@if (Model.Rows.Count > 0)
+{
+    <div class="divCategory bg-white pr-3 pl-3" dir="rtl" style="border-bottom:2px solid #0081c6">
+
+        @foreach (DataRow pData in Model.Rows)
+        {
+        <div class=" btn  btn-lg clsButton overflow-visible border   text-center fa fa-check" style="border-radius:0px" Order="@pData["row_num"]" data-id="@pData["LookupDtlId"]" value="@pData["LookupDtlDesc"]">
+            @pData["LookupDtlDesc"]
+        <textarea Order="@pData["row_num"]" class="clsData d-none">@pData["Meal"]</textarea>
+        
+        </div>
+        }
+    </div>
+    <div class="arrow-next btn btn-sm btn-light clsarrow text-center">
+        <span>
+            <i class="fa fa-angle-left "></i>
+        </span>
+    </div>
+    <div class="arrow-prev ">
+        <span>
+            <i class="btn btn-sm btn-light fa fa-angle-right clsarrow"></i>
+        </span>
+    </div>
+}
+<script>
+    $('.divCategory').slick({
+        dots: false,
+        accessibility: true,
+        infinite: false,
+        rtl: true,
+        speed: 300,
+        slidesToShow: 5,
+        slidesToScroll: true,
+        adaptiveHeight: true,
+        arrows: true,
+        nextArrow: '.arrow-next',
+        prevArrow: '.arrow-prev',
+    });
+    var Order = localStorage.getItem('Order')
+    funTabs(Order)
+    function funTabs(Order) {
+        $('.clsButton').removeClass('fa fa-check')
+        $('.clsButton').removeClass('clr')
+        $('.clsButton').removeClass('clsTabs')
+        $('.clsButton[Order=' + Order + ']').addClass('fa fa-check')
+        $('.clsButton[Order=' + Order + ']').addClass('clsTabs')
+        $('.clsButton[Order=' + Order + ']').addClass('clr')
+    }
+
+
+    // Append Meal
+    function funConfigMeal(DataMeal) {
+        $('.divMeal').html('');
+        if (DataMeal != '') {
+            var DataResult = JSON.parse(DataMeal)
+
+            $.each(DataResult, function (g, Meal) {
+                var ItemAdd = JSON.stringify(Meal.ItemAdd)
+                if (parseInt(Meal.ItemQty) > 0 && parseInt(Meal.ItemQty) != 0 || parseInt(Meal.ShowItem) === 1) {
+                 
+                    $('.divMeal').append(' <div class="box bg-white  clsButtonItem border rounded p-2 show="' + Meal.ShowItem + '"  Points = "' + Meal.Points + '" Order = "' + g + '" data-id="' + Meal.InvItemId + '" Qty = "' + Meal.ItemQty + '" Price = "' + Meal.Price + '" unitid = "' + Meal.UnitId + '" data-name="' + Meal.InvItemNameL1 + '" value = "' + Meal.InvItemNameL1 + Meal.ItemQty + '"> <div class="topText" ><p>' + Meal.ItemQty + '</p></div><img src="/Image/WalemaImages/meal1.jpeg" /> <div class="text">'+
+                        '<p>' + Meal.InvItemNameL1 + '</p></div></div><textarea Order="' + g + '" class="clsItemAdd d-none">' + ItemAdd + '</textarea><div data-id="' + Meal.InvItemId + '" class= "clsQty d-none" > ' + Meal.ItemQty + '</div >');
+                }
+                else {
+                
+                    $('.divMeal').append(' <div class="box bg-white darkColor clsButtonItemD border rounded p-2 "show="' + Meal.ShowItem + '"  Points = "' + Meal.Points + '" Order = "' + g + '" data-id="' + Meal.InvItemId + '" Qty = "' + Meal.ItemQty + '" Price = "' + Meal.Price + '" unitid = "' + Meal.UnitId + '" data-name="' + Meal.InvItemNameL1 + '" value = "' + Meal.InvItemNameL1 + Meal.ItemQty + '"> <div class="topText" ><p>' + Meal.ItemQty + '</p></div><img src="/Image/WalemaImages/meal1.jpeg" /> <div class="text">' +
+                        '<p>' + Meal.InvItemNameL1 + '</p></div></div><textarea Order="' + g + '" class="clsItemAdd d-none">' + ItemAdd + '</textarea><div data-id="' + Meal.InvItemId + '" class= "clsQty d-none" > ' + Meal.ItemQty + '</div >');
+
+
+                }
+
+
+                if (g % 2 == 0) {
+                    $('.clsButtonItem[Order=' + g + ']').removeClass('darkColor')
+                    $('.clsButtonItem[Order=' + g + ']').addClass('GrayColor')
+                } else {
+                    $('.clsButtonItem[Order=' + g + ']').addClass('darkColor')
+                    $('.clsButtonItem[Order=' + g + ']').removeClass('GrayColor')
+
+                }
+            })
+        }
+    }
+
+    var Data = $('.clsData[Order=' + Order + ']').text();
+
+    function callback() {
+        $(".divMeal").append('qwerty');
+    };
+
+    $(document).ready(function () {
+
+        funConfigMeal(Data)
+    });
+
+    </script>

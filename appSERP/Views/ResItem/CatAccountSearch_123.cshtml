@@ -1,0 +1,163 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "LookupSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divEmpAtType {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divEmpAtTypeSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divEmpAtTypeSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divEmpAtTypeNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._AccountsTypes</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divEmpAtType">
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyLookup"></tbody>
+    </table>
+</div>
+
+
+<!-- Lookup GET -->
+<script>
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Lookup GET
+        funLookupGET();
+    })
+
+    // Lookup GET
+    function funLookupGET() {
+
+        $.get('/api/APILookup/LookupGET',
+            {
+                pIsDetail: true,
+                pLookupId: 123,
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyLookup');
+
+                console.log(vDataResult)
+                // Lookups
+                $.each(vDataResult, function (i, LookupData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].LookupId + '">';
+
+                    var vLookupName = vDataResult[i].LookupNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vLookupName = vDataResult[i].LookupNameL2;
+                    }
+                    console.log(vDataResult[i].AccountIsCostCenter)
+                    vRowContent += '<td data-id="' + vDataResult[i].LookupId + '">';
+                    vRowContent += '<div class="divCatAccountSelect d-flex p-2" data-id="' + vDataResult[i].LookupDtlId + '">';
+                    vRowContent += '<div class="divCatAccountId d-none px-4">' + vDataResult[i].LookupDtlId + '</div>';
+                    vRowContent += '<div class="divCatAccountCode  px-4 ">' + vDataResult[i].ORD + '</div>';
+                    vRowContent += '<div class="divCatAccountName px-4">' + vDataResult[i].LookupDtlDesc + '</div>';
+
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+
+
+
+
+    }
+
+</script>
+
+<!-- Search Lookup -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divCatAccountSelect').each(function () {
+
+                // Get Lookup Code
+                var vLookupCode = $(this).find('.divCatAccountId').text();
+                var vLookupName = $(this).find('.divCatAccountName').text();
+
+                // Check Result
+                if (vLookupCode.search(vSearchInput) != -1 || vLookupName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+        }
+    })
+</script>

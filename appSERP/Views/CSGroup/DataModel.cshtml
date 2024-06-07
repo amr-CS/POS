@@ -1,0 +1,86 @@
+﻿@model appSERP.Models.ACC.CustomerSupplierGroupModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+<!-- Header -->
+<div class="container-fluid">
+    @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._CSGroup, pId = Model.CSGroupId })
+</div>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+       
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.CSGroupId)
+        <div class="form-group">
+            @Html.LabelFor(model => model.CSGroupNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CSGroupNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CSGroupNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CSGroupNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CSGroupNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CSGroupNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CSGroupCreditLimit, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CSGroupCreditLimit, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CSGroupCreditLimit, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CSGroupGracePeriodDays, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CSGroupGracePeriodDays, new { htmlAttributes = new { @class = "form-control" , @min = "0" } })
+                @Html.ValidationMessageFor(model => model.CSGroupGracePeriodDays, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CSGroupIsCustomerGroup, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck13" } })
+                @Html.LabelFor(model => model.CSGroupIsCustomerGroup, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck13" })
+            </div>
+        </div>
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CSGroupIsDefault, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck12" } })
+                @Html.LabelFor(model => model.CSGroupIsDefault, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck12" })
+            </div>
+        </div>
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.CSGroupIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.CSGroupIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+    </div>
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+
+}
+

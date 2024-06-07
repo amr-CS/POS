@@ -1,0 +1,3953 @@
+﻿@using appSERP.Views.Shared.appResource;
+@using appSERP.appCode.Setting.User;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row bg-white border rounded p-3 ">
+        @*<div>
+            <input type="submit" value="استعلام" class="btn btn-success btnSearch" />
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Edit -->
+                <!-- ADD -->
+                <button class="btn btnCreate btnUtilityCreate" title="@appResource.ttAdd"><i class="fa fa-save"></i></button>
+                <!-- Cut -->
+                <button class="btn btnUtility btnCut" title="@appResource.btnDelete"><i class="fa fa-cut"></i></button>
+            </div>
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Next -->
+                <button class="btn btnUtility   btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                <!-- Prev -->
+                <button class="btn btnUtility   btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                <!-- First -->
+                <button class="btn btnUtility btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                <!-- Last -->
+                <button class="btn btnUtility btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+            </div>
+        </div>*@
+            <div class="w-100">
+                <div class="d-flex justify-content-end">
+                    <div class="btn-group m-2" role="group" aria-label="First group">
+                        <!-- Save -->
+                        <button class="btn btnUtility btnSave1" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                        <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                    </div>
+                    <div class="btn-group m-2" role="group" aria-label="First group">
+                        <!-- Copy -->
+                        <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                        <!-- Cut -->
+                        <button class="btn btnUtility btnCut" title="@appResource.btnDelete"><i class="fa fa-cut"></i></button>
+                        <!-- Paste -->
+                        <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                    </div>
+
+
+                    <div class="btn-group m-2" role="group" aria-label="First group">
+                        <!-- Print -->
+                        <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                        <!-- Sort Asc -->
+                        <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                        <!-- Sort Asc -->
+                        <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                    </div>
+
+                    <div class="btn-group m-2" role="group" aria-label="First group">
+                        <!-- ADD -->
+                        <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                        <!-- Edit -->
+                        <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                    </div>
+
+                    <div class="btn-group m-2" role="group" aria-label="First group">
+                        <!-- PDF -->
+                        <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                        <!-- Excel -->
+                        <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                        <!-- Word -->
+                        <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                    </div>
+
+
+                    <div class="btn-group m-2" role="group" aria-label="First group">
+                        <!-- Close -->
+                        <button class="btn btnUtility btnClose" title="@appResource.ttClose"><i class="fa fa-close"></i></button>
+                    </div>
+
+                    <div class="btn-group m-2" role="group" aria-label="First group">
+                        <!-- Next -->
+                        <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                        <!-- Prev -->
+                        <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                        <!-- First -->
+                        <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                        <!-- Last -->
+                        <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                    </div>
+
+
+                    <div class="btn-group m-2" role="group" aria-label="First group">
+                        <!-- Full Screen -->
+                        <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                    </div>
+
+                    <div class="btn-group m-2" role="group" aria-label="First group">
+                        <div class="dropdown">
+                            <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-table"></i>
+                            </button>
+                            <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <table width="90%">
+            <tr>
+                <td width="30%" align="center"><div class="mt-3">@appResource.ParcodeEnquiry </div></td>
+                @*<td width="30%" align="left"> <div class="mt-3 mr-5"> الفئة </div></td>*@
+                <td width="30%" align="right"> <div class="mt-3 ml-5"> @appResource._Kind </div></td>
+                <td width="30%" align="left"> <div class="mt-3"> </div></td>
+            </tr>
+            <tr>
+                <td width="30%" align="center"><input type="text" class="form-control w-50" id="txtBarCode" /></td>
+                <td>
+                    <div class="d-flex">
+                        <input type="text" class="form-control w-25" id="txtCategoryAccountId" data-id="0" />
+                        <input type="text" class="form-control w-75" readonly id="txtCategoryAccountName" data-id="0" />
+
+
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <tr style="height:50px;"></tr>
+
+
+
+        </table>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row bg-white border rounded p-3 ">
+
+        <div class="col-md-4">
+            @*<div class="d-flex">*@
+            <div class="row pt-1">
+                <div class="col-md-3">
+                    <label class="control-label">@appResource.ProductNo</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" class="form-control " id="txtInvItemCode" disabled data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-md-3">
+                    <label class="control-label">@appResource.OriginalNo </label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" class="form-control " id="txtItemIdNo" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-md-3">
+                    <label class="control-label">@appResource.FactoryNo</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" class="form-control " id="txtItemFactorId" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-md-3">
+                    <label class="control-label">@appResource.ProductCode</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" class="form-control " id="txtItemCode2" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-md-3">
+                    <label class="control-label">@appResource.MeasureProduct</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" class="form-control " id="txtItemMeasurement" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-md-3">
+                    <label class="control-label">@appResource.ProductionDate</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="date" class="form-control " id="txtProductDate" data-id="0" />
+                </div>
+            </div>
+            @*</div>*@
+
+        </div>
+        <div class="col-md-8">
+            <div class="row pt-1">
+                <div class="col-md-1">
+                    <label class="control-label">@appResource.ProductName</label>
+                </div>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="txtInvItemNameL1" data-id="0" />
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col-md-1">
+                    <label class="control-label">@appResource.ProductName</label>
+                </div>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="txtInvItemNameL2" data-id="0" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row pt-1">
+                        <div class="col-md-3">
+                            <label class="control-label">@appResource.OrderLimit</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="txtOrderLimit" data-id="0" />
+                        </div>
+
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-md-3">
+                            <label class="control-label">@appResource.ProductCurrency</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row d-flex w-100 ml-0">
+                                <input type="text" class="form-control w-25" id="txtCurrencyId" data-id="0" />
+                                <input type="text" class="form-control w-75" id="txtCurrencyName" data-id="0" readonly />
+
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-md-3">
+                            <label class="control-label">@appResource.LastCost</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" disabled id="txtItemLastCost" data-id="0" />
+                        </div>
+
+                    </div>
+
+                    <div class="row pt-1">
+                        <div class="col-md-3">
+                            <label class="control-label">@appResource.CountryOrigin</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="txtSupCompany" data-id="0" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4 pt-1">
+                    <div>
+                        <input type="checkbox" name="gender" value="1" id="chk1"> <label class="control-label">@appResource.HasEndDate</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="gender" value="2" id="chk2">  <label class="control-label">@appResource.CompoundProduct</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="gender" value="3" id="chk3"> <label class="control-label">@appResource.Sellable</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="gender" value="4" id="chk4">  <label class="control-label">@appResource.ServiceProduct</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="gender" value="5" id="chk5"> <label class="control-label">@appResource._Product</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+
+                    <form id="uploader">
+                        <input name="pFile" id="pFile" type="file" multiple="multiple" accept="image/*" onchange="funShowImage(this)" />
+
+                        @*<input id="fileInput" type="file" multiple onchange="funShowImage(this)">*@
+
+                    </form>
+
+                    <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" data-src="" data-src-basic="" data-filename="" class="clsimg" width="120" />
+                    @*<img src="~/Image/DataImage/FoesEnd.jpg" class="clsimg" width="120" />*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row bg-white border rounded p-3">
+        <div class="col-md-2">
+            <div class="row ">
+                <div class="col-md-6 "><label class="control-label">@appResource.DiscLimit</label> <label class="control-label">@appResource.DiscLimit</label></div>
+                <div class="col-md-6 pt-1">
+                    <input type="text" class="form-control" id="txtDiscLimit" data-id="0" />
+                    <input type="text" class="form-control" id="txtDiscPerc" data-id="0" />
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-6 "><label class="control-label">@appResource.FreeGrantlimit</label> <label class="control-label">@appResource.QtyFree</label></div>
+                <div class="col-md-6 ">
+                    <input type="text" class="form-control" id="txtBonusLimit" data-id="0" />
+                    <input type="text" class="form-control" id="txtBonus" data-id="0" />
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-6 "><label class="control-label">@appResource.DiscMin</label> <label class="control-label">@appResource.DiscMax</label></div>
+                <div class="col-md-6 ">
+                    <input type="text" class="form-control" id="txtItemMinQuantity" data-id="0" />
+                    <input type="text" class="form-control" id="txtItemMaxQuantity" data-id="0" />
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-6 "><label class="control-label">@appResource.QtyMaxUnit</label> <label class="control-label">@appResource.QtyMinUnit</label></div>
+                <div class="col-md-6 ">
+                    <input type="text" class="form-control" id="txtItemMinQuantity2" disabled data-id="0" />
+                    <input type="text" class="form-control" id="txtItemMaxQuantity2" disabled data-id="0" />
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-4 "><label class="control-label">@appResource.LastBuy</label><br /> <label class="control-label">@appResource.LastSell</label></div>
+                <div class="col-md-8 ">
+                    <input type="date" class="form-control" id="txtLastBuy" disabled data-id="0" />
+                    <input type="date" class="form-control" id="txtLastSell" disabled data-id="0" />
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="container-fluid">
+    <ul class="nav nav-tabs" id="myTab3" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">@appResource.ProductsUnits</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">@appResource.ProductsSettings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">@appResource.ProductsAlternatives</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact2" role="tab" aria-controls="contact" aria-selected="false">@appResource.ProductsUnitsPrices</a>
+        </li>
+        <li class="nav-item d-none navitemsub">
+            <a class="nav-link" id="parts-tab" data-toggle="tab" href="#contact3" role="tab" aria-controls="contact" aria-selected="false">@appResource.ProductParts</a>
+        </li>
+        <li class="nav-item d-none navitemexpire">
+            <a class="nav-link" id="expire-tab" data-toggle="tab" href="#contact4" role="tab" aria-controls="contact" aria-selected="false">@appResource.EndDate</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active tab1" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <!-- StoreKeeper Data style="margin-right:100px" -->
+            <div class="row divItemUnit bg-white border p-2">
+                <div class="col-10 divUnit">
+                    <table class="tblItemUnit border" width="100%">
+                        <!-- Head -->
+                        <thead>
+                            <tr>
+
+                                <th></th>
+                                <th>@appResource._Code</th>
+                                <th>@appResource.UnitNo</th>
+                                <th>@appResource.UnitName</th>
+                                <th colspan="2">@appResource.UnitMain</th>
+                                <th>@appResource._Package</th>
+                                <th>@appResource.UnitCost</th>
+                                <th>@appResource._Currency</th>
+                                <th> @appResource._Currency</th>
+                                <th> @appResource.UnitPrice</th>
+
+                                <th>@appResource.OrderLimit</th>
+                                <th class="thActions">@appResource._Actions</th>
+
+                            </tr>
+                        </thead>
+                        <!-- Body -->
+                        <tbody class="tblItemUnitBody">
+                            <tr class="tblRow">
+                                <td><button class="btn btn-sm btn-light btnUnitAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>
+                                <td><input type="text" class="form-control UnitCode" disabled /></td>
+                                <td><input type="text" class="form-control UnitId" /></td>
+                                <td><input type="text" class="form-control UnitNameL1" /></td>
+                                <td><input type="text" class="form-control DefaultUnit" /></td>
+                                <td><input type="text" class="form-control PartsInParents" /></td>
+                                <td><input type="text" class="form-control UnitCost" /></td>
+                                <td><input type="text" class="form-control CurrencyId" data-id="0" /></td>
+                                <td><input type="text" class="form-control CurrencyNameL1" readonly /></td>sav
+                                <td><input type="text" class="form-control UnitPrice" /></td>
+                                <td><input type="text" class="form-control UnitOrderLimit" /></td>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-2">
+                    <table class="tblParcode  border" width="100%">
+                        <!-- Head -->
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>باركود</th>
+                                <th class="thActions">@appResource._Actions</th>
+                            </tr>
+                        </thead>
+                        <!-- Body -->
+                        <tbody class="tblParcodeBody">
+                            <tr>
+                                <td><input type="text" class="form-control UnitCode" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreKeeperSave" />*@
+            </div>
+        </div>
+        <div class="tab-pane fade tab2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <!-- Store Setting Data -->
+            <div class="divEquip bg-white border p-2">
+                <table class="tblEquip border" width="100%">
+                    <!-- Head -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@appResource.SettingNo</th>
+                            <th>@appResource.SettingName</th>
+                            <th>@appResource._Note</th>
+                            <th class="thActions">@appResource._Actions</th>
+
+                        </tr>
+                    </thead>
+                    <!-- Body -->
+                    <tbody class="tblEquipBody">
+                        <tr class="tblRow">
+                            @*<td><button class="btn btn-sm btn-light btnEquipAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>
+                                <td><input type="text" class="form-control EquipCode" disabled /></td>
+                                <td><input type="text" class="form-control EquipName" /></td>
+                                <td><input type="text" class="form-control Notes" /></td>*@
+                    </tbody>
+                </table>
+                @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreSettingSave" />*@
+            </div>
+        </div>
+
+        <div class="tab-pane fade tab3" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <!-- Store Type Data -->
+            <div class="divStoreType bg-white border p-2">
+                <table class="tblItemReplace border" width="100%">
+                    <!-- Head -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@appResource._Code</th>
+                            <th>@appResource._No</th>
+                            <th>@appResource._Name</th>
+                            <th>@appResource._Note</th>
+                            <th class="thActions">@appResource._Actions</th>
+
+                        </tr>
+                    </thead>
+
+                    <!-- Body -->
+                    <tbody class="tblItemReplaceBody"></tbody>
+                </table>
+                @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreTypeSave" />*@
+
+            </div>
+
+        </div>
+        <div class="tab-pane fade tab4" id="contact2" role="tabpanel" aria-labelledby="contact-tab">
+            <!-- Store Type Data -->
+            <div class="divtblPrice bg-white border p-2">
+                <table class="tblPrice border" width="100%">
+                    <!-- Head -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@appResource._Code</th>
+                            <th>@appResource.PriceType</th>
+                            <th>@appResource._Price</th>
+                            <th>@appResource._Note</th>
+                            <th class="thActions">@appResource._Actions</th>
+
+                        </tr>
+                    </thead>
+
+                    <!-- Body -->
+                    <tbody class="tblPriceBody"></tbody>
+                </table>
+                @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreTypeSave" />*@
+
+            </div>
+
+        </div>
+        <div class="tab-pane fade d-none tab5" id="contact3" role="tabpanel" aria-labelledby="contact-tab">
+            <!-- SubItems Data -->
+            <div class="divtblSubItem bg-white border p-2">
+                <table class="divtblSubItem border" width="100%">
+                    <!-- Head -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@appResource._Code</th>
+                            <th>@appResource._Name - AR</th>
+                            <th>@appResource._Name -EN</th>
+                            <th>@appResource.PartsNo</th>
+                            <th>@appResource._Note</th>
+                            <th class="thActions">@appResource._Actions</th>
+
+                        </tr>
+                    </thead>
+
+                    <!-- Body -->
+                    <tbody class="tblSubItemBody"></tbody>
+                </table>
+                @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreTypeSave" />*@
+
+            </div>
+        </div>
+        <div class="tab-pane fade d-none tab6" id="contact4" role="tabpanel" aria-labelledby="contact-tab">
+            <!-- SubItems Data -->
+            <div class="divtblExpireDate bg-white border p-2">
+                <table class="divtblExpireDate border" width="100%">
+                    <!-- Head -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@appResource._Code</th>
+                            <th>@appResource.EndDate</th>
+                            <th class="thActions">@appResource._Actions</th>
+
+                        </tr>
+                    </thead>
+
+                    <!-- Body -->
+                    <tbody class="tblExpireDateBody"></tbody>
+                </table>
+                @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnStoreTypeSave" />*@
+
+            </div>
+        </div>
+
+
+    </div>
+    @*<label id=".lblunitid" data-id="0">0</label>*@
+
+    @*<input type="submit" value="@appResource.btnSave" class="btn btn-success btnSave" />
+        <input type="submit" value="@appResource.btnDelete" class="btn  btnDelete"  style="background-color:red !important"/>*@
+</div>
+
+@*<table width="90%">
+            <tr >
+                <td width="73%">
+                    <div class="d-flex">
+                        <label class="control-label">اسم الصنف</label>
+                        <input type="text" class="form-control w-75" readonly id="txtCostCenterName" data-id="0" style="margin-right:118px;" />
+
+                    </div>
+                    <div class="d-flex">
+                        <label class="control-label">اسم الصنف</label>
+                        <input type="text" class="form-control w-75" readonly id="txtCostCenterName" data-id="0" style="margin-right:118px;" />
+
+                    </div>
+
+                </td>
+                <td width="19%">
+                    <div class="d-flex">
+                        <label class="control-label">رقم الصنف</label>
+                        <input type="text" class="form-control w-50" readonly id="txtCostCenterName" data-id="0" />
+
+                    </div>
+                    <div class="d-flex">
+                        <label class="control-label">الرقم الأصلي</label>
+                        <input type="text" class="form-control w-50" readonly id="txtCostCenterName" data-id="0" />
+
+                    </div>
+                </td>
+            </tr>
+        </table>
+      <table width="90%" >
+          <tr>
+              <td width="30%" align="center">
+                  <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" width="120" />
+              </td>
+              <td width="22.5%">
+                  <div>
+                      <input type="checkbox" name="gender" value="1" id="chk1"> <label class="control-label">له تاريخ انتهاء</label>
+                  </div>
+                  <div>
+                      <input type="checkbox" name="gender" value="2" id="chk2">  <label class="control-label">صنف مركب</label>
+                  </div>
+                  <div>
+                      <input type="checkbox" name="gender" value="3" id="chk3"> <label class="control-label">الباقي للبيع</label>
+                  </div>
+                  <div>
+                      <input type="checkbox" name="gender" value="4" id="chk4">  <label class="control-label">صنف خدمي</label>
+                  </div>
+                  <div>
+                      <input type="checkbox" name="gender" value="5" id="chk5"> <label class="control-label">منتج</label>
+                  </div>
+              </td>
+              <td width="22.5%">
+                  <div class="d-flex">
+                      <input type="text" class="form-control w-50" readonly id="txtCostCenterName" data-id="0" style="margin-right:6px;" />
+                      <label class="control-label">حد الطلب</label>
+                  </div>
+                  <div class="d-flex">
+                      <input type="text" class="form-control w-25" readonly id="txtCostCenterName" data-id="0" style="margin-right:6px;" />
+                      <input type="text" class="form-control w-25"  id="txtCostCenterName" data-id="0"  />
+                      <label class="control-label">عملة الصنف</label>
+                  </div>
+                  <div class="d-flex">
+                      <input type="text" class="form-control w-25" readonly id="txtCostCenterName" data-id="0" style="margin-right:6px;" />
+                      <input type="text" class="form-control w-25" readonly id="txtCostCenterName" data-id="0" />
+                      <label class="control-label">اخر تكلفة للصنف</label>
+                  </div>
+                  <div class="d-flex">
+                      <input type="text" class="form-control w-50" readonly id="txtCostCenterName" data-id="0" style="margin-right:6px;" />
+                      <label class="control-label">بلد المنشأ</label>
+                  </div>
+
+              </td>
+              <td width="20%" align="center">
+                  <div class="d-flex">
+                      <label class="control-label">رقم المصنع</label>
+                      <input type="text" class="form-control w-50" readonly id="txtCostCenterName" data-id="0" style="margin-right:5px;" />
+
+                  </div>
+                  <div class="d-flex">
+                      <label class="control-label">رقم الصنف</label>
+                      <input type="text" class="form-control w-50" readonly id="txtCostCenterName" data-id="0" style="margin-right:5px;" />
+
+                  </div>
+                  <div class="d-flex">
+                      <label class="control-label">قياس الصنف</label>
+                      <input type="text" class="form-control w-50" readonly id="txtCostCenterName" data-id="0" style="margin-right:5px;" />
+
+                  </div>
+                  <div class="d-flex">
+                      <label class="control-label">تاريخ الانتاج</label>
+                      <input type="date" class="form-control w-50" readonly id="txtCostCenterName" data-id="0" style="margin-right:5px;" />
+
+                  </div>
+              </td>
+          </tr>
+      </table>
+    <div class="row">
+        <div class="d-flex">
+            <input type="date" class="form-control w-25" readonly id="txtCostCenterName" data-id="0"/>
+        </div>
+
+    </div>*@
+<div id="CategoryAccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CategoryAccountDataModalContent"></div>
+    </div>
+</div>
+<div id="CurrencyDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="CurrencyDataModalContent"></div>
+    </div>
+</div>
+<div id="ItemDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="ItemDataModalContent"></div>
+    </div>
+</div>
+<div id="UnitDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="UnitDataModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<div id="InvItemDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="InvItemDataModalContent"></div>
+    </div>
+</div>
+@*<form id="uploader">
+        <input id="fileInput" type="file" multiple onchange="funShowImage(this)" >
+        <input type="submit" value="Upload file" />
+    </form>*@
+<script>
+    //document.getElementById('uploader').onsubmit = function () {
+    function changeimage() {
+        var formdata = new FormData(); //FormData object
+        var fileInput = document.getElementById('pFile');
+        //Iterating through each files selected in fileInput
+        for (i = 0; i < fileInput.files.length; i++) {
+            //Appending each file to FormData object
+            formdata.append(fileInput.files[i].name, fileInput.files[i]);
+        }
+        //Creating an XMLHttpRequest and sending
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/InvItem/Upload');
+        xhr.send(formdata);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                //alert(xhr.responseText);
+            }
+        }
+        return false;
+    }
+    //}
+</script>
+<script>
+
+        console.log('lengthhh' + $('.tblItemUnitBody tr').length);
+    console.log('value       ' + $(".tblItemUnitBody > tr:first").find('.UnitId').val());
+
+    fnGetDefaultCurrency();
+    localStorage.setItem('lstcurrentcurrencytxt', '0')
+    //fnGetBasicUnit()
+    function fnGetDefaultCurrency() {
+        $.post('/InvItem/GetDefaultUnit', {
+
+        }, function (data, status) {
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+                // Row Content
+                $("#txtCurrencyId").attr('data-id', vDataResult[0].DefaultCurrencyId);
+                $("#txtCurrencyId").val(vDataResult[0].DefaultCurrencyId);
+                $("#txtCurrencyName").val(vDataResult[0].CurrencyNameL1);
+
+
+            }
+        })
+    }
+    function fnGetBasicUnit() {
+
+        var vTableBody = $('.tblItemUnitBody');
+        vTableBody.html('');
+        $.post('/InvItem/GETBasicUnit', {
+        }, function (data, status) {
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+                // Row Content
+                $(".tblItemUnitBody > tr:first").find('.UnitId').val(vDataResult[0].CodeId)
+                $(".tblItemUnitBody > tr:first").find('.UnitId').attr('data-id', vDataResult[0].LookupDtlId)
+                $(".tblItemUnitBody > tr:first").find('.ChildNameL1').val(vDataResult[0].LookupDtlDesc)
+                $(".tblItemUnitBody > tr:first").find('.DefaultUnit').val('0')
+                $(".tblItemUnitBody > tr:first").find('.DefaultUnitName').attr('data-id', '0')
+
+
+            }
+        })
+            }
+
+
+
+
+    $('#txtCategoryAccountId').on('change', function () {
+        if ($('#txtCategoryAccountId').val().trim() == '') {
+
+            $('#txtCategoryAccountName').val('');
+
+        }
+        else {
+            var vCode = $(this).val();
+          $.get('/api/APILookup/LookupGET',
+            {
+                pIsDetail: true,
+                pLookupId: 122,
+                pdORD: vCode,
+                pQueryTypeId: '400',
+
+                },
+                function (data, status)
+                {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, CatAccount)
+                    {
+                        // Set Value
+                 
+                       
+
+                        $('#txtCategoryAccountName').val(CatAccount.LookupDtlDesc);
+                        $('#txtCategoryAccountId').val(CatAccount.ORD);
+
+                        $('#txtCategoryAccountId').attr('data-id', CatAccount.LookupDtlId);
+
+
+                    }
+                    )
+
+            })
+        }
+    })
+
+    fncleartables();
+
+    function fnSetTimeNow() {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+
+        $('#txtProductDate').val(today.toString("yyyy-MM-dd"));
+        $('#txtLastBuy').val(today.toString("yyyy-MM-dd"));
+        $('#txtLastSell').val(today.toString("yyyy-MM-dd"));
+    }
+    function fncleartables() {
+    $('.tblItemUnitBody').html('');
+    $('.tblParcodeBody').html('');
+    $('.tblEquipBody').html('');
+    $('.tblItemReplaceBody').html('');
+    $('.tblPriceBody').html('');
+        var vRowContent3 = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+        '<td><button class="btn btn-sm btn-light btnUnitAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        '<td width="7%"><input type="text" class="form-control UnitCode" disabled /></td>' +
+        '<td  width="7%"><input type="text" class="form-control UnitId" /></td>' +
+        '<td><input type="text" class="form-control ChildNameL1" readonly /></td>' +
+        '<td width="7%"><input type="text" class="form-control DefaultUnit " disabled /></td>' +
+        '<td><input type="text" class="form-control DefaultUnitName " readonly  /></td>' +
+
+        '<td><input type="text" class="form-control PartsInParents " /></td>' +
+        '<td><input type="text" class="form-control UnitCost  "   /></td>' +
+        '<td><input type="text" class="form-control CurrencyId   "  data-id="0"   /></td>' +
+        '<td><input type="text" class="form-control CurrencyNameL1   " readonly /></td>' +
+        '<td><input type="text" class="form-control UnitPrice"   /></td>' +
+        '<td><input type="text" class="form-control UnitOrderLimit   "/></td>' +
+        '<td><button class="btn btn-light btn-sm btnUnitDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+        '</tr>';
+
+    $('.tblItemUnitBody').append(vRowContent3);
+
+
+    var vRowContent4 =
+        '<tr class="tblRow"  data-changed = "0" data-id="0" data-unit-id = "0">' +
+        '<td><button class="btn btn-sm btn-light btnBarcodeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        '<td><input type="text" class="form-control ItemBarCode"   /></td>' +
+        '<td><button class="btn btn-light btn-sm btnBarCodeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+        '</tr>';
+
+    $('.tblParcodeBody').append(vRowContent4);
+
+        var vRowEquipContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+        '<td width="7%"><button class="btn btn-sm btn-light btnEquipAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        '<td width="7%"><input type="text" class="form-control EquipCode" disabled /></td>' +
+        '<td><input type="text" class="form-control EquipName" /></td>' +
+        '<td><input type="text" class="form-control Notes" /></td>' +
+        '<td><button class="btn btn-light btn-sm btnEquipDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+        '</tr>';
+    // append equip table empty row
+    $('.tblEquipBody').append(vRowEquipContent);
+
+    // Row Content
+        var vRowContentitemreplace = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+        '<td width="5%"><button class="btn btn-sm btn-light btnitemreplaceAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        '<td width="7%"><input type="text" class="form-control InvItemReplaceCode" disabled /></td>' +
+        '<td width="7%"><input type="text" class="form-control ReplaceItemId"  /></td>' +
+        '<td width="10%"><input type="text" class="form-control InvItemNameRL1" readonly   /></td>' +
+        '<td><input type="text" class="form-control Notes "  /></td>' +
+        '<td><button class="btn btn-light btn-sm btnItemReplaceDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+        '</tr>';
+
+    $('.tblItemReplaceBody').append(vRowContentitemreplace);
+        var vRowContentPrice = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+        '<td width="5%"><button class="btn btn-sm btn-light btnPriceAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        '<td width="7%"><input type="text" class="form-control PriceCode" disabled /></td>' +
+        '<td><input type="text" class="form-control SellCostType"  /></td>' +
+        '<td><input type="text" class="form-control Price"    /></td>' +
+        '<td><input type="text" class="form-control Notes "  /></td>' +
+        '<td><button class="btn btn-light btn-sm btnPriceDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+        '</tr>';
+
+        $('.tblPriceBody').append(vRowContentPrice);
+        var vRowContentSubItem = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+            '<td><button class="btn btn-sm btn-light btnSubItemAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control SubItemCode" disabled /></td>' +
+            '<td width="7%"><input type="text" class="form-control  SubItemNameL1" /></td>' +
+            '<td width="7%"><input type="text" class="form-control  SubItemNameL2" /></td>' +
+            '<td width="10%"><input type="text" class="form-control  PiecesCount"    /></td>' +
+            '<td><input type="text" class="form-control Notes "  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnSubItemDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+        $('.tblSubItemBody').append(vRowContentSubItem);
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        // Row Content
+        var vRowContentExpireDate = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+            '<td><button class="btn btn-sm btn-light btnExpireDateAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control ExpireDateCode" disabled  /></td>' +
+            '<td><input type="date" class="form-control  ExpireDate"  value="'+ today+'"  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnExpireDateDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+
+        $('.tblExpireDateBody').append(vRowContentExpireDate);
+        fnSetTimeNow();
+    }
+    function fnClearBarcode()
+    {
+        $('.tblParcodeBody').html('');
+        var vRowContent4 =
+            '<tr class="tblRow"  data-changed = "0" data-id="0" data-unit-id = "0">' +
+            '<td><button class="btn btn-sm btn-light btnBarcodeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td><input type="text" class="form-control ItemBarCode"   /></td>' +
+            '<td><button class="btn btn-light btn-sm btnBarCodeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        $('.tblParcodeBody').append(vRowContent4);
+
+    }
+
+
+
+   
+
+    //$('.tblItemUnitBody').append();
+    $('#txtCategoryAccountId').on('keydown dblclick', function (e) {
+
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            var vURL = '/ResItem/CatAccountSearch/';
+            $('#CategoryAccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#CategoryAccountDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divCatAccountSelect', function () {
+
+                vElementGroupAccount = $('body').find('#txtCategoryAccountId');
+                // Account Id
+                var vCatAccountId = $(this).attr('data-id');
+                var vCatAccountNameValue = $(this).find('.divCatAccountName').text();
+                var vCatAccountCodeValue = $(this).find('.divCatAccountCode').text();
+                var vCatAccountIdValue = $(this).find('.divCatAccountId').text();
+                // Set Value
+                $('#txtCategoryAccountId').val(vCatAccountCodeValue);
+                $('#txtCategoryAccountId').attr('data-id', vCatAccountId)
+                $('#txtCategoryAccountName').val(vCatAccountNameValue);
+                //}
+
+
+                // Modal Show
+                $('#CategoryAccountDataModal').modal('hide');
+
+
+            })
+
+        }
+    })
+    $('#txtCurrencyId').on('keydown dblclick', function (e) {
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentcurrencytxt', 'txtCurrencyId')
+            // Get Currency Data
+            var vCurrencyIdElement = $('#txtCurrencyId');
+            var vCurrencyNameElement = $('#txtCurrencyName');
+
+
+            // Search Currency
+            var vURL = '/Currency/SearchCurrency';
+            // Load Content of Currency Search
+            $('#CurrencyDataModalContent').load(vURL);
+            // Modal Show
+            $('#CurrencyDataModal').modal('show');
+            // Focus
+            $('#CurrencyDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Currency
+                $('body').on('click', '.divCurrencySelect', function () {
+                    if (localStorage.getItem('lstcurrentcurrencytxt') == 'txtCurrencyId') {
+                        $('.txtSearch').focus();
+
+                        // Currency Id
+                        var vCurrencyId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vCurrencyCodeValue = $(this).find('.divCurrencyNo').text();
+                        var vCurrencyNameValue = $(this).find('.divCurrencyName').text();
+
+
+
+                        // Set Value
+                        vCurrencyIdElement.val(vCurrencyCodeValue);
+                        vCurrencyIdElement.attr('data-id', vCurrencyId);
+                        vCurrencyNameElement.val(vCurrencyNameValue);
+
+                        // Modal Show
+                        $('#CurrencyDataModal').modal('hide');
+                    }
+
+                })
+    })
+        }
+    });
+    $('#txtCurrencyId').on('blur', function () {
+        var vCurrencyCode = $(this).val();
+        $.post('/Currency/SearchCurrencyByCode', {
+            pCurrencyCode: vCurrencyCode
+
+        }, function (data, status) {
+            if (data != undefined && data != '' ) {
+                var vDataResult = JSON.parse(data);
+                $('#txtCurrencyId').attr('data-id', vDataResult[0].CurrencyId)
+                $('#txtCurrencyName').val(vDataResult[0].CurrencyNameL1)
+            }
+            else {
+                funNotification('@appResource.msgWrongCurrency', 1);
+            }
+
+        })
+    })
+    $('#txtBarCode').on('blur', function () {
+
+        fnGetInventoryItem($('#txtBarCode'))
+        //GetUnits($('#txtBarCode'))
+    })
+    // Get Id Of Main Group
+    $('.divUnit').on('click', 'table tr', function () {
+        var vUnitId = $(this).attr('data-id')
+        localStorage.setItem('vUnitId', vUnitId);
+        fnGetBarcode(vUnitId);
+    });
+
+    function fnGetInventoryItem(pElement) {
+        if (pElement.val() != undefined && pElement.val() != '') {
+            fnClearBarcode();
+            console.log('gggg' + pElement.val());
+            //$.post('/InvItem/GetInvItem',
+            $.post('/InvItem/GetInvItemByParCode',
+                {
+                    pInvItemBarCode: pElement.val(),
+                },
+                function (data, status) {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, invitem) {
+                        pElement.attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').val(invitem.InvItemCode);
+                        $('#txtItemIdNo').val(invitem.ItemIdNo);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemCode2').val(invitem.InvItemSymbol);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemMeasurement').val(invitem.ItemMeasurement);
+                        $('#txtProductDate').val(invitem.ProductDate);
+                        $('#txtInvItemNameL1').val(invitem.InvItemNameL1);
+                        $('#txtInvItemNameL2').val(invitem.InvItemNameL2);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        //$('#txtCurrencyId').val(invitem.CurrencyId);
+                         if (invitem.CurrencyId == undefined || invitem.CurrencyId == '') {
+                             $('#txtCurrencyId').val(invitem.DefaultCurrencyId);
+                             $('#txtCurrencyName').val(invitem.DefaultCurrencyName);
+
+                        }
+                        else {
+                             $('#txtCurrencyId').val(invitem.CurrencyId);
+                             $('#txtCurrencyName').val(invitem.CurrencyNameL1);
+                        }
+
+                        $('#txtItemLastCost').val(invitem.ItemLastCost);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtDiscLimit').val(invitem.DiscLimit);
+                        $('#txtDiscPerc').val(invitem.DiscPerc);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        $('#txtBonus').val(invitem.Bonus);
+                        $('#txtItemMinQuantity').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity').val(invitem.ItemMaxQuantity);
+                        $('#txtItemMinQuantity2').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity2').val(invitem.ItemMaxQuantity);
+                        $('#txtLastBuy').val(invitem.LastBuy);
+                        $('#txtLastSell').val(invitem.LastSell);
+                        $('#txtCategoryAccountId').val(invitem.CategoryAccountCode);
+                        $('#txtCategoryAccountId').attr('data-id',invitem.CategoryId);
+                        $('#txtCategoryAccountName').val(invitem.CategoryAccountNameL1);
+                        $('.clsimg').attr('data-filename', invitem.ItemImage);
+                        $('#txtBonusLimit').val(invitem.BonusLimit);
+
+                        $('.clsimg').attr('src', invitem.ItemImage)
+
+                    });
+                    GetUnits($('#txtBarCode'))
+                    fnGetEquip($('#txtBarCode').attr('data-id'))
+                    fnGetItemReplace();
+                    fnGetPrices();
+                    fnGetSubItem();
+                    fnGetExpireDate();
+
+
+                }
+            )
+        }
+        else {
+
+            fnClearAll();
+        }
+
+    }
+    function fnClearAll()
+    {
+
+        $('#txtInvItemCode').val('');
+        $('#txtItemIdNo').val('');
+        $('#txtItemFactorId').val('');
+        $('#txtItemCode2').val('');
+        $('#txtItemFactorId').val('');
+        $('#txtItemMeasurement').val('');
+        $('#txtProductDate').val('');
+        $('#txtInvItemNameL1').val('');
+        $('#txtInvItemNameL2').val('');
+        $('#txtOrderLimit').val('');
+        $('#txtCurrencyId').val('');
+        $('#txtCurrencyName').val('');
+        $('#txtItemLastCost').val('');
+        $('#txtSupCompany').val('');
+        $('#txtSupCompany').val('');
+        $('#txtDiscLimit').val('');
+        $('#txtDiscPerc').val('');
+        $('#txtOrderLimit').val('');
+        $('#txtBonus').val('');
+        $('#txtItemMinQuantity').val('');
+        $('#txtItemMaxQuantity').val('');
+        $('#txtItemMinQuantity2').val('');
+        $('#txtItemMaxQuantity2').val('');
+        $('#txtLastBuy').val('');
+        $('#txtLastSell').val('');
+        $('#txtCategoryAccountId').val('');
+        $('#txtCategoryAccountId').attr('data-id','0');
+        $('#txtCategoryAccountName').val('');
+        $('.clsimg').attr('src', null);
+        $('#txtBonusLimit').val('');
+        // clear all tables content
+        fncleartables();
+        fnGetDefaultCurrency();
+    }
+
+    function GetUnits(pElement) {
+        var vTableBody = $('.tblItemUnitBody');
+        vTableBody.html('');
+        $.post('/InvItem/GetInvItemUnit', {
+            pItemId: pElement.attr('data-id'),
+        }, function (data, status) {
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+                console.log('data' + vDataResult);
+
+                $.each(vDataResult, function (i, Unit) {
+                    // Row Content
+
+
+                    var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="' + Unit.InvItemUnitId + '">' +
+                        '<td><button class="btn btn-sm btn-light btnUnitAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        '<td width="7%"><input type="text" class="form-control UnitCode" disabled value="' + Unit.InvUnitCode + '" /></td>' +
+                        '<td width="7%"><input type="text" class="form-control UnitId" data-id="' + Unit.UnitId + '" value="' + Unit.ChildCode + '" /></td>' +
+                        '<td><input type="text" class="form-control ChildNameL1" readonly value="' + Unit.ChildNameL1 + '" /></td>' +
+                        '<td width="7%"><input type="text" class="form-control DefaultUnit " disabled  data-id = "' + Unit.DefaultUnit + '" value="' + Unit.ParentCode + '" /></td>' +
+                        '<td><input type="text" class="form-control DefaultUnitName " readonly value="' + Unit.ParentNameL1 + '" /></td>' +
+
+                        '<td><input type="text" class="form-control PartsInParents " value="' + Unit.PartsInParents + '" /></td>' +
+                        '<td><input type="text" class="form-control UnitCost  " value="' + Unit.UnitCost+'"   /></td>' +
+                        '<td><input type="text" class="form-control CurrencyId    " value="' + Unit.CurrencyId + '" data-id="' + Unit.CurrencyId + '"/></td>' +
+                        '<td><input type="text" class="form-control CurrencyNameL1   " readonly  value="' + Unit.CurrencyNameL1 + '" /></td>' +
+                        '<td><input type="text" class="form-control UnitPrice "value="' + Unit.UnitPrice + '"    /></td>' +
+                        '<td><input type="text" class="form-control UnitOrderLimit   " value="' + Unit.UnitOrderLimit + '" /></td>' +
+                        '<td><button class="btn btn-light btn-sm btnUnitDelete" data-id="' + Unit.InvItemUnitId + '"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>';
+
+                    vTableBody.append(vRowContent);
+
+                })
+            }
+            else {
+                var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+                    '<td><button class="btn btn-sm btn-light btnUnitAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                    '<td width="7%"><input type="text" class="form-control UnitCode" disabled /></td>' +
+                    '<td  width="7%"><input type="text" class="form-control UnitId" /></td>' +
+                    '<td><input type="text" class="form-control ChildNameL1" readonly /></td>' +
+                    '<td width="7%"><input type="text" class="form-control DefaultUnit " disabled /></td>' +
+                    '<td><input type="text" class="form-control DefaultUnitName " readonly  /></td>' +
+
+                    '<td><input type="text" class="form-control PartsInParents " /></td>' +
+                    '<td><input type="text" class="form-control UnitCost  "   /></td>' +
+                    '<td><input type="text" class="form-control CurrencyId   "  data-id="0"   /></td>' +
+                    '<td><input type="text" class="form-control CurrencyNameL1   " readonly /></td>' +
+                    '<td><input type="text" class="form-control UnitPrice"   /></td>' +
+                    '<td><input type="text" class="form-control UnitOrderLimit   "/></td>' +
+                    '<td><button class="btn btn-light btn-sm btnUnitDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>';
+
+                vTableBody.append(vRowContent);
+
+            }
+
+
+
+
+
+        })
+
+    }
+      function fnGetBarcode(pUnitId)
+      {
+
+          var vTableBody = $('.tblParcodeBody');
+          vTableBody.html('');
+        $.post('/InvItem/GetBarcode', {
+            pUnitId: pUnitId,
+        }, function (data, status) {
+
+
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+
+                $.each(vDataResult, function (i, Barcode) {
+                    // Row Content
+                    var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="' + Barcode.InvItemBarcodeId + '" data-unit-id = "' + pUnitId + '">' +
+                        '<td><button class="btn btn-sm btn-light btnBarcodeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>'+
+                        '<td><input type="text" class="form-control ItemBarCode"  value="' + Barcode.ItemBarCode + '" /></td>' +
+                        '<td><button class="btn btn-light btn-sm btnBarCodeDelete" data-id="' + Barcode.InvItemBarcodeId +'"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>';
+
+                    vTableBody.append(vRowContent);
+
+                })
+            }
+            else {
+                var vRowContentbarcode = '<tr class="tblRow"  data-changed = "0" data-id="0" data-unit-id = "0">' +
+                    '<td><button class="btn btn-sm btn-light btnBarcodeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                    '<td><input type="text" class="form-control ItemBarCode" /></td>' +
+                    '<td><button class="btn btn-light btn-sm btnBarCodeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>';
+
+                vTableBody.append(vRowContentbarcode);
+            }
+
+        })
+    }
+    //$('.btnUtilityCreate').on('click', function () {
+        $('.btnSave1').on('click', function () {
+        console.log('clllllllllickkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+           var vNameAr = $('#txtInvItemNameL1').val();
+        var vNameEn = $('#txtInvItemNameL2').val();
+        if (vNameAr != undefined && vNameAr != '' && vNameEn != undefined && vNameEn != '') {
+            if ($('#txtCategoryAccountId').val() != undefined && $('#txtCategoryAccountId').val() != '') {
+                if ($('#txtCurrencyId').val() == undefined || $('#txtCurrencyId').val() == '' ) {
+                    funNotification('@appResource.msgRequiredCurrency', 2);
+                    $('#txtCurrencyId').focus();
+                }
+                else {
+
+                    if ($('.tblItemUnitBody tr').length == 1) {
+
+                        if ($(".tblItemUnitBody > tr:first").find('.UnitId').val() == undefined || $(".tblItemUnitBody > tr:first").find('.UnitId').val().trim() == '') {
+                            funNotification('@appResource.msgRequiredUnits', 2);
+                            $(".tblItemUnitBody > tr:first").find('.UnitId').focus();
+                        }
+                        else {
+                            fnHeaderSave();
+                        }
+                    }
+                    else if ($('.tblItemUnitBody tr').length > 1) {
+                        console.log('length' + $('.tblItemUnitBody tr').length);
+                        fnHeaderSave();
+                    }
+                }
+
+
+
+            }
+            else {
+                 // Notification - Field Required
+                     funNotification('@appResource.msgRequiredType', 2);
+                $('#txtCategoryAccountId').focus();
+            }
+
+
+        }
+        else {
+            // Notification - Field Required
+                     funNotification('@appResource.msgRequired', 2);
+
+        }
+
+    });
+    $('.btnSave').on('click', function () {
+        var vNameAr = $('#txtInvItemNameL1').val();
+        var vNameEn = $('#txtInvItemNameL2').val();
+        if (vNameAr != undefined && vNameAr != '' && vNameEn != undefined && vNameEn != '') {
+            if ($('#txtCategoryAccountId').val() != undefined && $('#txtCategoryAccountId').val() != '' ) {
+                fnHeaderSave();
+
+            }
+            else {
+                 // Notification - Field Required
+                  funNotification('@appResource.msgRequiredType', 2);
+                $('#txtCategoryAccountId').focus();
+            }
+
+            ////setTimeout(function () {
+            //fnSaveUnit();
+
+
+
+            ////}, 1500);
+            //setTimeout(function () {
+            //fnEquipSave();
+
+            //}, 1200);
+
+            //setTimeout(function () {
+
+            //fnSaveItemReplace();
+
+            //}, 200);
+            //setTimeout(function () {
+
+            //fnPriceSave();
+
+            //}, 500);
+            //setTimeout(function () {
+            //    fnSaveBarcode();
+            //}, 600);
+        }
+        else {
+            // Notification - Field Required
+                     funNotification('@appResource.msgRequired', 2);
+
+        }
+    });
+    function fnHeaderSave() {
+        // Is Valid
+        var vIsValid = true;
+        ////console.log('date' + $('#txtProductDate').val())
+        ////console.log('image' + $('.clsimg').attr('src'))
+        ////console.log('lastbuy' + $('#txtLastBuy').val())
+        ////console.log('lastsell' + $('#txtLastSell').val())
+        ////console.log('factor' + $('#txtItemFactorId').val())
+        ////console.log('measure' + $('#txtItemMeasurement').val())
+        //$.get('/api/APIInvItem/InvItemGET', {
+        //    pInvItemId: $('#txtInvItemCode').attr('data-id'),
+        //    pInvItemNameL1: $('#txtInvItemNameL1').val(),
+        //    pInvItemNameL2: $('#txtInvItemNameL2').val(),
+        //    pCategoryId: $('#txtCategoryAccountId').val(),
+        //    pSupCompany: $('#txtSupCompany').val(),
+        //    pBonusLimit: $('#txtBonus').val(),
+        //    pBonus: $('#txtBonus').val(),
+        //    pDiscLimit: $('#txtDiscLimit').val(),
+        //    pDiscPerc: $('#txtDiscPerc').val(),
+        //    pOrderLimit: $('#txtOrderLimit').val(),
+        //    pItemMaxQuantity: $('#txtItemMaxQuantity').val(),
+        //    pItemMinQuantity: $('#txtItemMinQuantity2').val(),
+        //    pLastBuy: $('#txtLastBuy').val().toString("yyyy-MM-dd"),
+        //    pLastSell: $('#txtLastSell').val().toString("yyyy-MM-dd"),
+        //    pItemLastCost: $('#txtItemLastCost').val(),
+        //    pCurrencyId: $('#txtCurrencyId').val(),
+        //    pItemIdNo: $('#txtItemIdNo').val(),
+        //    pItemFactorId: $('#txtItemFactorId').val(),
+        //    pItemMeasurement: $('#txtItemMeasurement').val(),
+        //    pCategoryMeasureId: $('#txtItemMeasurement').val(),
+        //    pProductDate: $('#txtProductDate').val().toString("yyyy-MM-dd"),
+        //    //pItemImage: $('.clsimg').attr('src'),
+        //    pItemImage: $('.clsimg').attr('data-src'),
+        //    pQueryTypeId: 100
+        //}
+
+
+            //, function (data, status) {
+            //    setTimeout(function () {
+            //        fnSaveUnit();
+
+            //    }, 1000);
+
+            //    setTimeout(function () {
+            //        fnSaveBarcode();
+
+            //    }, 1200);
+            //    setTimeout(function () {
+            //        fnEquipSave();
+
+            //    }, 200);
+            //    setTimeout(function () {
+
+            //        fnSaveItemReplace();
+
+            //    }, 200);
+            //    setTimeout(function () {
+
+            //        fnPriceSave();
+
+            //    }, 500);
+
+
+
+        //    }
+        //)
+  
+        $.get(
+            '/api/APIInvItem/InvItemGet'
+            ,
+            {
+                //$('.clsimg').attr('data-src-basic', vBasicPath);
+                //    $('.clsimg').attr('data-filename', pElement.files[0].name);
+                pInvItemId: $('#txtInvItemCode').attr('data-id'),
+                pInvItemSymbol: $('#txtItemCode2').val(),
+                pInvItemNameL1: $('#txtInvItemNameL1').val(),
+                pInvItemNameL2: $('#txtInvItemNameL2').val(),
+                pCategoryId: $('#txtCategoryAccountId').attr('data-id'),
+                pSupCompany: $('#txtSupCompany').val(),
+                pBonusLimit: $('#txtBonusLimit').val(),
+                pBonus: $('#txtBonus').val(),
+                pDiscLimit: $('#txtDiscLimit').val(),
+                pDiscPerc: $('#txtDiscPerc').val(),
+                pOrderLimit: $('#txtOrderLimit').val(),
+                pItemMaxQuantity: $('#txtItemMaxQuantity').val(),
+                pItemMinQuantity: $('#txtItemMinQuantity').val(),
+                pLastBuy: $('#txtLastBuy').val().toString("yyyy-MM-dd"),
+                pLastSell: $('#txtLastSell').val().toString("yyyy-MM-dd"),
+                pItemLastCost: $('#txtItemLastCost').val(),
+                pCurrencyId: $('#txtCurrencyId').val(),
+                pItemIdNo: $('#txtItemIdNo').val(),
+                pItemFactorId: $('#txtItemFactorId').val(),
+                pItemMeasurement: $('#txtItemMeasurement').val(),
+                pCategoryMeasureId: $('#txtItemMeasurement').val(),
+                pProductDate: $('#txtProductDate').val().toString("yyyy-MM-dd"),
+                //pItemImage: $('.clsimg').attr('src'),
+              pItemImage: $('.clsimg').attr('data-src'),
+            pbasicpath: $('.clsimg').attr('data-src-basic'),
+                pfilename: $('.clsimg').attr('data-filename'),
+                //pFile: $('#pFile'),
+                pQueryTypeId: 100
+            }, function (data, status) {
+                //          //setTimeout(function () {
+                //    fnSaveUnit();
+
+                ////}, 1000);
+
+                ////setTimeout(function () {
+                //    fnSaveBarcode();
+
+                ////}, 1200);
+                ////setTimeout(function () {
+                //    fnEquipSave();
+
+                ////}, 500);
+                ////setTimeout(function () {
+
+                //    fnSaveItemReplace();
+
+                ////}, 500);
+                ////setTimeout(function () {
+
+                //    fnPriceSave();
+
+                ////}, 500);
+
+                //fnSaveSubItem();
+                //fnSaveExpireDate();
+
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $('#txtInvItemCode').attr('data-id', vDataResult[0].InvItemId)
+                    $('#txtBarCode').attr('data-id', vDataResult[0].InvItemId)
+
+                    fnSaveUnit();
+
+                    fnSaveBarcode();
+
+
+                    fnEquipSave();
+
+
+                    fnSaveItemReplace();
+
+
+
+                    fnPriceSave();
+
+
+                    fnSaveSubItem();
+                    fnSaveExpireDate();
+                }
+
+
+
+
+            });
+        //fnSaveUnit();
+
+        ////}, 1000);
+
+        ////setTimeout(function () {
+        //fnSaveBarcode();
+
+        ////}, 1200);
+        ////setTimeout(function () {
+        //fnEquipSave();
+
+        ////}, 500);
+        ////setTimeout(function () {
+
+        //fnSaveItemReplace();
+
+        ////}, 500);
+        ////setTimeout(function () {
+
+        //fnPriceSave();
+
+        ////}, 500);
+
+        //fnSaveSubItem();
+        //fnSaveExpireDate();
+
+
+        if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+            // Notification
+            funNotification('@appResource.msgSave', 1);
+        }
+
+
+    }
+    //$('.btnDelete').on('click', function () {
+    //    var vNameAr = $('#txtInvItemNameL1').val();
+    //    var vNameEn = $('#txtInvItemNameL2').val();
+    //    if (vNameAr != undefined && vNameAr != '' && vNameEn != undefined && vNameEn != '') {
+    //        fnHeaderDelete();
+    //    }
+    //})
+    $('.btnCut').on('click', function () {
+        var vNameAr = $('#txtInvItemNameL1').val();
+        var vNameEn = $('#txtInvItemNameL2').val();
+        if (vNameAr != undefined && vNameAr != '' && vNameEn != undefined && vNameEn != '') {
+            fnHeaderDelete();
+        }
+    });
+
+    function fnHeaderDelete()
+    {
+        //var vUnitIdElement = vTableRow.find('.UnitId');
+        var vElementId = $('.btnCut')
+        //vElementId.closest()
+        //var vPrinterId = vTableRow.attr('data-id')
+
+
+        var vDataId = $('#txtInvItemCode').attr('data-id');
+        var vDataName = $('#txtInvItemNameL1').val();
+
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    if ($('#txtInvItemCode').attr('data-id') != '0') {
+                        // Modal
+                        $('#confirmDeleteModalContent').html(data);
+                        $('#confirmDeleteModal').modal('show');
+                        $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                            $("body").on("click", "#btnDeleteConfirm", function () {
+                                $.post('/InvItem/DeleteHeader',
+                                    {
+                                        pInvItemId: $('#txtInvItemCode').attr('data-id'),
+                                    }, function (data, status) {
+                                        if (data != undefined && data != '') {
+                                            if ($.isNumeric(data)) {
+                                                funNotification('@appResource.msgDelete', 2);
+                                               
+                                            } else {
+                                              funNotification('@appResource.msgSave', 1);
+                                                fnClearAll();
+
+                                            }
+
+                                   
+                                        }
+                                  
+                              
+
+                                    })
+                            })
+                        })
+                    }
+
+                }
+            })
+
+
+    }
+    function fnSaveUnit() {
+        $(".tblItemUnitBody > tr").each(function () {
+            // Row Data
+            var vRowData = $(this);
+            //var vParentId = vRowData.find('.DefaultUnit').attr('data-id')
+            //if (vParentId = undefined && vParentId == '') {
+            //    vParentId = 0
+            //}
+            if (vRowData.attr('data-changed') == '1') {
+                vRowData.attr('data-changed', '0')
+                //if (vRowData.find('.ChildNameL1').val() != undefined && vRowData.find('.ChildNameL1').val() != '') {
+                if (vRowData.find('.UnitId').val() != undefined && vRowData.find('.UnitId').val() != '') {
+
+                    //$.get('/api/APIINVItemUnit/InvItemUnitGET',
+                    $.post('/InvItem/SaveUnit',
+                        {
+                            pInvItemUnitId: vRowData.attr('data-id'),
+                            pUnitId: vRowData.find('.UnitId').attr('data-id'),
+                            pUnitNameL1: vRowData.find('.ChildNameL1').val(),
+                            //pUnitNameL2: vRowData.find('.UnitNameL1').val(),
+                            pUnitCost: vRowData.find('.UnitCost').val(),
+                            pPartsInParents: vRowData.find('.PartsInParents').val(),
+                            pUnitParentId: vRowData.find('.DefaultUnit').attr('data-id'),
+                            pUnitPrice: vRowData.find('.UnitPrice').val(),
+                            pCurrencyId: vRowData.find('.CurrencyId').attr('data-id'),
+                            pDefaultUnit: vRowData.find('.DefaultUnit').attr('data-id'),
+                            pUnitOrderLimit: vRowData.find('.UnitOrderLimit').val(),
+                            pItemId: $('#txtInvItemCode').attr('data-id'),
+                            pUnitIsActive: true,
+                            pQueryTypeId: 100
+                        }, function (data, status) {
+                            if (data != undefined && data != '') {
+                                var vDataResult = JSON.parse(data);
+                                if (vRowData.attr('data-id') == '0') {
+
+                                    vRowData.attr('data-id', vDataResult[0].UnitId);
+                                    vRowData.find('.UnitCode').val(vDataResult[0].UnitCode);
+
+                                }
+                            }
+
+                        }
+                    )
+                }
+                else {
+                    funNotification('@appResource.msgRequiredUnits', 2);
+                }
+            }
+
+        });
+
+
+    }
+    function fnSaveBarcode() {
+        $(".tblParcodeBody > tr").each(function () {
+            // Row Data
+            var vRowData = $(this);
+            var vBarcodeId = vRowData.attr('data-id');
+            var vUnitId;
+            //if (vRowData.attr('data-unit-id') == undefined || vRowData.attr('data-unit-id') == '' ) {
+            //    vUnitId = 0;
+            //}
+            //else {
+            //    vUnitId = vRowData.attr('data-unit-id');
+            //}
+
+            vUnitId = localStorage.getItem('vUnitId');
+            if (vRowData.attr('data-changed') == '1') {
+                vRowData.attr('data-changed','0')
+            if (vRowData.find('.ItemBarCode').val() != undefined && vRowData.find('.ItemBarCode').val() != '') {
+                $.post('/InvItem/SaveBarCode',
+                    {
+                        pInvItemBarcodeId: vBarcodeId,
+                        pUnitId: vUnitId,
+                        pItemBarCode: vRowData.find('.ItemBarCode').val(),
+                        pQueryTypeId: 100
+                    }, function (data, status) {
+                        console.log('datapar' + data);
+                        if (data != undefined || data != '') {
+                            if ($.isNumeric(data)) {
+                                funNotification('@appResource.msgParcodeExisted', 2);
+                                console.log('parrrrrrrrrrrrrrrrrrr');
+                            }
+                            else {
+
+                                if (vRowData.attr('data-id') == '0') {
+                                    var vDataResult = JSON.parse(data);
+
+                                    vRowData.attr('data-id', vDataResult[0].InvItemBarcodeId);
+                                }
+
+                                funNotification('@appResource.msgSave', 1);
+
+
+                            }
+                        }
+                        else {
+
+
+
+                        }
+
+                    }
+                )
+            }
+        }
+
+
+        //    $.get('/api/APIInvItemBarcode/InvItemBarcodeGET',
+        //        {
+        //            pInvItemBarcodeId: vBarcodeId,
+        //            pUnitId: vUnitId,
+        //            pItemBarCode: vRowData.find('.ItemBarCode').val(),
+        //            pUnitIsActive: true,
+        //            pQueryTypeId: 100
+        //        }, function (data, status) {
+
+        //        }
+
+        //    )
+        });
+
+    }
+    // Currency Code, Name - F9
+    $('body').on('keydown dblclick', '.CurrencyId', function (e) {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentcurrencytxt', '0')
+            localStorage.setItem('lstcurrencycurrentindex', vTableRow.index)
+
+
+            // Get Currency Data
+            var vCurrencyIdElement = vTableRow.find('.CurrencyId');
+            var vCurrencyNameElement = vTableRow.find('.CurrencyNameL1');
+
+
+            // Search Currency
+            var vURL = '/Currency/SearchCurrency';
+            // Load Content of Currency Search
+            $('#CurrencyDataModalContent').load(vURL);
+            // Modal Show
+            $('#CurrencyDataModal').modal('show');
+            // Focus
+            $('#CurrencyDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Currency
+                $('body').on('click', '.divCurrencySelect', function () {
+                    if (localStorage.getItem('lstcurrencycurrentindex') == vTableRow.index ) {
+                        $('.txtSearch').focus();
+
+                        // Currency Id
+                        var vCurrencyId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vCurrencyCodeValue = $(this).find('.divCurrencyNo').text();
+                        var vCurrencyNameValue = $(this).find('.divCurrencyName').text();
+
+
+
+                        // Set Value
+                        vCurrencyIdElement.val(vCurrencyCodeValue);
+                        vCurrencyIdElement.attr('data-id', vCurrencyId);
+                        vCurrencyNameElement.val(vCurrencyNameValue);
+                        vTableRow.attr('data-changed', '1')
+                        // Modal Show
+                        $('#CurrencyDataModal').modal('hide');
+                        vTableRow = '';
+                    }
+
+
+
+                })
+            })
+        }
+    })
+    $('body').on('blur', '.CurrencyId', function (e) {
+        var vCurrencyCode = $(this).val();
+        var vTableRow = $(this).closest('.tblRow');
+        if (vCurrencyCode.trim() != '') {
+            $.post('/Currency/SearchCurrencyByCode', {
+                pCurrencyCode: vCurrencyCode
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    vTableRow.find('.CurrencyId').attr('data-id', vDataResult[0].CurrencyId)
+                    vTableRow.find('.CurrencyNameL1').val(vDataResult[0].CurrencyNameL1)
+                }
+                else {
+                    funNotification('@appResource.msgWrongCurrency', 1);
+                }
+
+            })
+        }
+
+    })
+    $('body').on('blur', '.UnitId', function (e) {
+        var vUnitCode = $(this).val();
+        var vTableRow = $(this).closest('.tblRow');
+        if (vUnitCode.trim() != '') {
+            $.post('/Unit/SearchUnitByCode', {
+                pUnitCode: vUnitCode
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    //vTableRow.find('.UnitId').attr('data-id', vDataResult[0].UnitId)
+                    //vTableRow.find('.ChildNameL1').val(vDataResult[0].UnitNameL1)
+                    vTableRow.find('.UnitId').attr('data-id', vDataResult[0].LookupDtlId)
+
+                    vTableRow.find('.ChildNameL1').val(vDataResult[0].LookupDtlDesc)
+                }
+                else {
+                    funNotification('@appResource.msgWrongUnit', 1);
+                }
+
+            })
+        }
+
+    })
+    $('body').on('click', '.btnUnitAddRow', function () {
+        var vTableRow = $(this).closest('.tblRow');
+        var vParentId = vTableRow.find('.UnitId').attr('data-id');
+        var vParentCode = vTableRow.find('.UnitId').val();
+        var vParentName = vTableRow.find('.ChildNameL1').val();
+        if (vParentId == undefined || vParentId == '') {
+            vParentId = '0';
+        }
+        var vRowContentUnitBody = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+            '<td><button class="btn btn-sm btn-light btnUnitAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control UnitCode" disabled /></td>' +
+            '<td  width="7%"><input type="text" class="form-control UnitId"  /></td>' +
+            '<td><input type="text" class="form-control ChildNameL1" readonly /></td>' +
+            '<td width="7%"><input type="text" class="form-control DefaultUnit " disabled data-id="' + vParentId + '" value = "' + vParentCode + '" /></td>' +
+            '<td><input type="text" class="form-control DefaultUnitName " readonly value = "' + vParentName + '"   /></td>' +
+            '<td><input type="text" class="form-control PartsInParents " /></td>' +
+            '<td><input type="text" class="form-control UnitCost  "   /></td>' +
+            '<td><input type="text" class="form-control CurrencyId   "  data-id="0"   /></td>' +
+            '<td><input type="text" class="form-control CurrencyNameL1   " readonly /></td>' +
+            '<td><input type="text" class="form-control UnitPrice"   /></td>' +
+            '<td><input type="text" class="form-control UnitOrderLimit   "/></td>' +
+            '<td><button class="btn btn-light btn-sm btnUnitDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        $('.tblItemUnitBody').append(vRowContentUnitBody);
+
+    })
+    function funAddUnitEmptyRow() {
+        var vRowContentUnitBody = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+            '<td><button class="btn btn-sm btn-light btnUnitAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control UnitCode" disabled /></td>' +
+            '<td  width="7%"><input type="text" class="form-control UnitId"  /></td>' +
+            '<td><input type="text" class="form-control ChildNameL1" readonly /></td>' +
+            '<td width="7%"><input type="text" class="form-control DefaultUnit " data-id="0" disabled  /></td>' +
+            '<td><input type="text" class="form-control DefaultUnitName " readonly   /></td>' +
+            '<td><input type="text" class="form-control PartsInParents " /></td>' +
+            '<td><input type="text" class="form-control UnitCost  "   /></td>' +
+            '<td><input type="text" class="form-control CurrencyId   "  data-id="0"   /></td>' +
+            '<td><input type="text" class="form-control CurrencyNameL1   " readonly /></td>' +
+            '<td><input type="text" class="form-control UnitPrice"   /></td>' +
+            '<td><input type="text" class="form-control UnitOrderLimit   "/></td>' +
+            '<td><button class="btn btn-light btn-sm btnUnitDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        $('.tblItemUnitBody').append(vRowContentUnitBody);
+
+    }
+
+    $('body').on('click', '.btnBarcodeAddRow', function () {
+
+        funAddParCodeEmptyRow();
+    })
+    function funAddParCodeEmptyRow() {
+        var vRowContentbarcodebody = '<tr class="tblRow"  data-changed = "0" data-id="0" data-unit-id = "0">' +
+            '<td><button class="btn btn-sm btn-light btnBarcodeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td><input type="text" class="form-control ItemBarCode" /></td>' +
+            '<td><button class="btn btn-light btn-sm btnBarCodeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+
+        $('.tblParcodeBody').append(vRowContentbarcodebody);
+    }
+    function fnGetEquip(pItemId) {
+        var vTableBody = $('.tblEquipBody');
+        $.post('/InvItem/GetEquip', {
+            pItemId: pItemId,
+        }, function (data, status) {
+            vTableBody.html('');
+
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+
+                $.each(vDataResult, function (i, Equip) {
+                    var vRowEquipContentBody = '<tr class="tblRow"  data-changed = "0" data-id="' + Equip.EquipId+'">' +
+                        '<td width="7%"><button class="btn btn-sm btn-light btnEquipAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        '<td width="7%"><input type="text" class="form-control EquipCode" disabled value="' + Equip.EquipCode + '"  /> </td>' +
+                        '<td><input type="text" class="form-control EquipName" value="' + Equip.EquipName + '" /></td>' +
+                        '<td><input type="text" class="form-control Notes" value="' + Equip.Notes + '"  /></td>' +
+                        '<td><button class="btn btn-light btn-sm btnEquipDelete" data-id="' + Equip.EquipId+'"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>';
+                    vTableBody.append(vRowEquipContentBody);
+
+                })
+            }
+            else {
+                var vRowEquipContentEmptyBody = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+                    '<td width="7%"><button class="btn btn-sm btn-light btnEquipAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                    '<td width="7%"><input type="text" class="form-control EquipCode" disabled /> </td>' +
+                    '<td><input type="text" class="form-control EquipName" /></td>' +
+                    '<td><input type="text" class="form-control Notes" /></td>' +
+                    '<td><button class="btn btn-light btn-sm btnEquipDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>';
+
+                vTableBody.append(vRowEquipContentEmptyBody);
+            }
+
+        })
+    }
+    $('body').on('click', '.btnEquipAddRow', function () {
+        funAddEquipEmptyRow()
+
+    })
+    function funAddEquipEmptyRow() {
+        var vTableBody = $('.tblEquipBody');
+        var vRowEquipContentEmptyBody = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+            '<td width="7%"><button class="btn btn-sm btn-light btnEquipAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control EquipCode" disabled /> </td>' +
+            '<td><input type="text" class="form-control EquipName" /></td>' +
+            '<td><input type="text" class="form-control Notes" /></td>' +
+            '<td><button class="btn btn-light btn-sm btnEquipDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        vTableBody.append(vRowEquipContentEmptyBody);
+    }
+    function fnEquipSave()
+    {
+        var vEquipId = 0;
+        $('.tblEquipBody > tr').each(function () {
+            var vRowData = $(this);
+            if (vRowData.attr('data-changed') == '1') {
+                vRowData.attr('data-changed','0')
+            if (vRowData.find('.EquipName').val() != undefined && vRowData.find('.EquipName').val() != '') {
+                $.post('/InvItem/SaveEquip',
+                    {
+                        pEquipId: vRowData.attr('data-id'),
+                        pEquipCode: vRowData.find('.EquipCode').val(),
+                        pEquipName: vRowData.find('.EquipName').val(),
+                        pItemId: $('#txtInvItemCode').attr('data-id'),
+                        pNotes: vRowData.find('.Notes').val(),
+                        pEquipIsActive: true,
+                        pQueryTypeId: 100
+                    }, function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            if (vRowData.attr('data-id') == '0') {
+                                vRowData.attr('data-id', vDataResult[0].EquipId)
+                                vRowData.find('.EquipCode').val(vDataResult[0].EquipCode)
+                            }
+                        }
+
+                    }
+                )
+            }
+        }
+
+            //$.get('/api/APIInvItemsEquip/InvItemsEquipGET',
+            //    {
+            //        pEquipId: vRowData.attr('data-id'),
+            //        pEquipCode: vRowData.find('.EquipCode').val(),
+            //        pEquipName: vRowData.find('.EquipName').val(),
+            //        pItemId: $('#txtInvItemCode').attr('data-id'),
+            //        pNotes: vRowData.find('.Notes').val(),
+            //        pEquipIsActive: true,
+            //        pQueryTypeId: 100
+            //    }, function (data, status) {
+
+            //    }
+            //)
+
+        })
+
+
+    }
+    function fnGetItemReplace()
+    {
+        var vTableBody = $('.tblItemReplaceBody');
+        vTableBody.html('');
+        $.post(
+            '/InvItem/GetItemReplace'
+            ,
+            {
+                pItemId: $('#txtInvItemCode').attr('data-id'),
+            }, function (data, status)
+            {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    console.log('data' + vDataResult);
+
+                    $.each(vDataResult, function (i, itemreplace) {
+                        // Row Content
+                        var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="' + itemreplace.InvItemReplaceId + '">' +
+                            '<td><button class="btn btn-sm btn-light btnitemreplaceAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                            '<td width="7%"><input type="text" class="form-control InvItemReplaceCode" disabled value="' + itemreplace.InvItemReplaceCode + '" /></td>' +
+                            '<td width="7%"><input type="text" class="form-control ReplaceItemId" value="' + itemreplace.ReplaceItemId + '" /></td>' +
+                            '<td width="10%"><input type="text" class="form-control InvItemNameRL1" readonly  value="' + itemreplace.InvItemNameRL1 + '" /></td>' +
+                            '<td><input type="text" class="form-control Notes " value="' + itemreplace.Notes + '" /></td>' +
+                            '<td><button class="btn btn-light btn-sm btnItemReplaceDelete" data-id="' + itemreplace.InvItemReplaceId + '"><i class="fa fa-trash"></i></button></td>' +
+                            '</tr>';
+
+                        vTableBody.append(vRowContent);
+
+                    })
+                }
+                else {
+                    // Row Content
+                    var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+                        '<td><button class="btn btn-sm btn-light btnitemreplaceAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        '<td width="7%"><input type="text" class="form-control InvItemReplaceCode" disabled  /></td>' +
+                        '<td width="7%"><input type="text" class="form-control ReplaceItemId"  /></td>' +
+                        '<td width="10%"><input type="text" class="form-control InvItemNameRL1" readonly   /></td>' +
+                        '<td><input type="text" class="form-control Notes "  /></td>' +
+                        '<td><button class="btn btn-light btn-sm btnItemReplaceDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>';
+
+                    vTableBody.append(vRowContent);
+
+                }
+
+            }
+
+        )
+    }
+    $('body').on('click', '.btnitemreplaceAddRow', function () {
+        funAddReplaceEmptyRow();
+    })
+    function funAddReplaceEmptyRow() {
+        var vTableBody = $('.tblItemReplaceBody');
+        // Row Content
+        var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+            '<td width="5%"><button class="btn btn-sm btn-light btnitemreplaceAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control InvItemReplaceCode" disabled /></td>' +
+            '<td width="7%"><input type="text" class="form-control ReplaceItemId"  /></td>' +
+            '<td width="10%"><input type="text" class="form-control InvItemNameRL1" readonly  /></td>' +
+            '<td><input type="text" class="form-control Notes "  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnItemReplaceDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        vTableBody.append(vRowContent);
+    }
+    $('body').on('keydown dblclick', '.ReplaceItemId', function (e)
+    {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            localStorage.setItem('lstcurrentindex', vTableRow.index)
+            // Get Currency Data
+            var vItemIdElement = vTableRow.find('.ReplaceItemId');
+            var vItemNameElement = vTableRow.find('.InvItemNameRL1');
+            // Search Item
+            var vURL = '/InvItem/SearchItem?ItemId=' + $('#txtInvItemCode').attr('data-id');
+            // Load Content of Item Search
+            $('#ItemDataModalContent').load(vURL);
+            // Modal Show
+            $('#ItemDataModal').modal('show');
+
+            // Select Item
+            $('body').on('click', '.divItemSelect', function () {
+                if (localStorage.getItem('lstcurrentindex') == vTableRow.index) {
+                    // Item Id
+                    var vItemId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vItemCodeValue = $(this).find('.divItemNo').text();
+                    var vItemNameValue = $(this).find('.divItemName').text();
+
+
+
+                    // Set Value
+                    vItemIdElement.val(vItemCodeValue);
+                    vItemIdElement.attr('data-id', vItemId);
+                    vItemNameElement.val(vItemNameValue);
+                    vTableRow.attr('data-changed', '1')
+
+                    // Modal Show
+                    $('#ItemDataModal').modal('hide');
+                    vTableRow = '';
+                }
+
+
+
+            })
+        }
+
+    })
+    $('body').on('blur', '.ReplaceItemId', function (e) {
+        var vReplaceItemCode = $(this).val();
+        var vTableRow = $(this).closest('.tblRow');
+        if (vReplaceItemCode.trim() != '') {
+            $.post('/InvItem/SearchInvItemByCode', {
+                pInvItemCode: vReplaceItemCode
+
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    vTableRow.find('.ReplaceItemId').attr('data-id', vDataResult[0].InvItemId)
+                    vTableRow.find('.InvItemNameRL1').val(vDataResult[0].InvItemNameL1)
+                }
+                else {
+                    funNotification('@appResource.msgWrongProduct', 1);
+                }
+
+            })
+        }
+
+    })
+    function fnSaveItemReplace() {
+        $('.tblItemReplaceBody > tr').each(function () {
+            // Row Data
+            var vRowData = $(this);
+            var vItemReplaceId = vRowData.attr('data-id');
+            if (vRowData.attr('data-changed') == '1') {
+                vRowData.attr('data-changed','0')
+                //if (vRowData.find('.ReplaceItemId').val() != undefined && vRowData.find('.ReplaceItemId').val() != '') {
+                $.post('/InvItem/SaveItemReplace',
+                    {
+                        pInvItemReplaceId: vItemReplaceId,
+                        pInvItemReplaceCode: vRowData.find('.InvItemReplaceCode').val(),
+                        pItemId: $('#txtBarCode').attr('data-id'),
+                        pReplaceItemId: vRowData.find('.ReplaceItemId').attr('data-id'),
+                        pNotes: vRowData.find('.Notes').val(),
+                        pQueryTypeId: 100
+                    }
+                    , function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            if (vRowData.attr('data-id') == '0') {
+                                vRowData.attr('data-id', vDataResult[0].InvItemReplaceId)
+                                vRowData.find('.InvItemReplaceCode').val(vDataResult[0].InvItemReplaceCode)
+                            }
+                        }
+
+                    })
+                //}
+            }
+
+
+            //$.get('/api/APIInvItemReplace/InvItemReplaceGET',
+            //    {
+            //        pInvItemReplaceId: vItemReplaceId,
+            //        pInvItemReplaceCode: vRowData.find('.InvItemReplaceCode').val(),
+            //        pItemId: $('#txtBarCode').attr('data-id'),
+            //        pReplaceItemId: vRowData.find('.ReplaceItemId').val(),
+            //        pNotes: vRowData.find('.Notes').val(),
+            //        pQueryTypeId: 100
+            //    }, function (data, status) {
+
+
+            //    }
+
+            //)
+        });
+
+    }
+    function fnGetPrices()
+    {
+        var vTableBody = $('.tblPriceBody');
+        vTableBody.html('');
+        $.post(
+            '/InvItem/GetPrices'
+            ,
+            {
+                pItemId: $('#txtInvItemCode').attr('data-id'),
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    console.log('data' + vDataResult);
+
+                    $.each(vDataResult, function (i, Price) {
+                        console.log('Pricekkkk' + Price.PriceId)
+                        // Row Content
+
+                        var vRowContent = '<tr class="tblRow"  data-changed = "0"  data-id="' + Price.PriceId + '">' +
+                            '<td width="5%"><button class="btn btn-sm btn-light btnPriceAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                            '<td width="7%"><input type="text" class="form-control PriceCode" disabled  value="' + Price.PriceCode+ '" / /></td>' +
+                            '<td><input type="text" class="form-control SellCostType" value="' + Price.SellCostType + '" /></td>' +
+                            '<td><input type="text" class="form-control Price" value="' + Price.Price + '"    /></td>' +
+                            '<td><input type="text" class="form-control Notes " value="' + Price.Notes + '"   /></td>' +
+                            '<td><button class="btn btn-light btn-sm btnPriceDelete" data-id="' + Price.PriceId +'"><i class="fa fa-trash"></i></button></td>' +
+                            '</tr>';
+
+                        vTableBody.append(vRowContent);
+
+                    })
+                }
+                else {
+                    // Row Content
+                    var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+                        '<td width="5%"><button class="btn btn-sm btn-light btnPriceAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        '<td width="7%"><input type="text" class="form-control PriceCode" disabled /></td>' +
+                        '<td><input type="text" class="form-control SellCostType"  /></td>' +
+                        '<td><input type="text" class="form-control Price"    /></td>' +
+                        '<td><input type="text" class="form-control Notes "  /></td>' +
+                        '<td><button class="btn btn-light btn-sm btnPriceDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>';
+
+
+                    vTableBody.append(vRowContent);
+
+                }
+
+            }
+
+        )
+
+    }
+    $('body').on('click', '.btnPriceAddRow', function () {
+        funAddPriceEmptyRow();
+
+    })
+    function funAddPriceEmptyRow() {
+        var vTableBody = $('.tblPriceBody');
+        // Row Content
+        var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+            '<td width="5%"><button class="btn btn-sm btn-light btnPriceAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control PriceCode" disabled /></td>' +
+            '<td><input type="text" class="form-control SellCostType"  /></td>' +
+            '<td><input type="text" class="form-control Price"    /></td>' +
+            '<td><input type="text" class="form-control Notes "  /></td>' +
+            '<td><button class="btn btn-light btn-sm btnPriceDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+
+        vTableBody.append(vRowContent);
+    }
+    function fnPriceSave()
+    {
+        $('.tblPriceBody > tr').each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            var vItemPriceId = vRowData.attr('data-id');
+            if (vRowData.attr('data-changed') == '1') {
+                vRowData.attr('data-changed','0')
+                if (vRowData.find('.Price').val() != undefined && vRowData.find('.Price').val() != '') {
+                    $.post('/InvItem/SavePrice', {
+                        pPriceId: vItemPriceId,
+                        pPriceCode: vRowData.find('.PriceCode').val(),
+                        //pItemId: $('#txtBarCode').attr('data-id'),
+                        pItemId: $('#txtInvItemCode').attr('data-id'),
+                        pSellCostType: vRowData.find('.SellCostType').val(),
+                        pPrice: vRowData.find('.Price').val(),
+                        pNotes: vRowData.find('.Notes').val(),
+                        pPriceIsActive: true,
+                        pQueryTypeId: 100
+                    }, function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            if (vRowData.attr('data-id') == '0') {
+                                vRowData.attr('data-id', vDataResult[0].PriceId)
+                                vRowData.find('.PriceCode').val(vDataResult[0].PriceCode)
+                            }
+                        }
+
+                    })
+                }
+            }
+
+
+            //$.get('/api/APIInvItemsUnitsPrice/InvItemsUnitsPriceGET',
+            //    {
+            //        pPriceId: vItemPriceId,
+            //        pPriceCode: vRowData.find('.PriceCode').val(),
+            //         pItemId : $('#txtBarCode').attr('data-id'),
+            //        pSellCostType: vRowData.find('.SellCostType').val(),
+            //        pPrice: vRowData.find('.Price').val(),
+            //        pNotes: vRowData.find('.Notes').val(),
+            //        pPriceIsActive : true,
+            //        pQueryTypeId: 100
+            //    }, function (data, status) {
+
+            //    }
+
+            //)
+        });
+    }
+
+    // Currency Code, Name - F9
+    $('body').on('keydown dblclick', '.UnitId', function (e)
+    {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+             // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstunitcurrentindex', vTableRow.index)
+            // Get Unit Data
+            var vUnitIdElement = vTableRow.find('.UnitId');
+            var vUnitNameElement = vTableRow.find('.ChildNameL1');
+            var vParentUnitIdElement = vTableRow.find('.DefaultUnit');
+            var vParentUnitNameElement = vTableRow.find('.DefaultUnitName');
+
+
+            // Search Unit
+            //var vURL = '/Unit/SearchUnit';
+            var vURL = '/Unit/SearchBasicUnit';
+            // Load Content of Unit Search
+            $('#UnitDataModalContent').load(vURL);
+            // Modal Show
+            $('#UnitDataModal').modal('show');
+            // Focus
+            $('#UnitDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Unit
+                $('body').on('click', '.divUnitSelect', function () {
+                    if (localStorage.getItem('lstunitcurrentindex') == vTableRow.index) {
+                        $('.txtSearch').focus();
+
+                        // Unit Id
+                        var vUnitId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vUnitCodeValue = $(this).find('.divUnitNo').text();
+                        var vUnitNameValue = $(this).find('.divUnitName').text();
+                        var vParentId = $(this).attr('data-parent-id');
+                        var vParentCode = $(this).attr('data-parent-code');
+                        var vParentName = $(this).attr('data-parent-name');
+                        console.log('vParentId' + vParentId)
+                        console.log('vParentCode' + vParentCode)
+                        console.log('vParentName' + vParentName)
+
+                        // Set Value
+                        vUnitIdElement.val(vUnitCodeValue);
+                        vUnitIdElement.attr('data-id', vUnitId);
+                        vUnitNameElement.val(vUnitNameValue);
+                        //vParentUnitIdElement.val(vParentCode);
+                        //vParentUnitIdElement.attr('data-id', vParentId);
+                        //vParentUnitNameElement.val(vParentName);
+                        vTableRow.attr('data-changed', '1')
+                        // Modal Show
+                        $('#UnitDataModal').modal('hide');
+                        vTableRow = '';
+                    }
+
+
+
+                })
+            })
+
+        }
+    })
+    // Currency Code, Name - F9
+    $('body').on('keydown dblclick', '.DefaultUnit', function (e) {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstdefaultunitcurrentindex', vTableRow.index)
+            // Get Unit Data
+            var vUnitIdElement = vTableRow.find('.DefaultUnit');
+            var vUnitNameElement = vTableRow.find('.DefaultUnitName');
+
+
+            // Search Unit
+            var vURL = '/Unit/SearchUnit';
+            // Load Content of Unit Search
+            $('#UnitDataModalContent').load(vURL);
+            // Modal Show
+            $('#UnitDataModal').modal('show');
+            // Focus
+            $('#UnitDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select Unit
+                $('body').on('click', '.divUnitSelect', function () {
+                    if (localStorage.getItem('lstdefaultunitcurrentindex') == vTableRow.index) {
+                        $('.txtSearch').focus();
+
+                        // Unit Id
+                        var vUnitId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vUnitCodeValue = $(this).find('.divUnitNo').text();
+                        var vUnitNameValue = $(this).find('.divUnitName').text();
+
+
+
+                        // Set Value
+                        vUnitIdElement.val(vUnitCodeValue);
+                        vUnitIdElement.attr('data-id', vUnitId);
+                        vUnitNameElement.val(vUnitNameValue);
+                        vTableRow.attr('data-changed', '1')
+                        // Modal Show
+                        $('#UnitDataModal').modal('hide');
+                        vTableRow = '';
+                    }
+
+
+
+                })
+            })
+
+        }
+    })
+    // Delete
+    $('body').on('click', '.btnUnitDelete', function (e) {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        var vElement = $(this);
+        // Get HTML Content of [Confirm Delete] Partial View
+        var vUnitIdElement = vTableRow.find('.UnitId');
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.ChildNameL1').val();
+        localStorage.setItem('lstdelUnit', vTableRow.index())
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            console.log('vTableRow.index ' + vTableRow.index )
+                            if (vTableRow.index() > 0) {
+                                // Get Unit Data
+                                var vUnitIdElement = vTableRow.find('.UnitId');
+                                if (vTableRow.attr('data-id').trim() != '0') {
+                                    $.post('/InvItem/DeleteUnit',
+                                        {
+                                            pInvItemUnitId: vTableRow.attr('data-id'),
+                                        }, function (data, status) {
+                                            //GetUnits($('#txtBarCode'))
+                                            $('.tblParcodeBody').html('')
+                                            var vRowContentbarcodebody = '<tr class="tblRow"  data-changed = "0" data-id="0" data-unit-id = "0">' +
+                                                '<td><button class="btn btn-sm btn-light btnBarcodeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                                '<td><input type="text" class="form-control ItemBarCode" /></td>' +
+                                                '<td><button class="btn btn-light btn-sm btnBarCodeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                                '</tr>';
+
+
+                                            $('.tblParcodeBody').append(vRowContentbarcodebody);
+
+                                        }
+
+                                    )
+                                    vTableRow.remove();
+                                    funNotification('@appResource.msgDelete', 1);
+                                }
+
+
+                            }
+
+                        })
+                    })
+
+                }
+                else {
+                    // Only Delete The Row
+                    vTableRow.remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblItemUnitBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddUnitEmptyRow();
+
+                    }
+                }
+
+
+
+
+
+
+
+
+
+
+            })
+
+
+
+
+    })
+    $('body').on('click', '.btnBarCodeDelete', function (e) {
+        var vElement = $(this);
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get Unit Data
+        var vUnitIdElement = $(this);
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.ItemBarCode').val();
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdelBar', vTableRow.index)
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdelBar') == vTableRow.index) {
+                                // Delete
+                                $.post('/InvItem/DeleteBarCode',
+                                    {
+                                        pInvItemBarcodeId: vTableRow.attr('data-id'),
+                                        pQueryTypeId: 300
+                                    }, function (data, status) {
+                                        vElement.closest('.tblRow').remove();
+                                        if (data != undefined && data != '') {
+
+                                        }
+                                        //fnGetBarcode(vTableRow.attr('data-id'));
+                                  
+
+                                        var vLastRow = $('.tblParcodeBody').find('tr').attr('data-id')
+                                        if (vLastRow == undefined) {
+                                            funAddParCodeEmptyRow();
+
+                                        }
+                                    }
+
+                                )
+                                vTableRow.remove();
+                                   funNotification('@appResource.msgDelete', 1);
+                                vTableRow = '';
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblParcodeBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    funAddParCodeEmptyRow();
+
+                                }
+                            }
+                        })
+                    })
+
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblParcodeBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddParCodeEmptyRow();
+
+                    }
+                }
+            })
+
+
+
+
+
+        //$.post('/InvItem/DeleteBarCode',
+        //    {
+        //        pInvItemBarcodeId: vTableRow.attr('data-id'),
+        //        pQueryTypeId: 300
+        //    }, function (data, status) {
+        //        fnGetBarcode(vTableRow.attr('data-id'));
+        //    }
+        //)
+        //funNotification('تم الحذف بنجاح', 1);
+    })
+    $('body').on('click', '.btnEquipDelete', function (e) {
+        var vElement = $(this);
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.EquipName').val();
+
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdelEquip', vTableRow.index)
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdelEquip') == vTableRow.index) {
+                                // Delete
+                                $.post('/InvItem/DeleteEquip',
+                                    {
+                                        pEquipId: vTableRow.attr('data-id'),
+                                        pIsDeleted: true,
+                                        pQueryTypeId: 300
+                                    }, function (data, status) {
+                                        vElement.closest('.tblRow').remove();
+                                        if (data != undefined && data != '') {
+
+                                        }
+                                        //fnGetEquip($('#txtBarCode').attr('data-id'));
+                                        //vTableRow.remove();
+
+                                        var vLastRow = $('.tblEquipBody').find('tr').attr('data-id')
+                                        if (vLastRow == undefined) {
+                                            funAddEquipEmptyRow();
+
+                                        }
+                                    }
+
+                                )
+
+                                    funNotification('@appResource.msgDelete', 1);
+                                vTableRow = '';
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblEquipBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    funAddEquipEmptyRow();
+
+                                }
+                            }
+                        })
+                    })
+
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblEquipBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddEquipEmptyRow();
+
+                    }
+                }
+            })
+
+
+
+
+
+        //$.post('/InvItem/DeleteEquip',
+        //    {
+        //        pEquipId: vTableRow.attr('data-id'),
+        //        pIsDeleted: vTableRow.attr('data-id'),
+        //        pQueryTypeId: 300
+        //    }, function (data, status) {
+        //        fnGetEquip($('#txtBarCode').attr('data-id'));
+        //    }
+        //)
+
+        //funNotification('تم الحذف بنجاح', 1);
+    })
+    $('body').on('click', '.btnItemReplaceDelete', function (e) {
+        var vElement = $(this);
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        // Get Unit Data
+        //var vUnitIdElement = vTableRow.find('.UnitId');
+        var vItemReplaceId = vTableRow.attr('data-id')
+
+
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.InvItemNameRL1').val();
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdelRep', vTableRow.index)
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdelRep') == vTableRow.index) {
+                                // Delete
+                                $.post('/InvItem/DeleteItemReplace',
+                                    {
+                                        pInvItemReplaceId: vItemReplaceId,
+                                        pQueryTypeId: 300
+                                    }
+                                    , function (data, status) {
+                                        vElement.closest('tr').remove();
+                                        //fnGetItemReplace();
+                                        if (data != undefined && data != '') {
+
+                                        }
+
+                                        //vTableRow.remove();
+
+                                        var vLastRow = $('.tblItemReplaceBody').find('tr').attr('data-id')
+                                        if (vLastRow == undefined) {
+                                            funAddReplaceEmptyRow();
+
+                                        }
+
+
+                                    })
+
+
+                                   funNotification('@appResource.msgDelete', 1);
+                                vTableRow = '';
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblItemReplaceBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    funAddReplaceEmptyRow();
+
+                                }
+                            }
+                        })
+
+                    })
+
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblItemReplaceBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddReplaceEmptyRow();
+
+                    }
+                }
+            })
+
+
+
+    //    if (vTableRow.find('.ReplaceItemId').val() != undefined && vTableRow.find('.ReplaceItemId').val() != '') {
+    //        $.post('/InvItem/DeleteItemReplace',
+    //            {
+    //                pInvItemReplaceId: vTableRow.attr('data-id'),
+    //                pQueryTypeId: 300
+    //            }
+    //            , function (data, status) {
+    //                fnGetItemReplace();
+    //            }
+    //        )
+
+    //        funNotification('تم الحذف بنجاح', 1);
+    //    }
+    })
+
+    $('body').on('click', '.btnPriceDelete', function (e) {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get Unit Data
+        //var vUnitIdElement = vTableRow.find('.UnitId');
+        var vPriceId = vTableRow.attr('data-id')
+
+
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.SellCostType').val();
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdelPrices', vTableRow.index)
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdelPrices') == vTableRow.index) {
+                                // Delete
+                                $.post('/InvItem/DeletePrice', {
+                                    pPriceId: vTableRow.attr('data-id'),
+                                    pQueryTypeId: 300
+                                    }, function (data, status) {
+                                        vElement.closest('.tblRow').remove();
+                                        if (data != undefined && data != '') {
+
+                                        }
+                                        //vTableRow.remove();
+
+                                        var vLastRow = $('.tblPriceBody').find('tr').attr('data-id')
+                                        if (vLastRow == undefined) {
+
+                                            funAddPriceEmptyRow();
+                                        }
+                                        //fnGetPrices()
+                                    })
+
+                               funNotification('@appResource.msgDelete', 1);
+                                vTableRow = '';
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('.tblRow').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblPriceBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    funAddPriceEmptyRow();
+
+                                }
+                            }
+                        })
+                    })
+
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblPriceBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddPriceEmptyRow();
+
+                    }
+                }
+            })
+
+        //if (vTableRow.find('.Price').val() != undefined && vTableRow.find('.Price').val() != '') {
+        //    $.post('/InvItem/DeletePrice', {
+        //        pPriceId: vTableRow.attr('data-id'),
+        //        pQueryTypeId: 300
+        //    }, function (data, status) {
+
+        //        fnGetPrices()
+        //        })
+        //    funNotification('تم الحذف بنجاح', 1);
+        //}
+    })
+    $('.btnFirst').click(function () {
+        $.post('/InvItem/GetFirstInvItem',
+            {
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    //fnClearAll();
+                   // fncleartables();
+                    fnClearBarcode();
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, invitem) {
+                        $('#txtBarCode').attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').val(invitem.InvItemCode);
+                        $('#txtItemIdNo').val(invitem.ItemIdNo);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemCode2').val(invitem.InvItemSymbol);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemMeasurement').val(invitem.ItemMeasurement);
+                        $('#txtProductDate').val(invitem.ProductDate);
+                        $('#txtInvItemNameL1').val(invitem.InvItemNameL1);
+                        $('#txtInvItemNameL2').val(invitem.InvItemNameL2);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        if (invitem.CurrencyId == undefined || invitem.CurrencyId == '') {
+                             $('#txtCurrencyId').val(invitem.DefaultCurrencyId);
+                             $('#txtCurrencyName').val(invitem.DefaultCurrencyName);
+
+                        }
+                        else {
+                             $('#txtCurrencyId').val(invitem.CurrencyId);
+                             $('#txtCurrencyName').val(invitem.CurrencyNameL1);
+                        }
+                        $('#txtItemLastCost').val(invitem.ItemLastCost);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtDiscLimit').val(invitem.DiscLimit);
+                        $('#txtDiscPerc').val(invitem.DiscPerc);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        $('#txtBonus').val(invitem.Bonus);
+                        $('#txtItemMinQuantity').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity').val(invitem.ItemMaxQuantity);
+                        $('#txtItemMinQuantity2').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity2').val(invitem.ItemMaxQuantity);
+                        $('#txtLastBuy').val(invitem.LastBuy);
+                        $('#txtLastSell').val(invitem.LastSell);
+                        $('#txtCategoryAccountId').val(invitem.CategoryAccountCode);
+                        $('#txtCategoryAccountId').attr('data-id', invitem.CategoryId);
+                        $('#txtCategoryAccountName').val(invitem.CategoryAccountNameL1);
+                        $('.clsimg').attr('data-filename', invitem.ItemImage);
+                        $('#txtBonusLimit').val(invitem.BonusLimit);
+
+                        $('.clsimg').attr('src', invitem.ItemImage)
+                        GetUnits($('#txtBarCode'))
+                        fnGetEquip($('#txtBarCode').attr('data-id'))
+                        fnGetItemReplace()
+                        fnGetPrices()
+                        fnGetSubItem()
+                        fnGetExpireDate()
+
+                    });
+                   
+                }
+            }
+        )
+    });
+    $('.btnLast').click(function () {
+        $.post('/InvItem/GetLastInvItem',
+            {
+                //pInvItemBarCode: pElement.val(),
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    //fnClearAll();
+                   // fncleartables();
+                    fnClearBarcode();
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, invitem) {
+
+                        $('#txtBarCode').attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').val(invitem.InvItemCode);
+                        $('#txtItemIdNo').val(invitem.ItemIdNo);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemCode2').val(invitem.InvItemSymbol);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemMeasurement').val(invitem.ItemMeasurement);
+                        $('#txtProductDate').val(invitem.ProductDate);
+                        $('#txtInvItemNameL1').val(invitem.InvItemNameL1);
+                        $('#txtInvItemNameL2').val(invitem.InvItemNameL2);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        //$('#txtCurrencyId').val(invitem.CurrencyId);
+                          if (invitem.CurrencyId == undefined || invitem.CurrencyId == '') {
+                             $('#txtCurrencyId').val(invitem.DefaultCurrencyId);
+                             $('#txtCurrencyName').val(invitem.DefaultCurrencyName);
+
+                        }
+                        else {
+                             $('#txtCurrencyId').val(invitem.CurrencyId);
+                             $('#txtCurrencyName').val(invitem.CurrencyNameL1);
+                        }
+                        $('#txtItemLastCost').val(invitem.ItemLastCost);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtDiscLimit').val(invitem.DiscLimit);
+                        $('#txtDiscPerc').val(invitem.DiscPerc);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        $('#txtBonus').val(invitem.Bonus);
+                        $('#txtItemMinQuantity').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity').val(invitem.ItemMaxQuantity);
+                        $('#txtItemMinQuantity2').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity2').val(invitem.ItemMaxQuantity);
+                        $('#txtLastBuy').val(invitem.LastBuy);
+                        $('#txtLastSell').val(invitem.LastSell);
+                        $('#txtCategoryAccountId').val(invitem.CategoryAccountCode);
+                        $('#txtCategoryAccountId').attr('data-id', invitem.CategoryId);
+                        $('#txtCategoryAccountName').val(invitem.CategoryAccountNameL1);
+                        $('.clsimg').attr('data-filename', invitem.ItemImage);
+                        $('#txtBonusLimit').val(invitem.BonusLimit);
+
+                        $('.clsimg').attr('src', invitem.ItemImage)
+                        GetUnits($('#txtBarCode'))
+                        fnGetEquip($('#txtBarCode').attr('data-id'))
+                        fnGetItemReplace()
+                        fnGetPrices()
+                        fnGetSubItem()
+                        fnGetExpireDate()
+
+                    });
+                    //GetUnits($('#txtBarCode'))
+                    //fnGetEquip($('#txtBarCode').attr('data-id'))
+                    //fnGetItemReplace()
+                    //fnGetPrices()
+                    //fnGetSubItem()
+                    //fnGetExpireDate()
+                }
+
+
+
+            }
+        )
+    });
+    $('.btnPrev').on('click', function () {
+        $.post('/InvItem/GetPreviousInvItem',
+            {
+                pInvItemId: $('#txtInvItemCode').attr('data-id'),
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    //fnClearAll();
+                    //fncleartables();
+                    fnClearBarcode();
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, invitem) {
+                        $('#txtBarCode').attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').val(invitem.InvItemCode);
+                        $('#txtItemIdNo').val(invitem.ItemIdNo);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemCode2').val(invitem.InvItemSymbol);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemMeasurement').val(invitem.ItemMeasurement);
+                        $('#txtProductDate').val(invitem.ProductDate);
+                        $('#txtInvItemNameL1').val(invitem.InvItemNameL1);
+                        $('#txtInvItemNameL2').val(invitem.InvItemNameL2);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        //$('#txtCurrencyId').val(invitem.CurrencyId);
+                        if (invitem.CurrencyId == undefined || invitem.CurrencyId == '') {
+                             $('#txtCurrencyId').val(invitem.DefaultCurrencyId);
+                             $('#txtCurrencyName').val(invitem.DefaultCurrencyName);
+
+                        }
+                        else {
+                             $('#txtCurrencyId').val(invitem.CurrencyId);
+                             $('#txtCurrencyName').val(invitem.CurrencyNameL1);
+                        }
+                        $('#txtItemLastCost').val(invitem.ItemLastCost);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtDiscLimit').val(invitem.DiscLimit);
+                        $('#txtDiscPerc').val(invitem.DiscPerc);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        $('#txtBonus').val(invitem.Bonus);
+                        $('#txtItemMinQuantity').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity').val(invitem.ItemMaxQuantity);
+                        $('#txtItemMinQuantity2').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity2').val(invitem.ItemMaxQuantity);
+                        $('#txtLastBuy').val(invitem.LastBuy);
+                        $('#txtLastSell').val(invitem.LastSell);
+                        $('#txtCategoryAccountId').val(invitem.CategoryAccountCode);
+                        $('#txtCategoryAccountId').attr('data-id', invitem.CategoryId);
+                        $('#txtCategoryAccountName').val(invitem.CategoryAccountNameL1);
+                        $('.clsimg').attr('data-filename', invitem.ItemImage);
+                        $('#txtBonusLimit').val(invitem.BonusLimit);
+
+                        $('.clsimg').attr('src', invitem.ItemImage)
+                        GetUnits($('#txtBarCode'))
+                        fnGetEquip($('#txtBarCode').attr('data-id'))
+                        fnGetItemReplace()
+                        fnGetPrices()
+                        fnGetSubItem()
+                        fnGetExpireDate()
+
+                    });
+                   
+                }
+
+
+
+            }
+        )
+
+    });
+    $('.btnNext').on('click', function () {
+        $.post('/InvItem/GetNextInvItem',
+            {
+                pInvItemId: $('#txtInvItemCode').attr('data-id'),
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    //fnClearAll();
+                    //fncleartables();
+                    fnClearBarcode();
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, invitem) {
+                        $('#txtBarCode').attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').attr('data-id', invitem.InvItemId)
+                        $('#txtInvItemCode').val(invitem.InvItemCode);
+                        $('#txtItemIdNo').val(invitem.ItemIdNo);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemCode2').val(invitem.InvItemSymbol);
+                        $('#txtItemFactorId').val(invitem.ItemFactorId);
+                        $('#txtItemMeasurement').val(invitem.ItemMeasurement);
+                        $('#txtProductDate').val(invitem.ProductDate);
+                        $('#txtInvItemNameL1').val(invitem.InvItemNameL1);
+                        $('#txtInvItemNameL2').val(invitem.InvItemNameL2);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        //$('#txtCurrencyId').val(invitem.CurrencyId);
+                          if (invitem.CurrencyId == undefined || invitem.CurrencyId == '') {
+                             $('#txtCurrencyId').val(invitem.DefaultCurrencyId);
+                             $('#txtCurrencyName').val(invitem.DefaultCurrencyName);
+
+                        }
+                        else {
+                             $('#txtCurrencyId').val(invitem.CurrencyId);
+                             $('#txtCurrencyName').val(invitem.CurrencyNameL1);
+                        }
+                        $('#txtItemLastCost').val(invitem.ItemLastCost);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtSupCompany').val(invitem.SupCompany);
+                        $('#txtDiscLimit').val(invitem.DiscLimit);
+                        $('#txtDiscPerc').val(invitem.DiscPerc);
+                        $('#txtOrderLimit').val(invitem.OrderLimit);
+                        $('#txtBonus').val(invitem.Bonus);
+                        $('#txtItemMinQuantity').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity').val(invitem.ItemMaxQuantity);
+                        $('#txtItemMinQuantity2').val(invitem.ItemMinQuantity);
+                        $('#txtItemMaxQuantity2').val(invitem.ItemMaxQuantity);
+                        $('#txtLastBuy').val(invitem.LastBuy);
+                        $('#txtLastSell').val(invitem.LastSell);
+                        $('#txtCategoryAccountId').val(invitem.CategoryAccountCode);
+                        $('#txtCategoryAccountId').attr('data-id', invitem.CategoryId);
+                        $('#txtCategoryAccountName').val(invitem.CategoryAccountNameL1);
+                        $('.clsimg').attr('data-filename', invitem.ItemImage);
+                        $('#txtBonusLimit').val(invitem.BonusLimit);
+
+                        $('.clsimg').attr('src', invitem.ItemImage)
+                        GetUnits($('#txtBarCode'))
+                        fnGetEquip($('#txtBarCode').attr('data-id'))
+                        fnGetItemReplace()
+                        fnGetPrices()
+                        fnGetSubItem()
+                        fnGetExpireDate()
+
+                    });
+                   
+                }
+            }
+        )
+
+    });
+
+    // function Get Sub Items
+    function fnGetSubItem() {
+        var vTableBody = $('.tblSubItemBody');
+        vTableBody.html('');
+        $.post(
+            '/InvItem/GetSubItems'
+            ,
+            {
+                pItemId: $('#txtInvItemCode').attr('data-id'),
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+
+                    $('#chk2').prop("checked", true);
+                    $('.navitemsub').removeClass('d-none');
+                    $('.tab5').removeClass('d-none');
+                    $('#chk2').prop("disabled", true);
+                    var vDataResult = JSON.parse(data);
+                    console.log('data' + vDataResult);
+
+                    $.each(vDataResult, function (i, SubItem) {
+                        // Row Content
+                        var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="' + SubItem.SubItemId + '">' +
+                            '<td><button class="btn btn-sm btn-light btnSubItemAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                            '<td width="7%"><input type="text" class="form-control SubItemCode" disabled value="' + SubItem.SubItemCode + '" /></td>' +
+                            '<td width="7%"><input type="text" class="form-control  SubItemNameL1" value="' + SubItem.SubItemNameL1 + '" /></td>' +
+                            '<td width="7%"><input type="text" class="form-control  SubItemNameL2" value="' + SubItem.SubItemNameL2 + '" /></td>' +
+                            '<td width="10%"><input type="text" class="form-control  PiecesCount"   value="' + SubItem.PiecesCount + '" /></td>' +
+                            '<td><input type="text" class="form-control Notes " value="' + SubItem.Notes + '" /></td>' +
+                            '<td><button class="btn btn-light btn-sm btnSubItemDelete" data-id="' + SubItem.SubItemId + '"><i class="fa fa-trash"></i></button></td>' +
+                            '</tr>';
+
+                        vTableBody.append(vRowContent);
+
+                    })
+                }
+                else {
+                    $('#chk2').removeAttr("disabled");
+                    $('#chk2').prop("checked", false);
+                    $('.navitemsub').addClass('d-none');
+                    $('.tab5').addClass('d-none');
+                    // Row Content
+                    var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+                        '<td><button class="btn btn-sm btn-light btnSubItemAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        '<td width="7%"><input type="text" class="form-control SubItemCode" disabled /></td>' +
+                        '<td width="7%"><input type="text" class="form-control  SubItemNameL1" /></td>' +
+                        '<td width="7%"><input type="text" class="form-control  SubItemNameL2" /></td>' +
+                        '<td width="10%"><input type="text" class="form-control  PiecesCount"    /></td>' +
+                        '<td><input type="text" class="form-control Notes "  /></td>' +
+                        '<td><button class="btn btn-light btn-sm btnSubItemDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>';
+
+                    vTableBody.append(vRowContent);
+
+                }
+
+            }
+
+        )
+    }
+       // function Get ExpireDate
+    function fnGetExpireDate() {
+        var vTableBody = $('.tblExpireDateBody');
+        vTableBody.html('');
+        $.post(
+            '/InvItem/GetExpireDate'
+            ,
+            {
+                pItemId: $('#txtInvItemCode').attr('data-id'),
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+
+                    $('#chk1').prop("checked", true);
+                    $('.navitemexpire').removeClass('d-none');
+                    $('.tab6').removeClass('d-none');
+                    $('#chk1').prop("disabled", true);
+                    var vDataResult = JSON.parse(data);
+                    console.log('data' + vDataResult);
+
+                    $.each(vDataResult, function (i, ExpireDate) {
+                        // Row Content
+                        var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="' + ExpireDate.ExpireDateId + '">' +
+                            '<td><button class="btn btn-sm btn-light btnExpireDateAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                            '<td width="7%"><input type="text" class="form-control ExpireDateCode" disabled value="' + ExpireDate.ExpireDateCode + '" /></td>' +
+                            '<td><input type="date" class="form-control  ExpireDate" value="' + ExpireDate.ExpireDate + '" /></td>' +
+                            '<td><button class="btn btn-light btn-sm btnExpireDateDelete" data-id="' + ExpireDate.ExpireDateId + '"><i class="fa fa-trash"></i></button></td>' +
+                            '</tr>';
+
+                        vTableBody.append(vRowContent);
+
+                    })
+                }
+                else {
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    var yyyy = today.getFullYear();
+
+                    today = yyyy + '-' + mm + '-' + dd;
+                    $('#chk1').removeAttr("disabled");
+                    $('#chk1').prop("checked", false);
+                    $('.navitemexpire').addClass('d-none');
+                    $('.tab6').addClass('d-none');
+                    // Row Content
+                    var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+                        '<td><button class="btn btn-sm btn-light btnExpireDateAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        '<td width="7%"><input type="text" class="form-control ExpireDateCode" disabled  /></td>' +
+                        '<td><input type="date" class="form-control  ExpireDate" value="'+ today +'"  /></td>' +
+                        '<td><button class="btn btn-light btn-sm btnExpireDateDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>';
+
+
+                    vTableBody.append(vRowContent);
+
+                }
+
+            }
+
+        )
+    }
+    // function save subitem
+    function fnSaveSubItem()
+    {
+        if ($('.navitemsub').hasClass('d-none')) {
+
+        }
+        else {
+            $('.tblSubItemBody >tr').each(function () {
+
+                // Row Data
+                var vRowData = $(this);
+                var vSubItemId = vRowData.attr('data-id');
+                if (vRowData.attr('data-changed') == '1') {
+                    vRowData.attr('data-changed','0')
+                if (vRowData.find('.SubItemNameL1').val() != undefined && vRowData.find('.SubItemNameL1').val() != '') {
+
+                    $.post('/InvItem/SaveSubItems',
+                        {
+                            pSubItemId: vSubItemId,
+                            pSubItemCode: vRowData.find('.SubItemCode').val(),
+                            pSubItemNameL1: vRowData.find('.SubItemNameL1').val(),
+                            pSubItemNameL2: vRowData.find('.SubItemNameL2').val(),
+                            pPiecesCount: vRowData.find('.PiecesCount').val(),
+                            pItemId: $('#txtBarCode').attr('data-id'),
+                            //pItemId: $('#txtBarCode').attr('data-id'),
+
+                            pNotes: vRowData.find('.Notes').val()
+                        }, function (data, status) {
+                            if (data != undefined && data != '') {
+
+                                var vDataResult = JSON.parse(data);
+                                if (vRowData.attr('data-id') == '0') {
+                                    vRowData.attr('data-id', vDataResult[0].SubItemId)
+                                    vRowData.find('.SubItemCode').val(vDataResult[0].SubItemCode)
+                                }
+                            }
+
+                        })
+                }
+            }
+
+
+            })
+        }
+
+    }
+    function fnSaveExpireDate()
+    {
+        if ($('.navitemexpire').hasClass('d-none')) {
+
+        }
+        else {
+            $('.tblExpireDateBody >tr').each(function () {
+                // Row Data
+                var vRowData = $(this);
+                var vExpireDateId = vRowData.attr('data-id');
+                if (vRowData.attr('data-changed') == '1') {
+                    vRowData.attr('data-changed','0')
+                    $.post('/InvItem/SaveExpireDate',
+                        {
+                            pExpireDateId: vExpireDateId,
+                            pExpireDateCode: vRowData.find('.ExpireDateCode').val(),
+                            pExpireDate: vRowData.find('.ExpireDate').val(),
+                            pItemId: $('#txtBarCode').attr('data-id'),
+                        }, function (data, status) {
+                            if (data != undefined && data != '') {
+
+                                var vDataResult = JSON.parse(data);
+                                if (vRowData.attr('data-id') == '0') {
+                                    vRowData.attr('data-id', vDataResult[0].ExpireDateId)
+                                    vRowData.find('.ExpireDateCode').val(vDataResult[0].ExpireDateCode)
+                                }
+                            }
+
+                        })
+                }
+            })
+        }
+
+    }
+    // Sub Item Add Row
+    $('body').on('click', '.btnSubItemAddRow', function () {
+        funAddSubItemEmptyRow()
+
+        })
+        function funAddSubItemEmptyRow() {
+            var vTableBody = $('.tblSubItemBody');
+            // Row Content
+            var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+                '<td><button class="btn btn-sm btn-light btnSubItemAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                '<td width="7%"><input type="text" class="form-control SubItemCode" disabled /></td>' +
+                '<td width="7%"><input type="text" class="form-control  SubItemNameL1" /></td>' +
+                '<td width="7%"><input type="text" class="form-control  SubItemNameL2" /></td>' +
+                '<td width="10%"><input type="text" class="form-control  PiecesCount"    /></td>' +
+                '<td><input type="text" class="form-control Notes "  /></td>' +
+                '<td><button class="btn btn-light btn-sm btnSubItemDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+
+            vTableBody.append(vRowContent);
+
+        }
+
+     // Expire Date Add Row
+    $('body').on('click', '.btnExpireDateAddRow', function () {
+
+        funAddExpireDateEmptyRow()
+        })
+        function funAddExpireDateEmptyRow() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + dd;
+            var vTableBody = $('.tblExpireDateBody');
+            // Row Content
+            var vRowContent = '<tr class="tblRow"  data-changed = "0" data-id="0">' +
+                '<td><button class="btn btn-sm btn-light btnExpireDateAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                '<td width="7%"><input type="text" class="form-control ExpireDateCode" disabled  /></td>' +
+                '<td><input type="date" class="form-control  ExpireDate"  value="' + today + '"     /></td>' +
+                '<td><button class="btn btn-light btn-sm btnExpireDateDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+
+
+            vTableBody.append(vRowContent);
+
+        }
+
+    $('#chk2').on('change', function () {
+
+        if (this.checked) {
+            $('.navitemsub').removeClass('d-none');
+            $('.tab5').removeClass('d-none');
+
+
+        }
+        else {
+            $('.navitemsub').addClass('d-none');
+            $('.tab5').addClass('d-none');
+            $('#parts-tab').removeClass('show')
+            $('#parts-tab').removeClass('show')
+            //$('#home-tab').addClass('show')
+            //$('#home-tab').addClass('active')
+            var active_tab_selector = $('#home-tab').attr('href');
+
+            //hide displaying tab content
+            $(active_tab_selector).addClass('show');
+            $(active_tab_selector).addClass('active');
+
+
+
+        }
+    })
+    $('#chk1').on('change', function () {
+
+        if (this.checked) {
+            $('.navitemexpire').removeClass('d-none');
+            $('.tab6').removeClass('d-none');
+
+        }
+        else {
+            $('.navitemexpire').addClass('d-none');
+            $('.tab6').addClass('d-none');
+            $('#expire-tab').removeClass('show')
+            $('#expire-tab').removeClass('show')
+            ////$('#home-tab').addClass('show')
+            ////$('#home-tab').addClass('active')
+            //$('#myTab3 ul li').attr('href').show();
+            ////$('#myTab3 a[href=#home-tab]').tab('show');
+            //get displaying tab content jQuery selector
+            var active_tab_selector = $('#home-tab').attr('href');
+
+            //hide displaying tab content
+            $(active_tab_selector).addClass('show');
+            $(active_tab_selector).addClass('active');
+         
+        }
+    })
+
+
+
+        $('body').on('click', '.btnSubItemDelete', function (e) {
+
+            var vElement = $(this);
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+
+            // Get Unit Data
+            //var vUnitIdElement = vTableRow.find('.UnitId');
+            var vSubItemId = vTableRow.attr('data-id')
+
+
+            var vDataId = vTableRow.attr('data-id');
+            var vDataName = vTableRow.find('.SubItemDescL1').val();
+            // URL
+            var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+            // Get HTML Content of [Confirm Delete] Partial View
+            localStorage.setItem('lstdelSub', vTableRow.index)
+            $.get(
+                // URL
+                vDataURL,
+                {
+                    id: vDataId,
+                    pName: vDataName,
+                }, function (data, status) {
+                    if (vDataId > 0) {
+                        // Modal
+                        $('#confirmDeleteModalContent').html(data);
+                        $('#confirmDeleteModal').modal('show');
+                        $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                            $("body").on("click", "#btnDeleteConfirm", function () {
+                                if (localStorage.getItem('lstdelSub') == vTableRow.index) {
+                                    // Delete
+                                    $.post('/InvItem/DeleteSubItems', {
+                                        pSubItemId: vTableRow.attr('data-id'),
+                                        pQueryTypeId: 300
+                                    }, function (data, status) {
+                                        //fnGetSubItem();
+                                        if (data != undefined && data != '') {
+
+                                        }
+                                        //vTableRow.remove();
+                                        vElement.closest('.tblRow').remove();
+                                        var vLastRow = $('.tblSubItemBody').find('tr').attr('data-id')
+                                        if (vLastRow == undefined) {
+                                            funAddSubItemEmptyRow();
+
+                                        }
+
+
+
+
+                                        //------------------------------------------
+
+                                    }
+
+                                    )
+
+                                    funNotification('@appResource.msgDelete', 1);
+                                    vTableRow = '';
+                                }
+                                else {
+                                    // Only Delete The Row
+                                    vElement.closest('tr').remove();
+                                    // Check If IT The Last Row
+                                    var vLastRow = $('.tblSubItemBody').find('tr').attr('data-id')
+                                    // Add Row If Empty
+                                    if (vLastRow == undefined) {
+                                        funAddSubItemEmptyRow();
+
+                                    }
+                                }
+                            })
+                        })
+
+                    }
+                    else {
+                        // Only Delete The Row
+                        vElement.closest('tr').remove();
+                        // Check If IT The Last Row
+                        var vLastRow = $('.tblSubItemBody').find('tr').attr('data-id')
+                        // Add Row If Empty
+                        if (vLastRow == undefined) {
+                            funAddSubItemEmptyRow();
+
+                        }
+                    }
+                })
+
+
+
+
+
+            //if (vTableRow.find('.SubItemNameL1').val() != undefined && vTableRow.find('.SubItemNameL1').val() != '') {
+            //    $.post('/InvItem/DeleteSubItems', {
+            //        pSubItemId: vTableRow.attr('data-id'),
+            //        pQueryTypeId: 300
+            //    }, function (data, status) {
+
+            //        fnGetSubItem();
+            //    })
+            //    funNotification('تم الحذف بنجاح', 1);
+            //}
+        });
+    $('body').on('click', '.btnExpireDateDelete', function (e) {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+
+            var vElement = $(this)
+            // Get Unit Data
+            //var vUnitIdElement = vTableRow.find('.UnitId');
+            var vExpireDateId = vTableRow.attr('data-id')
+
+
+            var vDataId = vTableRow.attr('data-id');
+            var vDataName = vTableRow.find('.ExpireDateDescL1').val();
+            // URL
+            var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+            // Get HTML Content of [Confirm Delete] Partial View
+            localStorage.setItem('lstdelSub', vTableRow.index)
+            $.get(
+                // URL
+                vDataURL,
+                {
+                    id: vDataId,
+                    pName: vDataName,
+                }, function (data, status) {
+                    if (vDataId > 0) {
+                        // Modal
+                        $('#confirmDeleteModalContent').html(data);
+                        $('#confirmDeleteModal').modal('show');
+                        $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                            $("body").on("click", "#btnDeleteConfirm", function () {
+                                if (localStorage.getItem('lstdelSub') == vTableRow.index) {
+                                    // Delete
+                                    $.post('/InvItem/DeleteExpireDate', {
+                                        pExpireDateId: vTableRow.attr('data-id'),
+                                        pQueryTypeId: 300
+                                    }, function (data, status) {
+
+                                        //fnGetExpireDate();
+                                        if (data != undefined && data != '') {
+
+                                        }
+                                        //vTableRow.remove();
+                                        vElement.closest('.tblRow').remove();
+                                        var vLastRow = $('.tblExpireDateBody').find('tr').attr('data-id')
+                                        if (vLastRow == undefined) {
+                                            funAddExpireDateEmptyRow()
+
+                                        }
+
+                                        //------------------------------------------
+                                    }
+
+                                    )
+
+                                     funNotification('@appResource.msgDelete', 1);
+                                    vTableRow = '';
+                                }
+                                else {
+                                    // Only Delete The Row
+                                    vElement.closest('.tblRow').remove();
+                                    // Check If IT The Last Row
+                                    var vLastRow = $('.tblExpireDateBody').find('tr').attr('data-id')
+                                    // Add Row If Empty
+                                    if (vLastRow == undefined) {
+                                        funAddExpireDateEmptyRow();
+
+                                    }
+                                }
+                            })
+                        })
+
+                    }
+                    else {
+                        // Only Delete The Row
+                        vElement.closest('.tblRow').remove();
+                        // Check If IT The Last Row
+                        var vLastRow = $('.tblExpireDateBody').find('tr').attr('data-id')
+                        // Add Row If Empty
+                        if (vLastRow == undefined) {
+                            funAddExpireDateEmptyRow();
+
+                        }
+                    }
+                })
+
+
+
+            //if (vTableRow.find('.ExpireDate').val() != undefined && vTableRow.find('.ExpireDate').val() != '') {
+            //    $.post('/InvItem/DeleteExpireDate', {
+            //        pExpireDateId: vTableRow.attr('data-id'),
+            //        pQueryTypeId: 300
+            //    }, function (data, status) {
+
+            //        fnGetExpireDate();
+            //    })
+            //    funNotification('تم الحذف بنجاح', 1);
+            //}
+        });
+        $('body').on('change', '.UnitId,.DefaultUnit,.PartsInParents,.UnitCost,.CurrencyId,.UnitPrice,.UnitOrderLimit', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+
+            vTableRow.attr('data-changed', '1');
+
+        });
+        $('body').on('change', '.ItemBarCode', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+
+            vTableRow.attr('data-changed', '1');
+
+        });
+        $('body').on('change', '.EquipName,.Notes', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+
+            vTableRow.attr('data-changed', '1');
+
+        });
+        $('body').on('change', '.ReplaceItemId,.Notes', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+
+            vTableRow.attr('data-changed', '1');
+
+        });
+        $('body').on('change', '.SellCostType,.Price,.Notes', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+
+            vTableRow.attr('data-changed', '1');
+
+        });
+        $('body').on('change', '.ExpireDate', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+
+            vTableRow.attr('data-changed', '1');
+
+        });
+        $('body').on('change', '.SubItemNameL1,.SubItemNameL2,.PiecesCount,.Notes ', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+
+            vTableRow.attr('data-changed', '1');
+
+    });
+
+    $('.btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/InvItem/SearchInvItem';
+        // Load Content of CostCenter Search
+        $('#InvItemDataModalContent').load(vURL);
+        // Modal Full
+        $('#InvItemDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#InvItemDataModal').modal('show');
+    })
+    $('body').on('click', '.btnSelect', function () {
+        var count = $("input[name='chkIsValid']:checked").length;
+        if (count == 0) {
+            // alert("No rows selected to Print");
+            return false;
+        }
+        else {
+            // Selected Permissions
+            var vSelected = '';
+
+            // Check If All True Or False
+            $('table > tbody > tr ').each(function () {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Check
+                if (vSelectedChk) {
+                    // Get Id
+                    var vInvId = vElement.attr('data-id');
+                    // Add Selected Action
+                    vSelected += vInvId + ',';
+                    //vCount += $(this).length
+
+                }
+            });
+            //$('.txtTotalCount').text(vCount)
+            // close The Modal
+            $('#InvItemDataModal').modal('hide');
+
+            // Get Data From Gl Voucher After Select
+            $.get('/api/APIInvItem/InvItemGet',
+                {
+                    // Head Parameters
+                    phNumbers: vSelected,
+                    //pdInvId:1,
+                    //phIsDeleted: false,
+                    // Query Type Id
+                    pQueryTypeId: '411'
+                },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        fnClearBarcode();
+                        // JSON Parse
+                        vDataResult = JSON.parse(data);
+                    //vDataSearch = vDataResult
+                    //displayData(vDataSearch[0])
+                        funGetSelectedData(vDataResult[0]) 
+
+                    }
+             
+                  
+                })
+        }
+    });
+    function funGetSelectedData(pData) {
+        $('#txtBarCode').attr('data-id', pData.InvItemId)
+        $('#txtInvItemCode').attr('data-id', pData.InvItemId)
+        $('#txtInvItemCode').val(pData.InvItemCode);
+        $('#txtItemIdNo').val(pData.ItemIdNo);
+        $('#txtItemFactorId').val(pData.ItemFactorId);
+        $('#txtItemCode2').val(pData.InvItemSymbol);
+        $('#txtItemFactorId').val(pData.ItemFactorId);
+        $('#txtItemMeasurement').val(pData.ItemMeasurement);
+        $('#txtProductDate').val(pData.ProductDate);
+        $('#txtInvItemNameL1').val(pData.InvItemNameL1);
+        $('#txtInvItemNameL2').val(pData.InvItemNameL2);
+        $('#txtOrderLimit').val(pData.OrderLimit);
+        //$('#txtCurrencyId').val(invitem.CurrencyId);
+        if (pData.CurrencyId == undefined || pData.CurrencyId == '') {
+            $('#txtCurrencyId').val(pData.DefaultCurrencyId);
+            $('#txtCurrencyName').val(pData.DefaultCurrencyName);
+
+        }
+        else {
+            $('#txtCurrencyId').val(pData.CurrencyId);
+            $('#txtCurrencyName').val(pData.CurrencyNameL1);
+        }
+        $('#txtItemLastCost').val(pData.ItemLastCost);
+        $('#txtSupCompany').val(pData.SupCompany);
+        $('#txtSupCompany').val(pData.SupCompany);
+        $('#txtDiscLimit').val(pData.DiscLimit);
+        $('#txtDiscPerc').val(pData.DiscPerc);
+        $('#txtOrderLimit').val(pData.OrderLimit);
+        $('#txtBonus').val(pData.Bonus);
+        $('#txtItemMinQuantity').val(pData.ItemMinQuantity);
+        $('#txtItemMaxQuantity').val(pData.ItemMaxQuantity);
+        $('#txtItemMinQuantity2').val(pData.ItemMinQuantity);
+        $('#txtItemMaxQuantity2').val(pData.ItemMaxQuantity);
+        $('#txtLastBuy').val(pData.LastBuy);
+        $('#txtLastSell').val(pData.LastSell);
+        $('#txtCategoryAccountId').val(pData.CategoryAccountCode);
+        $('#txtCategoryAccountId').attr('data-id', pData.CategoryId);
+        $('#txtCategoryAccountName').val(pData.CategoryAccountNameL1);
+        $('.clsimg').attr('data-filename', pData.ItemImage);
+        $('#txtBonusLimit').val(pData.BonusLimit);
+
+        $('.clsimg').attr('src', pData.ItemImage);
+        GetUnits($('#txtBarCode'))
+        fnGetEquip($('#txtBarCode').attr('data-id'))
+        fnGetItemReplace()
+        fnGetPrices()
+        fnGetSubItem()
+        fnGetExpireDate()
+    }
+
+    //if (data != undefined && data != '') {
+    //    //fnClearAll();
+    //    // fncleartables();
+    //    fnClearBarcode();
+    //    var vDataResult = JSON.parse(data);
+    //    $.each(vDataResult, function (i, invitem) {
+
+    //        $('#txtBarCode').attr('data-id', invitem.InvItemId)
+    //        $('#txtInvItemCode').attr('data-id', invitem.InvItemId)
+    //        $('#txtInvItemCode').val(invitem.InvItemCode);
+    //        $('#txtItemIdNo').val(invitem.ItemIdNo);
+    //        $('#txtItemFactorId').val(invitem.ItemFactorId);
+    //        $('#txtItemCode2').val(invitem.InvItemSymbol);
+    //        $('#txtItemFactorId').val(invitem.ItemFactorId);
+    //        $('#txtItemMeasurement').val(invitem.ItemMeasurement);
+    //        $('#txtProductDate').val(invitem.ProductDate);
+    //        $('#txtInvItemNameL1').val(invitem.InvItemNameL1);
+    //        $('#txtInvItemNameL2').val(invitem.InvItemNameL2);
+    //        $('#txtOrderLimit').val(invitem.OrderLimit);
+    //        //$('#txtCurrencyId').val(invitem.CurrencyId);
+    //        if (invitem.CurrencyId == undefined || invitem.CurrencyId == '') {
+    //            $('#txtCurrencyId').val(invitem.DefaultCurrencyId);
+    //            $('#txtCurrencyName').val(invitem.DefaultCurrencyName);
+
+    //        }
+    //        else {
+    //            $('#txtCurrencyId').val(invitem.CurrencyId);
+    //            $('#txtCurrencyName').val(invitem.CurrencyNameL1);
+    //        }
+    //        $('#txtItemLastCost').val(invitem.ItemLastCost);
+    //        $('#txtSupCompany').val(invitem.SupCompany);
+    //        $('#txtSupCompany').val(invitem.SupCompany);
+    //        $('#txtDiscLimit').val(invitem.DiscLimit);
+    //        $('#txtDiscPerc').val(invitem.DiscPerc);
+    //        $('#txtOrderLimit').val(invitem.OrderLimit);
+    //        $('#txtBonus').val(invitem.Bonus);
+    //        $('#txtItemMinQuantity').val(invitem.ItemMinQuantity);
+    //        $('#txtItemMaxQuantity').val(invitem.ItemMaxQuantity);
+    //        $('#txtItemMinQuantity2').val(invitem.ItemMinQuantity);
+    //        $('#txtItemMaxQuantity2').val(invitem.ItemMaxQuantity);
+    //        $('#txtLastBuy').val(invitem.LastBuy);
+    //        $('#txtLastSell').val(invitem.LastSell);
+    //        $('#txtCategoryAccountId').val(invitem.CategoryAccountCode);
+    //        $('#txtCategoryAccountId').attr('data-id', invitem.CategoryId);
+    //        $('#txtCategoryAccountName').val(invitem.CategoryAccountNameL1);
+    //        $('.clsimg').attr('data-filename', invitem.ItemImage);
+    //        $('#txtBonusLimit').val(invitem.BonusLimit);
+
+    //        $('.clsimg').attr('src', invitem.ItemImage)
+    //        GetUnits($('#txtBarCode'))
+    //        fnGetEquip($('#txtBarCode').attr('data-id'))
+    //        fnGetItemReplace()
+    //        fnGetPrices()
+    //        fnGetSubItem()
+    //        fnGetExpireDate()
+
+    //    });
+    //    //GetUnits($('#txtBarCode'))
+    //    //fnGetEquip($('#txtBarCode').attr('data-id'))
+    //    //fnGetItemReplace()
+    //    //fnGetPrices()
+    //    //fnGetSubItem()
+    //    //fnGetExpireDate()
+    //}
+
+</script>
+<script>
+    // Show Image [on Change]
+    function funShowImage(pElement) {
+        changeimage();
+        if (pElement.files && pElement.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('.clsimg').attr('src', e.target.result);
+                //var fileName = e.target.files[0].name;
+
+            }
+            filerdr.readAsDataURL(pElement.files[0]);
+            //var filename = $('.clsimg').attr('src').filename;
+            var vBasicPath = "~/Image/DataImage/"
+            var vBasicPathForSave = "/Image/DataImage/"
+            console.log('filename   -          ' + vBasicPath + pElement.files[0].name);
+            $('.clsimg').attr('data-src', vBasicPathForSave + pElement.files[0].name);
+            $('.clsimg').attr('data-src-basic', vBasicPathForSave);
+            $('.clsimg').attr('data-filename', pElement.files[0].name);
+
+            //'~\DataImage\FoesEnd.jpg'
+
+        }
+    }
+    $('.btnPrint').on('click', function () {
+        var url = '/InvItem/ItemsCardReport?pInvItemId=' + $('#txtInvItemCode').attr('data-id')
+       // var url = '/InvItem/ItemsCardReport?pCategoryId=' + $('#txtInvItemCode').attr('data-id')
+        var popupWindow = window.open(url);
+    });
+</script>
+
+
+

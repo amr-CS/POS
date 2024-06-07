@@ -1,0 +1,601 @@
+﻿@model appSERP.Models.FA.AssetModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <!-- Header -->
+    <div class="container-fluid">
+        @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.AssetId, pId = Model.AssetId })
+    </div>
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.HiddenFor(model => model.AssetId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.HiddenFor(model => model.AssetId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AssetId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetCode, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetCode, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.AssetCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AssetNameL1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AssetNameL2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetPurchasePrice, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetPurchasePrice, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetPurchasePrice, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CurrencyId, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectCurrency" class="selectpicker selCurrency form-control" name="CurrencyId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CurrencyValue, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.CurrencyValue, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.CurrencyValue, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetPurchasePriceBase, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetPurchasePriceBase, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetPurchasePriceBase, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetBookValue, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetBookValue, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetBookValue, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetBookValueBase, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetBookValueBase, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetBookValueBase, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetPercent, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetPercent, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetPercent, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetLastDepDate, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetLastDepDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = @Model.AssetLastDepDate.ToString("dd-MM-yyyy") } })
+                        @Html.ValidationMessageFor(model => model.AssetLastDepDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PostDate, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.PostDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = @Model.AssetLastDepDate.ToString("yyyy-MM-dd") } })
+                        @Html.ValidationMessageFor(model => model.PostDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetTotalDep, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetTotalDep, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetTotalDep, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetTotalDepBase, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetTotalDepBase, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetTotalDepBase, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BillNo, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.BillNo, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.BillNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PurchaseNo, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.PurchaseNo, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.PurchaseNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PurchaseDate, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.PurchaseDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = @Model.AssetLastDepDate.ToString("yyyy-MM-dd") } })
+                        @Html.ValidationMessageFor(model => model.PurchaseDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+            <div class="col-sm-3">
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetSupplierId, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectCS" class="selectpicker selCS form-control" name="AssetSupplierId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.AssetSupplierId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+    
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetMinPrice, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetMinPrice, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetMinPrice, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetMinPriceBase, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetMinPriceBase, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetMinPriceBase, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProductPeriod, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.ProductPeriod, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.ProductPeriod, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.InvItemId, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.InvItemId, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.InvItemId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.InvItemName, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.InvItemName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.InvItemName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FixedAssetMethodId, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectFixedAssetMethod" class="selectpicker selFixedAssetMethod form-control" name="FixedAssetMethodId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.FixedAssetMethodId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FixedAssetUnitId, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectFixedAssetUnit" class="selectpicker selFixedAssetUnit form-control" name="FixedAssetUnitId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.FixedAssetUnitId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DonorId, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectSiteDonor" class="selectpicker selSiteDonor form-control" name="DonorId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.DonorId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-3">
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetPurchaseAccount, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectAssetPurchaseAccount" class="selectpicker selAssetPurchaseAccount form-control" name="AssetPurchaseAccount" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.AssetPurchaseAccount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetSalesAccount, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectAssetSalesAccount" class="selectpicker selAssetSalesAccount form-control" name="AssetSalesAccount" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.AssetSalesAccount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetDebitAccount, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectAssetDebitAccount" class="selectpicker selAssetDebitAccount form-control" name="AssetDebitAccount" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.AssetDebitAccount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetCreditAccount, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectAssetCreditAccount" class="selectpicker selAssetCreditAccount selAssetCreditAccount form-control" name="AssetCreditAccount" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.AssetCreditAccount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetAccountId, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectAssetAccount" class="selectpicker selAssetAccount form-control" name="AssetAccountId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.AssetAccountId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group m-3">
+                    <div class="custom-control custom-checkbox col-md-12">
+                        @Html.EditorFor(model => model.IsAutoPost, new { htmlAttributes = new { @class = "custom-control-input", @id = "IsAutoPost" } })
+                        @Html.LabelFor(model => model.IsAutoPost, htmlAttributes: new { @class = "custom-control-label", @for = "IsAutoPost" })
+                    </div>
+                </div>
+                <div class="form-group m-3">
+                    <div class="custom-control custom-checkbox col-md-12">
+                        @Html.EditorFor(model => model.IsPosted, new { htmlAttributes = new { @class = "custom-control-input", @id = "IsPosted" } })
+                        @Html.LabelFor(model => model.IsPosted, htmlAttributes: new { @class = "custom-control-label", @for = "IsPosted" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BuyGroupId, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectBuyGroup" class="selectpicker selBuyGroup form-control" name="BuyGroupId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.BuyGroupId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FixedAssetCompanyId, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        <select id="selectFixedAssetCompany" class="selectpicker selFixedAssetCompany form-control" name="FixedAssetCompanyId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                        @Html.ValidationMessageFor(model => model.FixedAssetCompanyId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+                <div class="form-group m-3">
+                    <div class="custom-control custom-checkbox col-md-12">
+                        @Html.EditorFor(model => model.AssetIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "AssetIsActive" } })
+                        @Html.LabelFor(model => model.AssetIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "AssetIsActive" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetQty, htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.AssetQty, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.AssetQty, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+
+}
+    <script>
+
+        $(document).ready(function () {
+            funSelectListBind();
+        })
+
+        function funSelectListBind() {
+
+
+            // List GetFixedAssetMethod
+            $.post('/Home/GetFixedAssetMethod',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, FixedAssetMethod) {
+                        $('#selectFixedAssetMethod').append('<option data-id="' + FixedAssetMethod.FixedAssetMethodId + '" value="' + FixedAssetMethod.FixedAssetMethodId + '" sort-id="' + i + '">' + FixedAssetMethod.FixedAssetMethodNameL1 + '</option>')
+
+                    })
+                    var vData = '@Model.FixedAssetMethodId'
+
+                    if (vData != "0") {
+                        $('#selectFixedAssetMethod').val(@Model.FixedAssetMethodId);
+                    }
+                    // Refresh Select Picker
+                    $('.selFixedAssetMethod').selectpicker('refresh');
+                })
+
+
+
+            // List GetCurrency
+            $.post('/Home/GetCurrencyList',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Currency) {
+                        $('#selectCurrency').append('<option data-id="' + Currency.CurrencyId + '" value="' + Currency.CurrencyId + '" sort-id="' + i + '">' + Currency.CurrencyNameL1 + '</option>')
+
+                    })
+                    var vData = '@Model.CurrencyId'
+
+                    if (vData != "0") {
+                        $('#selectCurrency').val(@Model.CurrencyId);
+                    }
+                    // Refresh Select Picker
+                    $('.selCurrency').selectpicker('refresh');
+                })
+
+
+            // List GetFixedAssetMethod
+            $.post('/Home/GetSupplier',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, CS) {
+                        $('#selectCS').append('<option data-id="' + CS.CSId + '" value="' + CS.CSId + '" sort-id="' + i + '">' + CS.CSNameL1 + '</option>')
+
+                    })
+                    var vData = '@Model.AssetSupplierId'
+
+                    if (vData != "0") {
+                        $('#selectCS').val(@Model.AssetSupplierId);
+                    }
+                    // Refresh Select Picker
+                    $('.selCS').selectpicker('refresh');
+                })
+
+
+
+            // List GetFixedAssetUnit
+            $.post('/Home/GetFixedAssetUnit',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, FixedAssetUnit) {
+                        $('#selectFixedAssetUnit').append('<option data-id="' + FixedAssetUnit.FixedAssetUnitId + '" value="' + FixedAssetUnit.FixedAssetUnitId + '" sort-id="' + i + '">' + FixedAssetUnit.FixedAssetUnitNameL1 + '</option>')
+
+                    })
+                    var vData = '@Model.FixedAssetUnitId'
+
+                    if (vData != "0") {
+                        $('#selectFixedAssetUnit').val(@Model.FixedAssetUnitId);
+                    }
+                    // Refresh Select Picker
+                    $('.selFixedAssetUnit').selectpicker('refresh');
+                })
+
+
+
+            // List GetSiteDonor
+            $.post('/Home/GetSiteDonor',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, SiteDonor) {
+                        $('#selectSiteDonor').append('<option data-id="' + SiteDonor.SiteDonorId + '" value="' + SiteDonor.SiteDonorId + '" sort-id="' + i + '">' + SiteDonor.SiteDonorNameL1 + '</option>')
+
+                    })
+                    var vData = '@Model.DonorId'
+
+                    if (vData != "0") {
+                        $('#selectSiteDonor').val(@Model.DonorId);
+                    }
+                    // Refresh Select Picker
+                    $('.selSiteDonor').selectpicker('refresh');
+                })
+
+
+            // List GetBuyGroup
+            $.post('/Home/GetBuyGroup',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, BuyGroup) {
+                        $('#selectBuyGroup').append('<option data-id="' + BuyGroup.BuyGroupId + '" value="' + BuyGroup.BuyGroupId + '" sort-id="' + i + '">' + BuyGroup.BuyGroupNameL1 + '</option>')
+                    })
+                    var vData = '@Model.BuyGroupId'
+
+                    if (vData != "0") {
+                        $('#selectBuyGroup').val(@Model.BuyGroupId);
+                    }
+                    // Refresh Select Picker
+                    $('.selBuyGroup').selectpicker('refresh');
+                })
+
+            // List GetFixedAssetCompany
+            $.post('/Home/GetFixedAssetCompany',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, FixedAssetCompany) {
+                        $('#selectFixedAssetCompany').append('<option data-id="' + FixedAssetCompany.FixedAssetCompanyId + '" value="' + FixedAssetCompany.FixedAssetCompanyId + '" sort-id="' + i + '">' + FixedAssetCompany.FixedAssetCompanyNameL1 + '</option>')
+
+                    })
+                    var vData = '@Model.FixedAssetCompanyId'
+
+                    if (vData != "0") {
+                        $('#selectFixedAssetCompany').val(@Model.FixedAssetCompanyId);
+                    }
+                    // Refresh Select Picker
+                    $('.selFixedAssetCompany').selectpicker('refresh');
+                })
+
+            // List GetMainGroupPurchaseAccount
+            $.post('/Home/GetAccount',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, MainGroupDebitAccount) {
+                        $('#selectAssetAccount').append('<option data-id="' + MainGroupDebitAccount.ParentId + '" value="' + MainGroupDebitAccount.ParentId + '" sort-id="' + i + '">' + MainGroupDebitAccount.AccountNameL1 + '</option>')
+                    })
+                    var vData = '@Model.AssetAccountId'
+
+                    if (vData != "0") {
+                        $('#selectAssetAccount').val(@Model.AssetAccountId);
+                    }
+                    // Refresh Select Picker
+                    $('.selAssetAccount').selectpicker('refresh');
+                }
+            )
+
+
+            // List GetMainGroupPurchaseAccount
+            $.post('/Home/GetAccount',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, MainGroupCreditAccount) {
+                        $('#selectAssetDebitAccount').append('<option data-id="' + MainGroupCreditAccount.ParentId + '" value="' + MainGroupCreditAccount.ParentId + '" sort-id="' + i + '">' + MainGroupCreditAccount.AccountNameL1 + '</option>')
+                    })
+                    var vData = '@Model.AssetDebitAccount'
+
+                    if (vData != "0") {
+                        $('#selectAssetDebitAccount').val(@Model.AssetDebitAccount);
+                    }
+                    // Refresh Select Picker
+                    $('.selAssetDebitAccount').selectpicker('refresh');
+                }
+            )
+
+            // List GetMainGroupPurchaseAccount
+            $.post('/Home/GetAccount',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, MainGroupPurchaseAccount) {
+                        $('#selectAssetCreditAccount').append('<option data-id="' + MainGroupPurchaseAccount.ParentId + '" value="' + MainGroupPurchaseAccount.ParentId + '" sort-id="' + i + '">' + MainGroupPurchaseAccount.AccountNameL1 + '</option>')
+                    })
+                    var vData = '@Model.AssetCreditAccount'
+
+                    if (vData != "0") {
+                        $('#selectAssetCreditAccount').val(@Model.AssetCreditAccount);
+                    }
+                    // Refresh Select Picker
+                    $('.selAssetCreditAccount').selectpicker('refresh');
+                }
+            )
+            // List GetMainGroupSalesAccount
+            $.post('/Home/GetAccount',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, MainGroupPurchaseAccount) {
+                        $('#selectAssetSalesAccount').append('<option data-id="' + MainGroupPurchaseAccount.ParentId + '" value="' + MainGroupPurchaseAccount.ParentId + '" sort-id="' + i + '">' + MainGroupPurchaseAccount.AccountNameL1 + '</option>')
+                    })
+                    var vData = '@Model.AssetSalesAccount'
+
+                    if (vData != "0") {
+                        $('#selectAssetSalesAccount').val(@Model.AssetSalesAccount);
+                    }
+                    // Refresh Select Picker
+                    $('.selAssetSalesAccount').selectpicker('refresh');
+                }
+            )
+
+
+            $.post('/Home/GetAccount',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, MainGroupPurchaseAccount) {
+                        $('#selectAssetSalesAccount').append('<option data-id="' + MainGroupPurchaseAccount.ParentId + '" value="' + MainGroupPurchaseAccount.ParentId + '" sort-id="' + i + '">' + MainGroupPurchaseAccount.AccountNameL1 + '</option>')
+                    })
+                    var vData = '@Model.AssetSalesAccount'
+
+                    if (vData != "0") {
+                        $('#selectAssetSalesAccount').val(@Model.AssetSalesAccount);
+                    }
+                    // Refresh Select Picker
+                    $('.selAssetSalesAccount').selectpicker('refresh');
+                }  )
+
+            $.post('/Home/GetAccount',
+                null,
+                function (data, status) {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, MainGroupPurchaseAccount) {
+                        $('#selectAssetPurchaseAccount').append('<option data-id="' + MainGroupPurchaseAccount.ParentId + '" value="' + MainGroupPurchaseAccount.ParentId + '" sort-id="' + i + '">' + MainGroupPurchaseAccount.AccountNameL1 + '</option>')
+                    })
+                    var vData = '@Model.AssetSalesAccount'
+
+                    if (vData != "0") {
+                        $('#selectAssetPurchaseAccount').val(@Model.AssetSalesAccount);
+                    }
+                    // Refresh Select Picker
+                    $('.selAssetPurchaseAccount').selectpicker('refresh');
+                }
+            )
+
+
+        }
+    </script>

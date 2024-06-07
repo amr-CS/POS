@@ -1,0 +1,96 @@
+﻿@model appSERP.Models.ACC.FinancialYearModel
+@using appSERP.Views.Shared.appResource
+@{
+    ViewBag.Title = "DataModel";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._FinancialYear, pId = Model.FinancialYearId })
+        </div>
+       
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.FinancialYearId)
+        <div class="form-group">
+            @Html.LabelFor(model => model.FinancialYear, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FinancialYear, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FinancialYear, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FinancialYearStart, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FinancialYearStart,"{0:yyyy-MM-dd}", new { htmlAttributes = new { @class = "form-control", @type = "date",  } })
+                @Html.ValidationMessageFor(model => model.FinancialYearStart, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FinancialYearEnd, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FinancialYearEnd, "{0:yyyy-MM-dd}", new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                @Html.ValidationMessageFor(model => model.FinancialYearEnd, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FinancialYearStatusId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectFinancialYearStatus" class="selectpicker form-control" name="FinancialYearStatusId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.FinancialYearStatusId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.FinancialYearIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.FinancialYearIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+    </div>
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+
+}
+
+<script>
+        var vFinancialYearStatusId = 0;
+    // List GetFinancialYearStatus
+    $.post('/Home/GetFinancialYearStatus',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, FinancialYearStatus) {
+                $('#selectFinancialYearStatus').append('<option data-id="' + FinancialYearStatus.FinancialYearStatusId + '" value="' + FinancialYearStatus.FinancialYearStatusId + '" sort-id="' + i + '">' + FinancialYearStatus.FinancialYearStatusNameL1 + '</option>')
+                if (i == 0) {
+                    vFinancialYearStatusId = FinancialYearStatus.FinancialYearStatusId;
+                }
+            })
+            if (parseInt('@ViewBag.vbcFinancialYearStatusId') > 0) {
+                vFinancialYearStatusId = parseInt('@ViewBag.vbcFinancialYearStatusId');
+            }
+            $('#selectFinancialYearStatus').val(vFinancialYearStatusId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+</script>
+

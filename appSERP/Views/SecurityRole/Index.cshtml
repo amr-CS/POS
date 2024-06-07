@@ -1,0 +1,257 @@
+﻿<!-- UserSecurityRole -->
+@model System.Data.DataTable
+@using System.Data
+@using appSERP.appCode.dbCode.SEC
+@using appSERP.Views.Shared.appResource
+@{ DataTable vDtData = @Model;}
+
+<!-- Header -->
+<div >
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblSecurityRole })
+</div>
+@*Utlity*@
+<div class="divUtilityBar d-flex ">
+    @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+</div>
+
+<style>
+    .divAction{
+        font-size:13px !important;
+        padding:.75rem !important;
+        background-color:#dcdcdc;
+    }
+</style>
+
+<!-- Data Container Master-->
+<div  id="divContainer">
+    <!-- DataTable -->
+    <table class="table table-hover tblMaster tblData" id="tblData">
+        <!-- DataTable Header -->
+        <thead>
+            <tr>
+                <th>@appResource.SecurityRoleId </th>
+                <th>@appResource._IsActive </th>
+                <th class="thActions">@appResource._Actions</th>
+            </tr>
+        </thead> <!-- End of DataTable Header -->
+        <!-- DataTable Body -->
+        <tbody>
+            @foreach (DataRow vDrwData in vDtData.Rows)
+            {
+                <tr data-id="@vDrwData["SecurityRoleId"]">
+                    <!-- Data -->
+                    <td title="@vDrwData["SecurityRoleNameL1"]">@vDrwData["SecurityRoleNameL1"]</td>
+                    <td class="dataIsActive"></td>
+                    <!-- Actions -->
+                    <td>
+
+                        <!-- Edit -->
+                        <button type="button" class="btn btnEdit" data-id="@vDrwData["SecurityRoleId"]">
+                            <i class="icoEdit"></i>
+                        </button>
+                        <!-- Delete -->
+                        <button type="button" class="btn btnDelete" data-id="@vDrwData["SecurityRoleId"]" data-name="@vDrwData["SecurityRoleId"]">
+                            <i class="icoDelete"></i>
+                        </button>
+                    </td> <!-- End of Actions Cell -->
+                </tr>
+            }
+        </tbody><!-- End of DataTable Body -->
+    </table> <!-- End of DataTable -->
+</div> <!-- End of Data Container -->
+@{
+    string vSecurityRole = dbSecurityRole.vSecurityRoleId;
+}
+
+@if (vSecurityRole != null)
+{
+    <!-- Header -->
+    <div class="divViewHeader">
+        <!-- Title -->
+        <div class="row d-flex">
+            <!-- Header Content -->
+            <div class="divViewHeaderTitle col-md-12">
+
+                <div class="w-100">
+
+                </div>
+                <div class=" mt-1 flex-shrink-1">
+
+                    <!-- New Button -->
+                    <button type="button" class="btn btn-success btnNew" data-id="0">@appResource.btnNew</button>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Data Container Detail -->
+        <div class="container-fluid" id="divContainer">
+            <!-- DataTable -->
+            <table class="table table-hover tblData" id="tblData">
+                <!-- DataTable Header -->
+                <thead>
+                    <tr>
+                        <th>@appResource._Object </th>
+                        <th>الصلاحيات</th>
+                        <th class="thActions">@appResource._Actions</th>
+                    </tr>
+                </thead> <!-- End of DataTable Header -->
+                <!-- DataTable Body -->
+                <tbody>
+                    @foreach (var vDrwData in ViewBag.vDtDataDtl)
+                    {
+                        <tr>
+                            <!-- Data -->
+                            <td title="@vDrwData["ObjectNameL1"]">@vDrwData["ObjectNameL1"]</td>
+                            <td>
+                                @{string[] ObjectAction = vDrwData["ObjectActionName"].Split(',');
+                                    foreach (string word in ObjectAction)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(word))
+                                        {
+                                            <span class="badge divAction">@word</span>
+                                        }
+
+                                    }
+                                }
+
+                            </td>
+
+                            <!-- Actions -->
+                            <td>
+                                <!-- Edit -->
+                                <button type="button" class="btn btnEditD" data-id="@vDrwData["SecurityRoleObjectId"]">
+                                    <i class="icoEdit"></i>
+                                </button>
+                                <!-- Delete -->
+                                <button type="button" class="btn btnDeleteDtl" data-id="@vDrwData["SecurityRoleObjectId"]" data-name="@vDrwData["SecurityRoleObjectId"]">
+                                    <i class="icoDelete"></i>
+                                </button>
+                            </td> <!-- End of Actions Cell -->
+                        </tr>
+                    }
+                </tbody><!-- End of DataTable Body -->
+            </table> <!-- End of DataTable -->
+        </div> <!-- End of Data Container -->
+    </div>
+
+}
+
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<!-- Script Create / Edit / Delete -->
+<script>
+    // Data Model URL
+    var vDataURL = '/SecurityRole/DataModel/';
+
+    // Data Model URL Detail
+    var vDataURLDtl = '/SecurityRole/SecurityRoleObjectDataModel/';
+
+    // Data Model Elements [Create / Edit]
+    var vDataModelElements = $('.btnCreate, .btnEdit');
+    // Click Event
+    vDataModelElements.on('click', function () {
+        // Id
+        var vDataId = $(this).attr('data-id');
+        // Modal
+        $('#dataModalContent').load(vDataURL + vDataId);
+        // Check Modal Input
+        //funCheckModalInput();
+        // Modal Show
+        $('#dataModal').modal('show');
+    });
+
+
+    // Data Model Elements [Create / Edit]
+    var vDataModelElementsDtl = $('.btnNew, .btnEditD');
+
+    // Click Event
+    vDataModelElementsDtl.on('click', function () {
+        // Id
+        var vDataId = $(this).attr('data-id');
+        // Modal
+        $('#dataModalContent').load(vDataURLDtl + vDataId);
+        // Check Modal Input
+        // Modal Show
+        $('#dataModal').modal('show');
+    });
+
+
+</script>
+
+<script>
+    $('.btnDelete ,.btnDeleteDtl').on('click', function () {
+        var vClassName = $(this).attr('class');
+
+        // Id - NameAr - NameEn
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                // Modal
+                $('#confirmDeleteModalContent').html(data);
+                $('#confirmDeleteModal').modal('show');
+                // Click Event [Delete Confirm]
+                $("body").on("click", "#btnDeleteConfirm", function () {
+                    // Delete Action URL
+                    var vDeleteActionURL;
+
+                    if (vClassName == 'btn btnDeleteDtl') {
+                        vDeleteActionURL = '/SecurityRole/DataModel/';
+
+                    }
+                    else {
+                        vDeleteActionURL = '/SecurityRole/DataModel/';
+                    }
+
+                    // Delete
+                    $.post(vDeleteActionURL, { id: vDataId, pIsDelete: true }, function () {
+                        window.location.href = '/SecurityRole';
+                    });
+                });
+            });
+    }); // End of Click Event [Delete Button]</script>
+
+<script>
+    $('.selected').on('click', function () {
+        alert('yes')
+        var vId = $(this).attr('data-id');
+        alert(vId)
+
+    });
+
+    // SELECTED ROW In Any Table
+    $(".tblMaster tbody tr").click(function () {
+        var vId = $(this).attr('data-id');
+
+        // Get Details Of this Row
+        window.location.href = '/SecurityRole/Index?pSecurityRoleId=' + vId;
+    });
+</script>
+<!-- Notification -->
+@*<script>
+        funNotification('@dbUserSecurityRole.vSQLResult', '@dbUserSecurityRole.vSQLResultTypeId');
+        @{ dbUserSecurityRole.vSQLResult = string.Empty;}
+    </script>*@

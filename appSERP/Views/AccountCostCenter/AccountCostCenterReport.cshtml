@@ -1,0 +1,43 @@
+﻿
+
+@{
+    ViewBag.Title = "AccountCostCenterReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="bg-white border rounded p-3">
+
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4"></div>
+            <div class="col-4"></div>
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="bg-white border rounded p-3">
+
+        <iframe name="theFrame" style="width:100%; height:700Px !important"></iframe>
+    </div>
+
+</div>
+
+<script>
+
+        SimpleInSameWin();
+        function SimpleInSameWin() {
+            window.open("/AccountCostCenter/ShowSimple", "theFrame"); // calling action
+        }
+</script>
+
+
+
+
+
+
+
+
+
+

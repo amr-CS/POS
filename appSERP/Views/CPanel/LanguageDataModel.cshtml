@@ -1,0 +1,129 @@
+﻿@model appSERP.Models.SETT.LanguageModel
+@using appSERP.Views.Shared.appResource
+
+@{
+                /**/
+
+                ViewBag.Title = "DataModel";
+                Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<!-- Header -->
+<div class="container-fluid">
+    @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource._Language, pId = Model.LanguageId })
+</div>
+
+
+@using (Html.BeginForm("LanguageDataModel", "CPanel", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.LanguageId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LanguageCode, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.LanguageCode, new { htmlAttributes = new { @class = "form-control", @disabled = "true" } })
+                @Html.ValidationMessageFor(model => model.LanguageCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LanguageNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.LanguageNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LanguageNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LanguageNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.LanguageNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LanguageNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CultureName, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.CultureName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CultureName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LanguageImage, htmlAttributes: new { @class = "", @for = "customFile" })
+            <div class="col-md-12">
+                <input type="file" class="form-control" id="customFile" name="pFile" accept="image/*" onchange="funShowImage(this)">
+                <img id="imgData" width="100" src="@Model.LanguageImage" />
+                @Html.HiddenFor(model => model.LanguageImage)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DefaultFontId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                <select id="selectFont" class="selectpicker" name="DefaultFontId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.DefaultFontId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.LanguageIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.LanguageIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+    </div>
+    <div class="form-group divModalFooter">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+
+}
+
+<script>
+        var vFontId = 0;
+    // List GetFont
+    $.post('/Home/GetFont',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, Font) {
+                $('#selectFont').append('<option data-id="' + Font.FontId + '" value="' + Font.FontId + '" sort-id="' + i + '">' + Font.FontName + '</option>')
+                if (i == 0) {
+                    vFontId = Font.FontId;
+                }
+            })
+                 if (parseInt('@ViewBag.vbcFontId') >0 ) {
+                  vFontId = parseInt('@ViewBag.vbcFontId');
+            }
+            $('#selectFont').val(vFontId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+</script>
+<script>
+
+    // Show Image [on Change]
+    function funShowImage(pElement) {
+        if (pElement.files && pElement.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#imgData').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(pElement.files[0]);
+        }
+    }
+
+</script>

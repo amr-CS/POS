@@ -1,0 +1,324 @@
+﻿@using System.Data
+@using appSERP.Views.Shared.appResource;
+@{
+    ViewBag.Title = "AssetExcelFile";
+}
+
+@{DataTable vDtStudentData = ViewBag.vbExcelData; }
+
+@if (vDtStudentData != null)
+{
+    <div class="container-fluid table-responsive">
+        <table class="table table-bordered table-hover tblExcelData bg-white">
+            <thead>
+                <tr>
+                    <th>@appResource.AssetId</th>
+                    <th>@appResource.AssetId</th>
+                    <th>@appResource._Code</th>
+                    <th>@appResource._Qty</th>
+                    <th>@appResource._PurchasePrice</th>
+                    <th>@appResource._Currency</th>
+                    <th>@appResource.CurrencyValue</th>
+                    <th>@appResource._PurchasePriceBase</th>
+                    <th>@appResource._BookValue</th>
+                    <th>@appResource._BookValueBase</th>
+                    <th>@appResource._Percent</th>
+                    <th>@appResource.AssetLastDepDate</th>
+                    <th>@appResource.PostDate</th>
+                    <th>@appResource.BillNo</th>
+                    <th>@appResource.PurchaseNo</th>
+                    <th>@appResource.PurchaseDate</th>
+                    <th>@appResource._Supplier</th>
+                    <th>@appResource._MinPrice</th>
+                    <th>@appResource._MinPriceBase</th>
+                    <th>@appResource.ProductPeriod</th>
+                    <th>@appResource.MainGroupId</th>
+                    <th>@appResource.GroupId</th>
+                    <th>@appResource.FixedAssetMethod</th>
+                    <th>@appResource.SiteDonor</th>
+                    <th>@appResource.BuyGroup</th>
+                    <th>@appResource._Company</th>
+                    <th>@appResource._Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow vDrwData in vDtStudentData.Rows)
+                {
+                <tr>
+                    <!-- Data -->
+
+                    <td class="AssetNameL1">@vDrwData[0]</td>
+                    <td class="AssetNameL2">@vDrwData[1]</td>
+                    <td class="AssetCode">@vDrwData[2]</td>
+                    <td class="AssetQty">@vDrwData[3]</td>
+                    <td class="AssetPurchasePrice">@vDrwData[4]</td>
+                    <td class="CurrencyNameL1">@vDrwData[5]</td>
+                    <td class="CurrencyValue">@vDrwData[6]</td>
+                    <td class="AssetPurchasePriceBase">@vDrwData[7]</td>
+                    <td class="AssetBookValue">@vDrwData[8]</td>
+                    <td class="AssetBookValueBase">@vDrwData[9]</td>
+                    <td class="AssetPercent">@vDrwData[10]</td>
+                    <td class="AssetLastDepDate">@vDrwData[11]</td>
+                    <td class="PostDate">@vDrwData[12]</td>
+                    <td class="BillNo">@vDrwData[13]</td>
+                    <td class="PurchaseNo">@vDrwData[14]</td>
+                    <td class="PurchaseDate">@vDrwData[15]</td>
+                    <td class="AssetSupplierName">@vDrwData[16]</td>
+                    <td class="AssetMinPrice">@vDrwData[17]</td>
+                    <td class="AssetMinPriceBase">@vDrwData[18]</td>
+                    <td class="ProductPeriod">@vDrwData[19]</td>
+                    <td class="MainGroup">@vDrwData[20]</td>
+                    <td class="Group">@vDrwData[21]</td>
+                    <td class="FixedAssetMethod">@vDrwData[22]</td>
+                    <td class="Donor">@vDrwData[23]</td>
+                    <td class="BuyGroup">@vDrwData[24]</td>
+                    <td class="FixedAssetCompanyName">@vDrwData[25]</td>
+
+                    <td><button class="btn bg-white text-secondary btnRemoveButton"><i class="fa fa-times"></i></button></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="container-fluid">
+        <div class="bg-white border p-2">
+            <button class="btn btn-success btn-block form-control btnSave">
+                @appResource.btnSave
+            </button>
+        </div>
+    </div>
+}
+
+<!-- Scroll To Bottom -->
+<script>
+    $("html, body").animate({ scrollTop: $(document).height() - $(window).height() });
+</script>
+<!-- Delete Row -->
+<script>
+
+
+    // Remove Row on Click
+    $('.btnRemoveButton').on('click', function () {
+
+        var vRow = $(this).parent('td').parent('tr');
+        vRow.remove();
+
+        funDataValidation();
+    })
+</script>
+
+<!-- Save -->
+<script>
+    // Save
+    $('.btnSave').on('click', function () {
+
+
+        $('.tblExcelData > tbody > tr').each(function () {
+
+            // Get Asset Data
+
+            var vAssetNameL1 = $(this).find("td.AssetNameL1").text();
+            var vAssetNameL2 = $(this).find("td.AssetNameL2").text();
+            var vAssetCode = $(this).find("td.AssetCode").text();
+            var vAssetQty = $(this).find("td.AssetQty").text();
+            var vAssetPurchasePrice = $(this).find("td.AssetPurchasePrice").text();
+            var vCurrencyNameL1 = $(this).find("td.CurrencyNameL1").text();
+            var vCurrencyValue = $(this).find("td.CurrencyValue").text();
+            var vAssetPurchasePriceBase = $(this).find("td.AssetPurchasePriceBase").text();
+            var vAssetBookValue = $(this).find("td.AssetBookValue").text();
+            var vAssetBookValueBase = $(this).find("td.AssetBookValueBase").text();
+            var vAssetPercent = $(this).find("td.AssetPercent").text();
+            var vAssetLastDepDate = $(this).find("td.AssetLastDepDate").text();
+            var vPostDate = $(this).find("td.PostDate").text();
+            var vBillNo = $(this).find("td.BillNo").text();
+            var vPurchaseNo = $(this).find("td.PurchaseNo").text();
+            var vPurchaseDate = $(this).find("td.PurchaseDate").text();
+            //var vIsPosted = $(this).find("td.IsPosted").text();
+            var vAssetSupplierName = $(this).find("td.AssetSupplierName").text();
+            var vAssetMinPrice = $(this).find("td.AssetMinPrice").text();
+            var vAssetMinPriceBase = $(this).find("td.AssetMinPriceBase").text();
+            var vProductPeriod = $(this).find("td.ProductPeriod").text();
+            var vMainGroup = $(this).find("td.MainGroup").text();
+            var vGroup = $(this).find("td.Group").text();
+            var vFixedAssetMethod = $(this).find("td.FixedAssetMethod").text();
+            var vDonor = $(this).find("td.Donor").text();
+            var vBuyGroup = $(this).find("td.BuyGroup").text();
+            var vFixedAssetCompanyName = $(this).find("td.FixedAssetCompanyName").text();
+           
+
+            // SAVE
+            $.post('/Asset/AssetExcelSave',
+                {
+                     pAssetNameL1:vAssetNameL1, 
+                    pAssetNameL2: vAssetNameL2 ,
+                    pAssetCode: vAssetCode ,
+                    pAssetQty: vAssetQty ,
+                    pAssetPurchasePrice: vAssetPurchasePrice ,
+                     pCurrencyNameL1 :vCurrencyNameL1 ,
+                     pCurrencyValue :vCurrencyValue ,
+                    pAssetPurchasePriceBase : vAssetPurchasePriceBase ,
+                    pAssetBookValue :  vAssetBookValue ,
+                    pAssetBookValueBase :  vAssetBookValueBase ,
+                     pAssetPercent: vAssetPercent ,
+                     pAssetLastDepDate:  vAssetLastDepDate ,
+                      pPostDate: vPostDate ,
+                       pBillNo : vBillNo ,
+                    pPurchaseNo:  vPurchaseNo ,
+                    pPurchaseDate :   vPurchaseDate ,
+                    pAssetSupplierName :  vAssetSupplierName ,
+                     pAssetMinPrice :  vAssetMinPrice ,
+                    pAssetMinPriceBase :  vAssetMinPriceBase ,
+                    pProductPeriod: vProductPeriod,
+                    pMainGroup: vMainGroup,
+                    pGroup: vGroup,
+                    pFixedAssetMethod: vFixedAssetMethod,
+                     pDonor : vDonor ,
+                   pBuyGroup :  vBuyGroup ,
+                    pFixedAssetCompanyName : vFixedAssetCompanyName ,
+                }
+                ,
+                function (data, status) {
+
+                    console.log(status);
+
+                })
+
+        })
+
+    })
+</script>
+@*<script>
+    print();
+    function print() {
+        alert('alert')
+    }
+    </script>*@
+
+<script>
+
+    funDataValidation();
+    function funDataValidation() {
+        var vCountInvalid = 0;
+        $('.tblExcelData > tbody > tr').each(function () {
+       
+
+            // Get Asset Data
+            var vAssetNameL1C = $(this).find("td.AssetNameL1").text();
+            var vAssetNameL2C = $(this).find("td.AssetNameL2").text();
+            var vAssetCodeC = $(this).find("td.AssetCode").text();
+            var vAssetQtyC = $(this).find("td.AssetQty").text();
+            var vCurrencyNameL1C = $(this).find("td.CurrencyNameL1").text();
+            var vCurrencyValueC = $(this).find("td.CurrencyValue").text();
+            //var vIsPostedC = $(this).find("td.IsPosted").text();
+
+            if (vAssetNameL1C = '' || vAssetNameL1C.length == 0) {
+
+                $(this).addClass('bg-danger');
+                vCountInvalid++;
+                // Hide Save Button
+                funSaveButtonCheck(true);
+                console.log('AssetNameL1');
+                //$('.btnSave').hide();
+            }
+            else {
+                // Show Save Button
+
+                //funSaveButtonCheck(false);
+
+
+
+            }
+            if (vAssetNameL2C = '' || vAssetNameL2C.length == 0) {
+                vCountInvalid++;
+                $(this).addClass('bg-danger');
+                // Hide Save Button
+                funSaveButtonCheck(true);
+                console.log('AssetNameL2');
+                //$('.btnSave').hide();
+            }
+            else {
+                // Show Save Button
+
+                //funSaveButtonCheck(false);
+
+
+            }
+            if (vAssetCodeC = '' || vAssetCodeC.length == 0) {
+                vCountInvalid++;
+                $(this).addClass('bg-danger');
+                // Hide Save Button
+                funSaveButtonCheck(true);
+                console.log('Assetcode');
+                //$('.btnSave').hide();
+            }
+            else {
+                // Show Save Button
+
+                //funSaveButtonCheck(false);
+
+
+            }
+            if (vAssetQtyC = '' || vAssetQtyC.length == 0) {
+                vCountInvalid++;
+                $(this).addClass('bg-danger');
+                // Hide Save Button
+                funSaveButtonCheck(true);
+                console.log('Assetqty');
+                //$('.btnSave').hide();
+            }
+            else {
+                // Show Save Button
+
+                //funSaveButtonCheck(false);
+
+
+            }
+            if (vCurrencyNameL1C = '' || vCurrencyNameL1C.length == 0) {
+                vCountInvalid++;
+                $(this).addClass('bg-danger');
+                // Hide Save Button
+                funSaveButtonCheck(true);
+                console.log('vCurrencyNameL1');
+                //$('.btnSave').hide();
+            }
+            else {
+                // Show Save Button
+
+                //funSaveButtonCheck(false);
+
+
+            }
+            if (vCurrencyValueC = '' || vCurrencyValueC.length == 0) {
+                vCountInvalid++;
+                $(this).addClass('bg-danger');
+                // Hide Save Button
+                funSaveButtonCheck(true);
+                console.log('vCurrencyValue');
+                //$('.btnSave').hide();
+            }
+            else {
+                // Show Save Button
+
+                //funSaveButtonCheck(false);
+
+
+            }
+          
+        })
+        if (vCountInvalid == 0) {
+
+            $('.btnSave').show();
+        }
+    }
+
+    // Check Save Button
+    function funSaveButtonCheck(pIsHide) {
+
+        if (pIsHide) {
+            $('.btnSave').hide();
+        }
+        else {
+            $('.btnSave').show();
+        }
+    }
+</script>

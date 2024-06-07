@@ -1,0 +1,404 @@
+﻿@model System.Data.DataTable
+@using System.Data
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.ACC
+@using appSERP.appCode.Setting.APISetting;
+@using appSERP.appCode.Setting.APISetting.APIDirectory;
+@using appSERP.appCode.Setting.User
+
+@{
+    //API For DocNO To Get The First and The Last
+    string vPathDoc = appAPIDirectory.vAPICostCenter + "?pQueryTypeId=" + 404;
+    DataTable vDtDataDoc = clsAPI.funResultGet(vPathDoc);
+    ViewBag.vbFirst = vDtDataDoc.Rows[0]["MinDoc"].ToString();
+    ViewBag.vbLast = vDtDataDoc.Rows[0]["MaxDoc"].ToString();
+}
+<!DOCTYPE html>
+
+<html dir="rtl">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ChartCostCenters</title>
+    <link href="~/Content/file-explore.css" rel="stylesheet" />
+    <!-- Include Libraries - Style -->
+    @Styles.Render("~/Content/css_ltr")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <!--jquery -->
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    @*<link href="~/Content/font-awesome.css" rel="stylesheet" />*@
+</head>
+<body class="divContent">
+    <div class="" style="width: 50%;margin: 0 auto;">
+        <div class="row ">
+
+            <div class=""><button type="button" class="btn btn-outline-success btnClean" title="تنظيف الشاشه"><span class="fa fa-eraser " /></button> </div>
+            <div><button type="button" class="btn btn-outline-secondary btnList" title="القائمه"><span class="fa fa-book" /></button> </div>
+            <div><button type="button" class="btn btn-outline-info " title="ادخال استعلام"><span class="fa fa-inbox" /></button> </div>
+            <div><button type="button" class="btn btn-outline-info " title="استعراض البيانات"><span class="fa fa-television" /></button> </div>
+            <div><button type="button" class="btn btn-outline-info " title="الغاء الاستعراض"><span class="fa fa-ban" /></button> </div>
+            <div><button type="button" class="btn btn-outline-primary btnNext" title="الاول"><span class="fa fa-fast-forward " /></button> </div>
+            <div><button type="button" class="btn btn-outline-primary " title="التالي"><span class="fa fa-forward " /></button> </div>
+            <div><button type="button" class="btn btn-outline-primary " title="السابق "> <span class="fa fa-backward" /></button> </div>
+            <div><button type="button" class="btn btn-outline-primary btnLast" title="السابق"><span class="fa fa-fast-backward" /></button> </div>
+
+            <div><button type="button" class="btn btn-outline-primary btnDelete" title="تصاعدي"> <span class="fa fa-sort-desc" /></button> </div>
+            <div><button type="button" class="btn btn-outline-primary " title="تنازلي"><span class="fa fa-sort-asc" /></button> </div>
+            <div><button type="button" class="btn btn-outline-info " title="تعديل سجل"><span class="fa fa-edit " /></button> </div>
+            <div><button type="button" class="btn btn-outline-success btnAdd" title="اضافة حساب جديد"><span class="fa fa-plus " /></button> </div>
+            <div><button type="button" class="btn btn-outline-success btnFirstLevel" title="اضافة حسابات المستوي الاول"><span class="fa fa-first-order" /></button> </div>
+
+            <div><button type="button" class="btn btn-outline-danger " title="حذف سجل"><span class="fa fa-trash" /></button> </div>
+            <div class=""><button type="button" class="btn btn-outline-success btnSave" title="حفظ"><span class="fa fa-save" /></button> </div>
+            <div><button type="button" class="btn btn-outline-warning btnPrint" title="طباعه"><span class="fa fa-print" /></button> </div>
+            <div class=""><button type="button" class="btn btn-outline-danger btnExist" title="خروج"><span class="fa fa-window-close" /></button> </div>
+
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-6">
+        </div>
+
+    </div>
+    <div style="font-size:x-large ;text-align:right">
+        مراكز التكلفة
+    </div>
+    <hr>
+
+    <div class="row mt-2">
+
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-1">
+
+                    الفرع
+
+                </div>
+                <div class="col-md-2">
+
+                    <input type="text" class="form-control txtBranchId">
+
+                </div>
+                <div class="col-md-2">
+                    <input type="text" disabled class="form-control txtBranchName" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-2">
+                    مركز التكلفة الرئيسي
+                </div>
+                <div class="col-md-2">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0 ">
+                        </div>
+                        <div class="w-100 ">
+
+                            <input type="text" class="form-control txtMainNo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" disabled class="form-control txtMainName" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+
+        <div class="col-md-4">
+            <div class="bg-light">
+                <div id="divTreeView">
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="bg-light">
+                <!-- Data Container -->
+                <div class="container-fluid ">
+                    <!-- DataTable -->
+                    <table id="table" class="table table-hover tblCostCenter">
+                        <!-- DataTable Header -->
+                        <thead>
+                            <tr>
+                                <th>@appResource._Code</th>
+                                <th>@appResource._CostCenter</th>
+                                <th>@appResource._Level</th>
+                                <th>@appResource._IsAccumulative</th>
+                                <th>@appResource._IsActive</th>
+                                <th></th>
+                            </tr>
+                        </thead> <!-- End of DataTable Header -->
+                        <!-- DataTable Body -->
+                        <tbody>
+                            @if (Model.Rows.Count > 0)
+                            {
+                                foreach (DataRow vDrwData in Model.Rows)
+                                {
+                                    <tr>
+                                        <!-- Data -->
+                                        <td class="CostCenterId" style="display:none"><input type="text" value="@vDrwData["CostCenterId"]" class="form-control" name="CostCenterCode" id="CostCenterCode"></td>
+                                        <td class="CostCenterCode"><input type="text" value="@vDrwData["CostCenterCode"]" class="form-control" name="CostCenterCode" id="CostCenterCode" disabled></td>
+                                        <td class="CostCenterNameL1" data-id="@vDrwData["CostCenterId"]" Data-Level="@vDrwData["CostCenterLevel"]" data-parent-name="@vDrwData["CostCenterParentId"]" data-branch-id="@vDrwData["CompanyId"]" data-Branch-Name="@vDrwData["CompanyBranchNameL1"]" data-parent-Id="@vDrwData["CostCenterParentId"]"><input type="text" value="@vDrwData["CostCenterNameL1"]" class="form-control" name="CostCenterNameL1" id="CostCenterNameL1"></td>
+                                        <td class="CostCenterLevel"><input type="text" value="@vDrwData["CostCenterLevel"]" class="form-control" name="CostCenterLevel" id="CostCenterLevel" disabled></td>
+                                        <td class="CostCenterIsAccumulative"><input type="checkbox" value="@vDrwData["CostCenterIsAccumulative"]" class="form-control check" name="CostCenterIsAccumulative" checked="@vDrwData["CostCenterIsAccumulative"]" id="CostCenterIsAccumulative"></td>
+                                        <td class="CostCenterIsActive"><input type="checkbox" value="@vDrwData["CostCenterIsActive"]" class="form-control check" name="CostCenterIsActive" checked="@vDrwData["CostCenterIsActive"]" id="CostCenterIsActive"></td>
+                                        <td><button class="btn btn-outline-danger btnDelete" data-id="@vDrwData["CostCenterId"]" data-parent-Id="@vDrwData["CostCenterParentId"]" data-itemId="0"><span class="fa fa-close " /></button></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <!-- Data -->
+                                    <td class="CostCenterId" style="display:none"><input type="text" class="form-control" name="CostCenterCode" id="CostCenterCode"></td>
+                                    <td class="CostCenterCode"><input type="text" class="form-control" name="CostCenterCode" id="CostCenterCode" disabled></td>
+                                    <td class="CostCenterNameL1"><input type="text" class="form-control" name="CostCenterNameL1" id="CostCenterNameL1"></td>
+                                    <td class="CostCenterLevel"><input type="text" class="form-control" name="CostCenterLevel" id="CostCenterLevel" disabled></td>
+                                    <td class="CostCenterIsAccumulative"><input type="checkbox" class="form-control check" name="CostCenterIsAccumulative" id="CostCenterIsAccumulative"></td>
+                                    <td class="CostCenterIsActive"><input type="checkbox" class="form-control check" name="CostCenterIsActive" id="CostCenterIsActive"></td>
+                                </tr>
+
+                            }
+                        </tbody><!-- End of DataTable Body -->
+                    </table> <!-- End of DataTable -->
+
+                </div> <!-- End of Data Container -->
+
+            </div>
+        </div>
+        <div>
+        </div>
+
+    </div>
+</body>
+</html>
+<script src="~/Scripts/file-explore.js"></script>
+<script src="~/Scripts/TreeView/jsTreeView.js"></script>
+<script>
+    $(document).ready(function () {
+        var CostCenters = [];
+        var Parents = [];
+        var CostCentersDisplayName = [];
+        $.post('/CostCenter/GetTreeViewList/',
+            {
+            },
+            function (data, status) {
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, CostCenter) {
+                    CostCenters.push(CostCenter.CostCenterId)
+                    Parents.push(CostCenter.CostCenterParentId)
+                    CostCentersDisplayName.push(CostCenter.CostCenterDisplayName)
+                })
+                fnbuildtreeview(CostCenters, Parents, $("#divTreeView"), CostCentersDisplayName);
+                $("#divTreeView").filetree();
+            });
+    });
+</script>
+<script>
+    // SELECT FROM TREE VIEW
+    $("#divTreeView").on("dblclick", "li a", function (event) {
+        var id = $(this).attr('data-id');
+        var vPath = '/CostCenter/ChartsCostCenter?id=' + id;
+        $(".divContent").load(vPath);
+    });
+</script>
+<script>
+    // After Add A New Order In The List, If You Want, You Can Remove It.
+    $(document).on('click', 'button.btnDelete', function (e) {
+        e.preventDefault();
+        if ($(this).attr('data-itemId') == "0") {
+            var vId = $(this).attr('data-id');
+            var vParentId = $(this).attr('data-parent-id');
+            $.post('/CostCenter/funSaveCostCenter',
+                {
+                    id: vId,
+                    pIsDelete: true
+                },
+                function () {
+                    vPath = '/CostCenter/ChartsCostCenter?id=' + vParentId;
+                    $(".divContent").load(vPath);
+
+                });
+        }
+    });
+</script>
+
+<script>
+
+    // Foe Make Digit in Level
+    function funDigit(str, max) {
+        str = str.toString();
+        return str.length < max ? funDigit("0" + str, max) : str;
+    }
+    // ADD NEW ROW
+                function clearlastRow() {
+                    $(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio, :disabled').val('');
+                    $(':checkbox, :radio').prop('checked', false);
+                }
+                $('.btnAdd').on('click', function () {
+                    var vNew = $("#table").find("tr").last().prop('outerHTML');
+                    var vLast = $('#table').find('.CostCenterNameL1 > input[type=text]').last().val();
+                    var vLastText = $('#table').find('.CostCenterNameL1 > input[type=text]').last();
+                    if ($.trim(vLast) == "") {
+                        $(vLastText).css('border-color', 'red');
+                        return;
+                        $(vLastText).css('border-color', '');
+                    };
+                    $(vLastText).css('border-color', '');
+                    $('#table').append(vNew);
+                    var vCostCenterParentId = '@dbCostCenter.vCostCenterCode';
+                    var vId = '@dbCostCenter.vParentId';
+                        //$('.CostCenterNameL1').attr('data-Parent');
+                    var rowCount = $('#table tr').length - 1;
+                    var vChildDigit = funDigit(rowCount, 3)
+                    var vCostCenterLevel = $('.CostCenterNameL1').attr('Data-Level');
+                    $.each($(".tblCostCenter tbody tr:last"), function () {
+                        $(this).find('.CostCenterId > input[type=text]').last().val('');
+                        if (vId > 0) { $(this).find('.CostCenterCode > input[type=text]').last().val(vCostCenterParentId + vChildDigit); }
+                        else { $(this).find('.CostCenterCode > input[type=text]').last().val(rowCount)}
+                        $(this).find('.CostCenterNameL1 > input[type=text]').last().val('');
+                    });
+
+                });
+</script>
+<script>
+    // When Empty Columns
+        if (@Model.Rows.Count < 1) {
+            $.each($(".tblCostCenter tbody tr:last"), function () {
+                var vCostCenterParentId = '@dbCostCenter.vCostCenterCode';
+                  var vId = '@dbCostCenter.vParentId';
+                if (vId > 0) { $(this).find('.CostCenterCode > input[type=text]').last().val(vCostCenterParentId + funDigit(1, 3)); }
+                else { $(this).find('.CostCenterCode > input[type=text]').last().val('1') }
+                $('.txtMainNo').val('@dbCostCenter.vCostCenterCode');
+                $('.txtMainName').val('@dbCostCenter.vCostCenterName');
+                $('.txtBranchId').val('@dbCostCenter.vBranchId');
+                $('.txtBranchName').val('@dbCostCenter.vBranchName');
+            });
+        }
+</script>
+
+<script>
+    // GET MAIN CostCenter NAME AND Id IN TEXT
+    $('.txtMainNo').val('@dbCostCenter.vCostCenterCode');
+    $('.txtMainName').val('@dbCostCenter.vCostCenterName');
+    $('.txtBranchId').val('@dbCostCenter.vBranchId');
+    $('.txtBranchName').val('@dbCostCenter.vBranchName');
+    $('.txtLevel').val('@dbCostCenter.vCostCenterLevel');
+
+</script>
+<script>
+    // For The First Level
+    $('.btnFirstLevel').on('click', function () {
+        $('.divContent').load('/CostCenter/ChartsCostCenter?id=' + 0)
+    });
+</script>
+
+<script>
+ // Function Save costCenter
+    $('.btnSave').on('click', function () {
+      //  if ($.trim($(".CostCenterNameL1").val()) == "") return;
+            funCostCenterContent();
+    });
+    //  Calling Function Save CostCenter
+    function funSaveCostCenter(data) {
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: "/CostCenter/funSaveCostCenter",
+            data: data,
+            success: function (result) {
+                location.reload();
+            },
+            error: function () {
+            }
+        });
+    }
+    function funValidateTable() {
+
+        $.each($(".tblCostCenter tbody tr"), function () {
+          var vCode=  $(this).find('.CostCenterCode > input[type=text]').val();
+          var vName =$(this).find('.CostCenterNameL1 > input[type=text]').val();
+
+            });
+        
+    }
+    function funCostCenterContent() {
+        var vCostCenter = [];
+        var vCostCenterId = $('.CostCenterNameL1').attr('data-id');
+        $.each($(".tblCostCenter tbody tr"), function () {
+            vCostCenter.push({
+                CostCenterId: $(this).find('.CostCenterId > input[type=text]').val(),
+                CostCenterCode: $(this).find('.CostCenterCode > input[type=text]').val(),
+                CostCenterNameL1: $(this).find('.CostCenterNameL1 > input[type=text]').val(),
+                CostCenterIsAccumulative: $(this).find(".CostCenterIsAccumulative > input[type='checkbox']").prop('checked'),
+                CostCenterIsActive: $(this).find('.CostCenterIsActive > input[type=checkbox]').prop('checked'),
+            });
+        });
+        var vCostCenterParentId = $('.CostCenterNameL1').attr('data-Parent-Id');
+        var vLevel = $('.CostCenterNameL1').attr('data-level');
+        var vCostCenterParentId = '@dbCostCenter.vCostCenterCode'
+       // var res = vCostCenterParentId.split(".");
+        var vLevel = '@dbCostCenter.vCostCenterLevel'
+        var data = JSON.stringify({
+        vCostCenter: vCostCenter,
+        id: vCostCenterId,
+        ParentId: @dbCostCenter.vParentId,
+        CostCenterLevel: @dbCostCenter.vCostCenterLevel
+        });
+        $.when(funSaveCostCenter(data)).then(function (response) {
+        }).fail(function (err) {
+        });
+        alert('تم الحفظ بنجاح');
+        var vPath = '/CostCenter/ChartsCostCenter?id=' + @dbCostCenter.vParentId;
+        $(".divContent").load(vPath);
+        }
+</script>
+
+<script>
+    $('.btnExist').on('click', function () {
+
+        window.location.href = "/home/Index"
+
+    });
+    $('.btnList').on('click', function () {
+
+        window.location.href = "/home/Index"
+
+
+    });
+        function clearForms() {
+            $(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio').val('');
+        $(':checkbox, :radio').prop('checked', false);
+    }
+    // WORKIN ON BUTTONS
+    $('.btnClean').on('click', function () {
+            clearForms();
+        $(".btnOperation").prop("disabled", false);
+    });
+    $('.btnNext').on('click', function () {
+    
+        var vFirst = '@ViewBag.vbFirst';
+
+      var vPath = '/CostCenter/ChartsCostCenter?id=' + vFirst;
+        $(".divContent").load(vPath);
+    });
+        $('.btnLast').on('click', function () {
+        var vLast = '@ViewBag.vbLast';
+            var vPath = '/CostCenter/ChartsCostCenter?id=' + vLast;
+        $(".divContent").load(vPath);
+    });
+
+</script>
+<script src="~/Scripts/Notification/jquery.toast.js"></script>
+<script src="~/Scripts/Notification/jsNotifications.js" type="text/javascript"></script>
+<link href="~/Content/Notification/jquery.toast.css" rel="stylesheet" />
+<script>
+    funNotification('@dbCostCenter.vSQLResult', '@dbCostCenter.vSQLResultTypeId');
+    @{ dbCostCenter.vSQLResult = string.Empty;}
+</script>

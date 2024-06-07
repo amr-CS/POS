@@ -1,0 +1,1253 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.ACC;
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.appCode.Setting.User
+
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource._Bank, pIsNew = false })
+</div>
+
+<style>
+    body {
+        background-color: #FFFFFF !important;
+    }
+
+    .divTableContainer {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .divBank, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }
+
+    .divSectionTitle {
+        background-color: #FFFFFF !important;
+        font-weight: bold;
+        color: #2980b9;
+    }
+</style>
+<!--Scrolling Table-->
+<style>
+    #table-wrapper {
+        position: relative;
+    }
+
+    #table-wrapper-DTL {
+        position: relative;
+    }
+
+    #table-scroll {
+        height: 250px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    #table-scroll-DTL {
+        height: 300px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    #table-wrapper table thead th .text {
+        position: absolute;
+        top: -20px;
+    }
+
+    #table-wrapper-DTL table thead th .text {
+        position: absolute;
+        top: -20px;
+    }
+
+    .clsDiv {
+        /*position: fixed;*/
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        position: absolute;
+        top: -20px;
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        background-color: #D3EDFF !important;
+    }
+</style>
+
+<!-- Form Header -->
+<div class="">
+    @*<div class="bg-white border rounded p-3">
+            <div class=" form-group col-lg-2">
+                <label for="selectBankMain">الفرع </label>
+                <input type="text" val>
+            </div>
+
+        </div>*@
+</div>
+<!-- Utlity -->
+<div class="divUtilityBar d-flex ">
+    @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+</div>
+<!-- Cash Desk -->
+<div class="divTableContainer" >
+
+    <!-- Cash Desk Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">@appResource.lblBanks</div>
+
+    <div  id="table-wrapper">
+        <!-- Cash Desks Data -->
+        <div class="divBank bg-white border p-2" id="table-scroll">
+            <div class=" clsDiv"><div style="visibility:hidden;">1</div></div>
+            <table class="table tblBank">
+                <!-- Head -->
+                <thead>
+                    <tr>
+                        <th width="20px"><div class="text"></div></th>
+                        <th> <div class="text"> @appResource._Code</div></th>
+                        <th> <div class="text"> @appResource._Bank  -عربي</div> </th>
+                        <th>  <div class="text"> @appResource._Bank -انجليزي</div>   </th>
+                        <th>  <div class="text">@appResource._IsActive</div> </th>
+                        <th class="thActions">  <div class="text">@appResource._Actions</div> </th>
+                    </tr>
+                </thead>
+
+                <!-- Body -->
+                <tbody class="tblBankBody"></tbody>
+            </table>
+
+        </div>
+    </div>
+        <!-- Cash Desk Save -->
+        <div class=" bg-white border p-2 d-flex">
+            <div class="w-100"></div>
+            <div class="flex-shrink-1 p-1">
+                @*<button class="btn btn-success btnBankSave">@appResource.btnSave</button>*@
+            </div>
+        </div>
+    </div>
+
+<div class="divTableContainer">
+    <!-- Account Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">حسابات البنك</div>
+    <div  id="table-wrapper-DTL">
+        <!-- Account Data -->
+        <div class="divAccount bg-white border p-2" id="table-scroll-DTL">
+            <div class=" clsDiv"><div style="visibility:hidden;">1</div></div>
+            <table class="table tblAccount">
+                <!-- Head -->
+                <thead class="">
+                    <tr>
+                        @*<th width="20px"><div class="text"></div></th>*@
+                        <th width="15px"><div class="text"></div></th>
+                        <th width="25%"><div class="text">@appResource._Branch-عربي</div></th>
+                        <th width="25%"><div class="text">@appResource._Branch - انجليزي</div></th>
+                        <th><div class="text">@appResource.AccountNo</div></th>
+                        <th width="25%"><div class="text">@appResource._Account</div></th>
+                        <th><div class="text">@appResource._IsActive</div></th>
+                        <th class="thActions"><div class="text">@appResource._Actions</div></th>
+                    </tr>
+                </thead>
+
+                <!-- Body -->
+                <tbody class="tblAccountBody">
+                    <tr class="tblAccountRow"></tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+        <!-- Account Save -->
+        <div class=" bg-white border p-3 d-flex">
+            <div class="w-100"></div>
+            <div class="flex-shrink-1 p-1">
+                @*<button class="btn btn-success btnAccountSave">@appResource.btnSave</button>*@
+            </div>
+            <div class="flex-shrink-1 p-1">
+                @*<button class="btn btn-warning btnPrint">@appResource.btnPrint</button>*@
+            </div>
+        </div>
+    </div>
+    <!-- Data Modal -->
+    <div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="dataModalContent"></div>
+        </div>
+    </div>
+    <!-- Confirm Delete Modal -->
+    <div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="confirmDeleteModalContent"></div>
+        </div>
+    </div>
+    <!-- Cash Desk Scripts -->
+    <!-- Cash Desk -->
+    <script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Drop Down Main Cash Desk
+        funFillBank(null, 0, null, null,null, null, 1, null, null, false);
+
+        $.get('http://localhost:57380/api/bank', function (data) { console.log(data) })
+
+        // Wait 2 Seconds
+        setTimeout( function () {
+            // GET Cash Desk By Selected List
+            funGETBankBySelectedList();
+        },1000);
+    })
+
+
+    // Cash Desk GET
+    function funFillBank(
+        pBankId,
+        pBankParentId,
+        pBankCode,
+        pBankNameL1,
+        pBankNameL2,
+        pBankAccountIsActive,
+        pBankTypeId,
+        pBankAccountId,
+        pAccountId,
+        pIsAccountDetail) {
+
+        // GET Data
+        $.post('/Bank/BankGET',
+            {
+                pBankId: pBankId,
+                pBankParentId: pBankParentId,
+                pBankCode: pBankCode,
+                pBankNameL1: pBankNameL1,
+                pBankNameL2: pBankNameL2,
+                pBankTypeId: pBankTypeId,
+                pBankIsActive: null,
+                pIsDeleted: false,
+                pBankAccountId: pBankAccountId,
+                pBankAccountIsActive: pBankAccountIsActive,
+                pAccountId: pAccountId,
+                pIsAccountDetail: pIsAccountDetail,
+                pQueryTypeId: 400
+            },
+
+            function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+
+                // Select Cash Desk Element
+                var vSelectBank = $('#selectBankMain');
+                // Clear Items
+                vSelectBank.html('');
+                // Add [Select All] Option
+                vSelectBank.append('<option data-id="0" value="0">-</option>');
+
+                // For Each Cash Desk - Main
+                $.each(vDataResult, function (i, BankData) {
+
+                    // Append Each Option [Bank]
+                    vSelectBank.append('<option data-id="' + vDataResult[i].BankId + '" value="' + vDataResult[i].BankId + '">' + vDataResult[i].BankNameL1 + '</option>')
+
+                })
+
+                // Refresh Select Picker
+                $('.selectpicker').selectpicker('refresh');
+
+                // Cash Desk [Change]
+                $('#selectBankMain').on('change', function () {
+
+                    // GET Cash Desk By Selected List
+                    funGETBankBySelectedList();
+
+                });
+
+            }) // End of Post
+
+    } // End of Function [GET Data]
+
+        // Save - Click
+
+    $('.btnBankSave').on('click', function () {
+
+        funSaveBank();
+    }); // End of Save Click
+    function funSaveBank() {
+
+      
+        var banks = [];
+
+                    
+
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblBankBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get Bank Id
+            var vBankId = vRowData.attr('data-id');
+            // Get Parent [Id]
+            var vBankParent = $('#selectBankMain').val();
+            // Code
+            var vBankCode = vRowData.find('.BankCode').val();
+            // Type
+            var vBankType = vRowData.find('.BankType').children("option:selected").attr('data-id');
+            // Name L1
+            var vBankNameL1 = vRowData.find('.BankNameL1').val();
+            // Name L2
+            var vBankNameL2 = vRowData.find('.BankNameL2').val();
+            // Is Active
+            var vBankIsActive = vRowData.find('.BankIsActive').prop('checked');
+
+
+                 
+            // Check If Data Changed
+            if (vRowData.attr('data-changed') == '1') {
+                // Check Cash Desk If Empty
+                if (vBankNameL1 != '') {
+
+                    let bankData = {
+                      "code": "", 
+                        "nameL1": vBankNameL1, 
+                        "isActive": vBankIsActive, 
+                        "modified": true,
+                        "bankAccount": []
+                        
+
+
+                    }
+
+                    banks.push(bankData)
+
+                    // Save
+                    //$.post('/Bank/BankGET',
+                    //    {
+                    //        pBankId: vBankId,
+                    //        pBankParentId: vBankParent,
+                    //        pBankCode: vBankCode,
+                    //        pBankNameL1: vBankNameL1,
+                    //        pBankNameL2: vBankNameL2,
+                    //        pBankTypeId: vBankType,
+                    //        pBankIsActive: vBankIsActive,
+                    //        pIsDeleted: false,
+                    //        pBankAccountId: null,
+                    //        pAccountId: null,
+                    //        pIsAccountDetail: false,
+                    //        pQueryTypeId: 100
+                    //    },
+                    //    function (data, status) {
+                    //        vRowData.attr('data-changed', '0')
+
+                    //        // Drop Down Main Cash Desk
+                    //        funFillBank(null, 0, null, null, null, null, 1, null, null, false);
+
+                    //        // GET Cash Desk By Selected List
+                    //        funGETBankBySelectedList();
+
+
+                    //    });
+                }
+                else {
+
+                    // Not Valid
+                    vIsValid = false;
+                    vRowData.find('.BankNameL1').focus();
+                    vRowData.find('.BankNameL1').css("border-color", "red");
+                } // End Check Cash Desk Data
+
+            }
+
+        })
+
+                         $.ajax({
+            url: 'http://localhost:57380/api/bank/AddEditBankBulk',
+                             method: 'POST', contentType: 'application/json',
+                             data: JSON.stringify(banks),
+            success: function (r) {
+                console.log(r);
+            }
+        });
+        //funSaveDTL();
+
+
+
+        if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+
+        }
+        else {
+
+            //// Notification
+            // funNotification('تم الحفظ بنجاح', '1');
+            funSaveDTL();
+
+        }
+    }
+
+       // Save - Click
+
+    $('.btnAccountSave').on('click', function () {
+        funSaveBank();
+        //funSaveDTL();
+
+    }); // End of Save Click
+    function funSaveDTL() {
+           // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblAccountBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get Bank Id
+            var vBankId = localStorage.getItem('vBankId');
+            // Get Bank Id
+            var vBankAccountId = vRowData.attr('data-Account-id');
+            // Get Parent [Id]
+            var vBankParent = $('#selectBankMain').val();
+            // Code
+            var vBankCode = vRowData.find('.BankCode').val();
+            // AccountCode
+            var vAccountId = vRowData.find('.AccountId').val();
+
+            // Type
+            var vBankType = vRowData.find('.BankType').children("option:selected").attr('data-id');
+            // Name L1
+            var vBankAccountNameL1 = vRowData.find('.BankNameL1').val();
+            // Name L2
+            var vBankAccountNameL2 = vRowData.find('.BankNameL2').val();
+            // Is Active
+            var vBankIsActive = vRowData.find('.BankIsActive').prop('checked');
+            // Is Active
+            var vBankAccountIsActive = vRowData.find('.BankAccountIsActive').prop('checked');
+
+            console.log(vBankAccountIsActive)
+            // Check If Data Changed
+            if (vRowData.attr('data-changed') == '1') {
+                // Check Cash Desk If Empty
+                if (vBankAccountNameL1 != '') {
+
+                    // Save
+                    $.post('/Bank/BankGET',
+                        {
+                            pBankId: vBankId,
+                            pBankParentId: vBankParent,
+                            pBankCode: vBankCode,
+                            pBankNameL1: vBankAccountNameL1,
+                            pBankNameL2: vBankAccountNameL2,
+                            pBankAccountNameL1: vBankAccountNameL1,
+                            pBankAccountNameL2: vBankAccountNameL2,
+                            pBankAccountIsActive: vBankAccountIsActive,
+                            pBankTypeId: vBankType,
+                            pBankIsActive: vBankAccountIsActive,
+                            pIsDeleted: false,
+                            pBankAccountId: vBankAccountId,
+                            pAccountId: vAccountId,
+                            pIsAccountDetail: true,
+                            pQueryTypeId: 100
+                        },
+                        function (data, status) {
+
+
+                             vRowData.attr('data-changed','0')
+                            // GET Cash Desk By Selected List
+                            if (vBankId != 0) {
+                                funGETBankDTl(vBankId);
+                            }
+
+
+                        });
+                }
+                else {
+
+                    // Not Valid
+                    vIsValid = false;
+
+                } // End Check Cash Desk Data
+            }
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+            funNotification('@appResource.msgSave', 1);
+        }
+    }
+
+
+    $('body').on('click', '.btnBankDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get Unit Data
+        //var vUnitIdElement = vTableRow.find('.UnitId');
+        var vPrinterId = vTableRow.attr('data-id')
+
+
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.BankNameL1').val();
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdel', vTableRow.index)
+
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdel') == vTableRow.index) {
+                                // Get Bank Id
+                                var vBankIdDelete = $(this).attr('data-id');
+                                // Save
+                                $.post('/Bank/BankGET',
+                                    {
+                                        pBankId: vBankIdDelete,
+                                        pBankParentId: null,
+                                        pBankCode: null,
+                                        pBankNameL1: null,
+                                        pBankNameL2: null,
+                                        pBankTypeId: null,
+                                        pBankIsActive: null,
+                                        pIsDeleted: true,
+                                        pBankAccountId: null,
+                                        pAccountId: null,
+                                        pIsAccountDetail: false,
+                                        pQueryTypeId: 300
+                                    },
+                                    function (data, status) {
+
+                                        // Drop Down Main Cash Desk
+                                        funFillBank(null, 0, null, null, null, null, 1, null, null, false);
+
+                                        // GET Cash Desk By Selected List
+                                        funGETBankBySelectedList();
+
+                                    });
+
+                                // Notification
+                                funNotification('@appResource.msgDelete', 1);
+                                vTableRow = '';
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblBankBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    // Cash Desk Add Row
+                                    funBankAddRow(vTableRow);
+
+                                }
+                            }
+                        })
+                    })
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblBankBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddBankEmptyRow();
+
+                    }
+                }
+            })
+
+
+
+
+    })
+    $('body').on('click', '.btnBankAccountDelete', function () {
+
+
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get Unit Data
+        //var vUnitIdElement = vTableRow.find('.UnitId');
+        var vPrinterId = vTableRow.attr('data-Account-id')
+
+
+        var vDataId = vTableRow.attr('data-Account-id');
+        console.log('vDataIdaccccc' + vDataId);
+        var vDataName = vTableRow.find('.BankNameL1').val();
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdeldetail', vTableRow.index)
+
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdeldetail') == vTableRow.index) {
+                                // Get Bank Id
+                                var vBankIdDelete = $(this).attr('data-id');
+                                // Save
+                                $.post('/Bank/BankGET',
+                                    {
+                                        pBankId: null,
+                                        pBankParentId: null,
+                                        pBankCode: null,
+                                        pBankNameL1: null,
+                                        pBankNameL2: null,
+                                        pBankTypeId: null,
+                                        pBankIsActive: null,
+                                        pIsDeleted: true,
+                                        pBankAccountId: vBankIdDelete,
+                                        pAccountId: null,
+                                        pIsAccountDetail: true,
+                                        pQueryTypeId: 300
+                                    },
+                                    function (data, status) {
+                                        var vBankId = localStorage.getItem('vBankId');
+                                        // GET Cash Desk By Selected List
+                                        funGETBankDTl(vBankId);
+
+                                    });
+
+                                // Notification
+                                funNotification('@appResource.msgDelete', 1);
+                                vTableRow = '';
+                            }
+                            else {
+
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblAccountBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    var vCurrentRow = $(this).closest('tr');
+                                    // Cash Desk Add Row
+                                    funBankAccountAddRow(vCurrentRow);
+
+                                }
+                            }
+                        })
+                    })
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblAccountBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAccountAddRow();
+
+                    }
+                }
+            })
+
+
+
+
+
+
+    })
+    // Add New Row
+    $('body').on('click', '.btnBankAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funBankAddRow(vCurrentRow);
+    })
+
+    // GET Cash Desk By Selected List
+    function funGETBankBySelectedList() {
+
+        // Get Value [Id]
+        var vSelectedBank = $('#selectBankMain').val();
+        $.get('http://localhost:57380/api/bank', function (BankData) {
+
+
+
+            console.log(BankData)
+               // Table Body
+                var vBankTableBody = $('.tblBankBody');
+                // HTML CLEAR
+                vBankTableBody.html('');
+
+                // JSON
+                var vBankDataResult = BankData;
+
+                // For Each Cash Desk - Main
+                $.each(vBankDataResult, function (m, BankSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vBankRowContent = funBankRowConfig(vBankDataResult[m]);
+                    // Append Row Content
+                    vBankTableBody.append(vBankRowContent);
+
+                })
+        })
+        // GET Data
+        //$.get('/Bank/BankGET',
+        //    {
+        //        pBankId: null,
+        //        pBankParentId: null,
+        //        pBankCode: '',
+        //        pBankNameL1: '',
+        //        pBankNameL2: '',
+        //        pBankTypeId: null,
+        //        pBankIsActive: null,
+        //        pIsDeleted: false,
+        //        pBankAccountId: null,
+        //        pAccountId: null,
+        //        pIsAccountDetail: false,
+        //        pQueryTypeId: 400
+        //    },
+        //    function (BankData, status) {
+
+        //        // Table Body
+        //        var vBankTableBody = $('.tblBankBody');
+        //        // HTML CLEAR
+        //        vBankTableBody.html('');
+
+        //        // JSON
+        //        var vBankDataResult = JSON.parse(BankData);
+
+        //        // For Each Cash Desk - Main
+        //        $.each(vBankDataResult, function (m, BankSubData) {
+
+        //            // GET Cash Desk Row Content
+        //            var vBankRowContent = funBankRowConfig(vBankDataResult[m]);
+        //            // Append Row Content
+        //            vBankTableBody.append(vBankRowContent);
+
+        //        })
+        //        //funBankRow();
+        //    }) 
+    }
+    // Cash Desk Add Row
+    function funBankAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+        {
+            "BankIsActive": true,
+            "BankTypeId": 1,
+            "id": 0,
+            "code": '',
+            "nameL1": '',
+            "nameL2": '',
+        }
+
+        var vRowContent = funBankRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+    // function To Add emptyrow To Bank
+    function funAddBankEmptyRow() {
+                // Row Content
+        var vRowContent = '<tr data-changed = "0" class="tblRow" data-id="0">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnBankAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control BankCode" disabled  /></td>' +
+            '<td><input type="text" class="form-control BankNameL1"  /></td>' +
+            '<td><input type="text" class="form-control BankNameL2"  /></td>' +
+            '<td><input type="checkbox" class="form-control  BankIsActive" checked /></td>' +
+            '<td><button class="btn btn-light btn-sm btnBankDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+        // append Empty row to Body
+        $('.tblBankBody').append(vRowContent);
+    }
+
+
+    // Cash Desk Row Config
+    function funBankRowConfig(pBankDataResult) {
+
+
+        // Checked
+        var vChecked = null;
+        if (pBankDataResult.BankIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vBankTypeId = pBankDataResult.BankTypeId;
+        if (vBankTypeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        var vRowContent = '<tr data-changed = "0" class="tblRow" data-id="' + pBankDataResult.id + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnBankAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control BankCode" disabled value="' + pBankDataResult.code + '" /></td>' +
+            '<td><input type="text" class="form-control BankNameL1" value="' + pBankDataResult.nameL1 + '" /></td>' +
+            '<td><input type="text" class="form-control BankNameL2" value="' + pBankDataResult.nameL2 + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  BankIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnBankDelete" data-id="' + pBankDataResult.id + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        // Return Row Content
+        return vRowContent;
+    }
+    // Row Select
+    $('.tblBankBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divBank').on('click', 'table tr', function () {
+        var vBankId = $(this).attr('data-id')
+        localStorage.setItem('vBankId', vBankId);
+        // if Bank from database get details
+        if (vBankId != '0') {
+            funGETBankDTl(vBankId)
+        }
+        // if Bank Is New Has No Details
+        else {
+            // Table Body
+            var vBankTableBody = $('.tblAccountBody');
+            // HTML CLEAR
+            vBankTableBody.html('');
+            // Bank Add Empty Row
+            funAccountAddRow()
+        }
+    });
+    $('.divBank').on('focus', '.BankNameL1,.BankNameL2', function () {
+        var vCurrentElement = $(this);
+        var vCurrentRow = $(this).closest('.tblRow');
+        var vBankId = vCurrentRow.attr('data-id');
+        localStorage.setItem('vBankId', vBankId);
+           // if Bank from database get details
+        if (vBankId != '0') {
+            funGETBankDTl(vBankId)
+        }
+           // if Bank Is New Has No Details
+        else {
+            // Table Body
+            var vBankTableBody = $('.tblAccountBody');
+            // HTML CLEAR
+            vBankTableBody.html('');
+            // Bank Add Empty Row
+            funAccountAddRow()
+
+
+        }
+
+    })
+
+
+    // GET Cash Desk By Selected List
+    function funGETBankDTl(pBank) {
+
+        $.get('http://localhost:57380/api/bank/getBankAccounts',
+            {
+               bankId:pBank,
+               
+            },
+            function (BankData, status) {
+
+                console.log(BankData)
+                // Table Body
+                var vBankTableBody = $('.tblAccountBody');
+                // HTML CLEAR
+                vBankTableBody.html('');
+
+                // JSON
+                var vBankDataResult = BankData;
+
+                // For Each Cash Desk - Main
+                $.each(vBankDataResult, function (m, BankSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vBankRowContent = funBankDTlRowConfig(vBankDataResult[m]);
+                    // Append Row Content
+                    vBankTableBody.append(vBankRowContent);
+
+                })
+
+
+        // GET Data
+        //$.get('/Bank/BankGET',
+        //    {
+        //        pBankId: pBank,
+        //        pBankParentId: null,
+        //        pBankCode: '',
+        //        pBankNameL1: '',
+        //        pBankNameL2: '',
+        //        pBankTypeId: null,
+        //        pBankIsActive: null,
+        //        pIsDeleted: false,
+        //        pBankAccountId: null,
+        //        pAccountId: null,
+        //        pIsAccountDetail: true,
+        //        pQueryTypeId: 400
+        //    },
+        //    function (BankData, status) {
+
+        //        // Table Body
+        //        var vBankTableBody = $('.tblAccountBody');
+        //        // HTML CLEAR
+        //        vBankTableBody.html('');
+
+        //        // JSON
+        //        var vBankDataResult = JSON.parse(BankData);
+
+        //        // For Each Cash Desk - Main
+        //        $.each(vBankDataResult, function (m, BankSubData) {
+
+        //            // GET Cash Desk Row Content
+        //            var vBankRowContent = funBankDTlRowConfig(vBankDataResult[m]);
+        //            // Append Row Content
+        //            vBankTableBody.append(vBankRowContent);
+
+        //        })
+
+                // Cash Desk Add Row
+                funAccountAddRow()
+            })
+    }
+
+
+
+    </script>
+
+
+
+
+
+    <!-- Account Scripts -->
+    <!-- Add Row -->
+    <script>
+
+
+        // Add Row
+        $('.btnAccountAddRow').on('click', function () {
+            // Cash Desk Add Row
+            funAccountAddRow();
+            // Cash Desk Scroll
+            funAccountScroll();
+        })
+
+        // Account Scroll
+        function funAccountScroll() {
+            // Scroll To Bottom
+            $('.divAccount').animate({ scrollTop: $('.divAccount').prop("scrollHeight") }, 1000);
+        }
+    </script>
+
+
+
+
+    <script>
+
+        // Cash Desk Row Config
+        function funBankDTlRowConfig(pBankDataResult) {
+            // Checked
+            var vChecked = null;
+            if (pBankDataResult.BankAccountIsActive) {
+                vChecked = 'checked';
+            }
+
+            // Type
+            var vSelectedText1 = '';
+            var vSelectedText2 = '';
+            var vBankTypeId = pBankDataResult.BankTypeId;
+            if (vBankTypeId == 1) {
+
+                vSelectedText1 = 'selected';
+            }
+            else {
+                vSelectedText2 = 'selected';
+            }
+            console.log('funBankDTlRowConfig');
+
+            // Row Content
+            var vRowContent = '<tr data-changed = "0" class="tblRow" data-id="' + pBankDataResult.bankId + '"data-Account-id="' + pBankDataResult.id + '">' +
+                '<td width="20px"><button class="btn btn-sm btn-light btnBankAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                '<td><input type="text" class="form-control BankNameL1" value="' + pBankDataResult.nameL1 + '" /></td>' +
+                '<td><input type="text" class="form-control BankNameL2" value="' + pBankDataResult.nameL2 + '" /></td>' +
+                '<td width="7%"><input type="text" class="form-control AccountCode" value="' + pBankDataResult.accountNo + '" /><input type="text" class="form-control AccountId d-none" value="' + pBankDataResult.AccountId + '" /></td>' +
+                '<td><input type="text" class="form-control AccountNameL1" disabled value="' + pBankDataResult.AccountNameL1 + '" /></td>' +
+                '<td><input type="checkbox" class="form-control  BankAccountIsActive" ' + vChecked + ' /></td>' +
+                '<td><button class="btn btn-light btn-sm btnBankAccountDelete" data-id="' + pBankDataResult.BankAccountId + '"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+
+            // Return Row Content
+            return vRowContent;
+        }
+        ////////// Account Add Row
+        // Add New Row
+        $('body').on('click', '.btnBankAccountAddRow', function () {
+
+            var vCurrentRow = $(this).closest('tr');
+            // Cash Desk Add Row
+            funBankAccountAddRow(vCurrentRow);
+        })
+
+
+        // Cash Desk Add Row
+        function funBankAccountAddRow(pCurrentRow) {
+            // Row Content Data
+            var vRowContentData =
+                {
+                    "BankAccountId": '0',
+                    "BankIsActive": true,
+                    "AccountNo": '',
+                    "AccountId": 0,
+                    "BankCode": '',
+                    "AccountNameL1": '',
+                    "BankNameL1": '',
+                    "BankNameL2": '',
+                }
+
+
+
+            var vRowContent = funBankDTlRowConfig(vRowContentData);
+            // Add Row After Current Row
+            $(pCurrentRow).closest("tr").after(vRowContent);
+        }
+        // Function To Add Empty Row For BankAccount
+        //function funBankRowAccountConfig(vvRowContentData) {
+
+
+        //    var vRowEmpty = '<tr class="tblRow" data-id="0" data-Account-id="0">' +
+        //        '<td width="20px"><button class="btn btn-sm btn-light btnBankAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        //        '<td><input type="text" class="form-control BankNameL1"/></td>' +
+        //        '<td><input type="text" class="form-control BankNameL2"  /></td>' +
+        //        '<td width="7%"><input type="text" class="form-control AccountCode"  /><input type="text" class="form-control AccountId d-none"  /></td>' +
+        //        '<td><input type="text" class="form-control AccountNameL1" disabled  /></td>' +
+        //        '<td><input type="checkbox" class="form-control  BankAccountIsActive" checked /></td>' +
+        //        '<td><button class="btn btn-light btn-sm btnBankAccountDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+        //        '</tr>';
+        //    return vRowEmpty;
+
+        //}
+
+        // Add Row On Load Page
+        function funBankRow() {
+
+            // Table Body
+            var vBankTableBody = $('.tblBankBody');
+            // Append
+            vBankTableBody.append('<tr data-changed = "0" class="tblRow" data-id="0">' +
+                '<td width="20px"><button class="btn btn-sm btn-light btnBankAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                '<td width="7%"><input type="text" class="form-control BankCode" disabled  /></td>' +
+                '<td><input type="text" class="form-control BankNameL1"  /></td>' +
+                '<td><input type="text" class="form-control BankNameL2" /></td>' +
+                '<td><input type="checkbox" class="form-control  BankIsActive"  /></td>' +
+                '<td><button class="btn btn-light btn-sm btnBankDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>');
+        }
+
+
+        // Account Add Row
+        function funAccountAddRow() {
+
+            // Table Body
+            var vAccountTableBody = $('.tblAccountBody');
+            // Append
+            vAccountTableBody.append(' <tr data-changed = "0" class= "tblRow" data-id="0" data-Account-id="0" > ' +
+                '<td width="20px"><button class="btn btn-sm btn-light btnBankAccountAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                '<td><input type="text" class="form-control BankNameL1" /></td>' +
+                '<td><input type="text" class="form-control BankNameL2"  /></td>' +
+                '<td width="7%"><input type="text" class="form-control AccountCode"  /><input type="text" class="form-control AccountId d-none"  /></td>' +
+                '<td><input type="text" class="form-control AccountNameL1" disabled /></td>' +
+                '<td><input type="checkbox" class="form-control  BankAccountIsActive" /></td>' +
+                '<td><button class="btn btn-light btn-sm btnBankAccountDelete"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>'
+            );
+        }
+
+    </script>
+
+    <!-- AccountData Modal -->
+    <div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="AccountDataModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Get Account -->
+    <script>
+        // Account Code, Name - F9 - Double Click
+        $('table').on('keyup dblclick', '.AccountCode', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+
+                // Search Account
+                var vURL = '/GLVoucher/AccountSearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Account
+                    $('body').on('click', '.divAccountSelect', function () {
+                        // Account Id
+                        var vAccountId = $(this).attr('data-id');
+                        // Get Values
+                        var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                        var vAccountNameValue = $(this).find('.divAccountName').text();
+                        var vAccountCurrencyFactor = $(this).find('.divAccountCurrencyFactor').text();
+
+                        // Get Account Data
+                        var vAccountIdElement = vTableRow.find('.AccountId');
+                        var vAccountCodeElement = vTableRow.find('.AccountCode');
+                        var vAccountNameElement = vTableRow.find('.AccountNameL1');
+                        var vAccountCurrencyFactorElement = vTableRow.find('.txtAccountCurrencyFactor');
+
+
+                        // Change the Data-changed Attribute
+                        vTableRow.attr('data-changed', '1');
+
+                        // Set Value
+                        vAccountIdElement.val(vAccountId);
+                        vAccountCodeElement.val(vAccountCodeValue);
+                        vAccountNameElement.val(vAccountNameValue);
+                        vAccountCurrencyFactorElement.val(vAccountCurrencyFactor);
+
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                        vTableRow.removeClass('table-info');
+
+                        vTableRow = '';
+
+
+                    })
+                })
+            }
+        })
+    </script>
+    <script>
+        // When Change Value Of Id
+        $('body').on('keydown', '.AccountCode', function (e) {
+            $('input').on('blur', function () {
+                var row = $(this).closest('tr');
+                var vAccountNo = row.find('.AccountCode').val();
+                // List GetAccount
+                $.post('/Home/GetAccount',
+                    { AccountNo: vAccountNo },
+                    function (data, status) {
+                        var vDataJSON = JSON.parse(data);
+                        // Change the Data-changed Attribute
+                        row.attr('data-changed', '1');
+                        $.each(vDataJSON, function (i, Account) {
+                            // Account Name
+                            row.find('.AccountNameL1').val(Account.AccountNameL1);
+                            // AccountId
+                            row.find('.AccountId').val(Account.AccountId);
+                        })
+                    });
+
+            });
+        });
+    </script>
+    <script>
+
+        $('.divBank').on('change', '.BankNameL1,.BankNameL2,.BankIsActive', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+            // Change the Data-changed Attribute
+            vTableRow.attr('data-changed', '1');
+
+        })
+        $('.divBank').on('change', '.BankNameL1', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+            // Change the Data-changed Attribute
+            vTableRow.attr('data-changed', '1');
+            vTableRow.find('.BankNameL1').css("border-color", "");
+
+        })
+
+        $('.divAccount').on('change', '.BankNameL1,.BankNameL2,.BankIsActive,.divAccount,.BankAccountIsActive', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+            // Change the Data-changed Attribute
+            vTableRow.attr('data-changed', '1');
+
+        })
+        $('.divAccount').on('change', '.BankNameL1', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+            // Change the Data-changed Attribute
+            vTableRow.attr('data-changed', '1');
+            vTableRow.find('.BankNameL1').css("border-color", "");
+
+        })
+        $('.divAccount').on('change', '.divAccount', function () {
+
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblRow');
+            // Change the Data-changed Attribute
+            vTableRow.attr('data-changed', '1');
+            vTableRow.find('.divAccount').css("border-color", "");
+
+        })
+    </script>
+    <script>
+        $('.btnSave').on('click', function () {
+            funSaveBank();
+        });
+
+    // Print
+    $('.btnPrint').on('click', function () {
+        @*location.href = '/Account/ChartAccountReport?pCompanyId=' + '@clsUser.vUserCompanyId'*@
+        var url = '/Bank/BankReport'
+        var popupWindow = window.open(url);
+    });
+    //SimpleInSameWin()
+
+   </script>
+

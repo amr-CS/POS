@@ -1,0 +1,1054 @@
+﻿@using appSERP.appCode.Setting.User
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.SQL.QueryType;
+@{
+
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    string name = ticket.Name;
+
+    string UserId = string.Empty;
+    if (Request.Cookies["UserId"] != null)
+    { UserId = Request.Cookies["UserId"].Value; };
+ 
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+}
+@{
+    ViewBag.Title = "عملية الانتاج";
+}
+<style>
+    body {
+        font-family: Cairo;
+        background-color: #FFF;
+    }
+
+    .fullHeightInput {
+        height: 50px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .table th {
+        margin: auto;
+        border: none !important;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .table {
+        padding: 0rem;
+    }
+    /*.table td {
+        margin-top: 0.5rem;
+        padding: 0rem !important;
+    }*/
+
+    .tblHead {
+        border-bottom: 1px solid #d4d4d4;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+        max-width: 100% !important;
+    }
+
+    textarea {
+        max-width: 100% !important;
+    }
+
+    .form-inline {
+        margin-top: 0.5rem;
+    }
+
+    .table td, .table th {
+        border-top: 0 !important;
+    }
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+
+    /* Special Classes */
+    .controlRow {
+        margin-top: 0.5rem;
+    }
+
+    .checkInput {
+        margin: auto;
+    }
+
+    .tblFooter {
+        border: 0 !important;
+    }
+
+    .tooltip > .tooltip-inner {
+        background-color: #2980b9;
+    }
+
+    .tooltip > .tooltip-arrow {
+        border-bottom-color: #2980b9;
+    }
+
+    .form-control:Readonly, .form-control[Readonly] {
+        background-color: #eef1f5;
+        opacity: 1;
+    }
+
+    .divGlVoucher {
+        max-height: 50vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .txtDiscount {
+        height: 27px !important;
+        padding: 1px;
+    }
+
+    .errorClass {
+        border: 1px solid red;
+    }
+
+    .cardHeader {
+        background-color: #D3EDFF;
+    }
+
+    .clsItem {
+        height: 250px;
+        border: 1px #dee2e6 solid;
+        overflow-y: scroll !important;
+    }
+
+    .btn-Trans {
+        color: #000000;
+        background-color: #D3EDFF;
+        border-color: #D3EDFF;
+    }
+
+    .selected {
+        background-color: #2980b9 !important;
+    }
+</style>
+<!-- Utility Bar -->
+@*@Html.Action("Index", "DocUtilityBar")*@
+
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+</style>
+<!-- Head -->
+<div class="bg-white border rounded p-3">
+    <div class="row w-100 ">
+        <div class="col-lg-1">
+            <label class="font-weight-bold pt-3">
+                عملية الانتاج
+            </label>
+        </div>
+        <div class="d-flex justify-content-end col-lg-11">
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Save -->
+                <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+            </div>
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Copy -->
+                <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                <!-- Cut -->
+                <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                <!-- Paste -->
+                <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Print -->
+                <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                <!-- Sort Asc -->
+                <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                <!-- Sort Desc -->
+                <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- ADD -->
+                <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                <!-- Edit -->
+                <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- PDF -->
+                <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                <!-- Excel -->
+                <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                <!-- Word -->
+                <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Close -->
+                <button class="btn btnUtility btnDeleteHead" title="@appResource.btnDelete"><i class="fa fa-close"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Next -->
+                <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                <!-- Prev -->
+                <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                <!-- First -->
+                <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                <!-- Last -->
+                <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Full Screen -->
+                <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <div class="dropdown">
+                    <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-table"></i>
+                    </button>
+                    <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Head -->
+<div class="bg-white border rounded p-3">
+
+    <div class="row">
+        <!-- Doc No -->
+        <div class="row  col-sm-5 ">
+            <div class="col-sm-3">
+                <label class="small  pt-2">رقم الطلب</label>
+            </div>
+            <div class="col-sm-2 pl-2 pr-2">
+                <input type="text" class="form-control form-control-sm txtProductionCode" Readonly />
+                <input type="text" class="form-control form-control-sm txtProductionId d-none" value="0" Readonly />
+            </div>
+            <div class="col-sm-3">
+                <label class="small float-right pt-2">حالة الحركة</label>
+            </div>
+            <div class="col-sm-4 clsSelect">
+                <select class="form-control txtTransStatus" style="font-size:10px" Readonly>
+                    <option value="1">تحت الطلب </option>
+                    <option value="2">الموافقة للطلب  </option>
+                    <option value="3">الترحيل  </option>
+                    <option value="4">ملغي </option>
+                    <option value="5">اقفال الطلب </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Doc Date -->
+        <div class="row  col-sm-3">
+            <div class="col-sm-3">
+                <label class="small float-right pt-2">تاريخ الحركة</label>
+            </div>
+            <div class="col-sm-9">
+                <input class="form-control form-control-sm txtProductionDate" Readonly value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            </div>
+        </div>
+        <div class="row col-sm-3">
+            <div class="col-sm-4">
+                <label class="small float-right pt-2">الموظف المتابع</label>
+            </div>
+            <div class="col-sm-8">
+                <div class="d-flex txtEmployee">
+                    <input type="text" class="form-control form-control-sm w-25  txtEmployeeId d-none" />
+                    <input type="text" class="form-control form-control-sm w-25 txtEmployeeCode" />
+                    <input type="text" id="start" class="form-control form-control-sm txtEmployeeName" Readonly />
+                </div>
+            </div>
+        </div>
+        <div class="row col-sm-3 d-none">
+            <div class="col-sm-3">
+                <label class="small  pt-2">خط الانتاج</label>
+            </div>
+            <div class="col-sm-9">
+                <div class="d-flex txtProdLine">
+                    <input type="text" class="form-control form-control-sm w-25  txtProdLineId d-none" />
+                    <input type="text" class="form-control form-control-sm w-25 txtProdLineCode" />
+                    <input type="text" id="start" class="form-control form-control-sm txtProdLineName" Readonly />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row ">
+
+    <div class="col-md-3 border-right" style="height:78vh">
+        @*<input type="button" class="btn btn-outline-info" value="تحديث">*@
+        <div class="container-fluid ">
+            <div class="clsItem">
+                <table class="table table-hover border tblProduct">
+                    <thead>
+                        <tr class="cardHeader">
+                            <th>رقم الطلب</th>
+                            <th>موظف الانتاج</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tblProductBody">
+                        <tr class="tblProductRow">
+                            <td><div><input type="text" class="form-control form-control-sm txtOrderCode" data-id="0" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtEmpName" data-id="0" Readonly></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="border">
+                <div class="card">
+
+                    <div class="card-header cardHeader">
+                        @*<div id="loader">
+                                <img src="~/Image/PreloaderImage/preloader.gif" width="250" height="250" />
+                            </div>*@
+                        <div id="loading">
+                            <img src="~/Image/PreloaderImage/load-from-cloud.gif" class="loader" />
+                            @*<div class="loading-icon"></div>*@
+                        </div>
+                        طباعة التقرير
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>من تاريخ</label>
+                                <div><input type="text" class="form-control form-control-sm"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label>الى تاريخ</label>
+                                <div><input type="text" class="form-control form-control-sm"></div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="pt-2">
+                            <div class="pt-2">
+                                <!-- Default unchecked -->
+                                <div class="custom-control custom-radio ">
+                                    <input type="radio" class="custom-control-input" id="defaultUnchecked" name="defaultExampleRadios">
+                                    <label class="custom-control-label" for="defaultUnchecked">الطلب</label>
+                                </div>
+                            </div>
+                            <div class="pt-2">
+                                <!-- Default checked -->
+                                <div class="custom-control custom-radio ">
+                                    <input type="radio" class="custom-control-input" id="defaultChecked" name="defaultExampleRadios" checked>
+                                    <label class="custom-control-label" for="defaultChecked">الصرف</label>
+                                </div>
+                            </div>
+                            <div class="pt-2 pb-3">
+                                <!-- Default checked -->
+                                <div class="custom-control custom-radio ">
+                                    <input type="radio" class="custom-control-input" id="defaultChecked" name="defaultExampleRadios" checked>
+                                    <label class="custom-control-label" for="defaultChecked">مكونات المنتج</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="container-fluid pt-3" id="table-wrapper">
+
+            <div class="clsItem" id="table-scroll">
+                <table class="table table-hover border ">
+                    <thead>
+                        <tr class="cardHeader">
+                            <th>الصنف</th>
+                            <th>الكمية المطلوبة</th>
+                            <th>الكمية المتبقية</th>
+                            <th>الكمية المحولة</th>
+                            <th>بعد الاستثناء</th>
+                            <th>الوحدة</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tblItemBody">
+                        <tr class="tblItemRow">
+                            <td><div><input type="text" class="form-control form-control-sm txtItem" data-id="" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtQtyOrder" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtQtyRemain" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtQtyTransfer" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtExp" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtUnit" Readonly></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clsItem">
+                <table class="table table-hover border ">
+                    <thead>
+                        <tr class="cardHeader">
+                            <th>المنتج</th>
+                            <th>الكمية</th>
+                            <th>الوحدة</th>
+                            <th>مخزن الاصناف</th>
+                            <th>مخزن الانتاج</th>
+                            <th>البيان</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="tblProductDtlBody">
+                        <tr class="tblProductDtlRow">
+                            <td><div><input type="text" class="form-control form-control-sm txtProduct" dataid="0" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtQty" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtUnit" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtSourceStore" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtDestStore" Readonly></div></td>
+                            <td><div><input type="text" class="form-control form-control-sm txtNote" Readonly></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 border-left">
+        <div class="container-fluid pt-3">
+            <table class="table table-hover border clsItem">
+                <thead>
+                    <tr class="cardHeader">
+                        <th>المنتج</th>
+                        <th>بعد الاستثناء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div><input type="text" class="form-control form-control-sm" Readonly></div></td>
+                        <td><div><input type="text" class="form-control form-control-sm" Readonly></div></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="card">
+                <div class="card-header cardHeader">
+                    العمليات
+                </div>
+                <div class="card-body">
+                    <div class="pt-2"><input type="button" class="btn btn-primary btn-block" value="مرحلة الطلب"></div>
+                    <div class="pt-2"><input type="button" class="btn  btn-primary btn-block btnSubmit" value="الموافقة"></div>
+                    <div class="pt-2"><input type="button" class="btn btn-primary btn-block btnClose" value="اقفال الطلب"></div>
+                    <div class="pt-2 pb-4"><input type="button" class="btn btn-primary btn-block btnCancelOrder" value="الغاء الطلب"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+    function funConfigProduct(pData) {
+        if (pData) {
+            var RowContent =
+                '<tr class="tblProductDtlRow" data-found="' + pData.ItemIsFoundMain + '">' +
+                '<td><div><input type="text" class="form-control form-control-sm txtProduct text-center" data-id="' + pData.ItemId + '" value="' + pData.InvItemNameL1 + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtQty text-center"  value="' + pData.QTY + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtUnit text-center" data-id="' + pData.UnitId + '" value="' + pData.UnitName + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtSourceStore text-center" value="' + pData.SourceStoreName + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtDestStore text-center" value="' + pData.DestStoreName + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtNote text-center" value="' + pData.NOTES + '" Readonly></div></td>' +
+                '</tr>';
+
+            return RowContent;
+        }
+    }
+    function funConfigProductDtl(pData) {
+        if (pData) {
+            var RowContent =
+                '<tr class="tblProductDtlRow" data-id="' + pData.ProductionId + '" data-found="' + pData.ItemIsFoundMain + '">' +
+                '<td><div><input type="text" class="form-control form-control-sm txtProduct text-center" data-id="' + pData.ItemId + '" value="' + pData.InvItemNameL1 + '"  Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtQty text-center"  value="' + pData.QTY + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtUnit text-center" data-id="' + pData.UnitId + '" value="' + pData.UnitName + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtSourceStore text-center" value="' + pData.SourceStoreName + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtDestStore text-center" value="' + pData.DestStoreName + '" Readonly></div></td>' +
+
+                '<td><div><input type="text" class="form-control form-control-sm txtNote text-center" value="' + pData.NOTES + '" Readonly></div></td>' +
+                '</tr>';
+
+            return RowContent;
+        }
+    }
+
+    function funConfigItem(pData) {
+        if (pData) {
+            var QtyTransfer;
+            var Exp;
+            var Remain = 0;
+            if (parseFloat(pData.QtyRemain) > parseFloat(pData.QtyOrder)) {
+                QtyTransfer = 0;
+                Remain = parseFloat(pData.QtyRemain) - parseFloat(pData.QtyOrder)
+            }
+            else if (parseFloat(pData.QtyRemain) == parseFloat(pData.QtyOrder)) {
+                QtyTransfer = 0;
+                Remain = 0;
+            }
+            else {
+
+                QtyTransfer = Math.ceil(pData.QtyOrder - pData.QtyRemain);
+
+                Remain = QtyTransfer + pData.QtyRemain - pData.QtyOrder;
+
+                if (Remain < 0) {
+                    Remain = Remain * -1;
+
+                }
+
+            }
+            var RowContent =
+                '<tr class="tblItemRow" data-id="' + pData.ProductionId + '"   data-found="' + pData.ItemIsFoundMain + '" ItemQty="' + pData.ItemQty + '">' +
+
+                '<td><div><input type="text" class="form-control form-control-sm txtItem" value="' + pData.InvItemNameL1 + '" data-id="' + pData.ItemId + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtQtyOrder" value="' + pData.QtyOrder + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtQtyRemain" data-Remain="' + Remain + '" value="' + pData.QtyRemain + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtQtyTransfer"  value="' + QtyTransfer + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtExp"  Default-Data="' + pData.DefaultQty + '" value="' + pData.Exp + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtUnit" data-id="' + pData.UnitId + '" value="' + pData.UnitName + '" Readonly></div></td>' +
+                '<td><div><input type="text" class="form-control form-control-sm txtItemLastCost text-center d-none" value="' + pData.ItemLastCost + '" Readonly></div></td>' +
+                '</tr>';
+            return RowContent;
+        }
+
+    }
+
+    //Load Data
+    // funLoadProductData();
+
+    // Load Data Products
+    function funLoadProductData() {
+
+
+
+
+        // For Modal
+        if (vDataSearch) {
+
+            if (vDataSearch != undefined && vDataSearch != '') {
+                var vBody = $('.tblProductDtlBody')
+                vBody.html('')
+                $.each(vDataSearch, function (i, Item) {
+                    vBody.append(funConfigProductDtl(Item));
+                })
+            }
+        }
+        // Load Page
+        else {
+            $.get('/api/APIProduction/ProductionGet',
+                {
+                },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vBody = $('.tblProductDtlBody')
+                        vBody.html('')
+                        var DataResult = JSON.parse(data)
+                        $.each(DataResult, function (i, Item) {
+                            if (DataResult[i].ProductionDtl) {
+                                vBody.append(funConfigProductDtl(DataResult[i].ProductionDtl[0]));
+                            }
+                        })
+                    }
+                })
+        }
+    }
+
+
+    //------------------------------------------------------------------------------------/
+
+    function funConfigProductHead(pData) {
+        // console.log(pData)
+        if (pData.TransStatus == '1') {
+            var color = '#dc3545';
+        } else {
+            var color = '#28a745';
+        }
+        if (pData != 'undefined' && pData != 'null') {
+            // Content
+            var vProductDtl = JSON.stringify(pData.ProductionDtl);
+
+            var vItemDtl = JSON.stringify(pData.Item);
+            var RowContent =
+                '<tr class="tblProductRow" >' +
+                '<td class="d-none"><div><textarea class="clsData">' + vProductDtl + '</textarea></div></td>' +
+                '<td class="d-none"><div><textarea class="clsItem">' + vItemDtl + '</textarea></div></td>' +
+                '<td><div><input style="background-color:' + color + '" type="text" class="form-control form-control-sm txtOrderCode text-center" date="' + pData.TransDate + '" TransStatus="' + pData.TransStatus + '"  ProductLineName="' + pData.ProdLineName + '" ProductLineCode="' + pData.ProdLineCode + '" data-id="' + pData.ProductionId + '" invid="' + pData.InvId + '" value="' + pData.ProductionCode + '"  Readonly></div></td>' +
+                '<td><div><input style="background-color:' + color + '" type="text" class="form-control form-control-sm txtEmpName" data-id="' + pData.EmpId + '" value="' + pData.EmpName + '" Readonly></div></td>' +
+                '</tr>';
+            return RowContent;
+        }
+    }
+
+    funLoadProductHead()
+    // Load Data Order Empolyee
+    function funLoadProductHead() {
+        var vDataSearch = "";
+        var TransStatus = 5;
+
+
+
+        // For Modal
+        //if (vDataSearch) {
+        //    if (vDataSearch != undefined && vDataSearch != '') {
+        //        var vBody = $('.tblProductBody')
+        //        vBody.html('')
+        //        $.each(vDataSearch, function (i, Item) {
+        //            vBody.append(funConfigProductHead(Item));
+        //        })
+        //    }
+        //}
+        //// Load Page
+        //else {
+        $.get('/api/APIProduction/ProductionGet',
+            {
+                pTransStatus: TransStatus,
+                branchId:@BranchId
+            },
+            function (data, status) {
+                if (data != undefined && data != '') {
+                    var vBody = $('.tblProductBody')
+                    vBody.html('')
+                    var DataResult = JSON.parse(data)
+
+                    DataResult.reverse();
+
+                    $.each(DataResult, function (i, Item) {
+                        if (DataResult) {
+                            vBody.append(funConfigProductHead(DataResult[i]));
+                            $(".tblProduct tbody tr:first").addClass('selected')
+
+                            var Data = $('.selected').find('.clsData').text();
+
+                            var Item = $('.selected').find('.clsItem').text();
+                            //  alert('yes')
+
+                            if (Data) {
+                                funLoadProductData(Data)
+                            }
+                            if (Item) {
+                                funLoadItemData(Item)
+                            }
+
+
+
+
+                            var vItemId = $('.selected').attr('data-id')
+                            var OrderNo = $('.selected').find('.txtOrderCode').val();
+                            var OrderId = $('.selected').find('.txtOrderCode').attr('data-id');
+                            var InvId = $('.selected').find('.txtOrderCode').attr('invid');
+                            var ProdLineCode = $('.selected').attr('ProdLineCode')
+                            var ProdLineName = $('.selected').attr('ProdLineName')
+                            var EmplyeeName = $('.selected').find('.txtEmpName').val()
+                            var EmplyeeCode = $('.selected').find('.txtEmpName').attr('data-id')
+                            var TransStatus = $('.selected').find('.txtOrderCode ').attr('TransStatus')
+                            var Date = $('.selected').find('.txtOrderCode ').attr('date')
+
+
+
+
+                            $('.txtProductionCode').val(OrderNo)
+                            $('.txtProductionId').val(OrderId)
+                            $('.txtProductionCode').attr('InvId', InvId)
+
+                            $('.txtEmployeeCode').val(EmplyeeCode)
+                            $('.txtEmployeeName').val(EmplyeeName)
+                            $('.txtProdLineCode').val(ProdLineCode)
+                            $('.txtProdLineName').val(ProdLineName)
+                            $('.txtProductionDate').val(Date)
+
+                            $("div.clsSelect select").val(TransStatus);
+                            var $tr = $(".tblProduct .tblProductRow:first").closest('tr').find('input'); //get tr
+
+
+                            $tr.addClass('selected');
+
+
+                        }
+                    })
+                }
+            })
+        //   }
+
+    }
+</script>
+<!--On Select Data-->
+<script>
+    function funLoadProductData(Data) {
+
+        if (Data != 'null' && Data != 'undefined') {
+            var vBody = $('.tblProductDtlBody')
+            vBody.html('')
+
+            var DataResult = JSON.parse(Data)
+            //  $('.tblProductDtlRow data-id[' + DataResult.ProductionId + ']').addClass('selected')
+            $.each(DataResult, function (i, Item) {
+                vBody.append(funConfigProductDtl(Item));
+            })
+        }
+    }
+
+    function funLoadItemData(Data) {
+
+        if (Data != 'null' && Data != 'undefined') {
+            var vBody = $('.tblItemBody')
+            vBody.html('')
+
+
+            var DataResult = JSON.parse(Data)
+            // $('.tblItemRow data-id[' + DataResult.ProductionId + ']').addClass('selected')
+            $.each(DataResult, function (i, Item) {
+                vBody.append(funConfigItem(Item));
+            })
+        }
+    }
+
+
+
+    //console.log(Data)
+    //var Item = $(".tblProduct .tblProductRow:first").find('.clsItem').text();
+    //if (Data) {
+    //    funLoadProductData(Data)
+    //}
+    //if (Item) {
+    //    funLoadItemData(Item)
+    //}
+    // Row Select
+    $('.tblProductBody').on('keyup keydown click', '.tblProductRow', function (e) {
+        var $tr = $(this).closest('tr').find('input'); //get tr
+        // Add Selected Class
+        $('.tblProductRow input').removeClass('selected')
+
+        $tr.addClass('selected');
+
+        var vItemId = $(this).attr('data-id')
+        var OrderNo = $(this).find('.txtOrderCode').val();
+        var OrderId = $(this).find('.txtOrderCode').attr('data-id');
+        var InvId = $(this).find('.txtOrderCode').attr('invid');
+        var ProdLineCode = $(this).attr('ProdLineCode')
+        var ProdLineName = $(this).attr('ProdLineName')
+        var EmplyeeName = $(this).find('.txtEmpName').val()
+        var EmplyeeCode = $(this).find('.txtEmpName').attr('data-id')
+        var TransStatus = $(this).find('.txtOrderCode ').attr('TransStatus')
+        var Date = $(this).find('.txtOrderCode ').attr('date')
+        // Content Data
+        var Data = $(this).find('.clsData').text();
+
+        var Item = $(this).find('.clsItem').text();
+
+        if (Data) {
+            funLoadProductData(Data)
+        }
+        if (Item) {
+            funLoadItemData(Item)
+        }
+
+        $('.txtProductionCode').val(OrderNo)
+        $('.txtProductionId').val(OrderId)
+        $('.txtProductionCode').attr('InvId', InvId)
+
+        $('.txtEmployeeCode').val(EmplyeeCode)
+        $('.txtEmployeeName').val(EmplyeeName)
+        $('.txtProdLineCode').val(ProdLineCode)
+        $('.txtProdLineName').val(ProdLineName)
+        $('.txtProductionDate').val(Date)
+
+        $("div.clsSelect select").val(TransStatus);
+
+        // if (TransStatus == '5') {
+        //     $("div.clsSelect select").val("5");
+        //$('.tblProductRow selected').find('.txtOrderCode').attr('TransStatus','5')
+
+        // } else {
+        //     $("div.clsSelect select").val("1");
+        // $('.tblProductRow selected').find('.txtOrderCode ').attr('TransStatus','2')
+
+        // }
+    })
+    function LoadHead() {
+
+    }
+</script>
+<!---------------------------------------------------Order------------------------------------------------------------------->
+<script>
+
+    function funSaveDtl(InvId) {
+        let InvoiceDtls = [];
+        //})// DTL Rows
+        $('.tblProductDtlRow').each(function () {
+            var vTableRow = $(this);
+            var vdItemId = $(this).find('.txtProduct').attr('data-id')
+            var vdUnitId = $(this).find('.txtUnit').attr('data-id')
+            var vdItemQty = $(this).find('.txtQty').val()
+            let Item = {
+                InvDTLId: 0,
+                InvId: InvId,
+                ItemId: vdItemId,
+                UnitId: vdUnitId,
+                ItemQty: vdItemQty,
+                StoreId: 2,
+                InvType: 10,
+                IsDeleted: false,
+            }
+            InvoiceDtls.push(Item);
+        });
+        //console.log(InvoiceDtls)
+        $.ajax({
+            url: '/Invoice/InsertProductionTransInsertBulk',
+            method: 'POST', contentType: 'application/json',
+            data: JSON.stringify({
+                InvoiceDtls,
+                InvId: InvId,
+                UserId: '@UserId',
+                branchId:@BranchId
+            }),
+            beforeSend: function () {
+            },
+            complete: function () {
+                funLoadProductHead()
+
+                $('#loading').hide();
+            },
+            success: function (r) {
+
+            }
+        });
+
+    }
+    function funSaveItemDtl(vInvId) {
+    
+        let InvoiceDtls = [];
+
+        var ProductionId = $('.txtProductionId').val();
+        //})// DTL Rows
+        $('.tblItemRow').each(function () {
+            var vTableRow = $(this);
+            var vdItemId = $(this).find('.txtItem').attr('data-id')
+            var vdUnitId = $(this).find('.txtUnit').attr('data-id')
+            var vdItemQty = $(this).find('.txtExp').attr('Default-Data')
+            var vdItemQtyRemain = $(this).find('.txtQtyRemain').attr('data-Remain')
+            var ItemLastCost = $(this).find('.txtItemLastCost').val()
+            var vQtyOrder = $(this).find('.txtQtyOrder').val()
+            var QtyLastRemain = $(this).find('.txtQtyRemain').val();
+            var QtyTransfer = $(this).find('.txtQtyTransfer').val();
+            var QtyExp = $(this).find('.txtExp').val()
+
+
+            let Item = {
+                InvId: vInvId,
+                ItemId: vdItemId,
+                UnitId: vdUnitId,
+                ItemQty: QtyTransfer,
+                Qty: vQtyOrder,// QTY ORDERed
+                QtyPlate: vdItemQtyRemain,// Qty Remain
+                InvType: 4,
+                StoreId: 1,
+                IsDeleted: false,
+                ItemPrice: ItemLastCost,
+                QtyOrder: vQtyOrder,
+                QtyRemain: QtyLastRemain,
+                QtyTransfer: QtyTransfer,
+                QtyExp: QtyExp
+            }
+
+            InvoiceDtls.push(Item);
+        })
+
+        $('.tblProductDtlRow').each(function () {
+            var vTableRow = $(this);
+            var vdItemId = $(this).find('.txtProduct').attr('data-id')
+            var vdUnitId = $(this).find('.txtUnit').attr('data-id')
+            var vdItemQty = $(this).find('.txtQty').val()
+
+            let Item = {
+                InvId: vInvId,
+                ItemId: vdItemId,
+                UnitId: vdUnitId,
+                ItemQty: vdItemQty,
+                StoreId: 2,
+                InvType: 10,
+                IsDeleted: false,
+            }
+            InvoiceDtls.push(Item);
+
+        });
+
+        var UserId = $('.divUserId').text();
+
+        console.log(InvoiceDtls)
+        $.ajax({
+            url: '/Invoice/InsertProductionTransInsertBulk',
+            method: 'POST', contentType: 'application/json',
+            data: JSON.stringify({
+                InvoiceDtls,
+                InvId: vInvId,
+                ProductionId: ProductionId,
+                UserId: UserId,
+                branchId:@BranchId
+            }),
+
+            beforeSend: function () {
+                $('#loading').show();
+            },
+            complete: function () {
+                $('#loading').hide();
+            },
+            success: function (r) {
+
+                console.table(r);
+                var m = JSON.parse(r);
+                $.each(m, function (i, a) {
+                    funNotification(a.msg, a.c)
+                })
+                if (m[0].c == 1) {
+                    var data = JSON.parse(r);
+
+                    funLoadProductHead()
+
+                    //    Clear()
+                }
+
+            }, error: function (xhr) {
+                alert('Request Status: ' + xhr.status + ' Status Text: ' + xhr.statusText + ' ' + xhr.responseText);
+            }
+        });
+    }
+
+    $('.btnSubmit').on('click', function () {
+        var IsPosted = $("div.clsSelect select").val();
+        var Code = $(".txtProductionCode").val();
+    var valid =true;
+         $('.tblItemRow').each(function () {
+            var vTableRow = $(this);
+            var vdUnitId = $(this).find('.txtUnit').attr('data-id')
+           
+    if(vdUnitId==null||vdUnitId=='null'){
+    funNotification('يجب   ادخال  جميع الوحدات', 3)
+    valid =false
+    return;
+    }
+    
+    })
+    if(valid==true){
+        funSaveItemDtl(0);
+    }
+
+    })
+
+    function UpdateStore(vdItemId, pdItemQty, QtyTransfer, QtyLastRemain, pQueryTypeId) {
+
+        $.get('/api/APIINVInvoice/INVInvoiceGET/',
+            {
+
+                pdItemId: vdItemId,
+                pdItemQty: pdItemQty,
+                QtyTransfer: QtyTransfer,
+                QtyLastRemain: QtyLastRemain,
+                pQueryTypeId: pQueryTypeId
+            }, function (data) {
+
+            })
+    }
+
+    //Cancel Order
+    $('.btnCancelOrder').on('click', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vDataId = $('.txtProductionId').val()
+        var vDataName = $('.txtProductionId').val()
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+                        // Delete Action URL
+                        var vDeleteActionURL = '/api/APIProduction/ProductionGet';
+                        // Delete
+                        $.get(vDeleteActionURL, { pProductionId: vDataId, pIsDeleted: true, pQueryTypeId: '300' }, function (data) {
+                            //if ($.isNumeric(data)) {
+                            //    funNotification('لا يمكن حذف هذا المنتج', 2);
+                            //}
+                            //else {
+                            $('.selected').remove();
+                            // Check If IT The Last Row
+                            var vLastRow = $('.tblItemBody').find('tr').attr('data-id')
+
+                            // Add Row If Empty
+                            if (vLastRow == undefined) {
+                                //funAddDTLEmptyRow($('.tblItemBody'))
+                                // funAddItemEmptyRow()
+                            }
+                            // Notification
+                            funNotification('تم الحذف بنجاح', 1);
+                            //}
+
+
+                        });
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblDtlBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        //  funAddDTLEmptyRow($('.tblDtlBody'))
+                        // funAddItemEmptyRow()
+                    }
+                }
+            });
+
+
+
+    });
+    $('.btnPrint').on('click', function () {
+        var url = '/InvoicePaymentOrder/InvoicePaymentOrderHtmlReport?pInvId=' + $('.txtProductionCode').attr('InvId') + '&&InvType=4';
+        var popupWindow = window.open(url);
+    });
+    $('.btnClose').on('click', function () {
+        var ProductionId = $('.txtProductionId').val()
+        if (ProductionId) {
+            // Update Is Posted
+            $.get('/api/APIProduction/ProductionGet'
+                ,
+                {
+                    pProductionId: ProductionId,
+                    pQueryTypeId: '311'
+                },
+                function (data) {
+                    $('.clsSelect select').val(5)
+                    $('.selected').remove();
+                    funNotification('تم اقفال الطلب', 1)
+                    funLoadProductHead()
+                })
+        }
+    });
+
+</script>

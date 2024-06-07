@@ -1,0 +1,152 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "SalesMenSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divSalesMen {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divSalesMenSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divSalesMenSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divSalesMenNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">SalesMen</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divSalesMen">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodySalesMen"></tbody>
+    </table>
+</div>
+
+
+<!-- SalesMen GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // SalesMen GET
+        funSalesMenGET();
+    })
+
+    // SalesMen GET
+    function funSalesMenGET() {
+
+        $.get('/api/APISalesMen/SalesMenGET',
+            {
+
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodySalesMen');
+
+
+                // SalesMens
+                $.each(vDataResult, function (i, SalesMenData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].LookupDtlId + '">';
+
+                    var vSalesMenName = vDataResult[i].LookupDtlDesc;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vSalesMenName = vDataResult[i].LookupDtlDescL;
+                        }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].LookupDtlId + '">';
+                    vRowContent += '<div class="divSalesMenSelect d-flex p-2" data-id="' + vDataResult[i].LookupDtlId + '">';
+                    vRowContent += '<div class="divSalesMenNo px-4">' + vDataResult[i].CodeId + '</div>';
+                                vRowContent += '<div class="divSalesMenName px-4">' + vSalesMenName + '</div>';
+                                //vRowContent += '<div class="divSalesMenCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search SalesMen -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divSalesMenSelect').each(function () {
+
+                // Get SalesMen Code
+                var vSalesMenCode = $(this).find('.divSalesMenNo').text();
+                var vSalesMenName = $(this).find('.divSalesMenName').text();
+
+                if (vSalesMenCode.search(vSearchInput) != -1 || vSalesMenName.search(vSearchInput) != -1) {
+
+                    $(this).addClass('table-success');
+                    $(this).hide();
+
+                    console.log('found')
+                }
+                else {
+                    $(this).removeClass('table-success');
+                    $(this).show();
+                }
+
+            })
+
+        }
+        else {
+            $('.divSalesMenSelect').removeClass('table-success');
+            $(this).show();
+        }
+    })
+</script>
+

@@ -1,0 +1,203 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "CostCenterSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divCostCenter {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divCostCenterSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divCostCenterSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divCostCenterCode {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._CostCenter</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divCostCenter">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyCostCenter"></tbody>
+    </table>
+</div>
+
+
+<!-- CostCenter GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        //// CostCenter GET
+        //funCostCenterGET();
+    })
+
+    // CostCenter GET
+    function funCostCenterGET() {
+
+        $.get('/api/APICostCenter/CostCenterGET',
+            {
+            pQueryTypeId:402
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyCostCenter');
+
+
+                // CostCenters
+                $.each(vDataResult, function (i, CostCenterData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].CostCenterId + '">';
+
+                        var vCostCenterName = vDataResult[i].CostCenterNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCostCenterName = vDataResult[i].CostCenterNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].CostCenterId + '">';
+                            vRowContent += '<div class="divCostCenterSelect d-flex p-2" data-id="' + vDataResult[i].CostCenterId + '">';
+                                vRowContent += '<div class="divCostCenterCode px-4">' + vDataResult[i].CostCenterCode + '</div>';
+                                vRowContent += '<div class="divCostCenterName px-4">' + vCostCenterName + '</div>';
+                                 //vRowContent += '<div class="divCostCenterCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search CostCenter -->
+<script>
+    //// Search
+    //$('.txtSearch').on('keyup', function () {
+
+    //    // Search Input
+    //    var vSearchInput = $(this).val();
+
+    //    if (vSearchInput) {
+
+    //        // Check All
+    //        $('.divCostCenterSelect').each(function () {
+
+    //            // Get CostCenter Code
+    //            var vCostCenterCode = $(this).find('.divCostCenterCode').text();
+    //            var vCostCenterName = $(this).find('.divCostCenterName').text();
+
+    //            if (vCostCenterCode.search(vSearchInput) != -1 || vCostCenterName.search(vSearchInput) != -1) {
+
+    //                $(this).addClass('table-success');
+    //                $(this).hide();
+
+    //                console.log('found')
+    //            }
+    //            else {
+    //                $(this).removeClass('table-success');
+    //                $(this).show();
+    //            }
+
+    //        })
+
+    //    }
+    //    else {
+    //        $('.divCostCenterSelect').removeClass('table-success');
+    //        $(this).show();
+    //    }
+    //})
+     // Search
+    $('.txtSearch').on('blur', function () {
+        // Table Body
+        var vTableBody = $('.tblBodyCostCenter');
+        vTableBody.html('');
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            $.post('/CostCenter/FilterCostCenters',
+                {
+                    pCostCenterCode: vSearchInput
+                }, function (data, status) {
+                    // JSON
+                    var vDataResult = JSON.parse(data);
+                  
+                        // Accounts
+                $.each(vDataResult, function (i, CostCenter) {
+
+                    var vRowContent = funRowConfig(vDataResult[i])
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+            })
+
+        }
+        else {
+           
+     
+        }
+    })
+    function funRowConfig(pRow) {
+        var vRowContent = '<tr data-id="' + pRow.CostCenterId + '">';
+
+                        var vCostCenterName = pRow.CostCenterNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCostCenterName = pRow.CostCenterNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + pRow.CostCenterId + '">';
+                            vRowContent += '<div class="divCostCenterSelect d-flex p-2" data-id="' + pRow.CostCenterId + '">';
+                                vRowContent += '<div class="divCostCenterCode px-4">' + pRow.CostCenterCode + '</div>';
+                                vRowContent += '<div class="divCostCenterName px-4">' + vCostCenterName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+        return vRowContent;
+
+
+    }
+
+</script>

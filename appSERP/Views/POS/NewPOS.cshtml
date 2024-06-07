@@ -1,0 +1,2338 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.SEC
+
+@{
+    Layout = "~/Views/Shared/appLayout/_POSLayout.cshtml";
+}
+
+@{
+    ViewBag.Title = "نقاط البيع";
+}
+@{
+    var Period = ViewBag.open;
+    var IsCashier = ViewBag.IsCashier;
+
+    string InsuranceCategory = ViewBag.InsuranceCategory;
+    bool IsPOSPrinterNetwork = ViewBag.IsPOSPrinterNetwork;
+}
+@{
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    string name = ticket.Name;
+    string CashierId = string.Empty;
+    if (Request.Cookies["CashierId"] != null)
+    { CashierId = Request.Cookies["CashierId"].Value; };
+    string CashierName = string.Empty;
+    if (Request.Cookies["CashierName"] != null)
+    { CashierName = Request.Cookies["CashierName"].Value; };
+    string dftCredit = string.Empty;
+    if (Request.Cookies["Credit"] != null)
+    { dftCredit = Request.Cookies["Credit"].Value; };
+    int UserId = 0;
+    //Convert.ToInt32(Request.Cookies["UserId"].Value);
+    if (Request.Cookies["UserId"] != null)
+    { UserId = Convert.ToInt32(Request.Cookies["UserId"].Value); };
+    string userType = ViewBag.dbUser.funUserData(name).Rows[0]["UserTypeId"].ToString();
+}
+<style>
+    body {
+        height: 600px;
+        /* Make this site really long */
+        width: 5000px; /* Make this site really wide */
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+    .divMeal {
+        margin-top: 0 !important;
+        height: 530px;
+        overflow-x: scroll;
+
+    }
+
+
+    .clsButtonActions {
+        background-color: #3f3d3b;
+        color:#fff;
+    }
+
+    .modal-open .modal {
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    .clsButtonItemAdd, .btnItemAddVouch, .btnItemIns {
+        width: 112px;
+        border: 1px solid;
+        padding: 2px 5px;
+        height: 115px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .divTotalModal {
+        position: fixed;
+        bottom: 44px;
+    }
+
+    /*  input {
+            margin: 1px;
+            padding: 1px;
+        }
+    */
+    .divOrder {
+        height: 40%;
+        max-height: 40%;
+        overflow-x: scroll;
+        border: solid 2px solid #0081c6;
+    }
+
+    .info {
+        color: #dee2e6 !important;
+        background-color: #0081c6 !important;
+        border-color: #0081c6 !important;
+        border-radius: 0px;
+    }
+
+    .orange {
+        /* color: black !important;
+                background-color: #FF851B !important;
+                border-color: #ff7702 !important;*/
+    }
+
+    body {
+        background-color: #dee2e6;
+    }
+
+    .btn-group.special {
+        display: flex;
+    }
+
+    .special .btn {
+        flex: 1
+    }
+
+    .box {
+        position: relative;
+        display: inline-block; /* Make the width of box same as image */
+        box-sizing: border-box;
+    }
+
+    .darkColor {
+        background-color: #808080 !important;
+        color: #fff;
+    }
+
+    .GrayColor {
+        background-color: rgb(0, 0, 0) !important;
+    }
+
+    .text {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        bottom: 0;
+        background: rgb(0, 0, 0); /* Fallback color */
+        background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+        color: #fff;
+        height: 20%;
+    }
+
+    p {
+        font-size: 15px;
+        font-weight: bold;
+    }
+
+    .topText {
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 0;
+        background: rgb(0, 0, 0); /* Fallback color */
+        background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+        /*background: #0094ff;*/
+        color: #fff;
+        height: 20%;
+    }
+
+    img {
+        /* width: 114px; height: 125px;*/
+        width: 55px;
+        height: 60px;
+    }
+
+    .divDataContainer {
+        width: 53%;
+        max-height: 94vh;
+        height: 94vh;
+        background-color: #FFF;
+        margin-right: 4px;
+    }
+
+    .rowCategory {
+        /*        height: 50px;*/
+        border: 1px solid #eaeaea;
+        padding: 0px;
+    }
+
+    .divGridContainer {
+        width: 33%;
+        max-height: 94vh;
+        height: 94vh;
+        background-color: #FFF;
+        border: 1px solid #eaeaea;
+        padding-left: 15px;
+        /*padding: 1.5rem;*/
+    }
+
+    .divButtonsContainer {
+        width: 15%;
+        max-height: 94vh;
+        height: 94vh;
+        background-color: #FFF;
+        border: 1px solid #eaeaea;
+        /*padding: 1.5rem;*/
+    }
+
+    .divCalc {
+        border: 1px solid #eaeaea;
+        /*padding: 1.5rem;*/
+    }
+
+    .divCustomer {
+        background-color: #FFF;
+        border: 1px solid #eaeaea;
+    }
+
+    .overflow-visible {
+        white-space: initial;
+    }
+</style>
+<div class="d-flex ">
+    <div class="divButtonsContainer">
+        <div class="border rounded p-1" style="height:94vh;max-height:94vh;overflow-y:scroll">
+            <div class="col-sm-12 d-none">
+                <input type="text" class="form-control txtPad" disabled />
+            </div>
+            <div class="btnCalc divCalc" style="">
+                <div class="btn-group special">
+                    <input type="button" class="btn   clr" value="1" />
+                    <input type="button" class="btn   clr" value="2" />
+                    <input type="button" class="btn   clr" value="3" />
+                </div>
+                <div class="btn-group special">
+                    <input type="button" class="btn  clr" value="4" />
+                    <input type="button" class="btn  clr" value="5" />
+                    <input type="button" class="btn  clr" value="6" />
+                </div>
+                <div class="btn-group special">
+                    <input type="button" class="btn  clr" value="7" />
+                    <input type="button" class="btn  clr" value="8" />
+                    <input type="button" class="btn  clr" value="9" />
+                </div>
+                <div class="btn-group special">
+                    <input type="button" class="btn  clr" value="0" />
+                    <input type="button" class="btn  clr" value="." />
+                    <input type="button" class="btn  clr" value="C" />
+                </div>
+            </div>
+            <div class="divService">
+                <button class="btn clsButtonActions mb-2 btn-success btn-block  btnSave orange" style="height:80px"><img src="~/Image/POS/checked.png" style="width:30%;height:30%" />حفظ</button>
+                <button class="btn btn-block clsButtonActions btnNew orange">
+                    <img src="~/Image/POS/edit.png" style="width:20%;height:20%" />جديد
+                </button>
+                <button class="btn clsButtonActions  btn-block btnIns  orange">
+
+                    <img src="~/Image/POS/icons8-meal-64.png" style="width:20%;height:20%" />
+                    تأمين
+                </button>
+                <button class="btn clsButtonActions   btn-block mb-2 btnInsBack orange" @ViewBag.ReturnInvoice><img src="~/Image/POS/reload.png" style="width:20%;height:20%" />اعادة تأمين</button>
+                <button class="btn clsButtonActions  mb-2 btn-block btnItemAdd orange"><img src="~/Image/POS/plus.png" style="width:20%;height:20%" />اضافات الفاتورة</button>
+
+                <button class="btn  clsButtonActions  btn-block mb-2  btnWait orange"><img src="~/Image/POS/pause.png" style="width:20%;height:20%" />تعليق</button>
+                <button class="btn clsButtonActions btn-block mb-2   btnCustomer orange"> <img src="~/Image/POS/user.png" style="width:20%;height:20%" />العملاء</button>
+                <button class="btn  mb-2   btn-block  btnDeliv orange clsButtonActions" value="false"><img src="~/Image/POS/icons8-delivery-48.png" style="width:20%;height:20%" />توصيل</button>
+
+                <button class="btn  clsButtonActions mb-2 btn-block btnInvoiceWait orange d-none"><img src="~/Image/POS/receipt.png" style="width:20%;height:20%" />فواتير معلقة</button>
+                <div class="row  clsList   ml-0 " id="clsList" style="display:none">
+                    <select id="DriverId" class="DriverId form-control " name="DriverId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required></select>
+                </div>
+
+
+                <button type="button" class="btn clsButtonActions mb-2   btn-block  orange  btnExit d-none" value=""><img src="~/Image/POS/icons8-lock-48.png" style="width:20%;height:20%" />قفل الشاشة</button>
+                <button type="button" class="btn clsButtonActions mb-2   btn-block  orange  btnModalWait" value=""><img src="~/Image/POS/receipt.png" style="width:20%;height:20%" />استعراض الفواتير المعلقة</button>
+                @*<button type="button" class="btn Tools m-1 btn-outline-warning overflow-visible" value="حساب التوصيل">حساب التوصيل<img src="~/Image/POS/icons8-math-64.png" style="width:20%;height:20%" /></button>*@
+
+            <button type="button" class="btn clsButtonActions mb-2   btn-block  orange btnInvSearch" @ViewBag.SearchInvoice value="بحث عن فاتورةلكل الكاشيرات"><img src="~/Image/POS/icons8-search-64.png" style="width:20%;height:20%" />بحث عن فاتورةلكل الكاشيرات</button>
+            <button type="button" class="btn clsButtonActions mb-2   btn-block  orange btnDriverCash" value="حساب التوصيل"><img src="~/Image/POS/icons8-search-64.png" style="width:20%;height:20%" />حساب التوصيل</button>
+
+            <button type="button" class="btn clsButtonActions mb-2   btn-block  orange btnInvoiceDriver" value="ربط الفواتير بالسائقين">
+                <img src="~/Image/POS/icons8-connect-64.png" style="width:20%;height:20%" />
+                ربط الفواتير بالسائقين
+            </button>
+                <button type="button" class="btn clsButtonActions mb-2 d-none   btn-block d-none  orange" value="متابعة فواتير الحجز">متابعة فواتير الحجز<img src="~/Image/POS/icons8-reservation-48.png" style="width:20%;height:20%" /></button>
+                <button type="button" class="btn d-none clsButtonActions mb-2   btn-block  orange btnInvoiceStatus" value="متابعة حالة الفاتورة"><img src="~/Image/POS/icons8-active-state-64.png" style="width:20%;height:20%" />متابعة حالة الفاتورة</button>
+                <button type="button" class="btn clsButtonActions mb-2   btn-block  orange btnInvCancel" @ViewBag.CancelInvoice value="الغاء الفاتورة"><img src="~/Image/POS/icons8-cancel-subscription-48.png" style="width:20%;height:20%" />الغاء الفاتورة</button>
+                <button type="button" class="btn clsButtonActions mb-2   btn-block  orange btnOpenCash" value="فتح الدرج"><img src="~/Image/POS/icons8-filing-cabinet-64.png" style="width:20%;height:20%" />فتح الدرج</button>
+                <button type="button" class="btn d-none clsButtonActions mb-2   btn-block  orange" @ViewBag.ModifyInvoice value="تعديل الفاتورة">
+                    <img src="~/Image/POS/icons8-edit-64.png" style="width:20%;height:20%" />
+                 تعديل الفاتورة
+                </button>
+                <button class="btn clsButtonActions d-none mb-2   btn-block  orange btnPayment"><img src="~/Image/POS/icons8-paycheque-64.png" style="width:20%;height:20%" />طرق الدفع</button>
+                <button class="btn   Tools btn-block d-none   overflow-visible btnTest "> <img src="~/Image/POS/icons8-administrative-tools-64.png" style="width:20%;height:20%" />ادوات</button>
+                <button class="btn  clsButtonActions Tools  btn-block  overflow-visible btnExit"><img src="~/Image/POS/icons8-close-window-48.png" style="width:20%;height:20%" />خروج</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="divDataContainer bg-light">
+        <div class="rowCategory bg-light border rounded  mb-1">
+            <div class="divContainer">
+                @*<div class="divCategory pt-2" dir="rtl" style="border-bottom:2px solid #0081c6">
+                    </div>*@
+                @Html.Action("about", "home")
+            </div>
+        </div>
+        <div class="divMeal" style="">
+            @*@for (int i = 0; i <= 100; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        <div class="box bg-white darkColor border rounded p-2">
+
+                            <div class="topText">
+                                <p>
+                                    15
+                                    حبة
+                                </p>
+                            </div>
+                            <img src="~/Image/WalemaImages/meal1.jpeg">
+                            <div class="text">
+                                <p>حبة مندي مثلوثة بيشاور</p>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="box bg-white GrayColor border rounded p-2 ">
+                            <div class="topText">
+                                <p>
+                                    15
+                                    حبة
+                                </p>
+                            </div>
+                            <img src="~/Image/WalemaImages/meal1.jpeg">
+                            <div class="text">
+                                <p>حبة مندي مثلوثة بيشاور</p>
+                            </div>
+                        </div>
+                    }
+
+                }*@
+        </div>
+    </div>
+    <div class="divGridContainer">
+        <div class="btn-group btn-group-lg special" role="group" aria-label="...">
+            <button type="button" class="btn fa fa-check btn-light clr btnWay btnGroup dSelected" value="31">سفري</button>
+            <button type="button" class="btn btn-light btnLocal btnGroup" value="30">محلي </button>
+            <button type="button" class="btn btn-light btnFam btnGroup" value="32">عوائل</button>
+        </div>
+        <div class="divCustomer">
+            <div class="d-flex">
+                <input type="text" id="start" class="form-control  d-none InvId" value="0" disabled autocomplete="off" />
+                <input type="text" placeholder="رقم الفاتورة" id="start" class="form-control  InvCode" disabled autocomplete="off" />
+
+                <input type="text" id="start" placeholder="تاريخ الفاتورة" class="form-control  InvDate" disabled value="@DateTime.Now.ToString("yyyy/MM/dd")" date-time="@DateTime.Now" />
+            </div>
+            <div class="d-flex">
+                <input type="text" id="start" class="form-control CustomerId d-none" value="0" disabled autocomplete="off" />
+                <input type="text" placeholder="رقم العميل" id="start" class="form-control  CustomerCode" disabled autocomplete="off" />
+
+                <input type="text" placeholder="وقت الفاتورة" id="start" class="form-control  InvTime" autocomplete="off" disabled value="@DateTime.Now.ToShortTimeString()" />
+            </div>
+            <div class="d-flex">
+                <input type="text" placeholder="اسم العميل" id="start" class="form-control  CustomerName" autocomplete="off" />
+                <input type="text" placeholder="رقم الجوال" id="start" class="form-control  PhoneNumber" autocomplete="off" />
+            </div>
+            <div class="d-flex">
+
+                <input type="text" placeholder="العنوان" id="start" class="form-control  Address" autocomplete="off" />
+                <img src="~/Image/Icons/google.png" class="btnShowMap" style="width:20px;height:20px" />
+            </div>
+
+            <div class="row">
+                <div class="row col-sm-6 d-none">
+                    <div class="col-sm-4">
+                        <label class="small  Site">النقاط</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <p class="alert alert-info clsPoint" data-id="0">0</p>
+                    </div>
+                </div>
+
+                <div class="row col-sm-6">
+                    <div class="col-sm-4">
+                        <label class="small  ">طرق الدفع</label>
+                    </div>
+                    <div class="col-sm-8 ">
+           <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" checked id="cash" name="radio" value="1">
+                            <label class="custom-control-label" for="cash">نقدي</label>
+           </div>
+    <div class="custom-control custom-radio custom-control-inline">
+ <input type="radio" class="custom-control-input" id="card" name="radio" value="2">
+   <label class="custom-control-label" for="card">شبكة</label>
+        </div>
+
+                    </div>
+                </div>
+                <div class="row col-sm-6 mada">
+                    <div class="col-4">
+                        <label>جهاز مدي</label>
+                    </div>
+                    <div class="col-8">
+                        <select id="txtCredit" class="txtCredit form-control" name="txtCredit"></select>
+                        @*<input type="text" class="form-control " id="txtCredit" data-id="0" />*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*Item Grid*@
+        <div class="divOrder ">
+            <table class="table table-sm  bg-white">
+                <thead>
+                    <tr>
+                        <th width="50%">الصنف</th>
+                        <th width="37%">الكمية</th>
+                        <th>السعر</th>
+                        <th>الاجمالي</th>
+                        <th class="clsItemAdd d-none">الضريبة</th>
+                    </tr>
+                </thead>
+                <tbody class="tblItemBody"></tbody>
+
+            </table>
+
+
+        </div>
+        <table class="  table table-sm darkColor" style="border:solid 1px #dee2e6;">
+            <thead>
+            </thead>
+            <tbody>
+                <tr style="border:solid 1px #808080">
+
+                    <td>  <label class=" "> مبلغ الفاتورة </label></td>
+                    <td>  <label class="  txtVouchPrice">00.00</label></td>
+                    <td> <label class="  "> ضريبة </label></td>
+                    <td>  <label class="   txtVouchVat">00.00</label></td>
+                </tr>
+                <tr style="border:solid 1px rgb(0, 0, 0)">
+                    <td> <label class=" ">الاجمالي</label></td>
+                    <td>    <label class="  txtVouchTotal">00.00</label></td>
+                    <td>     <label class="  ">سعر الايجار</label></td>
+                    <td>      <label class="  txtRent">00.00</label></td>
+                </tr>
+                <tr style="border:solid 1px rgb(0, 0, 0)">
+
+                    <td><label class="  ">التأمين</label></td>
+                    <td><label class="  txtInsurance">00.00</label></td>
+                    <td>    <label class=" ">الخصم</label></td>
+                    <td><label class="  txtDiscount">00.00</label></td>
+                </tr>
+                <tr style="border:solid 1px rgb(0, 0, 0)">
+                    <td><label class="  ">ملاحظه</label></td>
+                    <td colspan="3" class=""><input type="text" class="txtNotes" style="width:100%" /></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- AccountData Modal -->
+<div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AccountDataModalContent"></div>
+    </div>
+</div>
+<!-- MapData Modal -->
+<div id="MapDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="MapDataModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+
+<div class="report d-none">
+
+</div>
+<!-- SignalR -->
+@section scripts {
+    @*<script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+        <script src="/signalr/hubs"></script>*@
+    <script>
+    funUserType()
+    function funUserType() {
+        if ('@userType'!= 0 || '@userType'!= '' || '@userType'!= 'null') {
+            if ('@userType' === '30' || '@userType' === '31' || '@userType' === '32') {
+                $('.btnGroup').removeClass('info')
+                $('.btnGroup').removeClass('dSelected')
+                $('.btnGroup[value="' + @userType + '"]').addClass('info')
+                $('.btnGroup[value="' + @userType + '"]').addClass('dSelected')
+            }
+            else {
+                $('.btnTake').removeClass('btn-primary')
+                $('.btnDeliv').removeClass('orange')
+                $('.btnDeliv').removeClass('clsButtonActions')
+                $('.btnDeliv').addClass('btn-primary')
+                $('.btnDeliv').val('true')
+                $('.clsList').css('visibility', 'visible');
+
+            }
+
+        }
+    }
+
+        $('.mada').hide();
+        $(function () {
+
+
+            // Add New Chat
+            //   var chat = $.connection.chatHub;
+            //  chat.client.addNewMessageToPage = function (message) {
+            // funUpdataDataAfterSave()
+            //    }
+            //    var Valid = localStorage.setItem('valid', 'false');
+            // Start Connection
+            //     $.connection.hub.start().done(function () {
+            $('#AccountDataModalContent').html('');
+
+
+            // Check Rows After Insert
+            var FirstCount = 0;
+            var SecondCount = 0;
+
+            $('.btnSave').on('click', function () {
+                var InvId = $('.InvId').val()
+                // Search Account
+                var vURL = '/POS/Payment';
+                $('#AccountDataModalContent').html('');
+               // GetTotalPaymentCheckPoints()
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Full
+                $('#AccountDataModalContent').parent().addClass('modal-dialog modal-lg');
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    // $('#btnOK').prop('disabled', true);
+
+                    // Get Total ANd Check Points
+                  //  GetTotalPaymentCheckPoints();
+
+                    // Get All Points
+                    var ALlPoints = 0;
+                    $('.tblItemRow').each(function () {
+                        var Element = $(this)
+                        var Qty = Element.find('.txtQty').val();
+                        var Points = Element.attr('Points') * Qty;
+                        ALlPoints += Points
+                    })
+                    $('.txtPoints').attr('data-Meal', ALlPoints)
+
+                    // Focus
+                    $('.txtCashM').focus();
+                    $('.txtCashM').select();
+                    $('body').on('click', '.btnOK', function () {
+
+                        // Save Voucher And Click Ok
+                        SaveInvoice()
+
+                    })
+                    $('body').on('keypress', function (e) {
+
+                        if (e.keyCode == 13) {
+
+
+                            // Save Voucher And Click Ok
+                            SaveInvoice()
+                        }
+                    })
+
+                })
+            })
+            // });
+
+            // Save Voucher And Click Ok
+            function SaveInvoice() {
+                // Save Head
+                var TotalCash = $('.txtCashM').val();
+                var Reamin = $('.txtRemain').text();
+
+                ///  var Payed=$('')
+                if (TotalCash == '' || isNaN(TotalCash) || TotalCash == '' || parseFloat(TotalCash) == 0.00 || parseFloat(Reamin) < 0) {
+                    // Check Total
+                    Valid = false;
+                    localStorage.setItem('valid', 'false')
+                    $('#AccountDataModalContent').html('');
+                }
+                else {
+                    //   chat.server.send('1')
+                    Valid = true;
+                    var price = $(".tblItemRow:first").find('.txtPrice').text()
+                    if (price) {
+                        Save(false)
+                        var InvId = $('.InvCode').attr('data-id')
+                        //funPrintCashierReport(localStorage.getItem('InvId'))
+                    }
+
+                    $('#AccountDataModal').modal('hide');
+                    $('#AccountDataModalContent').html('');
+
+                }
+            }
+
+
+        })
+        // Get Total ANd Check Points
+        function GetTotalPaymentCheckPoints() {
+            $('.txtCashM,.txtPointsM').on('change blur', function () {
+                var Cash = parseFloat($('.txtCashM').val())
+                var Points = parseFloat($('.txtPointsM').val());
+                var MainPoints = parseFloat($('.txtPoints').val());
+                
+                if (Points <= MainPoints) {
+                    Cash = Cash + Points
+                    $('.txtCashTotalM').text(Cash)
+                    GetDiscount()
+                    // Total
+                    GetTotal()
+
+                    // Decrease Points
+                    $('.txtPoints').attr('data-value', MainPoints - Points);
+
+                    var Payed = parseFloat($('.txtCashTotalM').text());
+                    var Req = parseFloat($('.txtReqM').text());
+                    var Remain = parseFloat($('.txtRemain').text());
+
+                    if (Payed >= Req) {
+                        // Check If Used Point
+                        if (Points > 0) {
+                            // Check Remain
+                            if (Remain <= 0) {
+                                $('#btnOK').prop('disabled', false);
+
+                            } else { funNotification('لا يجوز وجود باقي عند استخدام النقاط او الشبكة', 3) }
+                        } else {
+                            // Remove Disables Button
+                            $('#btnOK').prop('disabled', false);
+                        }
+                    }
+                    else { $('#btnOK').prop('disabled', true); }
+                } else {
+                    funNotification('النقاط لا تكفي', 3)
+                }
+            });
+        }
+
+
+        // Load Function Get Category
+        // GetProductCategory();
+        function GetProductCategory() {
+
+            $.get('/api/APILookup/LookupGET',
+                {
+                    pIsDetail: true,
+                    pLookupId: 120,
+                    pQueryTypeId: '400',
+                }, function (data, status) {
+                    if (data) {
+                        var DataResult = JSON.parse(data)
+
+                        var Count = 0;
+                        //  $('.divCategory').append('<div class="pb-1">');
+                        $('.divCategory').html('')
+                        $.each(DataResult, function (i, Category) {
+                            Count = i;
+                            var Meal = JSON.stringify(Category.Meal)
+                            $('.divCategory').append('<div><button type="button" class="btn btn-light clsButton overflow-visible border m-1" Order="' + i + '" data-id="' + Category.LookupDtlId + '" value="' + Category.LookupDtlDesc + '" >' + Category.LookupDtlDesc + '</button><textarea Order="' + i + '" class="clsData d-none">' + Meal + '</textarea><div>')
+                        })
+
+                        $('.divCategory').slick({
+                            dots: true,
+                            infinite: false,
+                            rtl: true,
+                            speed: 300,
+                            slidesToShow: 5,
+                            slidesToScroll: 3,
+                        });
+                    }
+                })
+        }
+
+
+
+        $('body').on('click', '.clsButton', function () {
+            //UpdateProductCategory()
+            var Order = $(this).attr('Order')
+            var Data = $('.clsData[Order="' + Order + '"]').text();
+            funConfigMeal(Data)
+        })
+
+        // Item Add Action
+        function funConfigItemAdd(DataMeal) {
+            var DataResult = JSON.parse(DataMeal)
+
+            $('.divMeal').html('');
+            $.each(DataResult, function (g, Meal) {
+                $('.divMeal').append('<input type="button" class="btn clsButtonItemAdd  m-1 btn-warning" Order="' + g + '" item-type="' + Meal.ItemType + '" data-id="' + Meal.AddOrder + '" Price="' + Meal.ItemAddPrice + '" Item-Id="' + Meal.ItemId + '" value="' + Meal.InvItemNameL1 + '" />')
+            })
+        }
+        // Add Item
+        $('body').on('click', '.btnAdd', function () {
+            var Data = $(this).closest('tr').find('.clsItemAdd').text()
+
+            funConfigItemAdd(Data)
+
+            $('tr').removeClass('ItemSelect')
+
+            $(this).closest('tr').addClass('ItemSelect')
+        })
+        // Add Item
+        $('body').on('click', '.btnItemAdd', function () {
+
+            $.get('/api/APILookup/LookupGET',
+                {
+                    //pIsDetail: true,
+                    pIsDetail: true,
+                    pLookupId: 126,
+                    pQueryTypeId: '400',
+                }, function (data, status) {
+                    if (data) {
+                        var DataResult = JSON.parse(data)
+                    }
+                    $('.divMeal').html('');
+                    $.each(DataResult, function (g, Meal) {
+                        $('.divMeal').append('<input type="button" class="btn  btnItemAddVouch m-1 btn-warning" Order="' + g + '" data-id="' + Meal.LookupDtlId + '" Price="' + Meal.Value1 + '" Item-Id="' + Meal.ItemId + '" value="' + Meal.InvItemNameL1 + '" />')
+                    })
+                })
+        })
+    </script>
+    <!--Append to Table-->
+    <script>
+        var IsDiscount = '@ViewBag.Discount';
+        var Credit = $.parseJSON($.ajax({
+            url: '/api/APILookup/LookupGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: { pIsDetail: true, pLookupId: 140, pQueryTypeId: '400' },
+            async: false
+        }).responseText);
+        var vTotal = 0;
+        var Vat = 1.15;
+        $('body').on('keyup', '.txtQty', function () {
+            // Calculate Price
+            var Qty = parseFloat($(this).val())
+            var Price = parseFloat($(this).closest('tr').find('.txtPrice').text())
+            vTotal = Qty * Price
+            $(this).closest('tr').find('.txtTotalPrice').text((vTotal).toFixed(2))
+
+            // Calculate Vat
+            var vVat = vTotal / Vat
+            var TotalVat = vTotal - vVat
+            $(this).closest('tr').find('.txtTotalVat').text((TotalVat).toFixed(2))
+
+        })
+
+        function funKeyBad() {
+            var Element = $('.focus')
+            // Calculate Price
+            var Qty = parseFloat(Element.closest('tr').find('.txtQty').val())
+            var Price = parseFloat($(Element).closest('tr').find('.txtPrice').text())
+            vTotal = Qty * Price
+
+
+            $(Element).closest('tr').find('.txtTotalPrice').text((vTotal).toFixed(2))
+
+            // Calculate Vat
+            var vVat = vTotal / Vat
+            var TotalVat = vTotal - vVat
+            $(Element).closest('tr').find('.txtTotalVat').text((TotalVat).toFixed(2))
+            funPriceTotal()
+            funVatTotal()
+            LastTotal()
+            funInsuranceTotal()
+        }
+
+        // Append To Order
+        $('body').on('click', '.clsButtonItem', function () {
+            // Check If There Are Inserted Row
+            var Id = $(this).attr('data-id')
+            var Price = $(this).attr('Price')
+            var Show = $(this).attr('Show')
+            var Name = $(this).attr('data-Name')
+            var Order = $(this).attr('Order')
+            var Points = $(this).attr('Points')
+            var ItemQty = $(this).attr('qty')
+            var DataItemAdd = $('.clsItemAdd[Order="' + Order + '"]').text();
+            var UnitId = $(this).attr('unitid')
+            // Calculat Total Price
+            var Qty = parseFloat(1)
+            var Price = parseFloat(Price)
+            vTotal = Qty * Price
+
+
+            // Calculate Vat
+            var vVat = vTotal / Vat
+            var TotalVat = vTotal - vVat
+            $(this).closest('tr').find('.txtTotalVat').text((TotalVat).toFixed(2))
+            // Remove Focus For Any Row
+            $(':input').removeClass('focus')
+            // Append To Table
+            $('.tblItemBody').append('<tr class="text-center tblItemRow" Show="' + Show + '" unitid="' + UnitId + '" Points="' + Points + '" Item-Qty="' + ItemQty + '" item-type="1" Dtl-id="0" data-id="' + Id + '">' +
+                '<td width="35%">' + Name + '</td >' +
+                '<td width="35%">' +
+                '<div class="row">' +
+                '<div><button class="btn btn-success btn-sm btnAdd" ><i class="fa fa-plus-circle"></i></button></div>' +
+                '<div><input type="number" min="1" class="form-control form-control-sm txtQty focus"  onfocus="this.value = minmax(this.value, 1, 100)" onkeyup="this.value = minmax(this.value, 1, 9000)" style="width:50px" value="1"></div>' +
+                '<div><button class="btn btn-danger btn-sm btnDelete btnDeleteItem" ><i class="fa fa-trash"></i></button></div>' +
+                '</div>' +
+                '</td>' +
+                '<td width="10%"> <div class="txtPrice">' + Price.toFixed(2) + '</div></td >' +
+                '<td width="10%"> <div class="txtTotalPrice">' + vTotal.toFixed(2) + '</div></td >' +
+                '<td width="10%"> <div class="txtTotalVat">' + TotalVat.toFixed(2) + '</div></td> ' +
+                '<td><textarea class="clsItemAdd d-none">' + DataItemAdd + '</textarea></td> ' +
+                '</tr>');
+
+            // Remove PAd
+            $('.txtPad').val('')
+
+            funPriceTotal()
+            funVatTotal()
+            LastTotal()
+            funInsuranceTotal()
+        })
+
+        // Append To ItemAdd
+        $('body').on('click', '.btnItemAddVouch', function () {
+            var Id = $(this).attr('data-id')
+            var Price = $(this).attr('Price')
+            var ItemId = $(this).attr('Item-Id')
+            var Name = $(this).val()
+            var Order = $(this).attr('Order')
+            var DataItemAdd = $('.clsItemAdd[Order="' + Order + '"]').text();
+
+            // Calculat Total Price
+            var Qty = parseFloat(1)
+            var Price = parseFloat(Price)
+            vTotal = Qty * Price
+
+            // Calculate Vat
+
+            var vVat = vTotal / Vat
+            var TotalVat = vTotal - vVat
+            $(this).closest('tr').find('.txtTotalVat').text((TotalVat).toFixed(2))
+
+            // Append To Table
+            $('.tblItemBody').append('<tr class="text-center trAdd tblItemRow" style="font-size:10px ;" item-type="2"  Dtl-id="0" data-id="' + Id + '">' +
+                '<td>' + Name + '</td >' +
+                '<td width="">' +
+                '<div class="row">' +
+                '<div style="visibility:hidden;"><button class="btn btn-success btn-sm btnAdd" ><i class="fa fa-plus-circle"></i></button></div>' +
+                '<div><input type="text" min="1" class="form-control form-control-sm txtQty" onfocus="this.value = minmax(this.value, 1, 9000)" onkeyup="this.value = minmax(this.value, 1, 100)" style="width:35px" value="1"></div>' +
+                '<div><button class="btn btn-danger btn-sm btnDelete" ><i class="fa fa-trash"></i></button></div>' +
+                '</div>' +
+                '</td>' +
+                '<td> <div class="txtPrice">' + Price.toFixed(2) + '</div></td >' +
+                '<td> <div class="txtTotalPrice">' + vTotal.toFixed(2) + '</div></td >' +
+                '<td> <div class="txtTotalVat">' + TotalVat.toFixed(2) + '</div></td> ' +
+                '<td><textarea class="clsItemAdd d-none">' + DataItemAdd + '</textarea></td> ' +
+                '</tr>');
+
+            // CalCulta Voucher
+            funPriceTotal()
+            funVatTotal()
+            LastTotal()
+            funInsuranceTotal()
+        })
+
+        // Append To ItemAdd
+        $('body').on('click', '.clsButtonItemAdd', function () {
+            var Id = $(this).attr('data-id')
+            var Price = $(this).attr('Price')
+            var ItemId = $(this).attr('Item-Id')
+            var index = $('.ItemSelect').index();
+
+            var Name = $(this).val()
+            var Order = $(this).attr('Order')
+            var DataItemAdd = $('.clsItemAdd[Order="' + Order + '"]').text();
+
+            // Calculat Total Price
+            var Qty = parseFloat(1)
+            var Price = parseFloat(Price)
+            vTotal = Qty * Price
+            // Calculate Vat
+
+            var vVat = vTotal / Vat
+            var TotalVat = vTotal - vVat
+            $(this).closest('tr').find('.txtTotalVat').text((TotalVat).toFixed(2))
+
+
+
+            // Loop Throug table To Get Closest Tr
+
+
+            // Append To Table
+            $('.ItemSelect').after('<tr class="text-center trAdd tblItemRow "style="font-size:10px ;background-color:#98E576" index="' + index + '" item-id="' + ItemId + '" item-type="2"  Dtl-id="0" data-id="' + Id + '">' +
+                '<td>' + Name + '</td >' +
+                '<td width="">' +
+                '<div width="10%" class="row">' +
+                '<div style="visibility:hidden;"><button class="btn btn-success btn-sm btnAdd" ><i class="fa fa-plus-circle"></i></button></div>' +
+                '<div><input type="text" min="1" class="form-control form-control-sm txtQty" onfocus="this.value = minmax(this.value, 1, 100)" onkeyup="this.value = minmax(this.value, 1, 100)" style="width:25px" value="1"></div>' +
+                '<div><button class="btn btn-danger btn-sm btnDelete" ><i class="fa fa-trash"></i></button></div>' +
+                '</div>' +
+                '</td>' +
+                '<td> <div class="txtPrice">' + Price.toFixed(2) + '</div></td >' +
+                '<td> <div class="txtTotalPrice">' + vTotal.toFixed(2) + '</div></td >' +
+                '<td> <div class="txtTotalVat">' + TotalVat.toFixed(2) + '</div></td> ' +
+                '<td><textarea class="clsItemAdd d-none">' + DataItemAdd + '</textarea></td> ' +
+                '</tr>');
+
+            // CalCulta Voucher
+            funPriceTotal()
+            funVatTotal()
+            LastTotal()
+
+        })
+
+        $('.btnInvCancel').on('click', function () {
+
+            var InvId = $('.InvId').val()
+
+            // Account Code, Name - F9 - Double Click
+
+            // Search Account
+            var vURL = '/POS/CancelSearch';
+            $('#AccountDataModalContent').html('');
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Full
+            $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+            })
+
+        })
+
+        $('.btnShowMap').on('click', function () {
+
+            // Search Map
+            var vURL = '/POS/Map';
+            $('#MapDataModalContent').html('');
+            // Load Content of Map Search
+            $('#MapDataModalContent').load(vURL);
+            // Modal Full
+            $('#MapDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#MapDataModal').modal('show');
+
+
+
+        })
+
+        $('.btnPayment').on('click', function () {
+            var InvId = $('.InvId').val()
+            // Search Account
+            var vURL = '/POS/Payment';
+            $('#AccountDataModalContent').html('');
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Full
+            $('#AccountDataModalContent').parent().addClass('modal-dialog modal-lg');
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+            })
+
+        })
+    </script>
+    <script>
+        $('body').on('blur', '.txtQty', function () {
+            funPriceTotal()
+            funVatTotal()
+            LastTotal()
+            funInsuranceTotal()
+        })
+
+        function funPriceTotal() {
+            // Total Debit
+            var Total = 0;
+            $('.txtTotalPrice').each(function () {
+
+                // Get Value
+                var Price = $(this).text();
+                // Check Value
+                if (Price == '' || Price == null || Price == undefined) {
+                    Price = 0;
+                }
+                // Add Value
+                Total += parseFloat(Price);
+
+                return Total
+            })
+
+            // SET Values
+            $('.txtVouchPrice').text(Total.toFixed(2));
+
+        }
+        function funVatTotal() {
+
+            // Total Debit
+            var Total = 0;
+            $('.txtTotalVat').each(function () {
+                // Get Value
+                var Vat = $(this).text();
+                // Check Value
+                if (Vat == '' || Vat == null || Vat == undefined) {
+                    Vat = 0;
+                }
+                // Add Value
+                Total += parseFloat(Vat);
+            })
+
+            // SET Values
+            $('.txtVouchVat').text(Total.toFixed(2));
+        }
+
+
+        function LastTotal() {
+            var vat = $('.txtVouchVat').text();
+            var Total = $('.txtVouchPrice').text();
+            var Insurance = $('.txtInsurance').text();
+
+            var TotalVouch = parseFloat(Total)
+            //parseFloat(Total) + parseFloat(vat) + parseFloat(Insurance)
+            // SET Values
+            $('.txtVouchTotal').text(TotalVouch.toFixed(2));
+            $('.txtReq').text(TotalVouch.toFixed(2));
+        }
+
+
+        function funInsuranceTotal() {
+
+            // Total Debit
+            var Total = 0;
+            $('.trIns .txtTotalPrice').each(function () {
+                // Get Value
+                var Price = $(this).text();
+
+                // Check Value
+                if (Price == '' || Price == null || Price == undefined) {
+                    Price = 0;
+                }
+                // Add Value
+                Total += parseFloat(Price);
+                return Total
+            })
+            // SET Values
+            $('.txtInsurance').text(Total.toFixed(2));
+        }
+
+        $('.txtCash').on('change', function () {
+            var Cash = $(this).val()
+            var Req = $('.txtReq').text()
+            var TotaL = Cash - Req;
+            $('.txtCashTotal').text(TotaL.toFixed(2))
+        });
+    </script>
+    <!--Delete Add ItemAdd-->
+    <script>
+        $('body').on('click', '.btnDelete', function () {
+            $(this).closest('tr').remove();
+            var Order = $('.clsTabs').attr('order')
+            var Data = $('.clsData[Order="' + Order + '"]').text();
+            var ItemSelectId = $('.ItemSelect').attr('data-id');
+            var rowCount = $('.trAdd[item-id=' + ItemSelectId + ']').length;
+            var rowCount = $('.trAdd[item-id=' + ItemSelectId + ']').length;
+            if (rowCount == 0) {
+                funConfigMeal(Data)
+            }
+            funPriceTotal()
+            funVatTotal()
+            LastTotal()
+            funInsuranceTotal()
+        })
+
+        function funRefreshMeal() {
+            var Order = $('.clsTabs').attr('order')
+            var Data = $('.clsData[Order=' + Order + ']').text();
+
+
+            funConfigMeal(Data)
+
+        }
+
+
+        $('body').on('click', '.btnDeleteItem', function () {
+            $(this).closest('tr').remove();
+            var Id = $(this).closest('tr').attr('data-id')
+            //  $('tr[data-id="'+ Id +'"]').remove();
+            $('.trAdd').each(function () {
+                var DataId = $(this).attr('item-id')
+                if (Id == DataId) {
+                    $(this).closest('tr').remove();
+                }
+            })
+
+            var Order = $('.clsTabs').attr('order')
+
+            var Data = $('.clsData[Order="' + Order + '"]').text();
+            var ItemSelectId = $('.ItemSelect').attr('data-id');
+            var rowCount = $('.trAdd[item-id=' + ItemSelectId + ']').length;
+            if (rowCount == 0) {
+                funConfigMeal(Data)
+            }
+            funPriceTotal()
+            funVatTotal()
+            LastTotal()
+            funInsuranceTotal()
+
+        })
+    </script>
+    <!--Save Voucher-->
+    <script>
+
+
+
+        function SaveCustomer() {
+
+        $.post('/GLCustomer/SavePOSHeader',
+            {
+            pCustomerId: $('.CustomerId').val(),
+            pCustomerCode: $('.CustomerCode').val(),
+            pCustomerNameL1: $('.CustomerName ').val(),
+            pCustomerAddress: $('.Address').val(),
+            pCustomerPhoneNumber: $('.PhoneNumber').val(),
+            pCustomerDailyDay: 0,
+            pStatus: 0,
+            pCustomerParentId: 0,
+            pIsParent: 1,
+            pTypeId: 1,
+            },
+            function (data, status) {
+
+            })
+        }
+
+        function SaveSite() {
+            var SiteNameL1 = $('.Address').attr('Name');
+            var SiteNameL2 = $('.Address').attr('Name');
+            var SiteLat = $('.Address').attr('lat');
+            var SiteLng = $('.Address').attr('lng');
+            $.get('/api/APISite/SiteGet',
+                {
+                    pSiteNameL1: SiteNameL1,
+                    pSiteNameL2: SiteNameL2,
+                    pSiteLat: SiteLat,
+                    pSiteLng: SiteLng,
+                    pSiteIsActive: true,
+                    pIsDeleted: false,
+                    pQueryTypeId: 100
+                },
+                function (data, status) {
+                    var DataJson = JSON.parse(data)
+                    localStorage.setItem('SiteId', DataJson.SiteId)
+                })
+        }
+        function SaveCustomerSite() {
+            var CustomerId = $('.CustomerId').val();
+            var SiteId = $('#selectSite').val()
+
+            $.get('/api/APICustomerSite/CustomerSiteGET',
+                {
+                    pCustomerId: CustomerId,
+                    pSiteId: SiteId,
+                    pCustomerSiteIsActive : true,
+                    pIsDeleted : false,
+                    pQueryTypeId: 101
+                },
+                function (data, status) {
+
+                })
+        }
+
+        // Check Qty
+        function CheckQty() {
+            var valid = true;
+            var SumQty = 0;
+            var ItemId;
+            $('.tblItemRow').each(function () {
+                var Element = $(this);
+                var ItemQty = parseInt(Element.attr('Item-Qty'));
+
+                 ItemId = Element.attr('data-id');
+                var Show = Element.attr('show');
+                  var checkQty = parseInt(Element.find('.txtQty').val());
+                if (parseFloat(checkQty) < 1) {
+                valid = false;
+                }
+                if (Show != '1') {
+                    var Qty = parseInt(Element.find('.txtQty').val());
+
+                    if (Qty > ItemQty) {
+                        Element.find('.txtQty').addClass('errorClass')
+                        valid = false;
+                    }
+
+                    $('.tblItemRow[data-id=' + ItemId + ']').each(function () {
+                        var Element = $(this);
+                        var Qty = parseInt(Element.find('.txtQty').val());
+                        SumQty += parseFloat(Qty);
+                    })
+                    if (SumQty > ItemQty || ItemQty === null || ItemQty ===0) {
+                        Element.find('.txtQty').addClass('errorClass')
+                        valid = false;
+                    }
+                    SumQty = 0;
+                }
+            })
+
+            return valid;
+        }
+            var Second = 0;
+            function arrItemRow() {
+                let ItemArr = [];
+                $('.tblItemRow').each(function () {
+                    var Element = $(this)
+                    var ItemId = Element.attr('data-id')
+                    var DtlId = Element.attr('Dtl-id')
+                    var Price = Element.find('.txtPrice').text();
+                    var Qty = Element.find('.txtQty').val();
+                    var ItemQty = Element.attr('Item-Qty');
+                    var Points = Element.attr('Points') * Qty;
+                   // ALlPoints += Points
+                    var vatPrice = 1.15
+                    var VatTotal = Element.find('.txtTotalVat').text();
+                    var ItemType = Element.attr('item-type')
+                    let Item = {
+                        pdInvDTLId: DtlId,
+                        pItemUnitId: ItemId,
+                        pPrice: Price,
+                        pQty: Qty,
+                        pVatPrice: vatPrice,
+                        pVatTotal: VatTotal,
+                        pItemType: ItemType,
+                        ppType: 2,
+                        pQueryTypeId: 100
+                    }
+                    ItemArr.push(Item);
+
+                });
+                return ItemArr;
+            }
+
+            // Bulk Save
+        function funSaveDtl(InvId, IsWait) {
+
+                let InvoiceDtls = [];
+                var InvDate = $('.InvDate').val()
+                var InvId = $('.InvId').val()
+                var InvDate = $('.InvDate').val()
+                var CustomerCode = $('.CustomerCode').val()
+                var InvTime = $('.InvTime').val()
+                var CustomerName = $('.CustomerName').val()
+                var CustomerId = $('.CustomerId').val()
+                var PhoneNumber = $('.PhoneNumber').val()
+                var Location = $('#selectSite').val()
+               var Address = $('.Address').val()
+               var vDiscount = $('.txtAfterDisM').attr('discount');
+
+                var PayTypeId ;
+               //$('#PayTypeId').val();
+                var vVatVoucher = $('.txtVouchVat').text();
+                var vInsurance = $('.txtInsurance').text();
+              //  var vDiscount = $('.txtDiscount').text();
+                var vRent = $('.txtRent').text();
+                var Delivery = $('#DriverId').val()
+                var IsCheck = $('input[type=radio][name=radio]').val()
+                var CardNo;
+                if (document.getElementById('card').checked) {
+                    CardNo = $('#txtCredit').val()
+                    PayTypeId = document.getElementById('card').value
+
+
+                }
+                if (document.getElementById('cash').checked) {
+                    CardNo = $('#txtCredit').val()
+                    PayTypeId = document.getElementById('cash').value}
+
+               //var CardNo =  $('option:selected', $('#DriverId')).attr('credit');
+                var IsDelivery = $('.btnDeliv').val();
+                var Notes = $('.txtNotes').val();
+                var pOrderType = $('.dSelected').val()
+                var VatTotal = $('.txtVouchTotal').text();
+                var price = $(".tblItemRow:first").find('.txtPrice').text()
+                var Points = $(".txtPointsM").val();
+                var MealPoints = $('.txtPoints').attr('data-Meal')
+
+
+
+                $('.tblItemRow').each(function () {
+                    var Element = $(this)
+
+                    var ItemType = Element.attr('item-type')
+                    if (ItemType != '2') {
+
+                        var ItemId = Element.attr('data-id')
+
+                        var UnitId = Element.attr('unitid')
+
+                        var DtlId = Element.attr('Dtl-id')
+
+                        var Price = Element.find('.txtPrice').text();
+
+                        var Qty = Element.find('.txtQty').val();
+                        var itemindex = Element.index();
+
+                        var ItemAdd = '';
+
+                        // Item Add
+                        $('.trAdd').each(function () {
+
+                            var Element1 = $(this)
+                            var Item = Element1.closest('tr').attr('item-id');
+                            var indexadd = Element1.closest('tr').attr('index');
+                            var addQty = Element1.closest('tr').find('.txtQty').val();
+                           // alert(indexadd + "==" + itemindex)
+                            if (indexadd == itemindex) {
+                                ItemAdd += Element1.find('td:first-child').text() + '-' + addQty + ' ';
+
+                          }
+                        })
+
+
+                        var ItemQty = Element.attr('Item-Qty');
+                        var Points = Element.attr('Points') * Qty;
+                        var VatTotal = $('.txtVouchTotal').text();
+                        // ALlPoints += Points
+                        //  var vatPrice = 0.05
+                        var VatTotal = Element.find('.txtTotalVat').text();
+
+                        let Item = {
+                            dInvDTLId: DtlId,
+                            ItemUnitId: ItemId,
+                            ItemId: ItemId,
+                            Price: Price,
+                            ItemQty: Qty,
+                            UnitId:UnitId,
+                            Qty: Qty,
+                            // VatPrice: vatPrice,
+                            VatTotal: VatTotal,
+                            ItemType: ItemType,
+                            VatTotal: VatTotal,
+                            CreatedOn: InvDate,
+                            Notes:ItemAdd
+                        }
+                        InvoiceDtls.push(Item);
+                    }
+                });
+        $.ajax({
+            url: '/Invoice/InsertPOSBulk',
+            method: 'POST', contentType: 'application/json',
+            data: JSON.stringify({
+                InvoiceDtls,
+                InvId: InvId,
+                Invtype: 33,
+                InvIsWait: IsWait,
+                CardNo: CardNo,
+                InvDate: InvDate,
+                PayTypeId: PayTypeId,
+                Notes: Notes,
+                CashDeskId: '@CashierId',
+                InvStatus: 1,
+                Insurance: vInsurance,
+                Service: vRent,
+                Tax: vVatVoucher,
+                Discount: vDiscount,
+                Delivery: Delivery,
+                InvMachine: '@Environment.MachineName',
+                DeliveryInvoice: IsDelivery,
+                DeliveryDate: InvDate,
+                InvPhoneNo: PhoneNumber,
+                SiteId: Location,
+                LocAddressInvoice: Address,
+                InvCurValue: VatTotal,
+                CustomerName: CustomerName,
+                CustomerId: CustomerId,
+                OrderType: pOrderType,
+                UsedPoints: Points,
+                MealPoints: MealPoints,
+                CustomerId: $('.CustomerId').val(),
+                CustomerAddress: $('.Address').val(),
+                CustomerPhoneNumber: $('.PhoneNumber').val(),
+            }),
+            success: function (r) {
+                $('#loading').hide();
+                var data = JSON.parse(r);
+                     $.each(data, function (i, a) {
+                         funNotification(a.msg, a.c)
+                     })
+                if (data[0].c == 1) {
+                 var vInvId = data[0].InvId;
+                    if (!IsWait) {
+                        funPrintCashierReport(vInvId)
+                }
+
+            $('.btnGroup').removeClass('info')
+            $('.btnGroup').removeClass('dSelected')
+            $('.btnGroup[value="' + 31 + '"]').addClass('info')
+            $('.btnGroup[value="' + 31 + '"]').addClass('dSelected')
+            funUpdataDataAfterSave()
+              Clear()
+            }
+            },
+            //error: function (xhr, msg) {
+            //alert('Request Status: ' + msg + ' Status Text: ' + xhr.statusText + ' ' + xhr.responseText);
+            //}
+        });
+        }
+
+        function printIframePOS(url) {
+           $(".report").html('')
+            $(".report").append('<iframe id="myId" src="' + url + '"  class=""></iframe>');
+
+        }
+        function printIframe(url) {
+            $(".report").html('')
+            $(".report").append('<iframe id="myId" src="' + url + '"  class=""></iframe>');
+
+            var yourFrame = document.getElementById('myId');
+            yourFrame.addEventListener("load", function (response, status, xhr) {
+                yourFrame.contentWindow.print()
+            });
+        }
+        function Save(pIsWait) {
+                // Save Head
+                var InvId = $('.InvId').val()
+                var InvDate = $('.InvDate').val()
+                var CustomerCode = $('.CustomerCode').val()
+                var InvTime = $('.InvTime').val()
+                var CustomerName = $('.CustomerName').val()
+                var CustomerId = $('.CustomerId').val()
+                var PhoneNumber = $('.PhoneNumber').val()
+                var Location = $('#selectSite').val()
+                var Address = $('.Address').val()
+                var PayTypeId ;
+                    //$('#PayTypeId').val();
+
+                var vVatVoucher = $('.txtVouchVat').text();
+                var vInsurance = $('.txtInsurance').text();
+            var vDiscount = $('.txtDiscountM').val();
+                var vRent = $('.txtRent').text();
+                var Delivery = $('#DriverId').val()
+                var IsCheck = $('input[type=radio][name=radio]').val()
+                var CardNo;
+                if (document.getElementById('card').checked) {
+                    CardNo = $('#txtCredit').val()
+                    PayTypeId = document.getElementById('card').value
+
+
+                }
+                if (document.getElementById('cash').checked) {
+                    CardNo = $('#txtCredit').val()
+                    PayTypeId = document.getElementById('cash').value
+
+                }
+
+                //var CardNo =  $('option:selected', $('#DriverId')).attr('credit');
+                var IsDelivery = $('.btnDeliv').val();
+                var Notes = $('.txtNotes').val();
+                var pOrderType = $('.dSelected').val()
+                var VatTotal = $('.txtVouchTotal').text();
+                var price = $(".tblItemRow:first").find('.txtPrice').text()
+                var Points = $(".txtPointsM").val();
+                var MealPoints = $('.txtPoints').attr('data-Meal')
+                var RowCount = $('.tblItemRow').length;
+
+                var ArrItem = arrItemRow()
+
+
+               // if (PhoneNumber || pOrderType == '30' || pOrderType == '32') {
+                 //   Clear();
+               // }
+            var Check = CheckQty();
+            if (Check === false) {
+                funNotification('الكمية لا تكفي', 2)
+                return;
+            }
+            // Check Table Has Insurance
+            var HasInsurance = false
+            $('.tblItemRow').each(function () {
+                var ItemType = $(this).attr('item-type')
+                if (ItemType==='3')
+                HasInsurance = true;
+            })
+                var IsCustomer = true;
+
+                if (!PhoneNumber || PhoneNumber.length!=10) {
+                    IsCustomer = false;
+            }
+
+                if ((HasInsurance && !IsCustomer) || (IsDelivery === 'true' && !IsCustomer)) {
+                    funNotification('يجب ادخال رقم جوال وبيانات  العميل ', 2)
+     if (PhoneNumber.length != 10) {
+        funNotification(' رقم الجوال يجب ان يتكون من 10 ارقام ', 3)
+
+     }
+            } else {
+
+
+                if (VatTotal != '0' && price != '') {
+                    if (pOrderType == '31' || pOrderType == '30' || pOrderType == '32') {
+                        $('#loading').show();
+                        if (pOrderType == '') { pOrderType='31' }
+                        var ALlPoints = 0;
+
+                        funSaveDtl(0, pIsWait)
+                                 Second = $('.tblItemRow').length;
+                    } else {
+                            $('.PhoneNumber').addClass('errorClass')
+                    }
+                }
+            }
+        }
+        function funUpdataDataAfterSave() {
+
+            $('.divContainer').load('/home/about');
+            btnDelivery()
+            funUserType()
+
+        }
+
+
+
+    // Wait
+    $('.btnWait').on('click', function () {
+        //
+        Save(true);
+    })
+
+    // Check UnitAdd
+        $('.PhoneNumber').on('keyup keydown click', function (e) {
+                // Error Class Validation
+                $('.PhoneNumber').removeClass('errorClass')
+    })
+        $('.PhoneNumber').on('blur', function (e) {
+            if ($('.PhoneNumber').val().length != 10) {
+                funNotification(' رقم الجوال يجب ان يتكون من 10 ارقام ', 3)
+                $('.PhoneNumber').addClass('errorClass')
+            }
+    })
+    </script>
+
+    <!--Calculator Panel-->
+    <script>
+
+        //isNumber = function (value) {
+        //    return !isNaN(value);
+        //}
+        $('.btnCalc :input').on('click', function () {
+            var Total = $(this).val()
+
+            var value = $('.txtPad').val()
+
+
+            if (Total != 'C') {
+
+                Total = + value + Total
+                $('.txtPad').val(Total)
+            }
+            else {
+                $('.txtPad').val('')
+
+            }
+            var val = $('.txtPad').val()
+            if (val != '') {
+                $('.focus').val(val)
+            } else { $('.focus').val(1) }
+
+            var Cash = $('.txtCash').val()
+
+            var Req = $('.txtReq').text()
+
+            var TotaL = Cash - Req;
+            $('.txtCashTotal').text(TotaL)
+            // Calc Voucher
+            funKeyBad()
+        })
+
+
+        $('body').on('focus', ':input[type=text]', function () {
+            $(':input').removeClass('focus')
+            $(this).addClass('focus')
+        })
+
+
+
+        $(".focus").select(function () {
+            $(this).attr('changed', '1')
+        });
+
+        $('body').on('click', '.tblItemRow', function () {
+            $(':input').removeClass('focus')
+            $(this).find('.txtQty').addClass('focus')
+            $('.txtPad').val('')
+        })
+
+
+
+        // Min Value in Quantity
+        function minmax(value, min, max) {
+            if (parseInt(value) < min || isNaN(parseInt(value)))
+                return min;
+            else if (parseInt(value) > max)
+                return max;
+            else return value;
+        }
+
+        // TAke Or Delv
+        $('.btnDeliv').on('click', function () {
+            var btnValue = $(this).val();
+            $('#DriverId').val(0)
+            if (btnValue == 'true') {
+                $('.btnDeliv').addClass('orange')
+                $('.btnDeliv').addClass('clsButtonActions')
+                $('.btnDeliv').removeClass('btn-primary')
+                $('.btnDeliv').val('false')
+                $('.clsList').css('visibility', 'hidden');
+
+
+            }
+            else {
+                $('.btnTake').removeClass('btn-primary')
+                $('.btnDeliv').removeClass('orange')
+                $('.btnDeliv').removeClass('clsButtonActions')
+                $('.btnDeliv').addClass('btn-primary')
+                $('.btnDeliv').val('true')
+                $('.clsList').css('visibility', 'visible');
+            }
+
+        })
+
+        $('input[type=radio][name=radio]').change(function () {
+            if (document.getElementById('card').checked) {
+                $('.mada').show();
+
+            }
+
+            else if (document.getElementById('cash').checked) {
+                $('.mada').hide();
+            }
+        });
+        // btn Show Map
+        $('.btnShowMap').on('click', function () {
+            var btnValue = $(this).attr('val');
+            if (btnValue == 'true') {
+                $(this).attr('val', 'false')
+                $('.clsMap').addClass('d-none');
+            }
+            else {
+                $(this).attr('val', 'true')
+                $('.clsMap').removeClass('d-none');
+            }
+
+        })
+        $('.btnGroup').on('click', function () {
+            var value = $(this).val();
+            $('.btnGroup').removeClass('info')
+            $('.btnGroup').removeClass('dSelected')
+            $('.btnGroup[value="' + value + '"]').addClass('info')
+            $('.btnGroup[value="' + value + '"]').addClass('dSelected')
+        })
+        funGetOrderType()
+        // Get Value Of Order Type
+        function funGetOrderType() {
+            var Value = $('.dSelected').val();
+            if (Value = '31') {
+                $('.btnDeliv').prop('disabled', false)
+            } else {
+                $('.btnDeliv').prop('disabled', true)
+            }
+        }
+        $('.btnWay').on('click', function () {
+            $('.btnDeliv').prop('disabled', false)
+            $('.clsList').css('visibility', 'visible');
+        })
+        $('.btnLocal').on('click', function () {
+            $('.btnDeliv').prop('disabled', true)
+            $('.clsList').css('visibility', 'hidden');
+        })
+        $('.btnFam ').on('click', function () {
+            $('.btnDeliv').prop('disabled', true)
+            $('.clsList').css('visibility', 'hidden');
+        })
+
+        $('.btnTake').on('click', function () {
+            $('.btnDeliv').removeClass('btn-primary')
+            $('.btnDeliv').val('false')
+            $(this).addClass('btn-primary')
+            $('.clsList').css('visibility', 'hidden');
+
+        })
+        function btnDelivery() {
+            $('.btnDeliv').removeClass('btn-primary')
+            $('.btnDeliv').val('false')
+            $('.btnDeliv').addClass('orange')
+            $('.clsList').css('visibility', 'hidden');
+            $('#DriverId').val(0)
+
+        }
+        // Insurance
+        $('.btnIns').on('click', function () {
+            $.get('/api/APIInvItem/InvItemGet',
+                {
+                    pCategoryId: '@InsuranceCategory'
+                }, function (data) {
+                    var DataResult = JSON.parse(data)
+
+                    $('.divMeal').html('')
+                    $.each(DataResult, function (g, Meal) {
+                        $('.divMeal').append('<input type="button" class="btn btnItemIns m-1 btn-warning" Order="' + g + '" data-id="' + Meal.InvItemId + '"    Item-Id="' + Meal.ItemId + '" value="' + Meal.InvItemNameL1 + '"  Price="' + Meal.Price + '"/>')
+                    })
+                })
+        })
+
+        $('body').on('click', '.btnItemIns', function () {
+            var Id = $(this).attr('data-id')
+            var Price = $(this).attr('price')
+            var Show = $(this).attr('Show')
+            var ItemId = $(this).attr('Item-Id')
+            var Name = $(this).val()
+            var Order = $(this).attr('Order')
+            var DataItemAdd = $('.clsItemAdd[Order="' + Order + '"]').text();
+
+            // Calculat Total Price
+            var Qty = parseFloat(1)
+            var Price = parseFloat(Price)
+            vTotal = Qty * Price
+
+            // Calculate Vat
+            var TotalVat = 0.00
+            $(this).closest('tr').find('.txtTotalVat').text((TotalVat).toFixed(2))
+
+
+            //funInsuranceTotal()
+            // Loop Throug table To Get Closest Tr
+
+            // Append To Table
+            $('.tblItemBody').append('<tr class="text-center trIns tblItemRow" Show="' + Show + '" style="font-size:10px ;background-color:gray;" item-type="3" Dtl-id="0" data-id="' + Id + '">' +
+                '<td>' + Name + '</td>' +
+                '<td width="">' +
+                '<div width="10%" class="row">' +
+                '<div style="visibility:hidden;"><button class="btn btn-success btn-sm btnAdd"  ><i class="fa fa-plus-circle"></i></button></div>' +
+                '<div><input type="text" min="1" class="form-control form-control-sm txtQty" style="width:35px" onkeyup="this.value = minmax(this.value, 1, 100)" value="1"></div>' +
+                '<div><button class="btn btn-danger btn-sm btnDelete" ><i class="fa fa-trash"></i></button></div>' +
+                '</div>' +
+                '</td>' +
+                '<td><div class="txtPrice">' + Price + '</div></td >' +
+                '<td><div class="txtTotalPrice">' + vTotal + '</div></td >' +
+                '<td><div class="txtTotalVat">' + TotalVat.toFixed(2) + '</div></td> ' +
+                '<td><textarea class="clsItemAdd d-none">' + DataItemAdd + '</textarea></td> ' +
+                //'<td><button class="btn btn-light btn-sm btnDelete"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>');
+            funInsuranceTotal()
+            // Calculta Voucher
+            funPriceTotal()
+            funVatTotal()
+            LastTotal()
+        })
+    </script>
+    <!--Customer-->
+    <script>
+        // Account Code, Name - F9 - Double Click
+        $('.btnCustomer').on('click', function (e) {
+            // Search Account
+            var vURL = '/POS/CustomerSearch';
+            $('#AccountDataModalContent').html('');
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Full
+            $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+                // Select Account
+                $('body').on('click', '.divCustomerSelect', function () {
+
+                    // Get Values
+                    var vCustomerId = $(this).attr('data-id');
+                    var vCustomerNameValue = $(this).find('.divCustomerName').text();
+                    var vCustomerCodeValue = $(this).find('.divCustomerNo').text();
+                    var vCustomerPhoneValue = $(this).find('.divCustomerPhoneNumber').text();
+                    var vCustomerAddressValue = $(this).find('.divCustomerAddress').text();
+                    var vCustomerPointsValue = $(this).find('.divPoints').text();
+                    var vCustomerEquavilantValue = $(this).find('.divEquavilant').text();
+
+
+                    // Get Customer Data
+                    var vCustomerIdElement = $('.CustomerId');
+                    var vCustomerCodeElement = $('.CustomerCode');
+                    var vCustomerNameElement = $('.CustomerName');
+                    var vCustomerPhoneElement = $('.PhoneNumber');
+                    var vCustomerAddressElement = $('.Address');
+                    var vCustomerPointsElement = $('.clsPoint');
+                    var vCustomerEquavilantElement = $('.clsPoint').attr('data-id');
+
+                    // Set Value
+                    vCustomerIdElement.val(vCustomerId);
+                    vCustomerCodeElement.val(vCustomerCodeValue);
+                    vCustomerNameElement.val(vCustomerNameValue);
+                    vCustomerPhoneElement.val(vCustomerPhoneValue);
+                    vCustomerAddressElement.val(vCustomerAddressValue);
+                    vCustomerPointsElement.text(vCustomerPointsValue);
+                    $('.clsPoint').attr('data-id', vCustomerEquavilantValue);
+                })
+                // Select Account
+                $('body').on('click', '.divSiteSelect', function () {
+
+                    // Get Values
+                    var vSiteId = $(this).attr('data-id');
+                    var vSiteNameValue = $(this).find('.divSiteName').text();
+
+                    // Get Site Data
+                    var vSiteIdElement = $('.SiteId');
+                    var vSiteNameElement = $('.SiteName');
+                    // Set Value
+                    vSiteIdElement.val(vSiteId);
+                    vSiteNameElement.val(vSiteNameValue);
+
+
+                })
+            })
+        })
+        // Account Code, Name - F9 - Double Click
+        $('.btnInvSearch').on('click', function (e) {
+            // Search Account
+            var vURL = '/POS/InvoiceSearch';
+            $('#AccountDataModalContent').html('');
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Full
+            $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+            })
+        })
+
+        // Account Code, Name - F9 - Double Click
+        $('.btnDriverCash').on('click', function (e) {
+            // Search Account
+            var vURL = '/POS/InvoiceDriverSearch';
+            $('#AccountDataModalContent').html('');
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Full
+            $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+            })
+        })
+
+        // Account Code, Name - F9 - Double Click
+        $('.btnInvoiceStatus').on('click', function (e) {
+            // Search Account
+            var vURL = '/POS/InvoiceStatus';
+            $('#AccountDataModalContent').html('');
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Full
+            $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+            })
+        })
+        // Account Code, Name - F9 - Double Click
+        $('.btnModalWait,.btnInvoiceWait').on('click', function (e) {
+            // Search Account
+            var vURL = '/POS/WaitSearch';
+            $('#AccountDataModalContent').html('');
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Full
+            $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+            })
+        })
+        // Account Code, Name - F9 - Double Click
+        $('.btnInvoiceDriver').on('click', function (e) {
+            // Search Account
+            var vURL = '/POS/DeliverySearch';
+            $('#AccountDataModalContent').html('');
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Full
+            $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+            })
+        })
+        // Account Code, Name - F9 - Double Click
+        $('.btnInsBack').on('click', function (e) {
+            // Search Account
+            var vURL = '/POS/InsuranceSearch';
+
+            $('#AccountDataModalContent').html('');
+            // Load Content of Account Search
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Full
+            $('#AccountDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+
+            // Focus
+            $('#AccountDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+
+            })
+        })
+
+    </script>
+    <!--Config-->
+    <script>
+
+        // HEad
+        function funConfigHead(pData) {
+            // Get Customer Data
+            var vCustomerIdElement = $('.CustomerId');
+            var vCustomerCodeElement = $('.CustomerCode');
+            var vCustomerNameElement = $('.CustomerName');
+            var vCustomerPhoneElement = $('.PhoneNumber');
+            var vCustomerAddressElement = $('.Address');
+
+            // Set Value
+            $('.InvId').val(pData.InvId)
+            $('.InvCode').val(pData.InvId)
+            vCustomerIdElement.val(pData.CustomerId);
+            vCustomerCodeElement.val(pData.CustomerCode);
+            vCustomerNameElement.val(pData.CustomerName);
+            vCustomerPhoneElement.val(pData.InvPhoneNo);
+            vCustomerAddressElement.val(pData.LocAddressInvoice);
+            $('.SiteName').val(pData.SiteNameL1)
+
+            $('#selectSite').val(pData.SiteId)
+            $('#selSite').selectpicker('refresh');
+        }
+        // Dtl
+        function funConfigItem(pData) {
+
+            var RowContent = '<tr class="text-center tblItemRow" unitid = "' + pData.UnitId + '" item-type="' + pData.ItemType + '" Dtl-id="' + pData.InvDTLId + '" data-id="' + pData.ItemId + '">' +
+                '<td width="35%">' + pData.InvItemName + '</td >' +
+                '<td width="35%">' +
+                '<div  class="row">' +
+                '<div><button class="btn btn-success btn-sm btnAdd" ><i class="fa fa-plus-circle"></i></button></div>' +
+                '<div><input type = "text" min = "1" class="form-control form-control-sm txtQty" onkeyup="this.value = minmax(this.value, 1, 100)" onfocus="this.value = minmax(this.value, 1, 100)" style="width:25px" value = "' + pData.Qty + '" > </div>' +
+                '<div><button class="btn btn-danger btn-sm btnDelete " ><i class="fa fa-trash"></i></button></div>' +
+                '</div>' +
+                '</td>' +
+                '<td width="10%"> <div class="txtPrice">' + (pData.Price).toFixed(2) + '</div></td >' +
+                '<td width="10%"> <div class="txtTotalPrice">' + (pData.Total).toFixed(2) + '</div></td >' +
+                '<td width="10%"> <div class="txtTotalVat">' + (pData.VatTotal).toFixed(2) + '</div></td> ' +
+                '<td><textarea class="clsItemAdd d-none">' + pData.DataItemAdd + '</textarea></td> ' +
+                '</tr>';
+
+
+
+
+            return RowContent;
+        }
+
+        $('body').on('click', '.btnChoose', function () {
+
+            // Get Data
+            var vData = $('.clsSelected').closest('tr').find('.clsData').text()
+            // Get Data
+            var vDataHead = $('.clsSelected').closest('tr').find('.clsDataHead').text()
+            // Fill Head
+            var vHead = JSON.parse(vDataHead)
+            funConfigHead(vHead)
+            // Convert to json
+            var vDataResult = JSON.parse(vData)
+            //Close Modal
+            $('#AccountDataModal').modal('hide');
+            // Name Of Table
+            var TableRow = $('.tblItemBody')
+            // Clean Table
+            TableRow.html('');
+            // Loop For Data To Fill Table
+            $.each(vDataResult, function (i, Item) {
+                TableRow.append(funConfigItem(Item))
+            })
+            funPriceTotal()
+            funVatTotal()
+            LastTotal()
+            funInsuranceTotal()
+        })
+
+        function Clear() {
+            $(':input')
+                .not(':button, :submit, :reset, :hidden ,.InvTime,.InvDate')
+                .val('')
+                .removeAttr('checked')
+                .removeAttr('selected');
+            $('.tblItemBody').html('');
+            $('.txtVouchTotal').text('0.00')
+            $('.txtVouchPrice').text('0.00')
+            $('.txtVouchVat').text('0.00')
+            $('.clsPoint').text('0')
+            $('.clsPoint').attr('data-id', '0')
+            $('.InvId').val('0')
+            $('.CustomerId').val('')
+        }
+        $('.btnNew').on('click', function () {
+            Clear();
+        })
+        $('.btnClearCustomer').on('click', function () {
+            $(':input')
+                .not(':button, :submit, :reset, :hidden ,.InvTime,.InvDate')
+                .val('')
+                .removeAttr('checked')
+                .removeAttr('selected');
+        })
+    </script>
+    <!--Load Select List Of Driver-->
+    <script>
+
+        var Driver = $.parseJSON($.ajax({
+            url: '/api/APIResEmployee/ResEmployeeGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: {
+                pValueTypeId: 1030,
+                pResEmployeeIsActive: 1,
+                pQueryTypeId: '400',
+
+            },
+            async: false
+        }).responseText);
+
+        funDriver(Driver)
+        function funDriver(Data) {
+            var vDataJSON = JSON.parse(Data);
+            $.each(vDataJSON, function (i, Driver) {
+                $('#DriverId').append('<option data-id="' + Driver.ResEmployeeId + '" credit="' + Driver.Credit + '"  value="' + Driver.ResEmployeeId + '" sort-id="' + i + '">' + Driver.ResEmployeeNameL1 + '</option>')
+                if (i == 0) {
+                    vDriverId = Driver.DriverId;
+                }
+            })
+            $('#DriverId').val(vDriverId);
+            // Refresh Select Picker
+            //  $('.DriverId').selectpicker('refresh');
+        }
+
+
+
+        var vPayTypeId = 1
+        // List GetPayType
+        // $.get('/api/APIPaymentType/PaymentTypeGet',
+        //{
+        //    pQueryTypeId: '400',
+        //},
+        //function (data, status) {
+        //    var vDataJSON = JSON.parse(data);
+        //    $.each(vDataJSON, function (i, PayType) {
+        //        $('#PayTypeId').append('<option data-id="' + PayType.PaymentTypeId + '" value="' + PayType.PaymentTypeId + '" sort-id="' + i + '">' + PayType.PaymentTypeNameL1 + '</option>')
+        //    })
+        //    // Refresh Select Picker
+        //    $('#PayTypeId').selectpicker('refresh');
+        //})
+
+
+
+    </script>
+
+    <!--Exist-->
+    <script>
+        $('.btnExit').on('click', function () {
+            window.location.href = '/home/Login'
+
+        })
+
+    </script>
+
+
+    <!--Clear Side Bar For Design-->
+    <script>
+        $(document).ready(function () {
+            $('.appSideBar').addClass('d-none')
+            $('.divNav').addClass('d-none')
+        })
+
+        $('body').on('click', '.clsButton', function () {
+            $('.clsButton').removeClass('fa fa-check')
+            $('.clsButton').removeClass('clsTabs')
+            $(this).addClass('fa fa-check')
+            $(this).addClass('clsTabs')
+
+
+
+            $('.clsButton').removeClass('clr')
+            $(this).addClass('clr')
+
+            var Order = $(this).attr('Order')
+            localStorage.setItem('Order', Order)
+
+        })
+
+        function funTabs(Order) {
+            $('.clsButton').removeClass('fa fa-check')
+            $('.clsButton').removeClass('clsTabs')
+            $('.clsButton[Order=' + Order + ']').addClass('fa fa-check')
+            $('.clsButton[Order=' + Order + ']').addClass('clsTabs')
+
+        }
+
+    </script>
+    <script>
+
+        function funPrintCashierReport(InvId) {
+            if (InvId) {
+                printIframePOS("/pos/HtmlReport?InvId=" + InvId)
+            }
+        }
+    </script>
+    <!--Check EXist Customer-->
+    <script>
+
+
+        //$('.PhoneNumber').on('blur', function () {
+
+        //    if ($('.PhoneNumber').val() != undefined && $('.PhoneNumber').val() != '') {
+
+        //        $.post('/GLCustomer/CheckPhone',
+        //            { pCustomerPhoneNumber: $('.PhoneNumber').val() },
+        //            function (data, status) {
+
+        //                if (data != undefined && data != '') {
+        //                    var vDataResult = JSON.parse(data);
+        //                    funNotification('هذا الرقم موجود من قبل للمستخدم رقم' + vDataResult[0].CustomerCode, 2);
+        //                    $('.PhoneNumber').val('');
+        //                    $('.PhoneNumber').focus();
+
+        //                }
+        //                else {
+
+
+        //                }
+        //            })
+
+        //    }
+
+        //})
+
+        $('.PhoneNumber').on('blur', function () {
+            var vPhone = $(this).val()
+            $.post('/GLCustomer/CheckPhone',
+                { pCustomerPhoneNumber: vPhone },
+                function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        var CustomerId = vDataResult[0].CustomerId
+                        var CustomerCode = vDataResult[0].CustomerCode
+                        var CustomerName = vDataResult[0].CustomerNameL1
+                        var CustomerAddress = vDataResult[0].CustomerAddress
+                        var CustomerSite = vDataResult[0].CustomerSiteNameL1
+
+                        // Id - NameAr - NameEn
+                        var vDataId = CustomerId
+                        var vDataName = CustomerId
+                        // URL
+                        var vDataURL = '/ViewSetting/ViewSettingExistCustomer/';
+                        // Get HTML Content of [Confirm Delete] Partial View
+                        $.get(
+                            // URL
+                            vDataURL,
+                            // Parameters
+                            {
+                                id: vDataId,
+                                pName: vDataName,
+                            },
+                            // Function
+                            function (data, status) {
+                                if (vDataId > 0) {
+                                    // Modal
+                                    $('#confirmDeleteModalContent').html(data);
+                                    $('#confirmDeleteModal').modal('show');
+                                    // Click Event [Delete Confirm]
+                                    $("body").on("click", "#btnConfirm", function () {
+                                        // Set Value
+                                        // Set Value
+                                        $('.CustomerId').val(CustomerId);
+                                        $('.CustomerCode').val(CustomerCode);
+                                        $('.CustomerName').val(CustomerName);
+                                        $('.Address').val(CustomerAddress);
+                                        $('.SiteName').val(CustomerSite);
+
+                                    });
+                                    $("body").on("click", "#btnCancel", function () {
+                                        // Set Value
+                                        //$('.CustomerId').val(CustomerId);
+                                        //$('.CustomerCode').val(CustomerCode);
+                                        //$('.CustomerName').val(CustomerName);
+                                        //$('.Address').val(CustomerAddress);
+                                        //$('.SiteName').val(CustomerSite);
+
+                                    });
+                                }
+
+                            });
+                    }
+                })
+        })
+        // Cancel Invoice
+        $('body').on('click', '.btnDel', function () {
+        var InvId = $('.clsSelected').attr('data-id')
+            var UserId = $('.user').attr('user-id')
+            $.get('/api/APIINVInvoice/INVInvoiceGET',
+                {
+                    // Head Parameters
+                    phINVId: InvId,
+                    pLastUpdatedBy:'@UserId',
+                    pQueryTypeId: '203',
+                },
+                function (data, status) {
+
+                    var vDataResult = JSON.parse(data)
+                    funNotification(vDataResult[0].msg, 3)
+                    if (vDataResult[0].msgtype == '1') {
+                        printIframePOS("/pos/HtmlReport?InvId=" + InvId)
+                        funUpdataDataAfterSave()
+                    }
+
+                })
+            $('#AccountDataModal').modal('hide');
+        })
+
+
+        // Cancel Invoice
+        $('body').on('click', '.btnCancelInvoice', function () {
+            var InvId = $('.clsSelected').attr('data-id')
+            var UserId = $('.user').attr('user-id')
+            $.get('/api/APIINVInvoice/INVInvoiceGET',
+                {
+                    // Head Parameters
+                    phINVId: InvId,
+                    pLastUpdatedBy:'@UserId',
+                    pQueryTypeId: '203',
+                },
+                function (data, status) {
+
+                    var vDataResult = JSON.parse(data)
+                    funNotification(vDataResult[0].msg, 3)
+                    if (vDataResult[0].msgtype == '1') {
+                        printIframePOS("/pos/HtmlReport?InvId=" + InvId)
+                        funUpdataDataAfterSave()
+                    }
+
+                })
+            $('#AccountDataModal').modal('hide');
+        })
+        var Customer = $.parseJSON($.ajax({
+            url: '/api/APIGLCustomer/GLCustomerGET',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: { pIsCustomer: true, pQueryTypeId: '450', },
+            async: false
+        }).responseText);
+        var CustomerSite = $.parseJSON($.ajax({
+            url: '/api/APISite/SiteGet',
+            dataType: "json",
+            method: 'GET', contentType: 'application/json',
+            data: {},
+            async: false
+        }).responseText);
+        $('.btnOpenCash').on('click', function () {
+            if ('@ViewBag.IsPOSPrinterNetwork' === 'False') {
+                printIframe("/POS/GetPrintTestReport")
+            } else
+            {
+                   $.get('/POS/GetPrintGeneralReport',
+                {
+
+                }, function (Data) {
+                })
+            }
+        })
+    //      fillCredit(Credit)
+    //function fillCredit(data) {
+    //        var vDataJSON = JSON.parse(data);
+
+    //        $('#txtCredit').append('<option data-id="" value="" sort-id="" class="selected"  >-</option>')
+
+    //        $.each(vDataJSON, function (i, Credit) {
+
+    //            $('#txtCredit').append('<option data-id="' + Credit.LookupDtlId + '" value="' + Credit.LookupDtlId + '" sort-id="' + i + '">' + Credit.LookupDtlDesc + '</option>')
+
+
+    //        })
+
+    //    }
+        $('#txtCredit').val(@dftCredit);
+        $('#DriverId').on('change', function (e) {
+
+            var valueSelected =  $('option:selected', $('#DriverId')).attr('credit');
+            $('#txtCredit').val(valueSelected)
+        });
+        $('.btnTest').on('click', function (e) {
+            var UserId = $('.user').attr('user-id')
+
+        });
+    </script>
+
+}
+
+
+

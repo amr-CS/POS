@@ -1,0 +1,2846 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FEBA1819-ED06-4607-A51D-27DFB40EA5FB}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>appSERP</RootNamespace>
+    <AssemblyName>appSERP</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Charts.v19.2.Core, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.CodeParser.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.DataAccess.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Office.v19.2.Core, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Pdf.v19.2.Core, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.PivotGrid.v19.2.Core, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v19.2.Core, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v19.2.Core, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v19.2.Export, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Sparkline.v19.2.Core, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpo.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraCharts.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGauges.v19.2.Core, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExtreme.AspNet.Data, Version=2.5.1.0, Culture=neutral, PublicKeyToken=982f5dab1439d0f7, processorArchitecture=MSIL">
+      <HintPath>..\packages\DevExtreme.AspNet.Data.2.5.1\lib\net452\DevExtreme.AspNet.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExtreme.AspNet.Mvc">
+      <HintPath>C:\Program Files (x86)\DevExpress 19.2\DevExtreme\System\DevExtreme\Bin\AspNet\DevExtreme.AspNet.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="FastMember, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.5.0\lib\net461\FastMember.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>I:\Microsoft.ReportViewer.WinForms.DLL</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.1.7.3\lib\net461\Rotativa.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.4\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.4\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.4\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.TelemetryCorrelation">
+      <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.0\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.5.1\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.Agent.Intercept">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.4.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.5.1\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.5.1\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.5.1\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.5.1\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.5.1\lib\net45\Microsoft.AI.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="appCode\dbCode\ACC\dbAccount.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbAccountCostCenter.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbAccountType.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbBank.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCashDesk.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCashDeskDtl.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCashDeskTrans.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCashFlowType.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCommunicationType.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCostCenter.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCurrency.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCurrencyFactor.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCurrencyGender.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCustomerCategory.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCustomerSite.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCustomerSupplier.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCustomerSupplierGroup.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbCustomerTel.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbDashBoard.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbEPaymentType.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbEstimatedBudgetAccount.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbFinancialYear.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbFinancialYearStatus.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbGLCustomer.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbGLTransaction.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbGLVoucherOld.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbGLVoucherCashDesk.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbGLVoucherCategory.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbGLVoucherDtl.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbPaymentType.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbSellCostType.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbTransactionSource.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbTransactionType.cs" />
+    <Compile Include="appCode\dbCode\ACC\dbVoucherType.cs" />
+    <Compile Include="appCode\dbCode\ACC\Doc\dbAccountLastChild.cs" />
+    <Compile Include="appCode\dbCode\ACC\Doc\dbGLVoucher.cs" />
+    <Compile Include="appCode\dbCode\ACC\Doc\dbVoucherBoxCheck.cs" />
+    <Compile Include="appCode\dbCode\CPanel\dbCompanyBranch.cs" />
+    <Compile Include="appCode\dbCode\CPanel\dbCompanySystem.cs" />
+    <Compile Include="appCode\dbCode\CPanel\dbDevCompany.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAsset.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetContract.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetContractDetail.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetContractPayType.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetDep.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetReasonType.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetRelease.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetReleaseDetail.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetTrans.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetTransactionType.cs" />
+    <Compile Include="appCode\dbCode\FA\dbAssetUnDep.cs" />
+    <Compile Include="appCode\dbCode\FA\dbBuyGroup.cs" />
+    <Compile Include="appCode\dbCode\FA\dbFixedAssetCompany.cs" />
+    <Compile Include="appCode\dbCode\FA\dbFixedAssetCompanyType.cs" />
+    <Compile Include="appCode\dbCode\FA\dbFixedAssetMethod.cs" />
+    <Compile Include="appCode\dbCode\FA\dbFixedAssetSite.cs" />
+    <Compile Include="appCode\dbCode\FA\dbFixedAssetUnit.cs" />
+    <Compile Include="appCode\dbCode\FA\dbGroup.cs" />
+    <Compile Include="appCode\dbCode\FA\dbMainGroup.cs" />
+    <Compile Include="appCode\dbCode\FA\dbSite.cs" />
+    <Compile Include="appCode\dbCode\FA\dbSiteDetail.cs" />
+    <Compile Include="appCode\dbCode\FA\dbSiteDonor.cs" />
+    <Compile Include="appCode\dbCode\FA\dbSystemSTAT.cs" />
+    <Compile Include="appCode\dbCode\FA\dbTrust.cs" />
+    <Compile Include="appCode\dbCode\CPanel\dbSystem.cs" />
+    <Compile Include="appCode\dbCode\CPanel\dbAdmin.cs" />
+    <Compile Include="appCode\dbCode\INV\dbCategoryAccount.cs" />
+    <Compile Include="appCode\dbCode\INV\dbExpireDate.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvBoxes.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvChecks.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvEquipment.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvItem.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvItemBarcode.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvItemEquipment.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvItemReplace.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvItemsEquip.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvItemsUnitsPrice.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvItemUnit.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvStoreItemQty.cs" />
+    <Compile Include="appCode\dbCode\INV\dbInvSubItem.cs" />
+    <Compile Include="appCode\dbCode\INV\dbOfferType.cs" />
+    <Compile Include="appCode\dbCode\INV\dbPlate.cs" />
+    <Compile Include="appCode\dbCode\INV\dbProductType.cs" />
+    <Compile Include="appCode\dbCode\INV\dbSalesOrderType.cs" />
+    <Compile Include="appCode\dbCode\INV\dbSize.cs" />
+    <Compile Include="appCode\dbCode\INV\dbSizeType.cs" />
+    <Compile Include="appCode\dbCode\INV\dbStore.cs" />
+    <Compile Include="appCode\dbCode\INV\dbStoreConversion.cs" />
+    <Compile Include="appCode\dbCode\INV\dbStoreDepartment.cs" />
+    <Compile Include="appCode\dbCode\INV\dbStoreEmployee.cs" />
+    <Compile Include="appCode\dbCode\INV\dbStoreKeeper.cs" />
+    <Compile Include="appCode\dbCode\INV\dbStoreSetting.cs" />
+    <Compile Include="appCode\dbCode\INV\dbStoreType.cs" />
+    <Compile Include="appCode\dbCode\INV\dbUnit.cs" />
+    <Compile Include="appCode\dbCode\INV\Doc\dbINVInvoice.cs" />
+    <Compile Include="appCode\dbCode\RES\dbBranchSetting.cs" />
+    <Compile Include="appCode\dbCode\RES\dbCashier.cs" />
+    <Compile Include="appCode\dbCode\RES\dbDashBoard.cs" />
+    <Compile Include="appCode\dbCode\RES\dbDirectPrint.cs" />
+    <Compile Include="appCode\dbCode\RES\dbEmpStatus.cs" />
+    <Compile Include="appCode\dbCode\RES\dbExitType.cs" />
+    <Compile Include="appCode\dbCode\RES\dbIdentityType.cs" />
+    <Compile Include="appCode\dbCode\RES\dbInvType.cs" />
+    <Compile Include="appCode\dbCode\RES\dbLookup.cs" />
+    <Compile Include="appCode\dbCode\RES\dbNationality.cs" />
+    <Compile Include="appCode\dbCode\RES\dbPeriod.cs" />
+    <Compile Include="appCode\dbCode\RES\dbPortType.cs" />
+    <Compile Include="appCode\dbCode\RES\dbPOSReport.cs" />
+    <Compile Include="appCode\dbCode\RES\dbPrinter.cs" />
+    <Compile Include="appCode\dbCode\RES\dbprinterDTL.cs" />
+    <Compile Include="appCode\dbCode\RES\dbProduction.cs" />
+    <Compile Include="appCode\dbCode\RES\dbResEmployee.cs" />
+    <Compile Include="appCode\dbCode\RES\dbSalesMen.cs" />
+    <Compile Include="appCode\dbCode\RES\dbVAccountCategory.cs" />
+    <Compile Include="appCode\dbCode\RES\dbValueType.cs" />
+    <Compile Include="appCode\dbCode\RES\dbVehBrand.cs" />
+    <Compile Include="appCode\dbCode\RES\dbVehColor.cs" />
+    <Compile Include="appCode\dbCode\RES\dbVehicle.cs" />
+    <Compile Include="appCode\dbCode\RES\dbVehicleDriver.cs" />
+    <Compile Include="appCode\dbCode\RES\dbVehModel.cs" />
+    <Compile Include="appCode\dbCode\RES\dbVehStatus.cs" />
+    <Compile Include="appCode\dbCode\RES\dbVehType.cs" />
+    <Compile Include="appCode\dbCode\RES\dbVUnit.cs" />
+    <Compile Include="appCode\dbCode\RES\Order\dbResOrderDtl.cs" />
+    <Compile Include="appCode\dbCode\RES\Order\dbResOrder.cs" />
+    <Compile Include="appCode\dbCode\RES\Order\dbResOrderLocation.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbFontSizeType.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbSecurityGrade.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbSecurityPolicy.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbSecurityRole.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbSecurityRoleException.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbUser.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbUserCashier.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbUserGroup.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbUserLock.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbUserSecurityLog.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbUserSecurityTransactionType.cs" />
+    <Compile Include="appCode\dbCode\SEC\dbUserType.cs" />
+    <Compile Include="appCode\dbCode\SETT\dbArea.cs" />
+    <Compile Include="appCode\dbCode\SETT\dbCity.cs" />
+    <Compile Include="appCode\dbCode\SETT\dbDocStatus.cs" />
+    <Compile Include="appCode\dbCode\CPanel\dbFont.cs" />
+    <Compile Include="appCode\dbCode\CPanel\dbLanguage.cs" />
+    <Compile Include="appCode\dbCode\SYSSETT\dbCountry.cs" />
+    <Compile Include="appCode\dbCode\SYSSETT\dbCountryType.cs" />
+    <Compile Include="appCode\dbCode\SYSSETT\dbDocStatus.cs" />
+    <Compile Include="appCode\dbCode\CPanel\dbObjects.cs" />
+    <Compile Include="appCode\dbCode\CPanel\dbSystemMessage.cs" />
+    <Compile Include="appCode\dbCode\SYSSETT\dbTimeZone.cs" />
+    <Compile Include="appCode\dbCode\SYSSETT\dbTransactionType.cs" />
+    <Compile Include="appCode\dbCode\SYSSETT\dbUserFavorite.cs" />
+    <Compile Include="appCode\dbCode\SYSSETT\dbUserObjectAction.cs" />
+    <Compile Include="appCode\Setting\ACC\ACCSetting.cs" />
+    <Compile Include="appCode\Setting\APISetting\APIDirectory\appAPIDirectory.cs" />
+    <Compile Include="appCode\Setting\APISetting\clsAPI.cs" />
+    <Compile Include="appCode\Setting\CalendarSetting\clsCalendar.cs" />
+    <Compile Include="appCode\Setting\CaptchaImageResult\CaptchaImageResult.cs" />
+    <Compile Include="appCode\Setting\clsSystemSetting.cs" />
+    <Compile Include="appCode\Setting\Company\clsBranch.cs" />
+    <Compile Include="appCode\Setting\Company\clsCompany.cs" />
+    <Compile Include="appCode\Setting\ExcelSetting\clsExcel.cs" />
+    <Compile Include="appCode\Setting\FA\FASetting.cs" />
+    <Compile Include="appCode\Setting\GD\DevCompanySetting.cs" />
+    <Compile Include="appCode\Setting\GD\GDSetting.cs" />
+    <Compile Include="appCode\Setting\GSetting\clsFileSave.cs" />
+    <Compile Include="appCode\Setting\GSetting\Encode\clsEncode.cs" />
+    <Compile Include="appCode\Setting\GSetting\NoDirectAccessAttr\NoDirectAccessAttribute.cs" />
+    <Compile Include="appCode\Setting\HR\HRSetting.cs" />
+    <Compile Include="appCode\Setting\INV\INVSetting.cs" />
+    <Compile Include="appCode\Setting\Mail\clsMail.cs" />
+    <Compile Include="appCode\Setting\ReportSetting\clsExportPrinter.cs" />
+    <Compile Include="appCode\Setting\ReportSetting\ClsReport.cs" />
+    <Compile Include="appCode\Setting\ReportSetting\Demo.cs" />
+    <Compile Include="appCode\Setting\ReportSetting\Reports.cs" />
+    <Compile Include="appCode\Setting\SEC\SECSetting.cs" />
+    <Compile Include="appCode\Setting\SETT\SETTSetting.cs" />
+    <Compile Include="appCode\Setting\SYSSETT\SYSSETTSetting.cs" />
+    <Compile Include="appCode\Setting\TimeSetting\clsTimeSetting.cs" />
+    <Compile Include="appCode\Setting\User\clsUser.cs" />
+    <Compile Include="appCode\Setting\User\clsUserType.cs" />
+    <Compile Include="appCode\SQL\ADO\clsADO.cs" />
+    <Compile Include="appCode\SQL\QueryType\clsQueryType.cs" />
+    <Compile Include="appCode\SQL\SQLConnection\SQLConnectionGET\clsConnection.cs" />
+    <Compile Include="appCode\Utils\CustomXmlWriter.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\DevExtremeBundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIAccountController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIAccountCostCenterController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIAccountTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIBankController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICashDeskController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICashDeskDtlController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICashDeskTransController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICashFlowTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICommunicationTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICostCenterController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICurrencyController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICurrencyFactorController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICurrencyGenderController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICustomerCategoryController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICustomerSiteController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICustomerSupplierController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICustomerSupplierGroupController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APICustomerTelController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIEPaymentTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIEstimatedBudgetAccountController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIFinancialYearController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIFinancialYearStatusController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIGLCustomerController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIGLTransactionController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIGLVoucherCashDeskController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIGLVoucherCategoryController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIGLVoucherOldController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIGLVoucherDtlController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIPaymentTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APISellCostTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APITransactionSourceController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APITransactionTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\APIVoucherTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\Doc\APIGLVoucherController.cs" />
+    <Compile Include="Controllers\DataAPI\ACC\Doc\APIVoucherBoxCheckController.cs" />
+    <Compile Include="Controllers\DataAPI\APIDashBoardController.cs" />
+    <Compile Include="Controllers\DataAPI\BoardController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APICategoryAccountController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIExpireDateController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvBoxesController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvChecksController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvEquipmentController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvItemBarcodeController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvItemController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvItemEquipmentController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvItemReplaceController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvItemsEquipController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvItemsUnitsPriceController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIINVItemUnitController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvStoreItemQtyController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIInvSubItemController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIOfferTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIPlateController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIProductTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APISalesOrderTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APISizeController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APISizeTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIStoreController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIStoreConversionController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIStoreDepartmentController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIStoreEmployeeController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIStoreKeeperController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIStoreSettingController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIStoreTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\APIUnitController.cs" />
+    <Compile Include="Controllers\DataAPI\INV\Doc\APIINVInvoiceController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIBranchSettingController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIDashBoardController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIDirectPrintController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIEmpStatusController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIExitTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIIdentityTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIInvTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APILookupController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APINationalityController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIPeriodController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIPortTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIPrinterController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIPrinterDTLController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIProductionController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIResEmployeeController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APISalesMenController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIVAccountCategoryController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIValueTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIVehBrandController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIVehColorController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIVehicleController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIVehicleDriverController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIVehModelController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIVehStatusController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIVehTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APIVUnitController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\APICashierController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\Order\APIResOrderController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\Order\APIResOrderDtlController.cs" />
+    <Compile Include="Controllers\DataAPI\RES\Order\APIResOrderLocationController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APIUserCashierController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APIUserGroupController.cs" />
+    <Compile Include="Controllers\DataController\ACC\AccountStatementController.cs" />
+    <Compile Include="Controllers\DataController\ACC\BankController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CustomerCategoryController.cs" />
+    <Compile Include="Controllers\DataController\ACC\Doc\DocUtilityBarController.cs" />
+    <Compile Include="Controllers\DataController\ACC\Doc\GLVoucherController.cs" />
+    <Compile Include="Controllers\DataController\ACC\EPaymentTypeController.cs" />
+    <Compile Include="Controllers\DataController\ACC\GLCustomerController.cs" />
+    <Compile Include="Controllers\DataController\ACC\GLSupplierController.cs" />
+    <Compile Include="Controllers\DataController\ACC\Report\AccountStatementReportController.cs" />
+    <Compile Include="Controllers\DataController\ACC\SellCostTypeController.cs" />
+    <Compile Include="Controllers\DataController\ACC\StoreController.cs" />
+    <Compile Include="Controllers\DataController\CPanel\CPanelController.cs" />
+    <Compile Include="Controllers\DataAPI\CPanel\GD\APICompanyBranchController.cs" />
+    <Compile Include="Controllers\DataAPI\CPanel\GD\APICompanySystemController.cs" />
+    <Compile Include="Controllers\DataAPI\CPanel\SEC\APIAdminController.cs" />
+    <Compile Include="Controllers\DataAPI\CPanel\SETT\APIFontController.cs" />
+    <Compile Include="Controllers\DataAPI\CPanel\SYSSETT\APISystemMessageController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetContractController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetContractDetailController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetDepController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetReasonTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetReleaseController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetReleaseDetailController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetTransactionTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetTransController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetUnDepController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIBuyGroupController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIFixedAssetCompanyController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIFixedAssetCompanyTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIFixedAssetMethodController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIFixedAssetSiteController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIFixedAssetUnitController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIGroupController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIMainGroupController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APISiteController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APISiteDetailController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APISiteDonorController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APISystemSTATController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APIAssetContractPayTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\FA\APITrustController.cs" />
+    <Compile Include="Controllers\DataAPI\GD\APIDevCompanyController.cs" />
+    <Compile Include="Controllers\DataAPI\GD\APISystemController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APIFontSizeTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APIObjectsController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APISecurityGradeController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APISecurityPolicyController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APISecurityRoleController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APIUserController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APIUserLockController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APIUserSecurityLogController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APIUserSecurityTransactionTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\APIUserTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\SEC\Login\APIUserLoginController.cs" />
+    <Compile Include="Controllers\DataAPI\SETT\APIAreaController.cs" />
+    <Compile Include="Controllers\DataAPI\SETT\APICityController.cs" />
+    <Compile Include="Controllers\DataAPI\SETT\APILanguageController.cs" />
+    <Compile Include="Controllers\DataAPI\SYSSETT\APICountryController.cs" />
+    <Compile Include="Controllers\DataAPI\SYSSETT\APICountryTypeController.cs" />
+    <Compile Include="Controllers\DataAPI\SYSSETT\APIDocStatusController.cs" />
+    <Compile Include="Controllers\DataAPI\SYSSETT\APIObjectController.cs" />
+    <Compile Include="Controllers\DataAPI\SYSSETT\APITimeZoneController.cs" />
+    <Compile Include="Controllers\DataAPI\SYSSETT\APIUserFavoriteController.cs" />
+    <Compile Include="Controllers\DataAPI\SYSSETT\APIUserObjectActionController.cs" />
+    <Compile Include="Controllers\DataController\ACC\AccountController.cs" />
+    <Compile Include="Controllers\DataController\ACC\AccountCostCenterController.cs" />
+    <Compile Include="Controllers\DataController\ACC\AccountTypeController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CashDeskController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CashDeskTransController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CashFlowTypesController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CostCenterController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CSController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CSGroupController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CurrencyController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CurrencyFactorController.cs" />
+    <Compile Include="Controllers\DataController\ACC\CurrencyGenderController.cs" />
+    <Compile Include="Controllers\DataController\ACC\DashBoardController.cs" />
+    <Compile Include="Controllers\DataController\ACC\EstimatedBudgetAccountController.cs" />
+    <Compile Include="Controllers\DataController\ACC\FinancialYearController.cs" />
+    <Compile Include="Controllers\DataController\ACC\FinancialYearStatusController.cs" />
+    <Compile Include="Controllers\DataController\ACC\GLVoucherOldController.cs" />
+    <Compile Include="Controllers\DataController\ACC\PaymentTypeController.cs" />
+    <Compile Include="Controllers\DataController\ACC\TransactionSourceController.cs" />
+    <Compile Include="Controllers\DataController\ACC\TransactionTypeController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetContractController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetContractDetailController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetContractPayTypeController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetDepController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetReasonTypeController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetReleaseController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetReleaseDetailController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetTransactionTypeController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetTransController.cs" />
+    <Compile Include="Controllers\DataController\FA\AssetUnDepController.cs" />
+    <Compile Include="Controllers\DataController\FA\BuyGroupController.cs" />
+    <Compile Include="Controllers\DataController\FA\FixedAssetCompanyController.cs" />
+    <Compile Include="Controllers\DataController\FA\FixedAssetCompanyTypeController.cs" />
+    <Compile Include="Controllers\DataController\FA\FixedAssetMethodController.cs" />
+    <Compile Include="Controllers\DataController\FA\FixedAssetSiteController.cs" />
+    <Compile Include="Controllers\DataController\FA\FixedAssetUnitController.cs" />
+    <Compile Include="Controllers\DataController\FA\GroupController.cs" />
+    <Compile Include="Controllers\DataController\FA\MainGroupController.cs" />
+    <Compile Include="Controllers\DataController\FA\SiteController.cs" />
+    <Compile Include="Controllers\DataController\FA\SiteDetailController.cs" />
+    <Compile Include="Controllers\DataController\FA\SiteDonorController.cs" />
+    <Compile Include="Controllers\DataController\FA\SubGroupController.cs" />
+    <Compile Include="Controllers\DataController\FA\SystemSTATController.cs" />
+    <Compile Include="Controllers\DataController\FA\TrustController.cs" />
+    <Compile Include="Controllers\DataController\INV\CategoryAccountController.cs" />
+    <Compile Include="Controllers\DataController\INV\Docs\InvoicePaymentOrderController.cs" />
+    <Compile Include="Controllers\DataController\INV\Docs\InvoiceController.cs" />
+    <Compile Include="Controllers\DataController\INV\InvBoxesController.cs" />
+    <Compile Include="Controllers\DataController\INV\InvChecksController.cs" />
+    <Compile Include="Controllers\DataController\INV\InventoryItemController.cs" />
+    <Compile Include="Controllers\DataController\INV\InvItemController.cs" />
+    <Compile Include="Controllers\DataController\INV\OfferTypeController.cs" />
+    <Compile Include="Controllers\DataController\INV\ProductTypeController.cs" />
+    <Compile Include="Controllers\DataController\INV\SalesOrderTypeController.cs" />
+    <Compile Include="Controllers\DataController\INV\SizeSettingController.cs" />
+    <Compile Include="Controllers\DataController\INV\SizeTypeController.cs" />
+    <Compile Include="Controllers\DataController\INV\StoreConversionController.cs" />
+    <Compile Include="Controllers\DataController\INV\StoreDepartmentController.cs" />
+    <Compile Include="Controllers\DataController\INV\StoreEmployeeController.cs" />
+    <Compile Include="Controllers\DataController\INV\StoreKeeperController.cs" />
+    <Compile Include="Controllers\DataController\INV\StoreSettingController.cs" />
+    <Compile Include="Controllers\DataController\INV\StoreTypeController.cs" />
+    <Compile Include="Controllers\DataController\INV\UnitController.cs" />
+    <Compile Include="Controllers\DataController\ReportSetting\ReportSettingController.cs" />
+    <Compile Include="Controllers\DataController\Report\ReportController.cs" />
+    <Compile Include="Controllers\DataController\RES\BranchSettingController.cs" />
+    <Compile Include="Controllers\DataController\RES\CashierController.cs" />
+    <Compile Include="Controllers\DataController\RES\CustomerBlackListController.cs" />
+    <Compile Include="Controllers\DataController\RES\DashBoard\DashBoardController.cs" />
+    <Compile Include="Controllers\DataController\RES\InvTypeController.cs" />
+    <Compile Include="Controllers\DataController\RES\LookupController.cs" />
+    <Compile Include="Controllers\DataController\RES\Order\ResOrderController.cs" />
+    <Compile Include="Controllers\DataController\RES\POS\POSController.cs" />
+    <Compile Include="Controllers\DataController\RES\PrintersController.cs" />
+    <Compile Include="Controllers\DataController\RES\ProductsQuantitiesController.cs" />
+    <Compile Include="Controllers\DataController\RES\ResEmployeeController.cs" />
+    <Compile Include="Controllers\DataController\RES\ResItemController.cs" />
+    <Compile Include="Controllers\DataController\RES\ProductionController.cs" />
+    <Compile Include="Controllers\DataController\RES\SalesMenController.cs" />
+    <Compile Include="Controllers\DataController\RES\VAccountCategoryController.cs" />
+    <Compile Include="Controllers\DataController\RES\VehicleController.cs" />
+    <Compile Include="Controllers\DataController\RES\VehicleDriverController.cs" />
+    <Compile Include="Controllers\DataController\SEC\Login\LoginController.cs" />
+    <Compile Include="Controllers\DataController\SEC\SecurityGradeController.cs" />
+    <Compile Include="Controllers\DataController\SEC\SecurityPolicyController.cs" />
+    <Compile Include="Controllers\DataController\SEC\SecurityRoleController.cs" />
+    <Compile Include="Controllers\DataController\SEC\SecurityRoleExceptionController.cs" />
+    <Compile Include="Controllers\DataController\SEC\UserCashierController.cs" />
+    <Compile Include="Controllers\DataController\SEC\UserController.cs" />
+    <Compile Include="Controllers\DataController\SEC\UserSecurityLogController.cs" />
+    <Compile Include="Controllers\DataController\SEC\UserSecurityTransactionTypeController.cs" />
+    <Compile Include="Controllers\DataController\SEC\UserTypeController.cs" />
+    <Compile Include="Controllers\DataController\SETT\AreaController.cs" />
+    <Compile Include="Controllers\DataController\SETT\CityController.cs" />
+    <Compile Include="Controllers\DataController\SYSSETT\CountryController.cs" />
+    <Compile Include="Controllers\DataController\SYSSETT\CountryTypeController.cs" />
+    <Compile Include="Controllers\DataController\SYSSETT\UserFavoriteController.cs" />
+    <Compile Include="Controllers\DataController\SYSSETT\ViewHeader\ViewHeaderController.cs" />
+    <Compile Include="Controllers\DataController\ViewSetting\ViewSettingController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="InvoicePOS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InvoicePOS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ACC\AccountCostCenterModel.cs" />
+    <Compile Include="Models\ACC\AccountModel.cs" />
+    <Compile Include="Models\ACC\AccountTypeModel.cs" />
+    <Compile Include="Models\ACC\CashDeskDtlModel.cs" />
+    <Compile Include="Models\ACC\CashDeskTransModel.cs" />
+    <Compile Include="Models\ACC\CashFlowTypeModel.cs" />
+    <Compile Include="Models\ACC\CommunicationTypeModel.cs" />
+    <Compile Include="Models\ACC\CostCenterModel.cs" />
+    <Compile Include="Models\ACC\CurrencyFactorModel.cs" />
+    <Compile Include="Models\ACC\CurrencyGenderModel.cs" />
+    <Compile Include="Models\ACC\CurrencyModel.cs" />
+    <Compile Include="Models\ACC\CustomerCategoryModel.cs" />
+    <Compile Include="Models\ACC\CustomerSiteModel.cs" />
+    <Compile Include="Models\ACC\CustomerSupplierGroupModel.cs" />
+    <Compile Include="Models\ACC\CustomerSupplierModel.cs" />
+    <Compile Include="Models\ACC\CustomerTelModel.cs" />
+    <Compile Include="Models\ACC\EPaymentTypeModel.cs" />
+    <Compile Include="Models\ACC\EstimatedBudgetAccountModel.cs" />
+    <Compile Include="Models\ACC\FinancialYearModel.cs" />
+    <Compile Include="Models\ACC\FinancialYearStatusModel.cs" />
+    <Compile Include="Models\ACC\GLCustomerModel.cs" />
+    <Compile Include="Models\ACC\GLVoucherCashDeskModel.cs" />
+    <Compile Include="Models\ACC\GLVoucherCategoryModel.cs" />
+    <Compile Include="Models\ACC\GLVoucherDtlModel.cs" />
+    <Compile Include="Models\ACC\GLVoucherModel.cs" />
+    <Compile Include="Models\ACC\PaymentTypeModel.cs" />
+    <Compile Include="Models\ACC\SellCostTypeModel.cs" />
+    <Compile Include="Models\ACC\TransactionModel.cs" />
+    <Compile Include="Models\ACC\TransactionSourceModel.cs" />
+    <Compile Include="Models\ACC\TransactionTypeModel.cs" />
+    <Compile Include="Models\ACC\VoucherBoxCheck.cs" />
+    <Compile Include="Models\ACC\VoucherTypeModel.cs" />
+    <Compile Include="Models\CPanel\AdminModel.cs" />
+    <Compile Include="Models\CPanel\GD\CompanyBranchModel.cs" />
+    <Compile Include="Models\CPanel\GD\CompanySystemModel.cs" />
+    <Compile Include="Models\CPanel\GD\SystemModel.cs" />
+    <Compile Include="Models\CPanel\SETT\FontModel.cs" />
+    <Compile Include="Models\CPanel\SETT\LanguageModel.cs" />
+    <Compile Include="Models\CPanel\SYSSETT\ObjectsModel.cs" />
+    <Compile Include="Models\FA\AssetContractDetailModel.cs" />
+    <Compile Include="Models\FA\AssetContractModel.cs" />
+    <Compile Include="Models\FA\AssetContractPayTypeModel.cs" />
+    <Compile Include="Models\FA\AssetDep.cs" />
+    <Compile Include="Models\FA\AssetModel.cs" />
+    <Compile Include="Models\FA\AssetReasonTypeModel.cs" />
+    <Compile Include="Models\FA\AssetReleaseDetailModel.cs" />
+    <Compile Include="Models\FA\AssetReleaseModel.cs" />
+    <Compile Include="Models\FA\AssetTransactionTypeModel.cs" />
+    <Compile Include="Models\FA\AssetTransModel.cs" />
+    <Compile Include="Models\FA\AssetTrustModel.cs" />
+    <Compile Include="Models\FA\AssetUnDepModel.cs" />
+    <Compile Include="Models\FA\BuyGroupModel.cs" />
+    <Compile Include="Models\FA\FixedAssetCompanyModel.cs" />
+    <Compile Include="Models\FA\FixedAssetCompanyTypeModel.cs" />
+    <Compile Include="Models\FA\FixedAssetMethodModel.cs" />
+    <Compile Include="Models\FA\FixedAssetSiteModel.cs" />
+    <Compile Include="Models\FA\FixedAssetUnitModel.cs" />
+    <Compile Include="Models\FA\GroupModel.cs" />
+    <Compile Include="Models\FA\MainGroupModel.cs" />
+    <Compile Include="Models\FA\SiteDetailModel.cs" />
+    <Compile Include="Models\FA\SiteDonorModel.cs" />
+    <Compile Include="Models\FA\SiteModel.cs" />
+    <Compile Include="Models\FA\TrustModel.cs" />
+    <Compile Include="Models\GD\DevCompanyModel.cs" />
+    <Compile Include="Models\INV\CategoryAccountModel.cs" />
+    <Compile Include="Models\INV\ExpireDateModel.cs" />
+    <Compile Include="Models\INV\InvEquipmentModel.cs" />
+    <Compile Include="Models\INV\InvItemBarcodeModel.cs" />
+    <Compile Include="Models\INV\InvItemEquipmentModel.cs" />
+    <Compile Include="Models\INV\InvItemModel.cs" />
+    <Compile Include="Models\INV\InvItemReplaceModel.cs" />
+    <Compile Include="Models\INV\InvItemsEquipModel.cs" />
+    <Compile Include="Models\INV\InvItemsUnitsPriceModel.cs" />
+    <Compile Include="Models\INV\InvSubItemModel.cs" />
+    <Compile Include="Models\INV\OfferTypeModel.cs" />
+    <Compile Include="Models\INV\ProductTypeModel.cs" />
+    <Compile Include="Models\INV\SalesOrderTypeModel.cs" />
+    <Compile Include="Models\INV\SizeModel.cs" />
+    <Compile Include="Models\INV\SizeTypeModel.cs" />
+    <Compile Include="Models\INV\StoreDepartmentModel.cs" />
+    <Compile Include="Models\INV\StoreEmployeeModel.cs" />
+    <Compile Include="Models\INV\StoreKeeperModel.cs" />
+    <Compile Include="Models\INV\StoreModel.cs" />
+    <Compile Include="Models\INV\StoreSettingModel.cs" />
+    <Compile Include="Models\INV\StoreTypeModel.cs" />
+    <Compile Include="Models\INV\Invoice.cs" />
+    <Compile Include="Models\INV\InvoiceDtl.cs" />
+    <Compile Include="Models\INV\UnitModel.cs" />
+    <Compile Include="Models\RES\DirectPrintModel.cs" />
+    <Compile Include="Models\RES\InvTypeModel.cs" />
+    <Compile Include="Models\RES\PortTypeModel.cs" />
+    <Compile Include="Models\RES\PrinterDTLModel.cs" />
+    <Compile Include="Models\RES\PrinterModel.cs" />
+    <Compile Include="Models\RES\ResEmployeeModel.cs" />
+    <Compile Include="Models\RES\ResOrderDtl.cs" />
+    <Compile Include="Models\RES\VehicleDriverModel.cs" />
+    <Compile Include="Models\RES\VehicleModel.cs" />
+    <Compile Include="Models\SEC\FontSizeTypeModel.cs" />
+    <Compile Include="Models\SEC\Login\LoginModel.cs" />
+    <Compile Include="Models\SEC\SecurityGradeModel.cs" />
+    <Compile Include="Models\SEC\SecurityPolicyModel.cs" />
+    <Compile Include="Models\SEC\SecurityRoleExceptionModel.cs" />
+    <Compile Include="Models\SEC\SecurityRoleModel.cs" />
+    <Compile Include="Models\SEC\UserModel.cs" />
+    <Compile Include="Models\SEC\UserSecurityLogModel.cs" />
+    <Compile Include="Models\SEC\UserSecurityTransactionTypeModel.cs" />
+    <Compile Include="Models\SEC\UserTypeModel.cs" />
+    <Compile Include="Models\SETT\AreaModel.cs" />
+    <Compile Include="Models\SETT\CityModel.cs" />
+    <Compile Include="Models\SETT\DocStatusModel.cs" />
+    <Compile Include="Models\SYSSETT\CountryModel.cs" />
+    <Compile Include="Models\SYSSETT\CountryTypeModel.cs" />
+    <Compile Include="Models\SYSSETT\DocStatusModel.cs" />
+    <Compile Include="Models\SYSSETT\QueryTypeModel.cs" />
+    <Compile Include="Models\SYSSETT\SystemMessageModel.cs" />
+    <Compile Include="Models\SYSSETT\SystemObjectModel.cs" />
+    <Compile Include="Models\SYSSETT\UserFavoriteModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\AccountCostCenterReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccountCostCenterReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AccountReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccountReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetContractDetailReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetContractDetailReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetContractPayTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetContractPayTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetContractReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetContractReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetDepReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetDepReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetReasonTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetReasonTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetReleaseDetailReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetReleaseDetailReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetReleaseReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetReleaseReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetTransReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetTransReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AssetUnDepReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssetUnDepReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\BankReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BankReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\BuyGroupReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BuyGroupReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\BuyInvoiceReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BuyInvoiceReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\CashDeskReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CashDeskReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\CashFlowTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CashFlowTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\CNReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CNReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\CostCenterReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CostCenterReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\CurrencyFactorReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CurrencyFactorReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\CurrencyGenderReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CurrencyGenderReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\CurrencyReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CurrencyReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\CustomerSupplierReport .cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CustomerSupplierReport .rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\DNReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DNReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\FinancialYearReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FinancialYearReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\FinancialYearStatusReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FinancialYearStatusReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\FixedAssetCompanyReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FixedAssetCompanyReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\FixedAssetCompanyTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FixedAssetCompanyTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\FixedAssetMethodReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FixedAssetMethodReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\FixedAssetSiteReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FixedAssetSiteReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\FixedAssetUnitReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FixedAssetUnitReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GLCustomerReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GLCustomerReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GLDetailsCostCenterReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GLDetailsCostCenterReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GLDetailsReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GLDetailsReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GlOpeningReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GlOpeningReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GLTotalCostGLTotalCostReportReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GLTotalCostGLTotalCostReportReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GLTotalReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GLTotalReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GLVoucherPaymentReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GLVoucherPaymentReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GLVoucherReceiptReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GLVoucherReceiptReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GlVoucherReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GlVoucherReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\GroupReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GroupReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoicePaymentOrderReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InvoicePaymentOrderReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ItemReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ItemsCardReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemsCardReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ItemsReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemsReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\LookupReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LookupReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\MainGroupReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainGroupReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\OfferTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OfferTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\PaymentTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PaymentTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POSDTLCasherReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSDTLCasherReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\Customer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Customer.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSDTLCasherTodayReport - Copy.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSDTLCasherTodayReport - Copy.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSDTLCasherTodayReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSDTLCasherTodayReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSDTLReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSDTLReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSDTLTodayReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSDTLTodayReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSGroupingCasherReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSGroupingCasherReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSGroupingCasherTodayReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSGroupingCasherTodayReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSGroupingReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSGroupingReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSGroupingTodayReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSGroupingTodayReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSInsuranceDeletedReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSInsuranceDeletedReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSInsuranceDeletedTodayReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSInsuranceDeletedTodayReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSInsuranceDeletedTodayReport2.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSInsuranceDeletedTodayReport2.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSInsuranceReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSInsuranceReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSInsuranceTodayReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSInsuranceTodayReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSReceiptVoucher.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSReceiptVoucher.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSReceiptVoucherToday.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSReceiptVoucherToday.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\POSTodayReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSTodayReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\rptPOSCancel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptPOSCancel.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\rptPOSK.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptPOSK.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\POS\rptPOSKCancel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptPOSKCancel.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\PrintersReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PrintersReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ProductionContentReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionContentReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ProductionOrderReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionOrderReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ProductionQtyByStoreReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionQtyByStoreReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ProductionQtyByTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionQtyByTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ProductionQtyReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionQtyReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ResEmployeeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResEmployeeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ResItemsReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResItemsReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ResMealsReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResMealsReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ResOrder_Report.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SalesOrderTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SalesOrderTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SiteDetailReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SiteDetailReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SiteDonorReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SiteDonorReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SiteReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SiteReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SizeTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SizeTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\StoreConversionReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreConversionReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\StoreDepartmentReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreDepartmentReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\StoreEmployeeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoreEmployeeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Test.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Test.Designer.cs">
+      <DependentUpon>Test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\TransactionSourceReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TransactionSourceReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\TransactionTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TransactionTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\UserReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\UserSecurityTransactionTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserSecurityTransactionTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\UserTypeReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserTypeReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\VehicleDriverReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VehicleDriverReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\VehiclesReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VehiclesReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="signalr\hubs\ChatHub.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Views\Shared\appResource\appResource.de.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.de.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\appResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\appResource.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\appResource.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\appResource.fr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.fr.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\appResource.hi.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.hi.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\appResource.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\appResource.pt.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.pt.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\appResource.ru.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.ru.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\appResource.tr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>appResource.tr.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\loginResource\loginResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>loginResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\appResource\loginResource\loginResource.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>loginResource.en.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appCode\SQL\SQLConnection\SQLConnectionFiles\appConnLocal.txt" />
+    <Content Include="appCode\SQL\SQLConnection\SQLConnectionFiles\appConnOnline.txt" />
+    <Content Include="assets\fonts\fa-solid-900.svg" />
+    <Content Include="assets\fonts\Pe-icon-7-stroke.svg" />
+    <Content Include="assets\images\avatars\1.jpg" />
+    <Content Include="assets\images\avatars\10.jpg" />
+    <Content Include="assets\images\avatars\11.jpg" />
+    <Content Include="assets\images\avatars\12.jpg" />
+    <Content Include="assets\images\avatars\2.jpg" />
+    <Content Include="assets\images\avatars\3.jpg" />
+    <Content Include="assets\images\avatars\4.jpg" />
+    <Content Include="assets\images\avatars\5.jpg" />
+    <Content Include="assets\images\avatars\8.jpg" />
+    <Content Include="assets\images\avatars\9.jpg" />
+    <Content Include="assets\images\logo-inverse.png" />
+    <Content Include="assets\images\logo.png" />
+    <Content Include="assets\scripts\main.js" />
+    <Content Include="Content\bootstrap-grid.css" />
+    <Content Include="Content\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrap-reboot.css" />
+    <Content Include="Content\bootstrap-reboot.min.css" />
+    <Content Include="Content\bootstrap\bootstrap.css" />
+    <Content Include="Content\bootstrap_ltr.css" />
+    <Content Include="Content\bootstrap_ltr.min.css" />
+    <Content Include="Content\bootstrap_rtl.css" />
+    <Content Include="Content\bootstrap_rtl.min.css" />
+    <Content Include="Content\CircleSTAT.css" />
+    <Content Include="Content\ControlStyle\controlStyle.css" />
+    <Content Include="Content\DashBoard\main.css" />
+    <Content Include="Content\DashBoard\style.css" />
+    <Content Include="Content\DataTable\dataTables.bootstrap4.min.css" />
+    <Content Include="Content\dx-diagram.css" />
+    <Content Include="Content\dx-diagram.min.css" />
+    <Content Include="Content\dx-gantt.css" />
+    <Content Include="Content\dx-gantt.min.css" />
+    <Content Include="Content\dx.carmine.compact.css" />
+    <Content Include="Content\dx.carmine.css" />
+    <Content Include="Content\dx.common.css" />
+    <Content Include="Content\dx.contrast.compact.css" />
+    <Content Include="Content\dx.contrast.css" />
+    <Content Include="Content\dx.dark.compact.css" />
+    <Content Include="Content\dx.dark.css" />
+    <Content Include="Content\dx.darkmoon.compact.css" />
+    <Content Include="Content\dx.darkmoon.css" />
+    <Content Include="Content\dx.darkviolet.compact.css" />
+    <Content Include="Content\dx.darkviolet.css" />
+    <Content Include="Content\dx.greenmist.compact.css" />
+    <Content Include="Content\dx.greenmist.css" />
+    <Content Include="Content\dx.ios7.default.css" />
+    <Content Include="Content\dx.light.compact.css" />
+    <Content Include="Content\dx.light.css" />
+    <Content Include="Content\dx.material.blue.dark.compact.css" />
+    <Content Include="Content\dx.material.blue.dark.css" />
+    <Content Include="Content\dx.material.blue.light.compact.css" />
+    <Content Include="Content\dx.material.blue.light.css" />
+    <Content Include="Content\dx.material.lime.dark.compact.css" />
+    <Content Include="Content\dx.material.lime.dark.css" />
+    <Content Include="Content\dx.material.lime.light.compact.css" />
+    <Content Include="Content\dx.material.lime.light.css" />
+    <Content Include="Content\dx.material.orange.dark.compact.css" />
+    <Content Include="Content\dx.material.orange.dark.css" />
+    <Content Include="Content\dx.material.orange.light.compact.css" />
+    <Content Include="Content\dx.material.orange.light.css" />
+    <Content Include="Content\dx.material.purple.dark.compact.css" />
+    <Content Include="Content\dx.material.purple.dark.css" />
+    <Content Include="Content\dx.material.purple.light.compact.css" />
+    <Content Include="Content\dx.material.purple.light.css" />
+    <Content Include="Content\dx.material.teal.dark.compact.css" />
+    <Content Include="Content\dx.material.teal.dark.css" />
+    <Content Include="Content\dx.material.teal.light.compact.css" />
+    <Content Include="Content\dx.material.teal.light.css" />
+    <Content Include="Content\dx.softblue.compact.css" />
+    <Content Include="Content\dx.softblue.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\List\bootstrap-select.css" />
+    <Content Include="Content\Notification\jquery.toast.css" />
+    <Content Include="Content\print.css" />
+    <Content Include="Content\sidebar\sidebar_ltr.css" />
+    <Content Include="Content\sidebar\sidebar_rtl.css" />
+    <Content Include="Content\TreeView\style.min.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Image\Currency\10.jpg" />
+    <Content Include="Image\Currency\100.png" />
+    <Content Include="Image\Currency\200-1.jpg" />
+    <Content Include="Image\Currency\20f.jpg" />
+    <Content Include="Image\Currency\500.jpg" />
+    <Content Include="Image\Currency\5.png" />
+    <Content Include="Image\Currency\1.jpg" />
+    <Content Include="Image\Currency\50.png" />
+    <Content Include="Image\DataImage\Admin View Error when Log Out Or Change Language.png" />
+    <Content Include="Image\DataImage\GD\ACC copy_0a0b1414-8087-4df8-b5d1-276768cde0f4.png" />
+    <Content Include="Image\DataImage\GD\FA copy_7c5b0aac-fa05-493b-84ef-e9e71ea827f0.PNG" />
+    <Content Include="Image\DataImage\GD\HR copy_a3db0e1f-cdcb-4b70-9c12-226cffcc0d46.PNG" />
+    <Content Include="Image\DataImage\GD\PU copy_b567396b-c0b7-4ffc-bb93-0a14678a2863.png" />
+    <Content Include="Image\DataImage\GD\SA copy_28364a86-b222-47f7-9a63-d69c35facb6b.png" />
+    <Content Include="Image\DataImage\GD\SA copy_dba37e4e-3a35-4b21-83b9-c11c32c840a8.png" />
+    <Content Include="Image\DataImage\GD\SEC copy_37b5d101-f4da-4c30-bdef-8c8adcf97d6c.png" />
+    <Content Include="Image\DataImage\GD\SEC copy_c7ab1f9c-8b81-4bb5-9e1b-7f04497a58e9.png" />
+    <Content Include="Image\DataImage\SEC\content2_469f2f15-8ac7-466f-a791-4c11770b073b.png" />
+    <Content Include="Image\DataImage\SEC\content2_687aca69-e5f6-41fd-b10d-6aec37696c9a.png" />
+    <Content Include="Image\DataImage\SEC\content2_ddbb36fa-f892-42ac-a11f-985873c8cd3b.png" />
+    <Content Include="Image\DataImage\SETT\mosque_7e82b62e-0390-4a21-8406-1b557792a0e9.png" />
+    <Content Include="Image\DataImage\SETT\mosque_88eb18ea-8733-4b16-8b62-e8ec1288ceaa.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\AccountType_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\Account_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\CashDesk_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\CostCenter_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\CSGroup_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\CS_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\CurrencyGender_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\currency_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\FinancialYearStatues_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\PaymentType_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\TransactionSource_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\ACC\TransactionType_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\GD\CompanySystem_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\GD\Company_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\GD\System_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SEC\UserSecurityTransactionType_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SEC\UserType_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SEC\User_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SETT\Area_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SETT\City_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SETT\Font_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SETT\Language_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SYSSETT\content2_d0079b90-98fa-4831-b048-cc60d3710e72.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SYSSETT\CountryType_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SYSSETT\Country_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\BLack\SYSSETT\SystemMessage_B.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\account_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\AccountType_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\CashDesk_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\CashFlowType_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\CostCenter-C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\CSGroup_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\CS_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\CurrencyGender_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\Currency_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\FinancialYear_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\PaymentTypes_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\ACC\transactionSource_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\GD\Company_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\GD\System_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\SEC\UserSecurityTransactionType_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\SEC\UserType_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\SEC\User_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\SETT\Area_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\SETT\City_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\SETT\Font_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\SETT\Language_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\SYSSETT\Country_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\ColorFul\SYSSETT\SystemMessage_C.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\Account_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\CashDesk_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\CashFlowTypes_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\CostCenter_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\CSGroup_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\CS_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\CurrencyGender_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\currency_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\FinancialYearStatues_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\PaymentType_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\TransactionSource_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\ACC\TransactionType_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\GD\CompanySystem_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\GD\Company_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\GD\System_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SEC\UserSecurityTransactionType_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SEC\UserType_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SEC\User_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SETT\CountryType_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SETT\Country_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SETT\SystemMessage_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SYSSETT\Area_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SYSSETT\City_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SYSSETT\Font_W.png" />
+    <Content Include="Image\DataImage\SYSSETT\Icons\White\SYSSETT\Language_W.png" />
+    <Content Include="Content\image\DataTable\DataTableButtons\icoExcel.png" />
+    <Content Include="Content\image\DataTable\DataTableButtons\icoPrint.png" />
+    <Content Include="Image\Icons\AccountReport.png" />
+    <Content Include="Image\Icons\accounts.png" />
+    <Content Include="Image\Icons\AccountType.png" />
+    <Content Include="Image\Icons\AssetContractPayType.png" />
+    <Content Include="Image\Icons\AssetDep.png" />
+    <Content Include="Image\Icons\AssetReasonType.png" />
+    <Content Include="Image\Icons\Assets.png" />
+    <Content Include="Image\Icons\BuyGroup.png" />
+    <Content Include="Image\Icons\CashDesk.png" />
+    <Content Include="Image\Icons\AccountCostCenter.png" />
+    <Content Include="Image\Icons\cashier.png" />
+    <Content Include="Image\Icons\Category.png" />
+    <Content Include="Image\Icons\CatSize.png" />
+    <Content Include="Image\Icons\Company.png" />
+    <Content Include="Image\Icons\Contract.png" />
+    <Content Include="Image\Icons\CostCenter.png" />
+    <Content Include="Image\Icons\Currency.png" />
+    <Content Include="Image\Icons\CurrencyExchange.png" />
+    <Content Include="Image\Icons\CurrencyTypes.png" />
+    <Content Include="Image\Icons\Customer.png" />
+    <Content Include="Image\Icons\Customers.png" />
+    <Content Include="Image\Icons\CutomerData.png" />
+    <Content Include="Image\Icons\Details.png" />
+    <Content Include="Image\Icons\driver.png" />
+    <Content Include="Image\Icons\employee.png" />
+    <Content Include="Image\Icons\FinancialYears.png" />
+    <Content Include="Image\Icons\FixedAssetMethod.png" />
+    <Content Include="Image\Icons\FixedAssetSite.png" />
+    <Content Include="Image\Icons\GeneralReport.png" />
+    <Content Include="Image\Icons\google.png" />
+    <Content Include="Image\Icons\Group.png" />
+    <Content Include="Image\Icons\Item.png" />
+    <Content Include="Image\Icons\Items.png" />
+    <Content Include="Image\Icons\Lookup.png" />
+    <Content Include="Image\Icons\MainGroup.png" />
+    <Content Include="Image\Icons\Meals.png" />
+    <Content Include="Image\Icons\Offers.png" />
+    <Content Include="Image\Icons\Operations.png" />
+    <Content Include="Image\Icons\order.png" />
+    <Content Include="Image\Icons\Payment.png" />
+    <Content Include="Image\Icons\paymentType.png" />
+    <Content Include="Image\Icons\printer.png" />
+    <Content Include="Image\Icons\ProductionTrans.png" />
+    <Content Include="Image\Icons\Products.png" />
+    <Content Include="Image\Icons\Qty.png" />
+    <Content Include="Image\Icons\Recive.png" />
+    <Content Include="Image\Icons\resize-option.png" />
+    <Content Include="Image\Icons\settings.png" />
+    <Content Include="Image\Icons\StoreDepartments.png" />
+    <Content Include="Image\Icons\Unit.png" />
+    <Content Include="Image\Icons\Veichels.png" />
+    <Content Include="Image\Icons\Useroperation.png" />
+    <Content Include="Image\Icons\user.png" />
+    <Content Include="Image\Icons\YearStatues.png" />
+    <Content Include="Image\Loader\tenor.gif" />
+    <Content Include="Image\next.png" />
+    <Content Include="Image\POS\rptCancel.png" />
+    <Content Include="Image\POS\checked.png" />
+    <Content Include="Image\POS\edit.png" />
+    <Content Include="Image\POS\icons8-active-state-64.png" />
+    <Content Include="Image\POS\icons8-administrative-tools-64.png" />
+    <Content Include="Image\POS\icons8-cancel-subscription-48.png" />
+    <Content Include="Image\POS\icons8-close-window-48.png" />
+    <Content Include="Image\POS\icons8-connect-100.png" />
+    <Content Include="Image\POS\icons8-connect-64.png" />
+    <Content Include="Image\POS\icons8-delete-bin-64.png" />
+    <Content Include="Image\POS\icons8-delivery-48.png" />
+    <Content Include="Image\POS\icons8-edit-64.png" />
+    <Content Include="Image\POS\icons8-filing-cabinet-64.png" />
+    <Content Include="Image\POS\icons8-lock-48.png" />
+    <Content Include="Image\POS\icons8-math-64.png" />
+    <Content Include="Image\POS\icons8-meal-64.png" />
+    <Content Include="Image\POS\icons8-paycheque-64.png" />
+    <Content Include="Image\POS\icons8-reservation-48.png" />
+    <Content Include="Image\POS\icons8-search-64.png" />
+    <Content Include="Image\POS\pause.png" />
+    <Content Include="Image\POS\plus.png" />
+    <Content Include="Image\POS\receipt.png" />
+    <Content Include="Image\POS\refresh.png" />
+    <Content Include="Image\POS\reload.png" />
+    <Content Include="Image\POS\user.png" />
+    <Content Include="Image\WhiteCloudLogo\logo_350_175.PNG" />
+    <Content Include="Image\WhiteCloudLogo\logo_350_175_db.PNG" />
+    <Content Include="Image\Walema.jpg" />
+    <Content Include="Rotativa\help-wkhtmltoimage.txt" />
+    <Content Include="Rotativa\help-wkhtmltopdf.txt" />
+    <Content Include="Rotativa\wkhtmltoimage.exe" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
+    <Content Include="Scripts\AnimateMarker\jquery.easing.1.3.js" />
+    <Content Include="Scripts\AnimateMarker\markerAnimate.js" />
+    <Content Include="Scripts\AnimateMarker\SlidingMarker.js" />
+    <Content Include="Scripts\appScript\jsAppScript.js" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\appFont\Cairo.ttf" />
+    <Content Include="fonts\appFont\Dubai.ttf" />
+    <Content Include="Scripts\aspnet\dx.aspnet.data.js" />
+    <Content Include="Scripts\aspnet\dx.aspnet.mvc.js" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\cldr.js" />
+    <Content Include="Scripts\cldr.min.js" />
+    <Content Include="Scripts\cldr\event.js" />
+    <Content Include="Scripts\cldr\event.min.js" />
+    <Content Include="Scripts\cldr\supplemental.js" />
+    <Content Include="Scripts\cldr\supplemental.min.js" />
+    <Content Include="Scripts\cldr\unresolved.js" />
+    <Content Include="Scripts\cldr\unresolved.min.js" />
+    <Content Include="Scripts\DataTable\DataTableButtons\buttons.html5.min.js" />
+    <Content Include="Scripts\DataTable\DataTableButtons\buttons.print.min.js" />
+    <Content Include="Scripts\DataTable\DataTableButtons\dataTables.buttons.min.js" />
+    <Content Include="Scripts\DataTable\DataTableButtons\jszip.min.js" />
+    <Content Include="Scripts\dist\arrow-table.js" />
+    <Content Include="Scripts\dist\arrow-table.min.js" />
+    <Content Include="Scripts\dx-diagram.js" />
+    <Content Include="Scripts\dx-diagram.min.js" />
+    <Content Include="Scripts\dx-gantt.js" />
+    <Content Include="Scripts\dx-gantt.min.js" />
+    <Content Include="Scripts\dx.all.debug.js" />
+    <Content Include="Scripts\dx.all.js" />
+    <Content Include="Scripts\dx.viz-web.debug.js" />
+    <Content Include="Scripts\dx.viz-web.js" />
+    <Content Include="Scripts\dx.viz.debug.js" />
+    <Content Include="Scripts\dx.viz.js" />
+    <Content Include="Scripts\dx.web.debug.js" />
+    <Content Include="Scripts\dx.web.js" />
+    <Content Include="Scripts\editableTable\editableTable.js" />
+    <Content Include="Scripts\esm\popper-utils.js" />
+    <Content Include="Scripts\esm\popper-utils.min.js" />
+    <Content Include="Scripts\esm\popper.js" />
+    <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\esm\popper.min.js.map" />
+    <Content Include="Scripts\esm\popper.js.map" />
+    <Content Include="Scripts\esm\popper-utils.min.js.map" />
+    <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="App_Browsers\qt.browser" />
+    <Content Include="InvoicePOS.xsc">
+      <DependentUpon>InvoicePOS.xsd</DependentUpon>
+    </Content>
+    <Content Include="Content\fonts\Roboto-300.ttf" />
+    <Content Include="Content\fonts\Roboto-300.woff" />
+    <Content Include="Content\fonts\Roboto-300.woff2" />
+    <Content Include="Content\fonts\Roboto-400.ttf" />
+    <Content Include="Content\fonts\Roboto-400.woff" />
+    <Content Include="Content\fonts\Roboto-400.woff2" />
+    <Content Include="Content\fonts\Roboto-500.ttf" />
+    <Content Include="Content\fonts\Roboto-500.woff" />
+    <Content Include="Content\fonts\Roboto-500.woff2" />
+    <Content Include="Content\fonts\Roboto-700.ttf" />
+    <Content Include="Content\fonts\Roboto-700.woff" />
+    <Content Include="Content\fonts\Roboto-700.woff2" />
+    <Content Include="Content\icons\dxicons.ttf" />
+    <Content Include="Content\icons\dxicons.woff" />
+    <Content Include="Content\icons\dxicons.woff2" />
+    <Content Include="Content\icons\dxiconsios.ttf" />
+    <Content Include="Content\icons\dxiconsios.woff" />
+    <Content Include="Content\icons\dxiconsios.woff2" />
+    <Content Include="Content\icons\dxiconsmaterial.ttf" />
+    <Content Include="Content\icons\dxiconsmaterial.woff" />
+    <Content Include="Content\icons\dxiconsmaterial.woff2" />
+    <Content Include="assets\fonts\fa-solid-900.eot" />
+    <Content Include="assets\fonts\fa-solid-900.ttf" />
+    <Content Include="assets\fonts\fa-solid-900.woff" />
+    <Content Include="assets\fonts\fa-solid-900.woff2" />
+    <Content Include="assets\fonts\Pe-icon-7-stroke.eot" />
+    <Content Include="assets\fonts\Pe-icon-7-stroke.ttf" />
+    <Content Include="assets\fonts\Pe-icon-7-stroke.woff" />
+    <None Include="InvoicePOS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>InvoicePOS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="InvoicePOS.xss">
+      <DependentUpon>InvoicePOS.xsd</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile2.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile3.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile4.pubxml" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\DataTable\DataTableColumnsVisibility\jsDataTableColumnsVisibility.js" />
+    <Content Include="Scripts\DataTable\dataTables.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTable\jquery.dataTables.min.js" />
+    <Content Include="Scripts\Excel\external\FileSaver.min.js" />
+    <Content Include="Scripts\Excel\scripts\demo.page.js" />
+    <Content Include="Scripts\Excel\scripts\excel-gen.js" />
+    <Content Include="Scripts\Excel\sort.js" />
+    <Content Include="Scripts\Excel\SortTable\SortTable.js" />
+    <Content Include="Scripts\Excel\Word\jquery.wordexport.js" />
+    <Content Include="Scripts\file-explore.js" />
+    <Content Include="Scripts\globalize.js" />
+    <Content Include="Scripts\globalize.min.js" />
+    <Content Include="Scripts\globalize\currency.js" />
+    <Content Include="Scripts\globalize\currency.min.js" />
+    <Content Include="Scripts\globalize\date.js" />
+    <Content Include="Scripts\globalize\date.min.js" />
+    <Content Include="Scripts\globalize\message.js" />
+    <Content Include="Scripts\globalize\message.min.js" />
+    <Content Include="Scripts\globalize\number.js" />
+    <Content Include="Scripts\globalize\number.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.0.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jszip.js" />
+    <Content Include="Scripts\List\bootstrap-select.js" />
+    <Content Include="Scripts\List\defaults-ar.js" />
+    <Content Include="Scripts\localization\dx.messages.cs.js" />
+    <Content Include="Scripts\localization\dx.messages.de.js" />
+    <Content Include="Scripts\localization\dx.messages.el.js" />
+    <Content Include="Scripts\localization\dx.messages.en.js" />
+    <Content Include="Scripts\localization\dx.messages.es.js" />
+    <Content Include="Scripts\localization\dx.messages.fi.js" />
+    <Content Include="Scripts\localization\dx.messages.fr.js" />
+    <Content Include="Scripts\localization\dx.messages.hu.js" />
+    <Content Include="Scripts\localization\dx.messages.it.js" />
+    <Content Include="Scripts\localization\dx.messages.ja.js" />
+    <Content Include="Scripts\localization\dx.messages.nl.js" />
+    <Content Include="Scripts\localization\dx.messages.pt.js" />
+    <Content Include="Scripts\localization\dx.messages.ru.js" />
+    <Content Include="Scripts\localization\dx.messages.sl.js" />
+    <Content Include="Scripts\localization\dx.messages.sv.js" />
+    <Content Include="Scripts\localization\dx.messages.tr.js" />
+    <Content Include="Scripts\localization\dx.messages.vi.js" />
+    <Content Include="Scripts\localization\dx.messages.zh.js" />
+    <Content Include="Scripts\ModalValidation\jsModalCheckInput.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\Notification\jquery.toast.js" />
+    <Content Include="Scripts\Notification\jsNotifications.js" />
+    <Content Include="Scripts\popper-utils.js" />
+    <Content Include="Scripts\popper-utils.min.js" />
+    <Content Include="Scripts\popper.js" />
+    <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\shieldui-all.min.js" />
+    <Content Include="Scripts\TreeViewB\jsTreeView.js" />
+    <Content Include="Scripts\TreeViewB\TreeTest.js" />
+    <Content Include="Scripts\TreeView\jsTree.js" />
+    <Content Include="Scripts\umd\popper-utils.js" />
+    <Content Include="Scripts\umd\popper-utils.min.js" />
+    <Content Include="Scripts\umd\popper.js" />
+    <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Scripts\vectormap-data\africa.js" />
+    <Content Include="Scripts\vectormap-data\canada.js" />
+    <Content Include="Scripts\vectormap-data\eurasia.js" />
+    <Content Include="Scripts\vectormap-data\europe.js" />
+    <Content Include="Scripts\vectormap-data\usa.js" />
+    <Content Include="Scripts\vectormap-data\world.js" />
+    <Content Include="Scripts\vectormap-utils\dx.vectormaputils.debug.js" />
+    <Content Include="Scripts\vectormap-utils\dx.vectormaputils.js" />
+    <Content Include="Scripts\vectormap-utils\dx.vectormaputils.node.js" />
+    <Content Include="Scripts\Chart\Chart.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\AssetContractDetail\DataModel.cshtml" />
+    <Content Include="Views\AssetContractDetail\Index.cshtml" />
+    <Content Include="Views\AssetContract\DataModel.cshtml" />
+    <Content Include="Views\AssetContract\Index.cshtml" />
+    <Content Include="Views\AssetDep\DataModel.cshtml" />
+    <Content Include="Views\AssetDep\Index.cshtml" />
+    <Content Include="Views\AssetReasonType\DataModel.cshtml" />
+    <Content Include="Views\AssetReasonType\Index.cshtml" />
+    <Content Include="Views\AssetReleaseDetail\DataModel.cshtml" />
+    <Content Include="Views\AssetReleaseDetail\Index.cshtml" />
+    <Content Include="Views\AssetRelease\DataModel.cshtml" />
+    <Content Include="Views\AssetRelease\Index.cshtml" />
+    <Content Include="Views\AssetTrans\DataModel.cshtml" />
+    <Content Include="Views\AssetTrans\Index.cshtml" />
+    <Content Include="Views\AssetUnDep\DataModel.cshtml" />
+    <Content Include="Views\AssetUnDep\Index.cshtml" />
+    <Content Include="Views\Asset\DataModel.cshtml" />
+    <Content Include="Views\Asset\Index.cshtml" />
+    <Content Include="Views\Group\DataModel.cshtml" />
+    <Content Include="Views\Group\Index.cshtml" />
+    <Content Include="Views\MainGroup\DataModel.cshtml" />
+    <Content Include="Views\MainGroup\Index.cshtml" />
+    <Content Include="Views\SecurityPolicy\DataModel.cshtml" />
+    <Content Include="Views\SecurityPolicy\Index.cshtml" />
+    <Content Include="Views\SecurityRole\DataModel.cshtml" />
+    <Content Include="Views\SecurityRole\Index.cshtml" />
+    <Content Include="Views\Shared\appLayout\_AccountLayout.cshtml" />
+    <Content Include="Views\Shared\appLayout\_LoginLayout.cshtml" />
+    <Content Include="Views\Shared\appLayout\_ModalLayout.cshtml" />
+    <Content Include="Views\Shared\appLayout\_SearchLayout.cshtml" />
+    <Content Include="Views\Shared\NavbarPartial\NavbarPartial.cshtml" />
+    <Content Include="Views\TransactionType\DataModel.cshtml" />
+    <Content Include="Views\TransactionType\Index.cshtml" />
+    <Content Include="Views\UserSecurityLog\DataModel.cshtml" />
+    <Content Include="Views\UserSecurityLog\Index.cshtml" />
+    <Content Include="Views\ViewSetting\ViewSettingCompanyHeader.cshtml" />
+    <Content Include="Views\ViewSetting\ViewSettingConfirmDelete.cshtml" />
+    <Content Include="Views\ViewSetting\ViewSettingHeader.cshtml" />
+    <Content Include="Views\ViewSetting\ViewSettingModalHeader.cshtml" />
+    <Content Include="Views\ViewSetting\ViewSettingSideBar.cshtml" />
+    <Content Include="Views\ViewSetting\ViewSettingUtilityBar.cshtml" />
+    <Content Include="Views\SystemSTAT\STAT.cshtml" />
+    <Content Include="Views\BuyGroup\Index.cshtml" />
+    <Content Include="Views\BuyGroup\DataModel.cshtml" />
+    <Content Include="Views\AssetContractPayType\Index.cshtml" />
+    <Content Include="Views\AssetContractPayType\DataModel.cshtml" />
+    <Content Include="Views\FixedAssetCompanyType\DataModel.cshtml" />
+    <Content Include="Views\FixedAssetCompanyType\Index.cshtml" />
+    <Content Include="Views\FixedAssetCompany\DataModel.cshtml" />
+    <Content Include="Views\FixedAssetCompany\Index.cshtml" />
+    <Content Include="Views\FixedAssetMethod\DataModel.cshtml" />
+    <Content Include="Views\FixedAssetMethod\Index.cshtml" />
+    <Content Include="Views\FixedAssetUnit\DataModel.cshtml" />
+    <Content Include="Views\FixedAssetUnit\Index.cshtml" />
+    <Content Include="Views\SiteDonor\DataModel.cshtml" />
+    <Content Include="Views\SiteDonor\Index.cshtml" />
+    <Content Include="Views\Site\DataModel.cshtml" />
+    <Content Include="Views\Site\Index.cshtml" />
+    <Content Include="Views\Trust\DataModel.cshtml" />
+    <Content Include="Views\Trust\Index.cshtml" />
+    <Content Include="Views\SiteDetail\DataModel.cshtml" />
+    <Content Include="Views\SiteDetail\Index.cshtml" />
+    <Content Include="Views\FixedAssetSite\DataModel.cshtml" />
+    <Content Include="Views\FixedAssetSite\Index.cshtml" />
+    <Content Include="Views\AccountType\DataModel.cshtml" />
+    <Content Include="Views\AccountType\Index.cshtml" />
+    <Content Include="Views\Account\ChartAccounts.cshtml" />
+    <Content Include="Views\Account\DataModel.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Area\DataModel.cshtml" />
+    <Content Include="Views\Area\Index.cshtml" />
+    <Content Include="Views\CashDeskTrans\DataModel.cshtml" />
+    <Content Include="Views\CashDeskTrans\SearchCashDesk.cshtml" />
+    <Content Include="Views\CashFlowTypes\DataModel.cshtml" />
+    <Content Include="Views\CashFlowTypes\Index.cshtml" />
+    <Content Include="Views\City\DataModel.cshtml" />
+    <Content Include="Views\City\Index.cshtml" />
+    <Content Include="Views\CostCenter\ChartsCostCenter.cshtml" />
+    <Content Include="Views\CostCenter\DataModel.cshtml" />
+    <Content Include="Views\CostCenter\Index.cshtml" />
+    <Content Include="Views\CountryType\DataModel.cshtml" />
+    <Content Include="Views\CountryType\Index.cshtml" />
+    <Content Include="Views\Country\DataModel.cshtml" />
+    <Content Include="Views\Country\Index.cshtml" />
+    <Content Include="Views\CSGroup\DataModel.cshtml" />
+    <Content Include="Views\CSGroup\Index.cshtml" />
+    <Content Include="Views\CS\DataModel.cshtml" />
+    <Content Include="Views\CS\Index.cshtml" />
+    <Content Include="Views\CurrencyFactor\DataModel.cshtml" />
+    <Content Include="Views\CurrencyFactor\Index.cshtml" />
+    <Content Include="Views\CurrencyGender\DataModel.cshtml" />
+    <Content Include="Views\CurrencyGender\Index.cshtml" />
+    <Content Include="Views\Currency\DataModel.cshtml" />
+    <Content Include="Views\Currency\Index.cshtml" />
+    <Content Include="Views\DashBoard\Index.cshtml" />
+    <Content Include="Views\DashBoard\SystemSTAT.cshtml" />
+    <Content Include="Views\CPanel\DevCompanyDataModel.cshtml" />
+    <Content Include="Views\CPanel\DevCompany.cshtml" />
+    <Content Include="Views\FinancialYearStatus\DataModel.cshtml" />
+    <Content Include="Views\FinancialYearStatus\Index.cshtml" />
+    <Content Include="Views\FinancialYear\DataModel.cshtml" />
+    <Content Include="Views\FinancialYear\Index.cshtml" />
+    <Content Include="Views\GLVoucher\SearchGLVoucher.cshtml" />
+    <Content Include="Views\AssetTransactionType\DataModel.cshtml" />
+    <Content Include="Views\AssetTransactionType\Index.cshtml" />
+    <Content Include="Views\UserFavorite\DataModel.cshtml" />
+    <Content Include="Views\UserFavorite\Index.cshtml" />
+    <Content Include="Views\UserFavorite\UserFavorite.cshtml" />
+    <Content Include="Views\UserSecurityTransactionType\DataModel.cshtml" />
+    <Content Include="Views\UserSecurityTransactionType\Index.cshtml" />
+    <Content Include="Views\UserType\DataModel.cshtml" />
+    <Content Include="Views\UserType\Index.cshtml" />
+    <Content Include="Views\User\DataModel.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\UserSecurityLog\UserSecurityTransactionLog.cshtml" />
+    <Content Include="Views\PaymentType\DataModel.cshtml" />
+    <Content Include="Views\PaymentType\Index.cshtml" />
+    <Content Include="Views\TransactionSource\DataModel.cshtml" />
+    <Content Include="Views\TransactionSource\Index.cshtml" />
+    <Content Include="Views\CPanel\Admin.cshtml" />
+    <Content Include="Views\CPanel\CompanyBranchDataModel.cshtml" />
+    <Content Include="Views\CPanel\CompanyBranch.cshtml" />
+    <Content Include="Views\CPanel\CompanySystemDataModel.cshtml" />
+    <Content Include="Views\CPanel\CompanySystem.cshtml" />
+    <Content Include="Views\CPanel\FontDataModel.cshtml" />
+    <Content Include="Views\CPanel\Font.cshtml" />
+    <Content Include="Views\CPanel\LanguageDataModel.cshtml" />
+    <Content Include="Views\CPanel\Language.cshtml" />
+    <Content Include="Views\CPanel\ObjectsDataModel.cshtml" />
+    <Content Include="Views\CPanel\Objects.cshtml" />
+    <Content Include="Views\CPanel\SystemMessageDataModel.cshtml" />
+    <Content Include="Views\CPanel\SystemMessage.cshtml" />
+    <Content Include="Views\CPanel\SystemDataModel.cshtml" />
+    <Content Include="Views\CPanel\System.cshtml" />
+    <Content Include="Views\Shared\appLayout\_AdminLayout.cshtml" />
+    <Content Include="Views\CPanel\ViewSettingAdminSideBar.cshtml" />
+    <Content Include="Views\CashDesk\Index.cshtml" />
+    <Content Include="Scripts\umd\popper.min.js.map" />
+    <Content Include="Scripts\umd\popper.js.map" />
+    <Content Include="Scripts\umd\popper-utils.min.js.map" />
+    <Content Include="Scripts\umd\popper-utils.js.map" />
+    <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Scripts\popper-utils.min.js.map" />
+    <Content Include="Scripts\popper.js.map" />
+    <Content Include="Scripts\popper.min.js.map" />
+    <Content Include="Scripts\README.md" />
+    <Content Include="Views\SubGroup\Index.cshtml" />
+    <Content Include="Views\Asset\AssetForm.cshtml" />
+    <Content Include="Views\AssetDep\AssetDep.cshtml" />
+    <Content Include="Views\GLVoucher\Index.cshtml" />
+    <Content Include="Views\Account\SearchAccount.cshtml" />
+    <Content Include="Views\GLVoucher\AccountSearch.cshtml" />
+    <Content Include="Views\GLVoucher\AccountCostCenter.cshtml" />
+    <Content Include="Views\DocUtilityBar\Index.cshtml" />
+    <Content Include="Views\Bank\Index.cshtml" />
+    <Content Include="Views\CashDesk\SearchAccount.cshtml" />
+    <Content Include="Views\Account\Account.cshtml" />
+    <Content Include="Views\CostCenter\CostCenter.cshtml" />
+    <Content Include="Views\CostCenter\SearchCostCenter.cshtml" />
+    <Content Include="Views\AccountCostCenter\Index.cshtml" />
+    <Content Include="Views\AccountCostCenter\DataModel.cshtml" />
+    <Content Include="Views\SecurityRole\SecurityRole.cshtml" />
+    <Content Include="Views\SecurityRole\SecurityRoleObjectDataModel.cshtml" />
+    <Content Include="Views\SecurityRole\SecurityRoleObjectGet.cshtml" />
+    <Content Include="Views\EstimatedBudgetAccount\Index.cshtml" />
+    <Content Include="Views\GLVoucher\OpenJournal.cshtml" />
+    <Content Include="Views\GLVoucher\GLVoucherSearch.cshtml" />
+    <Content Include="Views\GLVoucher\Debit.cshtml" />
+    <Content Include="Views\GLVoucher\CustomerSupplierSearch.cshtml" />
+    <Content Include="Views\GLVoucher\Credit.cshtml" />
+    <Content Include="Views\GLVoucher\ReceiptVoucher.cshtml" />
+    <Content Include="Views\GLVoucher\CurrencySearch.cshtml" />
+    <Content Include="Views\GLVoucher\CashDeskSearch.cshtml" />
+    <Content Include="Views\GLVoucher\BankSearch.cshtml" />
+    <Content Include="Views\GLVoucher\VoucherCategorySearch.cshtml" />
+    <Content Include="Views\GLVoucher\MainBankSearch.cshtml" />
+    <Content Include="Views\GLVoucher\EPaymentTypeSearch.cshtml" />
+    <Content Include="Views\Country\SearchCountry.cshtml" />
+    <Content Include="Views\EPaymentType\Index.cshtml" />
+    <Content Include="Views\ReportSetting\ReportTemplate.cshtml" />
+    <Content Include="Views\Report\AccountReport.cshtml" />
+    <Content Include="Views\Report\BankReport.cshtml" />
+    <Content Include="Views\Report\CostCenterReport.cshtml" />
+    <Content Include="Views\Report\CSMovementPartialReport.cshtml" />
+    <Content Include="Views\Report\CSMovementReport.cshtml" />
+    <Content Include="Views\Report\EstimatedBudgetAccountPartialReport.cshtml" />
+    <Content Include="Views\Report\EstimatedBudgetAccountReport.cshtml" />
+    <Content Include="Views\Report\GLVoucherReport.cshtml" />
+    <Content Include="Views\SalesOrderType\DataModel.cshtml" />
+    <Content Include="Views\SalesOrderType\Index.cshtml" />
+    <Content Include="Views\SecurityGrade\DataModel.cshtml" />
+    <Content Include="Views\SecurityGrade\Index.cshtml" />
+    <Content Include="Views\SecurityRoleException\DataModel.cshtml" />
+    <Content Include="Views\SecurityRoleException\Index.cshtml" />
+    <Content Include="Views\SizeSetting\Index.cshtml" />
+    <Content Include="Views\SizeType\Index.cshtml" />
+    <Content Include="Views\StoreDepartment\DataModel.cshtml" />
+    <Content Include="Views\StoreDepartment\Index.cshtml" />
+    <Content Include="Views\StoreEmployee\Index.cshtml" />
+    <Content Include="Views\Store\Index.cshtml" />
+    <Content Include="Views\Store\SearchStore.cshtml" />
+    <Content Include="Views\Unit\DataModel.cshtml" />
+    <Content Include="Views\Unit\Index.cshtml" />
+    <Content Include="Views\ViewHeader\Index.cshtml" />
+    <Content Include="Views\OfferType\DataModel.cshtml" />
+    <Content Include="Views\OfferType\Index.cshtml" />
+    <Content Include="Views\ProductType\Index.cshtml" />
+    <Content Include="Views\ProductType\SearchProductType.cshtml" />
+    <Content Include="Views\StoreType\SearchStoreType.cshtml" />
+    <Content Include="Views\CategoryAccount\Index.cshtml" />
+    <Content Include="Views\Currency\SearchCurrency.cshtml" />
+    <Content Include="Views\GLVoucher\PaymentVoucher.cshtml" />
+    <Content Include="Views\Items\Index.cshtml" />
+    <Content Include="Views\InvoicePaymentOrder\InvoicePaymentOrder.cshtml" />
+    <Content Include="Views\AccountStatementReport\AccountStatementReport.cshtml" />
+    <Content Include="Views\AccountStatementReport\Index.cshtml" />
+    <Content Include="Views\InvoicePaymentOrder\StoreSearch.cshtml" />
+    <Content Include="Views\InvoicePaymentOrder\UnitSearch.cshtml" />
+    <Content Include="Views\InvoicePaymentOrder\InvoiceSearch.cshtml" />
+    <Content Include="Views\AccountStatementReport\AccountStatement.cshtml" />
+    <Content Include="Views\CategoryAccount\SearchCategoryAccount.cshtml" />
+    <Content Include="Views\InventoryItem\Index.cshtml" />
+    <Content Include="Views\InvItem\SearchItem.cshtml" />
+    <Content Include="Views\Unit\SearchUnit.cshtml" />
+    <Content Include="Views\StoreConversion\Index.cshtml" />
+    <Content Include="Views\CustomerCategory\SearchCustomerCategory.cshtml" />
+    <Content Include="Views\GLCustomer\Index.cshtml" />
+    <Content Include="Views\StoreConversion\StoreConversionSearch.cshtml" />
+    <Content Include="Views\Invoice\Index.cshtml" />
+    <Content Include="Views\Lookup\Index.cshtml" />
+    <Content Include="Views\SellCostType\SearchSellCostType.cshtml" />
+    <Content Include="Views\Lookup\MenuSearch.cshtml" />
+    <Content Include="Views\BranchSetting\Index.cshtml" />
+    <Content Include="Views\BranchSetting\BranchSettingSearch.cshtml" />
+    <Content Include="Views\BranchSetting\EmpAtTypeSearch.cshtml" />
+    <Content Include="Views\BranchSetting\FoodPrepareCatSearch.cshtml" />
+    <Content Include="Views\BranchSetting\SheepCatProductSearch.cshtml" />
+    <Content Include="Views\BranchSetting\SheepCatSearch.cshtml" />
+    <Content Include="Views\BranchSetting\SheepOutResSearch.cshtml" />
+    <Content Include="Views\BranchSetting\RiceCatSearch.cshtml" />
+    <Content Include="Views\BranchSetting\SellStoreSearch.cshtml" />
+    <Content Include="Views\BranchSetting\PlatCodeSearch.cshtml" />
+    <Content Include="Views\BranchSetting\PlatUnitSearch.cshtml" />
+    <Content Include="Views\BranchSetting\PlateStoreSearch.cshtml" />
+    <Content Include="Views\BranchSetting\SellAccSearch.cshtml" />
+    <Content Include="Views\BranchSetting\RentAccSearch.cshtml" />
+    <Content Include="Views\BranchSetting\InsurAccSearch.cshtml" />
+    <Content Include="Views\BranchSetting\CommAccountSearch.cshtml" />
+    <Content Include="Views\BranchSetting\DefaultLocationSearch.cshtml" />
+    <Content Include="Views\BranchSetting\DefaultLocationDeliverySearch.cshtml" />
+    <Content Include="Views\BranchSetting\BranchMgrSearch.cshtml" />
+    <Content Include="Views\BranchSetting\GrpAddPlateSearch.cshtml" />
+    <Content Include="Views\BranchSetting\ProductTypeOutSearch.cshtml" />
+    <Content Include="Views\BranchSetting\ReservTypeSearch.cshtml" />
+    <Content Include="Views\BranchSetting\ItemDeliverySearch.cshtml" />
+    <Content Include="Views\BranchSetting\KitchenPrinterSearch.cshtml" />
+    <Content Include="Views\BranchSetting\CashCodeSearch.cshtml" />
+    <Content Include="Views\BranchSetting\DriverSeqSearch.cshtml" />
+    <Content Include="Views\BranchSetting\StoreBasicSearch.cshtml" />
+    <Content Include="Views\BranchSetting\StoreProductionSearch.cshtml" />
+    <Content Include="Views\CustomerBlackList\Index.cshtml" />
+    <Content Include="Views\GLSupplier\Index.cshtml" />
+    <Content Include="Views\GLSupplier\SupplierSearch.cshtml" />
+    <Content Include="Views\InvType\SearchInvType.cshtml" />
+    <Content Include="Views\Printers\Index.cshtml" />
+    <Content Include="Views\GLCustomer\SearchCustomerModal.cshtml" />
+    <Content Include="Views\GLCustomer\CustomerSearch.cshtml" />
+    <Content Include="Views\ResItem\ResItems.cshtml" />
+    <Content Include="Views\ResItem\CatAccountSearch.cshtml" />
+    <Content Include="Views\ResItem\CatProductSearch.cshtml" />
+    <Content Include="Views\ResItem\ContentSearch.cshtml" />
+    <Content Include="Views\ResItem\UnitSearch.cshtml" />
+    <Content Include="Views\Unit\SearchBasicUnit.cshtml" />
+    <Content Include="Views\ResItem\PriceCatSearch.cshtml" />
+    <Content Include="Views\ResItem\ItemSearch.cshtml" />
+    <Content Include="Views\AccountStatementReport\AccStatementReport.cshtml" />
+    <Content Include="Views\ResItem\ResMeal.cshtml" />
+    <Content Include="Views\ResItem\Item.cshtml" />
+    <Content Include="Views\Production\ProductionOrder.cshtml" />
+    <Content Include="Views\Production\MarkingSearch.cshtml" />
+    <Content Include="Views\Production\ProdLineSearch.cshtml" />
+    <Content Include="Views\Production\ProductSearch.cshtml" />
+    <Content Include="Views\Production\ProductionSearch.cshtml" />
+    <Content Include="Views\Production\DestStoreSearch.cshtml" />
+    <Content Include="Views\Production\ProductionTrans.cshtml" />
+    <Content Include="Views\ResEmployee\Index.cshtml" />
+    <Content Include="Views\ResEmployee\ResEmployeeSearch.cshtml" />
+    <Content Include="Views\ResEmployee\SearchEmpStatus.cshtml" />
+    <Content Include="Views\ResEmployee\SearchExitType.cshtml" />
+    <Content Include="Views\ResEmployee\SearchIdentityType.cshtml" />
+    <Content Include="Views\ResEmployee\SearchNationality.cshtml" />
+    <Content Include="Views\ResEmployee\SearchResEmployeeModal.cshtml" />
+    <Content Include="Views\ResEmployee\SearchValueType.cshtml" />
+    <Content Include="Views\SalesMen\SearchSalesMen.cshtml" />
+    <Content Include="Views\VAccountCategory\SearchAccountCategory.cshtml" />
+    <Content Include="Views\Vehicle\Index.cshtml" />
+    <Content Include="Views\Vehicle\SearchVehBrand.cshtml" />
+    <Content Include="Views\Vehicle\SearchVehColor.cshtml" />
+    <Content Include="Views\Vehicle\SearchVehModel.cshtml" />
+    <Content Include="Views\Vehicle\SearchVehType.cshtml" />
+    <Content Include="Views\Vehicle\ShowComment.cshtml" />
+    <Content Include="Views\Vehicle\VehicleSearch.cshtml" />
+    <Content Include="Views\VehicleDriver\Index.cshtml" />
+    <Content Include="Views\VehicleDriver\SearchVehicle.cshtml" />
+    <Content Include="Views\VehicleDriver\SearchVehicleDriver.cshtml" />
+    <Content Include="Views\VehicleDriver\VehicleDriverReport.cshtml" />
+    <Content Include="Views\Account\ChartAccountReport.cshtml" />
+    <Content Include="Views\Account\SearchAccountBranches.cshtml" />
+    <Content Include="Views\CashDesk\CashDeskReport.cshtml" />
+    <Content Include="Views\CostCenter\CostCenterReport.cshtml" />
+    <Content Include="Views\ViewSetting\ViewSettingAlert.cshtml" />
+    <Content Include="Views\POS\Index.cshtml" />
+    <Content Include="Views\POS\CustomerSearch.cshtml" />
+    <Content Include="Views\Vehicle\VehicleReport.cshtml" />
+    <Content Include="Views\POS\POSReport.cshtml" />
+    <Content Include="Views\POS\InvoiceSearch.cshtml" />
+    <Content Include="Views\POS\WaitSearch.cshtml" />
+    <Content Include="Views\POS\InsuranceSearch.cshtml" />
+    <Content Include="Views\POS\DeliverySearch.cshtml" />
+    <Content Include="Views\Shared\appLayout\_POSLayout.cshtml" />
+    <Content Include="Views\POS\Login.cshtml" />
+    <Content Include="Views\Shared\LoginLayout\_LoginLayout.cshtml" />
+    <Content Include="Views\POS\InvoiceStatus.cshtml" />
+    <Content Include="Views\ViewSetting\ViewSettingExistCustomer.cshtml" />
+    <Content Include="Views\ResItem\ResItemsReport.cshtml" />
+    <Content Include="Views\ResItem\MealsReport.cshtml" />
+    <Content Include="Views\ResItem\ItemsReport.cshtml" />
+    <Content Include="Views\ResItem\ItemReport.cshtml" />
+    <Content Include="Views\ResItem\AddSearch.cshtml" />
+    <Content Include="Views\POS\CancelSearch.cshtml" />
+    <Content Include="Views\Bank\BankReport.cshtml" />
+    <Content Include="Views\POS\SimplePOSReport.cshtml" />
+    <Content Include="Views\POS\GeneralReport.cshtml" />
+    <Content Include="Views\POS\GeneralPOSReport.cshtml" />
+    <Content Include="Views\Cashier\Index.cshtml" />
+    <Content Include="Views\User\UserSearch.cshtml" />
+    <Content Include="Views\UserCashier\CashierSearch.cshtml" />
+    <Content Include="Views\UserCashier\UserSearch.cshtml" />
+    <Content Include="Views\Cashier\Permission.cshtml" />
+    <Content Include="Views\Production\AddQty.cshtml" />
+    <Content Include="Views\POS\Payment.cshtml" />
+    <Content Include="Views\POS\SimplePOSDTLCashReport.cshtml" />
+    <Content Include="Views\POS\SimplePOSDTLReport.cshtml" />
+    <Content Include="Views\POS\SimplePOSGroupingCashReport.cshtml" />
+    <Content Include="Views\POS\SimplePOSGroupingReport.cshtml" />
+    <Content Include="Views\POS\SimplePOSInsuranceReport.cshtml" />
+    <Content Include="Views\AccountType\AccountTypeReport.cshtml" />
+    <Content Include="Views\ProductsQuantities\Index.cshtml" />
+    <Content Include="Views\POS\SimplePOSDeletedReport.cshtml" />
+    <Content Include="Views\POS\SimplePOSReceiptVoucherReport.cshtml" />
+    <Content Include="Views\Production\AddQtySearch.cshtml" />
+    <Content Include="Views\SecurityRole\Security.cshtml" />
+    <Content Include="Views\SecurityRole\ObjectSearch.cshtml" />
+    <Content Include="Views\POS\Map.cshtml" />
+    <Content Include="Views\ResOrder\Index.cshtml" />
+    <Content Include="Views\ResItem\MealSearch.cshtml" />
+    <Content Include="Views\ResOrder\OrderSearch.cshtml" />
+    <Content Include="Views\Home\AttendanceSTAT.cshtml" />
+    <Content Include="Views\Home\Chart.cshtml" />
+    <Content Include="Views\Home\ChartBandwidth.cshtml" />
+    <Content Include="Views\ResItem\ContentItemSearch.cshtml" />
+    <Content Include="Views\Printers\PrintersReport.cshtml" />
+    <Content Include="Views\Printers\SearchPrinter.cshtml" />
+    <Content Include="Views\Printers\SearchPrinterDTL.cshtml" />
+    <Content Include="Views\ResItem\ItemHead.cshtml" />
+    <Content Include="Views\ResItem\ItemUnit.cshtml" />
+    <Content Include="Views\ResItem\Itemcontent.cshtml" />
+    <Content Include="Views\ResItem\ItemAdd.cshtml" />
+    <Content Include="Views\ResItem\ItemPrice.cshtml" />
+    <Content Include="Views\POS\Category.cshtml" />
+    <Content Include="Views\ResItem\CatAccountSearch_124.cshtml" />
+    <Content Include="Views\ResItem\CatAccountSearch_123.cshtml" />
+    <Content Include="Views\ResOrder\AddCustomer.cshtml" />
+    <Content Include="Views\ResItem\PlateSearch.cshtml" />
+    <Content Include="Views\InvoicePaymentOrder\InvoiceReceiveOrder.cshtml" />
+    <Content Include="Views\User\ChangePassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="appCode\dbCode\GD\" />
+    <Folder Include="appCode\Setting\GSetting\ACC\" />
+    <Folder Include="appCode\Setting\GSetting\FA\" />
+    <Folder Include="appCode\Setting\GSetting\GD\" />
+    <Folder Include="appCode\Setting\GSetting\HR\" />
+    <Folder Include="appCode\Setting\GSetting\INV\" />
+    <Folder Include="appCode\Setting\GSetting\SEC\" />
+    <Folder Include="appCode\Setting\GSetting\SETT\" />
+    <Folder Include="appCode\Setting\GSetting\SYSSETT\" />
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\Select List\" />
+    <Folder Include="Controllers\DataAPI\HR\" />
+    <Folder Include="Controllers\DataController\GD\" />
+    <Folder Include="dataFiles\Excel\" />
+    <Folder Include="Image\DataImage\ACC\" />
+    <Folder Include="Image\DataImage\FA\" />
+    <Folder Include="Image\DataImage\HR\" />
+    <Folder Include="Image\DataImage\INV\" />
+    <Folder Include="Scripts\SelectList\" />
+    <Folder Include="Views\AccountAtatementReport\" />
+    <Folder Include="Views\AccountStatement\" />
+    <Folder Include="Views\APIAccountLastChild\" />
+    <Folder Include="Views\APIInvStoreItemQty\" />
+    <Folder Include="Views\APIStoreConversion\" />
+    <Folder Include="Views\DevCompany\" />
+    <Folder Include="Views\InvBoxes\" />
+    <Folder Include="Views\InvChecks\" />
+    <Folder Include="Views\Invoices\" />
+    <Folder Include="Views\MainCashDesk\" />
+    <Folder Include="Views\SecurityRoleExecption\" />
+    <Folder Include="Views\Size\" />
+    <Folder Include="Views\StoreKeeper\" />
+    <Folder Include="Views\StoreSetting\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Reports\AccountCostCenterReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AccountCostCenterReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AccountReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AccountReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AccountTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AccountTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetContractDetailReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetContractDetailReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetContractPayTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetContractPayTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetContractReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetContractReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetDepReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetDepReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetReasonTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetReasonTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetReleaseDetailReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetReleaseDetailReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetReleaseReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetReleaseReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetTransReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetTransReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AssetUnDepReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AssetUnDepReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\BankReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BankReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\BuyGroupReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BuyGroupReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\BuyInvoiceReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BuyInvoiceReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CashDeskReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CashDeskReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CashFlowTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CashFlowTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CNReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CNReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CostCenterReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CostCenterReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CurrencyFactorReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CurrencyFactorReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CurrencyGenderReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CurrencyGenderReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CurrencyReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CurrencyReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CustomerSupplierReport .rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CustomerSupplierReport .cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\DNReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DNReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\FinancialYearReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>FinancialYearReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\FinancialYearStatusReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>FinancialYearStatusReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\FixedAssetCompanyReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>FixedAssetCompanyReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\FixedAssetCompanyTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>FixedAssetCompanyTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\FixedAssetMethodReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>FixedAssetMethodReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\FixedAssetSiteReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>FixedAssetSiteReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\FixedAssetUnitReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>FixedAssetUnitReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GLCustomerReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GLCustomerReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GLDetailsCostCenterReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GLDetailsCostCenterReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GLDetailsReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GLDetailsReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GlOpeningReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GlOpeningReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GLTotalCostGLTotalCostReportReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GLTotalCostGLTotalCostReportReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GLTotalReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GLTotalReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GLVoucherPaymentReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GLVoucherPaymentReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GLVoucherReceiptReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GLVoucherReceiptReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GlVoucherReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GlVoucherReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\GroupReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>GroupReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Insurance.rdlc" />
+    <EmbeddedResource Include="Reports\Insurance1.rdlc" />
+    <EmbeddedResource Include="Reports\InvoicePaymentOrderReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>InvoicePaymentOrderReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ItemReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ItemReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ItemsCardReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ItemsCardReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ItemsReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ItemsReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\LookupReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LookupReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\MainGroupReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>MainGroupReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\OfferTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>OfferTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\PaymentTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PaymentTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POSDTLCasherReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSDTLCasherReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\Customer.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Customer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSDTLCasherTodayReport - Copy.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSDTLCasherTodayReport - Copy.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSDTLCasherTodayReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSDTLCasherTodayReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSDTLReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSDTLReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSDTLTodayReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSDTLTodayReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSGroupingCasherReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSGroupingCasherReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSGroupingCasherTodayReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSGroupingCasherTodayReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSGroupingReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSGroupingReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSGroupingTodayReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSGroupingTodayReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSInsuranceDeletedReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSInsuranceDeletedReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSInsuranceDeletedTodayReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSInsuranceDeletedTodayReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSInsuranceDeletedTodayReport2.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSInsuranceDeletedTodayReport2.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSInsuranceReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSInsuranceReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSInsuranceTodayReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSInsuranceTodayReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSReceiptVoucher.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSReceiptVoucher.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSReceiptVoucherToday.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSReceiptVoucherToday.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\POSTodayReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>POSTodayReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\rptPOSCancel.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptPOSCancel.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\rptPOSK.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptPOSK.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\POS\rptPOSKCancel.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptPOSKCancel.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\PrintersReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PrintersReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ProductionContentReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ProductionContentReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ProductionOrderReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ProductionOrderReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ProductionQtyByStoreReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ProductionQtyByStoreReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ProductionQtyByTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ProductionQtyByTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ProductionQtyReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ProductionQtyReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ResEmployeeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ResEmployeeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ResItemsReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ResItemsReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ResMealsReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ResMealsReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ResOrder_Report.resx">
+      <DependentUpon>ResOrder_Report.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptPOS.rdlc" />
+    <EmbeddedResource Include="Reports\rptPOSK.rdlc" />
+    <EmbeddedResource Include="Reports\SalesOrderTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SalesOrderTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\SiteDetailReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SiteDetailReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\SiteDonorReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SiteDonorReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\SiteReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SiteReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\SizeTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SizeTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\StoreConversionReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>StoreConversionReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\StoreDepartmentReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>StoreDepartmentReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\StoreEmployeeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>StoreEmployeeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Test.resx">
+      <DependentUpon>Test.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\TransactionSourceReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>TransactionSourceReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\TransactionTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>TransactionTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\UserReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>UserReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\UserSecurityTransactionTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>UserSecurityTransactionTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\UserTypeReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>UserTypeReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\VehicleDriverReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>VehicleDriverReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\VehiclesReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>VehiclesReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.de.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.fr.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.hi.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.hi.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.pt.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.pt.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.ru.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.ru.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\appResource.tr.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>appResource.tr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.de.resx" />
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>loginResource.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.es.resx" />
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.fr.resx" />
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.hi.resx" />
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.it.resx" />
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.pt.resx" />
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>loginResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.ru.resx" />
+    <EmbeddedResource Include="Views\Shared\appResource\loginResource\loginResource.tr.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>54342</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:54342/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>http://localhost:2222/</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

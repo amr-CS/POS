@@ -1,0 +1,148 @@
+﻿@model System.Data.DataTable
+@using System.Data
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.ACC
+@{
+    Layout = null;
+}
+
+
+
+<table id="table" class="table table-hover tblAccount">
+    <!-- DataTable Header -->
+    <thead>
+        <tr>
+            <th></th>
+            <th>@appResource.AccountNo</th>
+            <th>@appResource._Account</th>
+            <th>@appResource._Currency</th>
+            <th>@appResource.SecurityGradeId</th>
+            <th>@appResource.AccountTypeId</th>
+            <th>@appResource.AccountingReportId</th>
+            <th>@appResource._IsAccumulative</th>
+            <th>@appResource._CostCenter</th>
+            <th></th>
+        </tr>
+    </thead> <!-- End of DataTable Header -->
+    <!-- DataTable Body -->
+    <tbody class="tblAccountBody">
+        @if (Model.Rows.Count > 0)
+        {
+            foreach (DataRow vDrwData in Model.Rows)
+            {
+                <tr>
+                    <!-- Data -->
+                    <td>
+                        <button type="button" data-id="@vDrwData["AccountId"]" class="btn btn-light btnLevel">
+                            <i class="fa fa-arrow-left"></i>
+                        </button>
+                    </td>
+                    <td class="AccountId" style="display:none"><input type="text" value="@vDrwData["AccountId"]" class="form-control" name="AccountNo" id="AccountNo"></td>
+                    <td width="7%" class="AccountNo"><input type="text" value="@vDrwData["AccountNo"]" class="form-control" name="AccountNo" id="AccountNo" disabled></td>
+                    <td class="AccountNameL1" data-id="@vDrwData["AccountId"]" Data-Level="@vDrwData["AccountLevel"]" data-parent-name="@vDrwData["AccountParent"]" data-branch-id="@vDrwData["CompanyId"]" data-Branch-Name="@vDrwData["CompanyBranchNameL1"]" data-parent="@vDrwData["ParentName"]" data-parent-Id="@vDrwData["ParentId"]"><input type="text" value="@vDrwData["AccountNameL1"]" class="form-control" name="AccountNameL1" id="AccountNameL1"></td>
+                    <td class="CurrencyId" style="width:130px">
+                        <div class="1">
+                            @Html.DropDownList("CurrencyId", ViewBag.vbCurrency as SelectList, htmlAttributes: new { @class = "CurrencyId form-control" })
+                        </div>
+                    </td>
+                    <td class="SecurityGradeId" style="width:130px">
+                        <div class="1">
+                            @Html.DropDownList("SecurityGradeId", ViewBag.vbSecurityGrade as SelectList, htmlAttributes: new { @class = "SecurityGradeId form-control" })
+                        </div>
+                    </td>
+                    <td class="AccountTypeId" style="width:130px">
+                        @Html.DropDownList("AccountTypeId", ViewBag.vbAccountType as SelectList, htmlAttributes: new { @class = "AccountTypeId form-control" })
+                    </td>
+                    <td class="AccountingReportId" style="width:160px">
+                        <div class="1">
+                            @Html.DropDownList("AccountReportId", ViewBag.vbAccountReport as SelectList, htmlAttributes: new { @class = "AccountReportId form-control" })
+                        </div>
+                    </td>
+                    <td class="AccountIsCumulative"><input type="checkbox" value="@vDrwData["AccountIsCumulative"]" class="form-control check" name="AccountIsCumulative" checked="@vDrwData["AccountIsCumulative"]" id="AccountIsCumulative"></td>
+                    <td class="IsCostCenter"><input type="checkbox" value="@vDrwData["IsCostCenter"]" checked="@vDrwData["IsCostCenter"]" class="form-control" name="IsCostCenter" id="IsCostCenter"></td>
+                    <td><button class="btn btn-danger btnDelete" data-id="@vDrwData["AccountId"]"> حذف </button></td>
+                </tr>
+            }
+        }
+
+        else
+        {
+            <tr>
+                <td>
+                    <button type="button" data-id="0" class="btn btn-light btnLevel">
+                        <i class="fa fa-arrow-left"></i>
+                    </button>
+                </td>
+                <td class="AccountId" style="display:none"><input type="text" class="form-control" name="AccountNo" id="AccountNo"></td>
+                <td class="AccountNo" width="7%"><input type="text" class="form-control" name="AccountNo" id="AccountNo" value="1" disabled></td>
+                <td class="AccountNameL1"><input type="text" class="form-control" name="AccountNameL1" id="AccountNameL1"></td>
+                <td class="CurrencyId" style="width:130px">
+                    <div class="1">
+                        <div class="d-flex 2">
+                            <div class=" flex-shrink-0 3" style="width:40%">
+                                <input type="text" class="form-control curr" name="CurrencyId" id="CurrencyId">
+                            </div><div class="w-100 4"><input type="text" readonly="readonly" class="form-control currName"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="SecurityGradeId" style="width:130px">
+                    <div class="1">
+                        <div class="d-flex 2">
+                            <div class=" flex-shrink-0 3" style="width:40%">
+                                <input type="text" class="form-control SecurityGradeId" name="SecurityGradeId" id="SecurityGradeId">
+                            </div><div class=" w-100 4"><input type="text" readonly="readonly" class="form-control"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="AccountTypeId" style="width:130px">
+                    <div class="1">
+                        <div class="d-flex 2">
+                            <div class=" flex-shrink-0 3" style="width:40%">
+                                <input type="text" class="form-control AccountTypeId" name="AccountTypeId" id="AccountTypeId">
+                            </div><div class="  w-100 4"><input type="text" readonly="readonly" class="form-control"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="AccountingReportId" style="width:130px">
+                    <div class="1">
+                        <div class="d-flex 2">
+                            <div class=" flex-shrink-0 3" style="width:50%">
+                                <input type="text" class="form-control AccountingReportId" name="AccountingReportId" id="AccountingReportId">
+                            </div><div class=" w-100 4"><input type="text" readonly="readonly" class="form-control"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="AccountIsCumulative "><input type="checkbox" class="form-control chk" name="AccountIsCumulative" id="AccountIsCumulative"></td>
+                <td class="IsCostCenter"><input type="checkbox" class="form-control" name="IsCostCenter" id="IsCostCenter"></td>
+            </tr>
+        }
+
+
+    </tbody><!-- End of DataTable Body -->
+</table> <!-- End of DataTable -->
+
+<div class="m-5">
+    <div class="row ">
+        <div class="">
+            تاريخ الحساب     <input type="text" disabled class="form-control txtDate">
+        </div>
+       
+
+    </div>
+
+    <div class="row ">
+        <div class="">
+            اخر حركه علي الحساب
+            <input type="text" disabled class="form-control txtLastDate">
+        </div>
+    
+
+    </div>
+    <div class="row ">
+        <div class="">
+            المستوي
+            <input type="text" disabled class="form-control txtLevel">
+        </div>
+      
+    </div>
+</div>

@@ -1,0 +1,150 @@
+﻿@model appSERP.Models.FA.AssetContractModel
+@using appSERP.Views.Shared.appResource
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <!-- Header -->
+    <div class="container-fluid">
+        @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.AssetContract, pId = Model.AssetContractId })
+    </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.HiddenFor(model => model.AssetContractId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.HiddenFor(model => model.AssetContractId, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.AssetContractId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetContractDate, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.AssetContractDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = @Model.AssetContractDate.ToString("yyyy-MM-dd") } })
+            
+            @Html.ValidationMessageFor(model => model.AssetContractDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetContractPeriod, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.AssetContractPeriod, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+            @Html.ValidationMessageFor(model => model.AssetContractPeriod, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetContractRefNo, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.AssetContractRefNo, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+            @Html.ValidationMessageFor(model => model.AssetContractRefNo, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetContractValue, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.AssetContractValue, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+            @Html.ValidationMessageFor(model => model.AssetContractValue, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CurrencyId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @*@Html.EditorFor(model => model.CurrencyId, new { htmlAttributes = new { @class = "form-control", @min = "0" } })*@
+            <select id="selectCurrency" class="selectpicker form-control form-control" name="CurrencyId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetContractNote, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.AssetContractNote, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.AssetContractNote, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetContractNo, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.AssetContractNo, new { htmlAttributes = new { @class = "form-control", @min = "0" } })
+            @Html.ValidationMessageFor(model => model.AssetContractNo, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetContractPayTypeId, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            @*@Html.EditorFor(model => model.AssetContractPayTypeId, new { htmlAttributes = new { @class = "form-control", @min = "0" } })*@
+            <select id="selectPayType" class="selectpicker form-control form-control" name="AssetContractPayTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+            @Html.ValidationMessageFor(model => model.AssetContractPayTypeId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AssetContractIsActive, htmlAttributes: new { @class = "control-label col-md-12" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.AssetContractIsActive)
+                @Html.ValidationMessageFor(model => model.AssetContractIsActive, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+            <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+        </div>
+    </div>
+</div>
+}
+<script>
+              // List GetFixedAssetMethod
+    $.post('/Home/GetCurrencyList',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, Currency) {
+               $('#selectCurrency').append('<option data-id="' + Currency.CurrencyId + '" value="' + Currency.CurrencyId + '" sort-id="' + i + '">' + Currency.CurrencyNameL1 + '</option>')
+
+           })
+           var vData = '@Model.CurrencyId'
+
+           if (vData != "0") {
+               $('#selectCurrency').val(@Model.CurrencyId);
+           }
+           // Refresh Select Picker
+           $('#selectCurrency').selectpicker('refresh');
+       }
+    )
+                 // List GetFixedAssetMethod
+    $.post('/Home/GetAssetContractPayType',
+       null,
+       function (data, status) {
+           var vDataJSON = JSON.parse(data);
+           $.each(vDataJSON, function (i, Type) {
+               $('#selectPayType').append('<option data-id="' + Type.AssetContractPayTypeId + '" value="' + Type.AssetContractPayTypeId + '" sort-id="' + i + '">' + Type.AssetContractPayTypeNameL1 + '</option>')
+
+           })
+           var vData = '@Model.AssetContractPayTypeId'
+
+           if (vData != "0") {
+               $('#selectPayType').val(@Model.AssetContractPayTypeId);
+           }
+           // Refresh Select Picker
+           $('#selectPayType').selectpicker('refresh');
+       }
+    )
+</script>
+

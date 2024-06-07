@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "SearchGLVoucher";
+    Layout = "~/Views/Shared/appLayout/_SearchLayout.cshtml";
+}
+
+<div class="divSchool container-fluid">
+    <table class="table table-bordered table-hover tblDataSearch " id="tblDataSchool">
+        <thead>
+            <tr>
+                <th>رقم المستند</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @ViewBag.vbGlVoucher)
+            {
+
+                <tr>
+                    <td><button class="btn btn-light btn-block btnSelect" data-id="@item["GLVoucherId"]">@item["GLVoucherNo"]</button> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $('.btnSelect').on('click', function () {
+        vId = $(this).attr('data-id');
+        $.get('/GLVoucher/DataModel',
+            { id: vId }
+            ,
+            function () {
+                window.location.href = '/GLVoucher/DataModel?id=' + vId;
+            }
+        )
+    });
+
+
+
+</script>

@@ -1,0 +1,241 @@
+﻿
+@using appSERP.Views.Shared.appResource
+@{
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    string name = ticket.Name;
+
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblOrderModalBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+
+    .divFormDtl {
+        max-height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            خيارات البحث
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <div >رقم الطلب<input type="text" class="form-control txtOrderId text-center" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+                               تاريخ الطلب 
+                                <input type="text" class="form-control OrderDate text-center" />
+                            </div>
+                            <div class="col-sm-6">
+                                تاريخ التوصيل
+                                <input type="text" class="form-control DELIVERY_DATE text-center" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                اسم العميل
+                                <div>
+                                    <input type="text" class="form-control CustomerName text-center" />
+
+                                </div>
+                            </div>
+                            <div class=" col-sm-6">
+                                البيان
+                                <div>
+                                    <input type="text" class="form-control NOTES text-center" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="divFormDtl ">
+        <table class="table table-bordered table-hover tblOrder">
+            <thead>
+                <tr>
+                    <th class=" " data-checked="false">
+                        <input type="checkbox" class="btnCheckAll">
+                        تحديد الكل
+                    </th>
+                    <th>رقم الطلب</th>
+                    <th> تاريخ الطلب </th>
+                    <th> تاريخ التوصيل</th>
+                    <th>اسم العميل</th>
+                    <th> الفترة</th>
+                    <th> البيان</th>
+                </tr>
+            </thead>
+
+            <tbody class="tblOrderModalBody"></tbody>
+        </table>
+
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary btnSelect">اختيار</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    //function Append
+    function funOrderRowConfig(pOrderRow) {
+        // Content
+        var RowContent = '<tr>' +
+            '<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pOrderRow.OrderId + '"/></td> ' +
+            '<td class="OrderId">' + pOrderRow.OrderId + '</td>' +
+            '<td class="ORDER_DATE">' + pOrderRow.ORDER_DATE + '</td>' +
+            '<td class="DELIVERY_DATE">' + pOrderRow.DELIVERY_DATE + '</td>' +
+            '<td class="CustomerName">' + pOrderRow.CustomerNameL1 + '</td>' +
+            '<td class="PERIOD_TYPEName">' + pOrderRow.PERIOD_TYPEName + '</td>' +
+            '<td class="NOTES">' + pOrderRow.NOTES + '</td>' +
+            +'</tr > '
+        return RowContent
+    }
+    function funGetOrderData(pOrderCode, pOrderNameL1, pOrderNameL2, pCatAccount, pGroup, pStore, phNumbers, pItemTypeId) {
+        var vDataResult;
+        $.get('/api/APIRESOrder/RESOrderGet',
+            {
+ 
+                pQueryTypeId: '400',
+                branchId:@BranchId
+                //pItemTypeId: pItemTypeId,
+                //pIsDeleted: pItemTypeId,
+            },
+            function (data, status) {
+                
+                // JSON Parse
+                vDataResult = JSON.parse(data);
+                console.log(vDataResult)
+                $('.tblOrderModalBody').html('');
+                $.each(vDataResult, function (m, OrderData) {
+                    // GET Cash Desk Row Content
+
+                    var vAccountRowContent = funOrderRowConfig(vDataResult[m]);
+
+                    // Append Row Content
+                    $('.tblOrderModalBody').append(vAccountRowContent);
+                });
+
+            })
+
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearch').on('click', function () {
+        var vCode = $('.txtCode').val();
+        var NameL1 = $('.txtNameL1').val();
+        var Namel2 = $('.txtNameL2').val();
+        var Group = $('#selectGroup').val();
+        var CatAccount = $('#selectCatAccount').val();
+        var Store = $('#selectStore').val();
+        var vItemTypeId = $('.txtItemType').val();
+
+
+        console.log(Group)
+        console.log(CatAccount)
+        console.log(Store)
+        // Get Row
+        funGetOrderData(vCode, NameL1, Namel2,  CatAccount, Group, Store, null, vItemTypeId)
+    })
+    // Actione Load
+    $(document).ready(function () {
+
+        // Get Row
+        funGetOrderData(null, null, null, null, null, null, null, null)
+    });
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+
+
+
+        
+
+    $(document).ready(function () {
+        $(".txtOrderId").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".tblOrder tr .OrderId").filter(function () {
+                $(this).closest('tr').toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $(".OrderDate").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".tblOrder tr .ORDER_DATE").filter(function () {
+                $(this).closest('tr').toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $(".DELIVERY_DATE").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".tblOrder tr .DELIVERY_DATE").filter(function () {
+                $(this).closest('tr').toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $(".CustomerName").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".tblOrder tr .CustomerName").filter(function () {
+                $(this).closest('tr').toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $(".NOTES").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".tblOrder tr .NOTES").filter(function () {
+                $(this).closest('tr').toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+    
+</script>

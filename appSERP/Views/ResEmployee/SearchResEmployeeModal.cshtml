@@ -1,0 +1,215 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "ResEmployeeSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divResEmployee {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divResEmployeeSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divResEmployeeSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divResEmployeeNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource.lblStoreEmployee</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divResEmployee">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyResEmployee"></tbody>
+    </table>
+</div>
+
+
+<!-- ResEmployee GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // ResEmployee GET
+        funResEmployeeGET();
+    })
+
+    // ResEmployee GET
+    function funResEmployeeGET() {
+
+        $.get('/api/APIResEmployee/ResEmployeeGET',
+            {
+                pQueryTypeId : 401
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyResEmployee');
+
+
+                // ResEmployees
+                $.each(vDataResult, function (i, ResEmployeeData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].ResEmployeeId + '">';
+
+                        var vResEmployeeName = vDataResult[i].ResEmployeeNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vResEmployeeName = vDataResult[i].ResEmployeeNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].ResEmployeeId + '">';
+                            vRowContent += '<div class="divResEmployeeSelect d-flex p-2" data-id="' + vDataResult[i].ResEmployeeId + '">';
+                    vRowContent += '<div class="divResEmployeeNo px-4">' + vDataResult[i].ResEmployeeCode + '</div>';
+                                vRowContent += '<div class="divResEmployeeName px-4">' + vResEmployeeName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search ResEmployee -->
+<script>
+   
+    // Search
+    $('.txtSearch').on('keyup', function () {
+      
+        // Search Input
+        var vSearchInput = $(this).val();
+        // Table Body
+        var vTableBody = $('.tblBodyResEmployee');
+        if (vSearchInput.trim() != '') {
+             $.post('/ResEmployee/GetResEmployeeByCode',
+                 {
+                     pResEmployeeCode: vSearchInput,
+                pQueryTypeId: 401
+
+            }, function (data, status) {
+                     if (data != undefined && data != '') {
+                         vTableBody.html('');
+                    // JSON
+                    var vDataResult = JSON.parse(data);
+                    // ResEmployees
+
+                             // ResEmployees
+                $.each(vDataResult, function (i, ResEmployeeData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].ResEmployeeId + '">';
+
+                        var vResEmployeeName = vDataResult[i].ResEmployeeNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vResEmployeeName = vDataResult[i].ResEmployeeNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].ResEmployeeId + '">';
+                            vRowContent += '<div class="divResEmployeeSelect d-flex p-2" data-id="' + vDataResult[i].ResEmployeeId + '">';
+                    vRowContent += '<div class="divResEmployeeNo px-4">' + vDataResult[i].ResEmployeeCode + '</div>';
+                                vRowContent += '<div class="divResEmployeeName px-4">' + vResEmployeeName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                    })
+
+                     }
+                     else {
+                         vTableBody.html('');
+                     }
+
+            })
+        }
+        else {
+             $.post('/ResEmployee/GetResEmployeeByCode',
+                 {
+                pQueryTypeId: 401
+
+            }, function (data, status) {
+                     if (data != undefined && data != '') {
+                         vTableBody.html('');
+                    // JSON
+                    var vDataResult = JSON.parse(data);
+                    // ResEmployees
+
+                             // ResEmployees
+                $.each(vDataResult, function (i, ResEmployeeData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].ResEmployeeId + '">';
+
+                        var vResEmployeeName = vDataResult[i].ResEmployeeNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vResEmployeeName = vDataResult[i].ResEmployeeNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].ResEmployeeId + '">';
+                            vRowContent += '<div class="divResEmployeeSelect d-flex p-2" data-id="' + vDataResult[i].ResEmployeeId + '">';
+                    vRowContent += '<div class="divResEmployeeNo px-4">' + vDataResult[i].ResEmployeeCode + '</div>';
+                                vRowContent += '<div class="divResEmployeeName px-4">' + vResEmployeeName + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                    })
+
+                     }
+                     else {
+                         vTableBody.html('');
+                     }
+
+            })
+
+        }
+     
+
+       
+
+
+    });
+
+</script>

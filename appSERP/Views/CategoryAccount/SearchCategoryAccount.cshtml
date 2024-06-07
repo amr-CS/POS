@@ -1,0 +1,151 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "CategoryAccountSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divCategoryAccount {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divCategoryAccountSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divCategoryAccountSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divCategoryAccountNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">الفئة</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divCategoryAccount">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyCategoryAccount"></tbody>
+    </table>
+</div>
+
+
+<!-- CategoryAccount GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // CategoryAccount GET
+        funCategoryAccountGET();
+    })
+
+    // CategoryAccount GET
+    function funCategoryAccountGET() {
+
+        $.get('/api/APICategoryAccount/CategoryAccountGET',
+            {
+
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyCategoryAccount');
+
+
+                // CategoryAccounts
+                $.each(vDataResult, function (i, CategoryAccountData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].CategoryAccountId + '">';
+
+                        var vCategoryAccountName = vDataResult[i].CategoryAccountNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCategoryAccountName = vDataResult[i].CategoryAccountNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].CategoryAccountId + '">';
+                            vRowContent += '<div class="divCategoryAccountSelect d-flex p-2" data-id="' + vDataResult[i].CategoryAccountId + '">';
+                    vRowContent += '<div class="divCategoryAccountNo px-4">' + vDataResult[i].CategoryAccountCode + '</div>';
+                                vRowContent += '<div class="divCategoryAccountName px-4">' + vCategoryAccountName + '</div>';
+                            
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search CategoryAccount -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divCategoryAccountSelect').each(function () {
+
+                // Get CategoryAccount Code
+                var vCategoryAccountCode = $(this).find('.divCategoryAccountNo').text();
+                var vCategoryAccountName = $(this).find('.divCategoryAccountName').text();
+
+                if (vCategoryAccountCode.search(vSearchInput) != -1 || vCategoryAccountName.search(vSearchInput) != -1) {
+
+                    $(this).addClass('table-success');
+                    $(this).hide();
+
+                    console.log('found')
+                }
+                else {
+                    $(this).removeClass('table-success');
+                    $(this).show();
+                }
+
+            })
+
+        }
+        else {
+            $('.divCategoryAccountSelect').removeClass('table-success');
+            $(this).show();
+        }
+    })
+</script>
+

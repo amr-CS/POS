@@ -1,0 +1,175 @@
+﻿
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "GLVoucherCategorySearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divGLVoucherCategory {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divGLVoucherCategorySelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divGLVoucherCategorySelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divGLVoucherCategoryNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource.GLVoucherCategoryId</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divGLVoucherCategory">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyGLVoucherCategory"></tbody>
+    </table>
+
+</div>
+
+
+<!-- GLVoucherCategory GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // GLVoucherCategory GET
+        funGLVoucherCategoryGET();
+    })
+
+    // GLVoucherCategory GET
+    function funGLVoucherCategoryGET() {
+
+        $.get('/api/APIGLVoucherCategory/GLVoucherCategoryGET',
+            {
+                pQueryTypeId: '@clsQueryType.qSelect'
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyGLVoucherCategory');
+
+
+                // GLVoucherCategorys
+                $.each(vDataResult, function (i, GLVoucherCategoryData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].GLVoucherCategoryId + '">';
+
+                    var vGLVoucherCategoryName = vDataResult[i].GLVoucherCategoryNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vGLVoucherCategoryName = vDataResult[i].GLVoucherCategoryNameL2;
+                        }
+
+                    vRowContent += '<td data-id="' + vDataResult[i].GLVoucherCategoryId + '">';
+                    vRowContent += '<div class="divGLVoucherCategorySelect d-flex p-2" data-id="' + vDataResult[i].GLVoucherCategoryId + '">';
+                    vRowContent += '<div class="divGLVoucherCategoryId px-4">' + vDataResult[i].GLVoucherCategoryId + '</div>';
+                    vRowContent += '<div class="divGLVoucherCategoryName px-4">' + vGLVoucherCategoryName + '</div>';
+
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+
+
+
+
+    }
+
+</script>
+
+<!-- Search GLVoucherCategory -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divGLVoucherCategorySelect').each(function () {
+
+                // Get GLVoucherCategory Code
+                var vGLVoucherCategoryCode = $(this).find('.divGLVoucherCategoryId').text();
+                var vGLVoucherCategoryName = $(this).find('.divGLVoucherCategoryName').text();
+
+                // Check Result
+                if (vGLVoucherCategoryCode.search(vSearchInput) != -1 || vGLVoucherCategoryName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+            $('.divGLVoucherCategorySelect').each(function () {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+             
+               
+
+            })
+
+
+        }
+    })
+</script>

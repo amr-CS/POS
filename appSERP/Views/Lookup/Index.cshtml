@@ -1,0 +1,1110 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.ACC;
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "بيانات الترميز";
+}
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = @appResource.LookupDetails, pIsNew = false })
+</div>
+
+<style>
+
+    .table th, .table td {
+        padding: 0rem !important;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .divLookup, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }
+
+    .divSectionTitle {
+        background-color: rgba(41, 128, 185, 0.04);
+        font-weight: bold;
+        color: #2980b9;
+    }
+</style>
+
+<!-- Head -->
+<div class="">
+    <div class="bg-white border rounded p-3">
+        <div class="w-100">
+            <div class="d-flex justify-content-end">
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Save -->
+                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Copy -->
+                    <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                    <!-- Paste -->
+                    <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Print -->
+                    <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                    <!-- Sort Desc -->
+                    <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                    <!-- Edit -->
+                    <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- PDF -->
+                    <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <!-- Excel -->
+                    <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                    <!-- Word -->
+                    <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Close -->
+                    <button class="btn btnUtility btnDeleteHead" title="@appResource.btnDelete"><i class="fa fa-close"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Full Screen -->
+                    <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <div class="dropdown">
+                        <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-table"></i>
+                        </button>
+                        <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cash Desk -->
+<div class="">
+
+    <!-- Title -->
+    <div class="w-100 divSectionTitle p-2 px-4">@appResource.TypeDetails </div>
+    <div>
+        <input type="text" class="form-control form-control-sm text-center txtLookupHeadId" value="0" data-lookupid="0">
+    </div>
+    <!-- Cash Desks Data -->
+    <div class="divLookup bg-white border p-2">
+        <table class="table tblLookup">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>@appResource._No</th>
+                    <th> @appResource._Type عربي </th>
+                    <th>  @appResource._Type انجليزي </th>
+                    <th>@appResource._Menu</th>
+                    <th>@appResource._MenuDetails</th>
+                    <th>@appResource._Group</th>
+                    <th>@appResource._Note</th>
+                    <th>@appResource._IsActive</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblLookupBody">
+                <tr class="tblLookupRow">
+                    <td class="" width="1%">
+                        <button class="btn btn-light btn-sm border btnLookup" type="submit">
+                            <i class="fa fa-plus-circle"></i>
+                        </button>
+                    </td>
+                    <td width="4%"><input type="text" class="form-control form-control-sm text-center txtLookupId" disabled></td>
+                    <td width="16%"><input type="text" class="form-control form-control-sm text-center txtLookupDesc"></td>
+                    <td width="16%"><input type="text" class="form-control form-control-sm text-center txtLookupDescL"></td>
+                    <td width="16%">
+                        <div class="d-flex">
+                            <div class="col-sm-2 p-0">
+                                <input class="form-control form-control-sm text-center txtParentCode" type="text" required />
+
+                            </div>
+                            <div class="col-sm-10 p-0">
+                                <input class="form-control form-control-sm text-center txtParentCodeName" type="text" required disabled />
+                            </div>
+                        </div>
+                    </td>
+                    <td width="16%">
+                        <div class="d-flex">
+                            <div class="col-sm-2 p-0">
+                                <input class="form-control form-control-sm text-center txtParentCodeDtl" type="text" required />
+
+                            </div>
+                            <div class="col-sm-10 p-0">
+                                <input class="form-control form-control-sm text-center txtParentCodeDtlName" type="text" required disabled />
+                            </div>
+                        </div>
+                    </td>
+                    <td width="16%"><input type="text" class="form-control form-control-sm txtLookupGroup"></td>
+                    <td width="16%"><input type="text" class="form-control form-control-sm txtNotes"></td>
+                    <td width="3%" class="" style=" padding-right:0.5rem !important;">
+                        <div class="custom-control custom-checkbox ">
+                            <input type="checkbox" class="custom-control-input  chkDtlIsActive" id="chkIsActive">
+                            <label class="custom-control-label small" for="chkDtlIsActive"></label>
+                        </div>
+                    </td>
+                    <td width="1%"><button class="btn btn-light btn-sm btnLookupDelete"><i class="fa fa-trash"></i></button></td>
+
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+</div>
+
+<div class="divTableContainer">
+    <!-- Account Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">@appResource.DtlType  </div>
+
+    <!-- Account Data -->
+    <div class="divAccount bg-white border p-2">
+        <!-- Cash Desks Data -->
+        <div class="divLookup bg-white border p-2">
+            <table class="table tblLookup">
+                <!-- Head -->
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>@appResource._No</th>
+                        <th> @appResource.DescAr </th>
+                        <th> @appResource.DescEn</th>
+                        <th> @appResource._Seq </th>
+                        <th> @appResource._Menu</th>
+                        <th>@appResource._Value1</th>
+                        <th>@appResource._Value2</th>
+                        <th>@appResource._Date1</th>
+                        <th>@appResource._Date2</th>
+                        <th>@appResource._Account 1</th>
+                        <th>@appResource._Account 2</th>
+                        <th>@appResource._Note</th>
+                        <th>@appResource._IsDefault</th>
+                        <th>@appResource._IsActive</th>
+                    </tr>
+                </thead>
+
+                <!-- Body -->
+                <tbody class="tblLookupDtlBody">
+
+                    <tr class="tblLookupDtlRow" data-changed="0" data-id="0">
+                        <td class="" width="1%">
+                            <button class="btn btn-light btn-sm border btnLookupDtlRow" type="submit">
+                                <i class="fa fa-plus-circle"></i>
+                            </button>
+                        </td>
+                        <td width="4%"><input type="text" class="form-control form-control-sm text-center txtLookupDtlCode" disabled></td>
+                        <td width="10%"><input type="text" class="form-control form-control-sm text-center txtLookupDtlDesc"></td>
+                        <td width="10%"><input type="text" class="form-control form-control-sm text-center txtLookupDtlDescL"></td>
+                        <td width="4%"><input type="text" class="form-control form-control-sm text-center txtORD"></td>
+                        <td width="15%">
+                            <div class="d-flex">
+                                <div class="col-sm-4 p-0">
+                                    <input class="form-control form-control-sm text-center txtValLink" type="text" required />
+                                </div>
+                                <div class="col-sm-8 p-0">
+                                    <input class="form-control form-control-sm text-center txtValLinkName" type="text" required disabled />
+                                </div>
+                            </div>
+                        </td>
+                        <td width="4%"><input type="text" class="form-control form-control-sm text-center txtVal1"></td>
+                        <td width="4%"><input type="text" class="form-control form-control-sm text-center txtVal2"></td>
+                        <td width=""><input type="date" class="form-control form-control-sm text-center txtDate1"></td>
+                        <td width=""><input type="date" class="form-control form-control-sm text-center txtDate2"></td>
+                        <td width="10%"><input type="text" class="form-control form-control-sm text-center txtAccountCode1"></td>
+                        <td width="10%"><input type="text" class="form-control form-control-sm text-center txtAccountCode2"></td>
+                        <td width="10%"><input type="text" class="form-control form-control-sm text-center txtNotes"></td>
+                        <td width="3%" class="" style=" padding-right:0.5rem !important;">
+                            <div class="custom-control custom-checkbox ">
+                                <input type="checkbox" class="custom-control-input  chkIsDefault" id="chkIsDefault">
+                                <label class="custom-control-label small" for="chkIsDefault"></label>
+                            </div>
+                        </td>
+                        <td width="3%" class="" style=" padding-right:0.5rem !important;">
+                            <div class="custom-control custom-checkbox ">
+                                <input type="checkbox" class="custom-control-input  chkIsActive " id="chkIsActive">
+                                <label class="custom-control-label small" for="chkIsActive"></label>
+                            </div>
+                        </td>
+                        <td width=""><button class="btn btn-light btn-sm btnLookupDtlDelete"><i class="fa fa-trash"></i></button></td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+    <!-- Data Modal -->
+    <!-- AccountData Modal -->
+    <div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="AccountDataModalContent"></div>
+        </div>
+    </div>
+    <!-- Confirm Delete Modal -->
+    <div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="confirmDeleteModalContent"></div>
+        </div>
+    </div>
+
+    <!-- LookupData Modal -->
+    <div id="LookupDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="LookupDataModalContent"></div>
+        </div>
+
+    </div>
+    <!-- Save -->
+    <script>
+        // Save - Click
+    $('.btnSave').on('click', function () {
+
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblLookupRow").each(function () {
+            // Head
+
+            // Row Data
+            var vRowData = $(this);
+            // Get Lookup Id
+           // var vLookupId = vRowData.attr('data-id');
+            var vLookupId = vRowData.attr('data-lookupid');
+            // Lookup Desc
+            var vLookupDesc = vRowData.find('.txtLookupDesc').val();
+            // Lookup DescL
+            var vLookupDescL = vRowData.find('.txtLookupDescL').val();
+            // Parent Code
+            var vParentCode = vRowData.find('.txtParentCode').val();
+            // Parent Dtl Code
+            var vParentCodeDtl = vRowData.find('.txtParentCodeDtl').val();
+            // Group
+            var vGroup = vRowData.find('.txtLookupGroup').val();
+            // Notes
+            var vNotes = vRowData.find('.txtNotes').val();
+
+            // Is Active
+            var vLookupIsActive = $(this).find('.chkIsActive').prop('checked')
+            // Check Cash Desk If Empty
+            if (vLookupDesc != '') {
+
+                if (vRowData.attr('data-changed') == '1') {
+                    $.ajax({
+                        type: "GET",
+                        url: '/Lookup/LookupGET',
+                        async: false,
+                        data: {
+                            pLookupId: vLookupId,
+                            pLookupParentId: vParentCode,
+                            pLookupDescL1: vLookupDesc,
+                            pLookupDescL2: vLookupDescL,
+                            pParentId: vParentCode,
+                            pLookupGroup: vGroup,
+                            pLookupStatus: vLookupIsActive,
+                            pHC: null,
+                            pNotes: vNotes,
+                            // pUserPriv: pUserPriv,
+                            pParentIdDtl: vParentCodeDtl,
+                            pIsDeleted: false,
+                            pIsDetail: false,
+                            pQueryTypeId: 100
+                        },
+                        contentType: "application/json",
+                        success: function (data) {
+
+                            // funGETLookupBySelectedList();
+                            vRowData.attr('data-changed', '0')
+                            if (vRowData.attr('data-id') == '0') {
+                                if (data != undefined && data != '') {
+                                    //' <tr class="tblLookupRow" data-changed="0" data-lookupid="' + pLookupData.LookupId + '"  data-id="' + pLookupData.TypeId + '">' +
+                                    // JSON
+                                    var vLookupDataResult = JSON.parse(data);
+                                    vRowData.find('.txtLookupId').val(vLookupDataResult[0].TypeId);
+                                    vRowData.attr('data-id', vLookupDataResult[0].TypeId)
+                                    vRowData.attr('data-lookupid', vLookupDataResult[0].LookupId)
+                                    $('.txtLookupHeadId').val(vLookupDataResult[0].TypeId)
+                                    $('.txtLookupHeadId').attr('data-lookupid', vLookupDataResult[0].LookupId)
+
+
+
+                                }
+                            }
+
+
+                        }
+                    });
+                }
+
+
+
+
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+        });
+
+            // Detail
+            // Check All Rows
+            $(".tblLookupDtlRow").each(function () {
+                // Head
+
+                // Row Data
+                var vRowData = $(this);
+                // Get Lookup Id
+                var vLookupDtlId = vRowData.attr('data-id');
+
+                var vLookupId = $('.txtLookupHeadId').val();
+                //var vLookupId = $('.txtLookupHeadId').attr('data-lookupid');
+
+                // Lookup Desc
+                var vLookupDtlCode = vRowData.find('.txtLookupDtlCode').val();
+                // Lookup DescL
+                var vLookupDtlDesc = vRowData.find('.txtLookupDtlDesc').val();
+                // Parent Code
+                var vLookupDtlDescL = vRowData.find('.txtLookupDtlDescL').val();
+                // Parent Dtl Code
+                var vORD = vRowData.find('.txtORD').val();
+                // Group
+                var vValLink = vRowData.find('.txtValLink').val();
+                // Notes
+                var vVal1 = vRowData.find('.txtVal1').val();
+                var vVal2 = vRowData.find('.txtVal2').val();
+                var vDate1 = vRowData.find('.txtDate1').val();
+                var vDate2 = vRowData.find('.txtDate2').val();
+
+                var vAccountCode1 = vRowData.find('.txtAccountCode1').val();
+                var vAccountCode2 = vRowData.find('.txtAccountCode2').val();
+                var vNotes = vRowData.find('.txtNotes').val();
+
+
+                // Is Active
+                var vLookupIsActive = $(this).find('.chkDtlIsActive').prop('checked')
+
+                console.log(vLookupIsActive +'new')
+                // Is Active
+                var vIsDefault = $(this).find('.chkIsDefault').prop('checked');
+
+                console.log(vIsDefault)
+
+                if (vRowData.attr('data-changed') == '1') {
+                    console.log('trrrrrrrrrrrrrrrrrrrrrrrrrrrrrrueeeeeee' + vLookupDtlId)
+                // Save
+                $.ajax({
+                    //type: "POST",
+                    type: "GET",
+                    url: '/Lookup/LookupGET',
+                    async: false,
+                    data: {
+                        pLookupDtlId: vLookupDtlId,
+                        pLookupId: vLookupId,
+                        pdLookupDtlCode: vLookupDtlCode,
+                        pdLookupDtlDesc: vLookupDtlDesc,
+                        pdLookupDtlDescL: vLookupDtlDescL,
+                        pdORD: vORD,
+                        pdDflt: vIsDefault,
+                        pdLookupDtlStatus: vLookupIsActive,
+                        pdNotes: vNotes,
+                        pdValue1: vVal1,
+                        pdValue2: vVal2,
+                        pdValLink: vValLink,
+                        pdDate1: vDate1,
+                        pdDate2: vDate2,
+                        pdAccountId: vAccountCode1,
+                        pdAccountId2: vAccountCode2,
+                        pdIsDeleted: false,
+                        pIsDetail: true,
+                        pQueryTypeId: 100
+                    },
+                    contentType: "application/json",
+                    success: function (data) {
+                        vRowData.attr('data-changed', '0')
+                        if (vLookupDtlId == '0') {
+                            if (data != undefined && data != '' ) {
+                                var vDataResult = JSON.parse(data);
+                                vRowData.attr('data-id', vDataResult[0].LookupDtlId)
+                                vRowData.find('.txtLookupDtlCode').val(vDataResult[0].LookupDtlCode)
+                                console.log('saved LookupDtlId' + vDataResult[0].LookupDtlId)
+                                console.log('saved LookupDtlCode' + vDataResult[0].LookupDtlCode)
+                            }
+                        }
+                          //funGETLookupBySelectedList();
+
+                    }
+                    });
+                }
+
+          if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+          //   funNotification('@appResource.msgSave', '1');
+                }
+            })
+
+        // Notification
+             funNotification('@appResource.msgSave', '1');
+    }); // End of Save Click
+
+
+    </script>
+    <!--Load Lookup Data-->
+    <script>
+        // Load Lookup
+        fillLookup()
+        //Load LookupDtl
+        //fillLookupDtl(1)
+        function fillLookup() {
+            $.get('/api/apiLookup/LookupGET',
+                {
+                    pIsDetail: false,
+                    pQueryTypeId: '400'
+                },
+                function (LookupData, status) {
+
+                    // Table Body
+                    var vLookupTableBody = $('.tblLookupBody');
+
+                    // JSON
+                    var vLookupDataResult = JSON.parse(LookupData);
+                    console.log(vLookupDataResult)
+                    // HTML CLEAR
+                    vLookupTableBody.html('');
+
+                    // For Each Lookup - Main
+                    $.each(vLookupDataResult, function (m, LookupSubData) {
+
+                        // GET Lookup Row Content
+                        var vLookupRowContent = funLookupRowConfig(vLookupDataResult[m]);
+                        // Append Row Content
+                        vLookupTableBody.append(vLookupRowContent);
+
+                    })
+                });
+        }
+        function fillLookupDtl(pLookupId) {
+            $.get('/api/apiLookup/LookupGET',
+                {
+                    pLookupId: pLookupId,
+                    pIsDetail: true,
+                    pQueryTypeId: '400'
+                },
+                function (LookupData, status) {
+                    //alert('yyyyyyyyyyyyyyyyyyyyyyyyessssssssssssss' + LookupData)
+                    // Table Body
+                    var vLookupTableBody = $('.tblLookupDtlBody');
+
+
+                    // JSON
+                    var vLookupDataResult = JSON.parse(LookupData);
+                    console.log(vLookupDataResult)
+                    if (LookupData) {
+                        // HTML CLEAR
+                        vLookupTableBody.html('');
+                        if (vLookupDataResult.length == 0) {
+                            vLookupTableBody.html('');
+                            funAddLookupDtlRow($('.tblLookupDtlBody'));
+                        }
+                        // For Each Lookup - Main
+                        $.each(vLookupDataResult, function (m, LookupSubData) {
+
+                            // GET Lookup Row Content
+                            var vLookupRowContent = LookupDtlConfig(vLookupDataResult[m]);
+                            // Append Row Content
+                            vLookupTableBody.append(vLookupRowContent);
+
+                        })
+                    }
+
+
+
+                });
+        }
+
+    </script>
+    <!--Config Lookup-->
+    <script>
+        function funLookupRowConfig(pLookupData) {
+
+            // Checked
+            var vIsActive = null;
+
+            if (pLookupData.LookupStatus) {
+                vIsActive = 'checked';
+            }
+
+            console.log(pLookupData)
+
+            var RowContent =
+                ' <tr class="tblLookupRow" data-changed="0" data-lookupid="' + pLookupData.LookupId + '"  data-id="' + pLookupData.TypeId + '">' +
+                '<td class="" width="1%">' +
+                '<button class="btn btn-light btn-sm border btnLookup " type="button">' +
+                '<i class="fa fa-plus-circle"></i>' +
+                ' </button>' +
+                '</td>' +
+                //'<td width="4%"><input type="text" class="form-control form-control-sm text-center txtLookupId" value="' + pLookupData.TypeId + '"  disabled></td>' +
+                '<td width="4%"><input type="text" class="form-control form-control-sm text-center txtLookupId" value="' + pLookupData.TypeId + '"  disabled></td>' +
+                '<td width="16%"><input type="text" class="form-control form-control-sm text-center txtLookupDesc" value="' + pLookupData.LookupDescL1 + '"></td>' +
+                '<td width="16%"><input type="text" class="form-control form-control-sm text-center txtLookupDescL" value="' + pLookupData.LookupDescL2 + '"></td>' +
+                '<td width="16%">' +
+                '<div class="d-flex">' +
+                ' <div class="col-sm-2 p-0">' +
+                '<input class="form-control form-control-sm text-center txtParentCode" type="text" value="' + pLookupData.ParentId + '" required />' +
+                '</div>' +
+                '<div class="col-sm-10 p-0">' +
+                ' <input class="form-control form-control-sm text-center txtParentCodeName" type="text" value="' + pLookupData.ParentId + '" required disabled />' +
+                ' </div>' +
+                '</div>' +
+                '</td>' +
+                '<td width="16%">' +
+                '<div class="d-flex">' +
+                ' <div class="col-sm-2 p-0">' +
+                '<input class="form-control form-control-sm text-center txtParentCodeDtl" type="text" value="' + pLookupData.ParentIdDtl + '" required />' +
+                '</div>' +
+                ' <div class="col-sm-10 p-0">' +
+                '<input class="form-control form-control-sm text-center txtParentCodeDtlName" type="text" value="' + pLookupData.ParentIdDtl + '" required disabled />' +
+                ' </div>' +
+                ' </div>' +
+                ' </td>' +
+                '<td width="16%"><input type="text" class="form-control form-control-sm txtLookupGroup" value="' + pLookupData.LookupGroup + '"></td>' +
+                '<td width="16%"><input type="text" class="form-control form-control-sm txtNotes" value="' + pLookupData.Notes + '"></td>' +
+                '<td width="3%" class="" style=" padding-right:0.5rem !important;" >' +
+                ' <div class="custom-control custom-checkbox ">' +
+                '<input type="checkbox" class="custom-control-input  chkIsActive "  id="chkIsActive' + pLookupData.LookupId + '"   ' + vIsActive + ' >' +
+                ' <label class="custom-control-label small" for="chkIsActive' + pLookupData.LookupId + '"></label>' +
+                ' </div>' +
+                ' </td>' +
+                ' <td width="1%"><button class="btn btn-light btn-sm btnLookupDelete" data-id="' + pLookupData.LookupId + '"><i class="fa fa-trash"></i></button></td>' +
+                ' </tr> ';
+
+            //Result
+            return RowContent
+
+        }
+
+        function funAddLookupRow(pTableBody) {
+            var RowContent = {
+                'LookupId': '0',
+                'LookupDescL1': '',
+                'LookupDescL2': '',
+                'LookupDescL1': '',
+                'ParentId': '',
+                'ParentIdDtl': '',
+                'LookupGroup': '',
+                'LookupDescL1': '',
+                'Notes': '',
+                'LookupStatus': '',
+                'TypeId': '0'
+            };
+
+            var vData = funLookupRowConfig(RowContent)
+            pTableBody.append(vData)
+        }
+
+
+        // Add Row - Button Click
+        $('.tblLookupBody').on('click', '.btnLookup', function () {
+            // Add Row
+            funAddLookupRow($('.tblLookupBody'));
+        })
+
+    </script>
+    <!--Config Lookup Detail-->
+    <script>
+        function LookupDtlConfig(pLookupDtlData) {
+
+            // Checked
+            var vIsActive = null;
+            var vIsDflt = null;
+
+            if (pLookupDtlData.LookupDtlStatus) {
+                vIsActive = 'checked';
+            }
+            if (pLookupDtlData.Dflt) {
+                vIsDflt = 'checked';
+            }
+            var RowContent =
+                ' <tr class="tblLookupDtlRow" data-changed="0" data-id="' + pLookupDtlData.LookupDtlId + '">' +
+                ' <td class="" width="1%">' +
+                '<button class="btn btn-light btn-sm border btnLookupDtlRow" type="submit">' +
+                ' <i class="fa fa-plus-circle"></i>' +
+                '</button>' +
+                '</td>' +
+                ' <td width="4%"><input type="text" class="form-control form-control-sm text-center txtLookupDtlCode" value="' + pLookupDtlData.LookupDtlCode + '" disabled></td>' +
+                ' <td width="10%"><input type="text" class="form-control form-control-sm text-center txtLookupDtlDesc" value="' + pLookupDtlData.LookupDtlDesc + '"></td>' +
+                '<td width="10%"><input type="text" class="form-control form-control-sm text-center txtLookupDtlDescL" value="' + pLookupDtlData.LookupDtlDescL + '"></td>' +
+                '<td width="4%"><input type="text" class="form-control form-control-sm text-center txtORD" value="' + pLookupDtlData.ORD + '" ></td>' +
+                '<td width="15%">' +
+                ' <div class="d-flex">' +
+                ' <div class="col-sm-4 p-0">' +
+                '<input class="form-control form-control-sm text-center txtValLink" value="' + pLookupDtlData.ValLink + '" type="text" required />' +
+                '</div>' +
+                '<div class="col-sm-8 p-0">' +
+                ' <input class="form-control form-control-sm text-center txtValLinkName" value="' + pLookupDtlData.ValLink + '" type="text" required disabled />' +
+                '</div>' +
+                ' </div>' +
+                ' </td>' +
+                '<td width="4%"><input type="text" class="form-control form-control-sm text-center txtVal1" value="' + pLookupDtlData.Value1 + '"></td>' +
+                '<td width="4%"><input type="text" class="form-control form-control-sm text-center txtVal2" value="' + pLookupDtlData.Value2 + '"></td>' +
+                '<td width=""><input type="date" class="form-control form-control-sm text-center txtDate1" value="' + pLookupDtlData.Date1 + '"></td>' +
+                '<td width=""><input type="date" class="form-control form-control-sm text-center txtDate2" value="' + pLookupDtlData.Date2 + '"></td>' +
+                '<td width="10%"><input type="text" class="form-control form-control-sm text-center txtAccountCode1" value="' + pLookupDtlData.AccountId + '"></td>' +
+                '<td width="10%"><input type="text" class="form-control form-control-sm text-center txtAccountCode2" value="' + pLookupDtlData.AccountId2 + '"></td>' +
+
+                '<td width="10%"><input type="text" class="form-control form-control-sm text-center txtNotes" value="' + pLookupDtlData.Notes + '"></td>' +
+                '<td width="3%" class="" style=" padding-right:0.5rem !important;">' +
+                '<div class="custom-control custom-checkbox ">' +
+                ' <input type="checkbox" class="custom-control-input  chkIsDefault" id="chkIsDefault' + pLookupDtlData.LookupDtlId + '" ' + vIsDflt + '>' +
+                '<label class="custom-control-label small" for="chkIsDefault' + pLookupDtlData.LookupDtlId + '"></label>' +
+                ' </div>' +
+
+                ' </td>' +
+                '<td width="3%" class="" style=" padding-right:0.5rem !important;">' +
+                '<div class="custom-control custom-checkbox ">' +
+                '<input type="checkbox" class="custom-control-input  chkDtlIsActive" id="chkDtlIsActive' + pLookupDtlData.LookupDtlId + '" ' + vIsActive + '>' +
+                '<label class="custom-control-label small" for="chkDtlIsActive' + pLookupDtlData.LookupDtlId + '"></label>' +
+                '</div>' +
+                '</td>' +
+                ' <td width=""><button class="btn btn-light btn-sm btnLookupDtlDelete" data-id="' + pLookupDtlData.LookupDtlId + '"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+
+            //Result
+            return RowContent
+
+        }
+
+        // Lookup Detail Row
+        function funAddLookupDtlRow(pTableBody) {
+            var RowContent = {
+                'LookupDtlId': '0',
+                'LookupDtlCode': '0',
+                'LookupDtlDesc': '',
+                'LookupDtlDescL': '',
+                'ORD': '',
+                'ValLink': '',
+                'Value1': '',
+                'Value2': '',
+                'Date1': '',
+                'Date2': '',
+                'AccountId': '',
+                'AccountId2': '',
+                'Notes': '',
+                'LookupStatus': '',
+                'Dflt': '',
+            };
+
+            var vData = LookupDtlConfig(RowContent)
+            console.log(vData)
+            $('.tblLookupDtlBody').append(vData)
+        }
+
+        // Add Row - Button Click
+        $('body').on('click', '.btnLookupDtlRow', function () {
+            // Add Row
+            funAddLookupDtlRow($('.tblLookupDtlBody'));
+        })
+
+    </script>
+    <!--Delete-->
+    <script>
+        $('body').on('click', '.btnLookupDelete', function () {
+            //Element
+            var vElement = $(this)
+            var vId = $(this).attr('data-id')
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblLookupRow');
+            var vDataId = vTableRow.attr('data-id');
+            var vDataName = vTableRow.find('.txtLookupDesc').val();
+            // URL
+            var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+            // Get HTML Content of [Confirm Delete] Partial View
+            localStorage.setItem('lstdel', vTableRow.index)
+            // Get CashDesk Id
+            var vLookupIdDelete = $(this).attr('data-id');
+
+            $.get(
+                // URL
+                vDataURL,
+                {
+                    id: vDataId,
+                    pName: vDataName,
+                }, function (data, status) {
+                    if (vDataId > 0) {
+                        // Modal
+                        $('#confirmDeleteModalContent').html(data);
+                        $('#confirmDeleteModal').modal('show');
+                        $('#confirmDeleteModal').on('shown.bs.modal', function () {
+                            $("body").on("click", "#btnDeleteConfirm", function () {
+                                if (localStorage.getItem('lstdel') == vTableRow.index) {
+                                    // Save Row
+                                    $.post('/Lookup/LookupGET',
+                                        {
+                                            // Detail Parameters
+                                            plookupId: vDataId,
+                                            pIsDetail: false,
+                                            pIsDeleted: true,
+                                            // Query Type Id
+                                            pQueryTypeId: '300'
+                                        },
+                                        function (data, status) {
+                                            if ($.isNumeric(data)) {
+                                                funNotification('@appResource.msgCannotDelete', 2);
+                                            }
+                                            else {
+                                                var vResultData = JSON.parse(data)
+
+                                                vElement.closest('tr').remove();
+
+
+                                                // Notification
+                                                funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                                            }
+
+                                        })
+                                    vTableRow = '';
+
+                                }
+                                else {
+                                    // Only Delete The Row
+                                    vElement.closest('tr').remove();
+                                    // Check If IT The Last Row
+                                    var vLastRow = $('.tblLookupBody').find('tr').attr('data-id')
+                                    // Add Row If Empty
+                                    if (vLastRow == undefined) {
+                                        // Cash Desk Add Row
+                                        funAddLookupRow($('.tblLookupBody'));
+                                    }
+                                }
+                            })
+                        })
+                    }
+                    else {
+                        // Only Delete The Row
+                        vElement.closest('tr').remove();
+                        // Check If IT The Last Row
+                        var vLastRow = $('.tblLookupBody').find('tr').attr('data-id')
+                        // Add Row If Empty
+                        if (vLastRow == undefined) {
+                            funAddLookupRow($('.tblLookupBody'));
+
+                        }
+                    }
+                })
+
+
+
+        })
+        $('body').on('click', '.btnLookupDtlDelete', function () {
+            //Element
+            var vElement = $(this)
+            var vId = $(this).attr('data-id')
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblLookupDtlRow');
+            var vDataId = vTableRow.attr('data-id');
+            var vDataName = vTableRow.find('.txtLookupDtlDesc').val();
+            // URL
+            var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+            // Get HTML Content of [Confirm Delete] Partial View
+            localStorage.setItem('lstdeldtl', vTableRow.index)
+            // Get CashDesk Id
+            var vLookupIdDelete = $(this).attr('data-id');
+
+            $.get(
+                // URL
+                vDataURL,
+                {
+                    id: vDataId,
+                    pName: vDataName,
+                }, function (data, status) {
+                    if (vDataId > 0) {
+                        // Modal
+                        $('#confirmDeleteModalContent').html(data);
+                        $('#confirmDeleteModal').modal('show');
+                        $('#confirmDeleteModal').on('shown.bs.modal', function () {
+                            $("body").on("click", "#btnDeleteConfirm", function () {
+                                if (localStorage.getItem('lstdeldtl') == vTableRow.index) {
+                                    // Save Row
+                                    $.post('/Lookup/LookupGET',
+                                        {
+                                            // Detail Parameters
+                                            plookupDtlId: vId,
+                                            pIsDetail: true,
+                                            pIsDeleted: true,
+                                            // Query Type Id
+                                            pQueryTypeId: '300'
+                                        },
+                                        function (data, status) {
+                                            var vResultData = JSON.parse(data)
+                                            vElement.closest('tr').remove();
+                                            // Notification
+                                            funNotification(vResultData[0].SystemMessageText, vResultData[0].SystemMessageTypeId);
+                                        })
+                                    // Notification
+                                    funNotification('@appResource.msgDelete', 1);
+                                    vTableRow = '';
+
+                                }
+                                else {
+                                    // Only Delete The Row
+                                    vElement.closest('tr').remove();
+                                    // Check If IT The Last Row
+                                    var vLastRow = $('.tblLookupDtlBody').find('tr').attr('data-id')
+                                    // Add Row If Empty
+                                    if (vLastRow == undefined) {
+                                        // Cash Desk Add Row
+                                        funAddLookupRow($('.tblLookupDtlBody'));
+
+                                    }
+                                }
+                            })
+                        })
+                    }
+                    else {
+                        // Only Delete The Row
+                        vElement.closest('tr').remove();
+                        // Check If IT The Last Row
+                        var vLastRow = $('.tblLookupDtlBody').find('tr').attr('data-id')
+                        // Add Row If Empty
+                        if (vLastRow == undefined) {
+                            // Cash Desk Add Row
+                            funAddLookupRow($('.tblLookupDtlBody'));
+
+                        }
+                    }
+                })
+
+
+
+
+        })
+    </script>
+
+    <!--SELECT ROW -->
+    <script>
+        // Row Select
+        $('.tblLookupBody').on('click', '.tblLookupRow', function () {
+
+            $('.tblLookupRow').removeClass('table-primary');
+
+            $(this).addClass('table-primary');
+            var vLookupId = $(this).attr('data-id')
+            var vLookupIdreal = $(this).attr('data-lookupid')
+
+            $('.txtLookupHeadId').val(vLookupId)
+            $('.txtLookupHeadId').attr('data-lookupid', vLookupIdreal)
+
+            fillLookupDtl(vLookupId)
+        })   // Row Select
+        // Row Select
+        $('.tblLookupBody').on('focus', '.txtLookupDesc,.txtLookupDescL,.txtParentCode,.txtParentCodeDtl,.txtLookupGroup,.txtNotes,.chkIsActive', function () {
+
+            $('.tblLookupRow').removeClass('table-primary');
+            var vTableRow = $(this).closest('.tblLookupRow');
+
+            $(this).addClass('table-primary');
+            var vLookupId = vTableRow.attr('data-id')
+            var vLookupIdreal = vTableRow.attr('data-lookupid')
+
+            $('.txtLookupHeadId').val(vLookupId)
+            $('.txtLookupHeadId').attr('data-lookupid', vLookupIdreal)
+
+            fillLookupDtl(vLookupId)
+        })   // Row Select
+        $('.tblLookupBody').on('change', '.txtLookupDesc,.txtLookupDescL,.txtParentCode,.txtParentCodeDtl,.txtLookupGroup,.txtNotes,.chkIsActive', function () {
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblLookupRow');
+            vTableRow.attr('data-changed', '1')
+        })
+        $('.tblLookupDtlBody').on('change', '.txtLookupDtlDesc,.txtLookupDtlDescL,.txtValLink,.txtORD,.txtVal1,.txtVal2,.txtDate1,.txtDate2,.txtAccountCode1,.txtAccountCode2,.txtNotes,.chkIsDefault,.chkDtlIsActive', function () {
+            // Get Closest Row
+            var vTableRow = $(this).closest('.tblLookupDtlRow');
+            vTableRow.attr('data-changed', '1')
+        })
+
+    </script>
+    <!--Modal-->
+    <script>
+        // Account Code, Name - F9 - Double Click
+        $('table').on('keyup dblclick', '.txtParentCode', function (e) {
+
+            // F9 - Double Click
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+
+                // Table Row - Closest Row
+                vTableRow = $(this).closest('tr');
+
+                // Search Account
+                var vURL = '/Lookup/MenuSearch';
+                // Load Content of Account Search
+                $('#AccountDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountDataModal').modal('show');
+                // Focus
+                $('#AccountDataModal').on('shown.bs.modal', function () {
+                    $('.txtSearch').focus();
+
+                    // Select Lookup
+                    $('body').on('click', '.divLookup', function () {
+
+                        // Get Values
+                        var vLookupId = $(this).attr('data-id')
+                        console.log(vLookupId)
+                        var vLookupCodeValue = $(this).find('.divLookupCode').text();
+                        var vLookupNameValue = $(this).find('.divLookupDescL1').text();
+                        // Get Lookup Data
+                        var vLookupIdElement = vTableRow.find('.txtLookupId');
+                        var vLookupCodeElement = vTableRow.find('.txtParentCode');
+                        var vLookupNameElement = vTableRow.find('.txtParentCodeName');
+                        // Set Value
+                        vLookupIdElement.val(vLookupId);
+                        vLookupCodeElement.val(vLookupCodeValue);
+                        vLookupNameElement.val(vLookupNameValue);
+
+                        // Modal Show
+                        $('#AccountDataModal').modal('hide');
+                        vTableRow.removeClass('table-info');
+
+                        vTableRow = '';
+                    })
+                })
+            }
+        })
+
+
+        // Search PrinterDataModal
+        $('.btnSearch').on('click', function () {
+            // Search CostCenter
+            var vURL = '/Lookup/LookupSearch';
+            // Load Content of CostCenter Search
+            $('#LookupDataModalContent').load(vURL);
+            // Modal Full
+            $('#LookupDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#LookupDataModal').modal('show');
+        })
+
+        $('body').on('click', '.btnSelect', function () {
+            var vLookupList = ''
+            var count = $("input[name='chkIsValid']:checked").length;
+
+            console.log('vcount' + count);
+            if (count == 0) {
+                $('#LookupDataModal').modal('hide');
+            }
+            else {
+                $('.tblSearchLookup > tbody > tr ').each(function (i) {
+                    // Element
+                    var vElement = $(this).find('.clsChk')
+                    var vSelectedChk = vElement.prop('checked')
+                    // Get Id
+                    var vLookupId = vElement.attr('data-lookupid');
+                    // Check
+                    if (vSelectedChk) {
+                        vLookupList += vLookupId + ','
+                        console.log('vLookupIdvLookupId' + vLookupId);
+                        //if (i == $('.tblLookupSearch > tbody > tr ').length - 1) {
+
+                        // close The Modal
+                        $('#LookupDataModal').modal('hide');
+                        //}
+
+                    }
+                })
+                funGetLookupList(vLookupList)
+
+            }
+        })
+
+        function funGetLookupList(pLookupList) {
+            $.post('/Lookup/LookupGET',
+                {
+                    pSelectList: pLookupList,
+                    pQueryTypeId: '403'
+                },
+                function (LookupData, status) {
+
+                    // Table Body
+                    var vLookupTableBody = $('.tblLookupBody');
+
+                    // JSON
+                    var vLookupDataResult = JSON.parse(LookupData);
+                    console.log(vLookupDataResult)
+                    // HTML CLEAR
+                    vLookupTableBody.html('');
+
+                   
+
+                    // For Each Lookup - Main
+                    $.each(vLookupDataResult, function (m, LookupSubData) {
+
+                        // GET Lookup Row Content
+                        var vLookupRowContent = funLookupRowConfig(vLookupDataResult[m]);
+                        // Append Row Content
+                        vLookupTableBody.append(vLookupRowContent);
+
+
+
+                    })
+                    // Find Element Desc In The first row
+                    var vFirstRowElement = $(".tblLookupBody > tr:first").find('.txtLookupDesc')
+                    // Focus ON The First row
+                    vFirstRowElement.focus();
+                    // Fire The Focus Event
+                    vFirstRowElement.trigger('focus');
+
+                });
+        }
+
+        $('.btnPrint').on('click', function () {
+            var url = '/Lookup/LookupReport'
+            var popupWindow = window.open(url);
+        });
+
+    </script>
+

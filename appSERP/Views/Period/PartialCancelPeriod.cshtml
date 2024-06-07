@@ -1,0 +1,27 @@
+﻿@{
+    Layout = null;
+}
+<div class="card-body">
+    <div class="row Period" periodId="@ViewBag.PeriodId">
+        <div class="col-md-2">
+            <div class="mt-4">
+
+                <label class=" ">اغلاق  الفترة</label>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div>
+                من تاريخ
+                <input type="datetime" disabled class="form-control" id="DateFrom" value="@ViewBag.DateFrom">
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div>
+                الي تاريخ
+                <input type="datetime" disabled class="form-control" id="DateTo" value="@ViewBag.DateTo">
+            </div>
+        </div>
+
+    </div>
+
+</div>

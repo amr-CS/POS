@@ -1,0 +1,135 @@
+﻿@using System.Data
+@{
+    /**/
+
+    ViewBag.Title = "StudentLabel";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
+}
+@Styles.Render("~/Content/css_rtl")
+
+<style>
+    label .lbl {
+        /* Other styling... */
+        text-align: right;
+        clear: both;
+        float: left;
+        margin-right: 15px;
+    }
+    @@page {
+        size: A4;
+        margin: 0;
+    }
+    @@media print {
+        html, body {
+            width: 210mm;
+            height: 297mm;
+            height: 100%;
+        }
+    }
+</style>
+<!-- Content Style -->
+<style>
+    .divLabelContent {
+        margin-top: 35px;
+    }
+
+    .divHeader {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .divBarcode {
+        height: 60px;
+    }
+
+
+    .hrSeparator {
+        margin-right: 25px;
+        margin-left: 25px;
+        border: 3px solid #808080;
+    }
+
+    .center {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+    }
+</style>
+
+<div>
+
+    <!-- Row -->
+    <div class="col-md-12 divLabel">
+        <!-- Label Content -->
+        <div class="divLabelContent container-fluid">
+
+
+            <!-- School -->
+            <div class="divHeader">
+                <div><h1>شركة ركن الوليمة</h1></div>
+                <div>
+                    <img src="~/Image/WhiteCloudLogo/logo_350_175.PNG" style="width:100px;height:60px" />
+                </div>
+            </div>
+
+
+            <!-- Barcode -->
+            <div class="divHeader">
+                <div>
+                    <div><label>الرقم الضريبي </label> <label> 600047142700003 </label></div>
+                </div>
+                <hr>
+                <div>
+                    <div><label>فرع الدرعية </label> <label> 0114155521 </label></div>
+                </div>
+                <hr>
+                <div>
+                    <div><label>الشرطة </label> <label> 45454854845465 </label></div>
+                </div>
+                <hr>
+                <div>
+                    <div><label>@DateTime.Now.ToString("dd/MM/yyyy") </label><label> @DateTime.Now.ToShortTimeString()</label></div>
+                </div>
+                <div class="divHeader ">
+                    <div class="form-group">
+                        <input name="Student" id="Student" style="" value="41" />
+                        <label class="lbl" for="Student">   :الرقم</label>
+                    </div>
+                </div>
+                <div class=" center"  style="width:50%">
+                    <table class="table table-bordered ">
+                        <thead>
+                            <tr>
+                                <th>الكمية</th>
+                                <th>الصنف</th>
+                                <th>السعر</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>تيس مندي</td>
+                                <td>10.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Print -->
+<script>
+    // Print Document and Go Back
+    window.onload = function () {
+        window.print();
+        setTimeout(function () { window.history.back(); }, 100);
+    }
+</script>

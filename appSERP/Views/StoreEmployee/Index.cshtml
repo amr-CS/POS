@@ -1,0 +1,717 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.INV;
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblStoreEmployee, pIsNew = false })
+</div>
+<style>
+    .divTableContainer {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    /*.divStoreEmployee, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }*/
+
+    .divSectionTitle {
+        background-color: rgba(41, 128, 185, 0.04);
+        font-weight: bold;
+        color: #2980b9;
+    }
+    .clsDiv {
+        /*position: fixed;*/
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        position: absolute;
+        top: -20px;
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        background-color: #D3EDFF !important;
+        background-color: #D3EDFF !important;
+    }
+    #table-wrapper {
+        position: relative;
+    }
+    #table-scroll {
+        height: 600px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+    #table-wrapper table thead th .text {
+        position: absolute;
+        top: -20px;
+    }
+</style>
+<div class="">
+    <div class="bg-white border rounded ">
+        <div class="w-100">
+            <div class="d-flex justify-content-end">
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Save -->
+                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Copy -->
+                    <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                    <!-- Paste -->
+                    <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Print -->
+                    <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                    <!-- Sort Asc -->
+                    <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                    <!-- Sort Desc -->
+                    <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- ADD -->
+                    <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                    <!-- Edit -->
+                    <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- PDF -->
+                    <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <!-- Excel -->
+                    <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                    <!-- Word -->
+                    <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Close -->
+                    <button class="btn btnUtility btnDeleteHead" title="@appResource.btnDelete"><i class="fa fa-close"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Full Screen -->
+                    <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+                </div>
+
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <div class="dropdown">
+                        <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-table"></i>
+                        </button>
+                        <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Size Type -->
+<div class="divTableContainer">
+
+    <!-- Cash Desk Header -->
+    <div class="w-100 divSectionTitle p-2 px-4">
+        @*@appResource.lblStoreEmployee*@
+    </div>
+
+    <!-- Cash Desks Data -->
+    <div class="container-fluid" id="table-wrapper">
+        @*<div class="divStoreEmployee bg-white border p-2">*@
+            <div class="row bg-white border rounded  divStoreEmployee" id="table-scroll">
+                <div class=" clsDiv"><div style="visibility:hidden;">1</div></div>
+                <table class="table tblStoreEmployee">
+                    <!-- Head -->
+                    <thead>
+                        <tr>
+                            @*<th width="20px"><div class="text"></div></th>*@
+                            <th width="20px"><div class="text"></div></th>
+                            <th width="5%"><div class="text">@appResource._Code</div></th>
+                            <th><div class="text"  width="10%">@appResource.StoreEmployeeId</div> </th>
+                            <th><div class="text"  width="7%">@appResource.GeneralNumber</div> </th>
+                            <th><div class="text"  width="10%">@appResource.Job</div> </th>
+                            <th><div class="text"  width="7%">@appResource.Profit</div> </th>
+                            <th><div class="text"  width="7%">@appResource.EmployeeStartDate</div> </th>
+                            <th><div class="text"  width="7%">@appResource.EmployeeEndDate</div> </th>
+                            <th width="25%"><div class="text">@appResource._Note</div> </th>
+                            <th><div class="text">@appResource._IsActive</div></th>
+                            <th class="thActions"><div class="text">@appResource._Actions</div></th>
+                        </tr>
+                    </thead>
+
+                    <!-- Body -->
+                    <tbody class="tblStoreEmployeeBody"></tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <!--Size Type Save -->
+        <div class=" bg-white border p-2 d-flex">
+            <div class="w-100"></div>
+            <div class="flex-shrink-1 p-1">
+                @*<button class="btn btn-success btnStoreEmployeeSave">@appResource.btnSave</button>*@
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Modal -->
+    <div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="dataModalContent"></div>
+        </div>
+    </div>
+    <!-- Confirm Delete Modal -->
+    <div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="confirmDeleteModalContent"></div>
+        </div>
+    </div>
+
+
+    <!-- Cash Desk Scripts -->
+    <!-- Cash Desk -->
+    <script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Drop Down  Font Size
+
+
+        // Wait 2 Seconds
+        setTimeout( function () {
+            // GET Font Size By Selected List
+            funGETStoreEmployeeBySelectedList();
+        },1000);
+    })
+
+
+
+
+        // Save - Click
+
+        //$('.btnStoreEmployeeSave').on('click', function () {
+            $('.btnSave').on('click', function () {
+
+        funSave()
+    }); // End of Save Click
+
+    $('.btnSave').on('click', function () {
+
+        funSave()
+    }); // End of Save Click
+
+
+    function funSave() {
+
+        // Is Valid
+        var vIsValid = true;
+
+        // Check All Rows
+        $(".tblStoreEmployeeBody > tr").each(function () {
+
+            // Row Data
+            var vRowData = $(this);
+            // Get StoreEmployee Id
+            var vStoreEmployeeId = vRowData.attr('data-id');
+            // Code
+            var vStoreEmployeeCode = vRowData.find('.StoreEmployeeCode').val();
+            // Name L1
+            var vStoreEmployeeName = vRowData.find('.StoreEmployeeName').val();
+            // GeneralNumber
+            var vGeneralNumber = vRowData.find('.GeneralNumber').val();
+            // Job
+            var vJob = vRowData.find('.Job').val();
+            // Profit
+            var vProfit = vRowData.find('.Profit').val();
+            // EmployeeStartDate
+            var vEmployeeStartDate = vRowData.find('.EmployeeStartDate').val();
+            // EmployeeEndDate
+            var vEmployeeEndDate = vRowData.find('.EmployeeEndDate').val();
+            // Notes
+            var vNotes = vRowData.find('.Notes').val();
+
+
+            // Is Active
+            var vStoreEmployeeIsActive = vRowData.find('.StoreEmployeeIsActive').prop('checked');
+
+            // Check Cash Desk If Empty
+            if (vStoreEmployeeName != '') {
+                // Save
+                $.post('/StoreEmployee/StoreEmployeeGET',
+                    {
+                        pStoreEmployeeId: vStoreEmployeeId,
+                        pStoreEmployeeCode: vStoreEmployeeCode,
+                        pStoreEmployeeName: vStoreEmployeeName,
+                        pGeneralNumber: vGeneralNumber,
+                        pJob: vJob,
+                        pProfit: vProfit,
+                        pEmployeeStartDate: vEmployeeStartDate,
+                        pEmployeeEndDate: vEmployeeEndDate,
+                        pNotes: vNotes,
+                        pStoreEmployeeIsActive: vStoreEmployeeIsActive,
+                        pIsDeleted: false,
+                        pQueryTypeId: 100
+                    },
+                    function (data, status) {
+
+
+
+
+                        // GET Cash Desk By Selected List
+                        funGETStoreEmployeeBySelectedList();
+                    });
+            }
+            else {
+
+                // Not Valid
+                vIsValid = false;
+
+            } // End Check Cash Desk Data
+
+        })
+
+        if (!vIsValid) {
+
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+
+            // Notification
+             funNotification('@appResource.msgSave', '1');
+        }
+    }
+
+
+
+
+
+    $('body').on('click', '.btnStoreEmployeeDelete', function () {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // Get StoreEmployee Id
+        var vStoreEmployeeIdDelete = $(this).attr('data-id');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    // Click Event [Delete Confirm]
+                    $("body").on("click", "#btnDeleteConfirm", function () {
+
+                        // Save
+                        $.post('/StoreEmployee/StoreEmployeeGET',
+                            {
+                                pStoreEmployeeId: vStoreEmployeeIdDelete,
+                                pStoreEmployeeCode: null,
+                                pStoreEmployeeName: null,
+                                pGeneralNumber: null,
+                                pJob: null,
+                                pProfit: null,
+                                pEmployeeStartDate: null,
+                                pEmployeeEndDate: null,
+                                pNotes: null,
+                                pStoreEmployeeIsActive: null,
+                                pIsDeleted: true,
+                                pQueryTypeId: 300
+                            },
+                            function (data, status) {
+
+                                //// Drop Down Main Cash Desk
+                                //funFillStoreEmployee(null, 0, null, null, null, null, 1, null, null, false);
+
+                                // GET Cash Desk By Selected List
+                                funGETStoreEmployeeBySelectedList();
+                                //funGETStoreEmployeeDTl(0);
+
+                            });
+
+                        // Notification
+                        funNotification('@appResource.msgDelete', 1);
+                    });
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblStoreEmployeeBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddItemEmptyRow()
+                    }
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+    })
+
+    // Add New Row
+    $('body').on('click', '.btnStoreEmployeeAddRow', function () {
+
+        var vCurrentRow = $(this).closest('tr');
+        // Cash Desk Add Row
+        funStoreEmployeeAddRow(vCurrentRow);
+    })
+
+    // GET Cash Desk By Selected List
+    function funGETStoreEmployeeBySelectedList() {
+
+        // Get Value [Id]
+        var vSelectedStoreEmployee = $('#selectStoreEmployeeMain').val();
+
+        // GET Data
+        $.get('/StoreEmployee/StoreEmployeeGET',
+            {
+                pStoreEmployeeId: null,
+                pStoreEmployeeCode: '',
+                pStoreEmployeeName: '',
+                pGeneralNumber: '',
+                pJob: '',
+                pProfit: '',
+                pEmployeeStartDate: null,
+                pEmployeeEndDate: null,
+                pNotes: null,
+                pStoreEmployeeIsActive: null,
+                pIsDeleted: false,
+                pQueryTypeId: 400
+            },
+            function (StoreEmployeeData, status) {
+
+                // Table Body
+                var vStoreEmployeeTableBody = $('.tblStoreEmployeeBody');
+                // HTML CLEAR
+                vStoreEmployeeTableBody.html('');
+
+                // JSON
+                var vStoreEmployeeDataResult = JSON.parse(StoreEmployeeData);
+
+                // For Each Cash Desk - Main
+                $.each(vStoreEmployeeDataResult, function (m, StoreEmployeeSubData) {
+
+                    // GET Cash Desk Row Content
+                    var vStoreEmployeeRowContent = funStoreEmployeeRowConfig(vStoreEmployeeDataResult[m]);
+                    // Append Row Content
+                    vStoreEmployeeTableBody.append(vStoreEmployeeRowContent);
+
+                })
+                //funStoreEmployeeRow();
+            }) }
+    // Cash Desk Add Row
+    function funStoreEmployeeAddRow(pCurrentRow) {
+        // Row Content Data
+        var vRowContentData =
+            {
+            "StoreEmployeeIsActive": true,
+            "StoreEmployeeId": 0,
+            "StoreEmployeeCode": '',
+             "StoreEmployeeName": '',
+             "GeneralNumber": '',
+              "Job": '',
+             "Profit": '',
+             "EmployeeStartDate": '',
+             "EmployeeEndDate": '',
+             "Notes":'',
+
+        }
+
+        var vRowContent = funStoreEmployeeRowConfig(vRowContentData);
+        // Add Row After Current Row
+        $(pCurrentRow).closest("tr").after(vRowContent);
+    }
+
+
+    // Cash Desk Row Config
+    function funStoreEmployeeRowConfig(pStoreEmployeeDataResult) {
+
+        // Checked
+        var vChecked = null;
+        if (pStoreEmployeeDataResult.StoreEmployeeIsActive) {
+            vChecked = 'checked';
+        }
+
+        // Type
+        var vSelectedText1 = '';
+        var vSelectedText2 = '';
+        var vStoreEmployeeId = pStoreEmployeeDataResult.StoreEmployeeId;
+        if (vStoreEmployeeId == 1) {
+
+            vSelectedText1 = 'selected';
+        }
+        else {
+            vSelectedText2 = 'selected';
+        }
+
+        // Row Content
+        //var vRowContent = '<tr class="tblRow" data-id="' + pStoreEmployeeDataResult.StoreEmployeeId + '">' +
+        //    '<td width="20px"><button class="btn btn-sm btn-light btnStoreEmployeeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        //    '<td width="7%"><input type="text" class="form-control StoreEmployeeCode" disabled value="' + pStoreEmployeeDataResult.StoreEmployeeCode + '" /></td>' +
+        //    '<td><input type="text" class="form-control StoreEmployeeName" value="' + pStoreEmployeeDataResult.StoreEmployeeName + '" /></td>' +
+        //    '<td><input type="text" class="form-control GeneralNumber" value="' + pStoreEmployeeDataResult.GeneralNumber + '" /></td>' +
+        //    '<td><input type="text" class="form-control Job" value="' + pStoreEmployeeDataResult.Job + '" /></td>' +
+        //    '<td><input type="text" class="form-control Profit" value="' + pStoreEmployeeDataResult.Profit + '" /></td>' +
+        //    '<td><input type="date" class="form-control EmployeeStartDate" value="' + pStoreEmployeeDataResult.EmployeeStartDate + '" /></td>' +
+        //    '<td><input type="date" class="form-control EmployeeEndDate" value="' + pStoreEmployeeDataResult.EmployeeEndDate + '" /></td>' +
+        //    '<td><input type="text" class="form-control Notes" value="' + pStoreEmployeeDataResult.Notes + '" /></td>' +
+        //    '<td><input type="checkbox" class="form-control  StoreEmployeeIsActive" ' + vChecked + ' /></td>' +
+        //    '<td><button class="btn btn-light btn-sm btnStoreEmployeeDelete" data-id="' + pStoreEmployeeDataResult.StoreEmployeeId + '"><i class="fa fa-trash"></i></button></td>' +
+        //    '</tr>';
+        var vRowContent = '<tr class="tblRow" data-id="' + pStoreEmployeeDataResult.StoreEmployeeId + '">' +
+            '<td width="20px"><button class="btn btn-sm btn-light btnStoreEmployeeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="5%"><input type="text" class="form-control StoreEmployeeCode" disabled value="' + pStoreEmployeeDataResult.StoreEmployeeCode + '" /></td>' +
+            '<td  width="10%"><input type="text" class="form-control StoreEmployeeName" value="' + pStoreEmployeeDataResult.StoreEmployeeName + '" /></td>' +
+            '<td  width="7%"><input type="text" class="form-control GeneralNumber" value="' + pStoreEmployeeDataResult.GeneralNumber + '" /></td>' +
+            '<td  width="10%"><input type="text" class="form-control Job" value="' + pStoreEmployeeDataResult.Job + '" /></td>' +
+            '<td  width="7%"><input type="text" class="form-control Profit" value="' + pStoreEmployeeDataResult.Profit + '" /></td>' ;
+
+        // Get The Current Date
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+         // Check If The Date Is Empty
+        if (pStoreEmployeeDataResult.EmployeeStartDate == undefined || pStoreEmployeeDataResult.EmployeeStartDate == '') {
+
+            vRowContent += '<td  width="7%"><input type="date" class="form-control EmployeeStartDate" value="' + today.toString("yyyy-MM-dd") + '" /></td>'
+        }
+        else {
+            vRowContent += '<td  width="7%"><input type="date" class="form-control EmployeeStartDate" value="' + pStoreEmployeeDataResult.EmployeeStartDate + '" /></td>'
+        }
+        if (pStoreEmployeeDataResult.EmployeeEndDate == undefined || pStoreEmployeeDataResult.EmployeeEndDate == '') {
+            vRowContent += '<td  width="7%"><input type="date" class="form-control EmployeeEndDate" value="' + today.toString("yyyy-MM-dd") + '" /></td>'
+        }
+        else {
+            vRowContent += '<td  width="7%"><input type="date" class="form-control EmployeeEndDate" value="' + pStoreEmployeeDataResult.EmployeeEndDate + '" /></td>'
+        }
+        vRowContent += '<td width="25%"><input type="text" class="form-control Notes" value="' + pStoreEmployeeDataResult.Notes + '" /></td>' +
+            '<td><input type="checkbox" class="form-control  StoreEmployeeIsActive" ' + vChecked + ' /></td>' +
+            '<td><button class="btn btn-light btn-sm btnStoreEmployeeDelete" data-id="' + pStoreEmployeeDataResult.StoreEmployeeId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+        
+        // Return Row Content
+        return vRowContent;
+    }
+
+
+
+    // Row Select
+    $('.tblStoreEmployeeBody').on('click', '.tblRow', function () {
+
+        $('.tblRow').removeClass('table-primary');
+        $(this).addClass('table-primary');
+
+    })
+
+    // Get Id Of Main Group
+    $('.divStoreEmployee').on('click', 'table tr', function () {
+        var vStoreEmployeeId = $(this).attr('data-id')
+        localStorage.setItem('vStoreEmployeeId', vStoreEmployeeId);
+        //funGETStoreEmployeeDTl(vStoreEmployeeId)
+    });
+
+
+    </script>
+    <!-- Account Scripts -->
+    <!-- Add Row -->
+    <script>
+
+
+        // Add Row
+        $('.btnSizeAddRow').on('click', function () {
+            // Cash Desk Add Row
+            funAccountAddRow();
+            // Cash Desk Scroll
+            funAccountScroll();
+        })
+
+        // Account Scroll
+        function funAccountScroll() {
+            // Scroll To Bottom
+            $('.divSize').animate({ scrollTop: $('.divSize').prop("scrollHeight") }, 1000);
+        }
+    </script>
+
+    <script>
+
+
+
+
+
+
+        // Add Row On Load Page
+        function funBankRow() {
+
+            // Table Body
+            var vStoreEmployeeTableBody = $('.tblStoreEmployeeBody');
+            // Append
+            vStoreEmployeeTableBody.append('<tr class="tblRow" data-id="0">' +
+                '<td width="20px"><button class="btn btn-sm btn-light btnStoreEmployeeAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                '<td width="7%"><input type="text" class="form-control StoreEmployeeCode" disabled  /></td>' +
+                '<td><input type="text" class="form-control StoreEmployeeName"  /></td>' +
+                '<td><input type="text" class="form-control GeneralNumber" /></td>' +
+                '<td><input type="text" class="form-control Job" /></td>' +
+                '<td><input type="text" class="form-control Profit" /></td>' +
+                '<td><input type="text" class="form-control EmployeeStartDate" /></td>' +
+                '<td><input type="text" class="form-control EmployeeEndDate" /></td>' +
+                '<td><input type="text" class="form-control Notes" /></td>' +
+                '<td><input type="checkbox" class="form-control  StoreEmployeeIsActive"  /></td>' +
+                '<td><button class="btn btn-light btn-sm btnStoreEmployeeDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>');
+        }
+        $('.btnSearch').on('click', function () {
+            // Search CostCenter
+            var vURL = '/StoreEmployee/StoreEmployeeSearch';
+            // Load Content of CostCenter Search
+            $('#EmployeeDataModalContent').load(vURL);
+            // Modal Full
+            $('#EmployeeDataModalContent').parent().addClass('modal-dialog-full');
+            // Modal Show
+            $('#EmployeeDataModal').modal('show');
+        })
+
+
+    </script>
+
+    <!-- SizeData Modal -->
+    <div id="SizeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="SizeDataModalContent"></div>
+        </div>
+    </div>
+    <!-- AccountData Modal -->
+    <div id="EmployeeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="EmployeeDataModalContent"></div>
+        </div>
+    </div>
+    <!--Above Checked-->
+    <script>
+
+
+        // Select Customer
+        $('body').on('click', '.btnSelect', function () {
+            var vStoreEmployeeList = ''
+            var count = $("input[name='chkIsValid']:checked").length;
+            if (count == 0) {
+                $('#EmployeeDataModal').modal('hide');
+            }
+            else {
+                $('.tblStoreEmployeeSearch > tbody > tr ').each(function (i) {
+                    // Element
+                    var vElement = $(this).find('.clsChk')
+                    var vSelectedChk = vElement.prop('checked')
+                    // Get Id
+                    var vStoreEmployeeId = vElement.attr('data-id');
+                    // Check
+                    if (vSelectedChk) {
+                        vStoreEmployeeList += vStoreEmployeeId + ','
+                        //if (i == $('.tblStoreEmployeeSearch > tbody > tr ').length - 1) {
+
+                        // close The Modal
+                        $('#EmployeeDataModal').modal('hide');
+                        //}
+
+                    }
+                })
+                funGetStoreEmployeeList(vStoreEmployeeList)
+
+            }
+        })
+        function funGetStoreEmployeeList(pList) {
+
+            //// Get Value [Id]
+            //var vSelectedStoreEmployee = $('#selectStoreEmployeeMain').val();
+
+            // GET Data
+            $.get('/StoreEmployee/GetFilterEmployee',
+                {
+                    pList: pList
+                },
+                function (StoreEmployeeData, status) {
+
+                    // Table Body
+                    var vStoreEmployeeTableBody = $('.tblStoreEmployeeBody');
+                    // HTML CLEAR
+                    vStoreEmployeeTableBody.html('');
+
+                    // JSON
+                    var vStoreEmployeeDataResult = JSON.parse(StoreEmployeeData);
+
+                    // For Each Cash Desk - Main
+                    $.each(vStoreEmployeeDataResult, function (m, StoreEmployeeSubData) {
+
+                        // GET Cash Desk Row Content
+                        var vStoreEmployeeRowContent = funStoreEmployeeRowConfig(vStoreEmployeeDataResult[m]);
+                        // Append Row Content
+                        vStoreEmployeeTableBody.append(vStoreEmployeeRowContent);
+
+                    })
+                    //funStoreEmployeeRow();
+                })
+
+        }
+
+        // Print
+        $('.btnPrint').on('click', function () {
+            var url = '/StoreEmployee/StoreEmployeeReport'
+            var popupWindow = window.open(url);
+        });
+        //SimpleInSameWin()
+
+
+    </script>
+
+
+

@@ -1,0 +1,380 @@
+﻿@using appSERP.Views.Shared.appResource
+@{
+    //Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+    Layout = null;
+}
+@{
+    DateTime dateTimeFrom = ViewBag.DateFrom;
+    DateTime dateTimeTo = ViewBag.DateTo;
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+}
+<style>
+    body {
+        background-color: #FFF;
+    }
+
+    .divFormControl, divFormDtl {
+        background-color: #FFF;
+        padding: 3px;
+    }
+
+    .tblGlVoucherBody {
+        text-align: center;
+        background-color: #FFF;
+    }
+    .divFormDtl, .divDtl {
+        height: 40vh !important;
+        overflow-y: scroll !important;
+        background-color: #FFF;
+    }
+
+    .clsSelected {
+        background-color: #0094ff;
+    }
+
+    .clsEdit {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+</style>
+<div class="divContainer bg-light">
+    <div class="card">
+        <div class="card-header ">
+            فواتير التوصيل
+        </div>
+        <div class="card-body">
+            <div class="divFormControl">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>رقم الفاتورة<input type="text" class="form-control txtDocSearchNo" name="chkIsValid" min="0" /></div>
+                    </div>
+
+                    <div class="col-sm-5">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @appResource.dtFrom
+                                <input type="date" class="form-control txtDateFrom"  value="@dateTimeFrom.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="col-md-6">
+                                @appResource.dtTo
+                                <input type="date" class="form-control txtDateTo"  value="@dateTimeTo.ToString("yyyy-MM-dd")" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-sm-2 bg-white">
+                        <div class="card-footer bg-white">
+                            <button type="button" class="btn btn-secondary btn-block btnSearch">@appResource.btnSearch</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="divFormDtl">
+                <table class="table table-bordered table-hover tblGlVoucher">
+                    <thead>
+                        <tr>
+
+                            <th>رقم الفاتورة</th>
+                            <th>@appResource._Date</th>
+                            <th>السائق</th>
+                            <th>المبلغ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tblGlVoucherBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4" style="background-color:#D3EDFF">
+            <div class="row pt-2">
+                <div class="col-sm-2">
+                    <label class="small float-right pt-2 Site">@appResource.dtFrom</label>
+                </div>
+                <div class="row col-sm-10">
+                    <div>
+                        <input type="date" id="start" class="form-control form-control-sm" autocomplete="off" />
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="small float-right pt-2 Site">@appResource.dtTo</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="Date" class="form-control txtDateTo" />
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-2">
+                <div class="col-sm-2">
+                    <label class="small float-right pt-2 Site">العميل</label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" id="start" class="form-control form-control-sm Location CustomerName" autocomplete="off" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <label class="small float-right pt-2 Site">الموقع</label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" id="start" class="form-control form-control-sm Location SiteName" autocomplete="off" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <label class="small float-right pt-2 Site">قيمة الفاتورة</label>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" id="start" class="form-control form-control-sm Location InvoicePrice" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <label class="small float-right pt-2 Site">السائق</label>
+                </div>
+                <div class="col-sm-8">
+                    <select id="Driver" class="Driver form-control " name="Driver" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required></select>
+                </div>
+            </div>
+            <div class=" ">
+                <button type="button" class="btn btn-secondary btn-block clsEdit">تعديل</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card row">
+        <div class="card-body row">
+            <div class="col-md-4"></div>
+
+            <div class="col-md-2">
+                <button type="button" class="btn btn-secondary btn-block btnClose">اغلاق</button>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+
+    </div>
+</div>
+<!--Load Select List Of Driver-->
+<script>
+     funDriver(Driver)
+    console.log(Driver)
+    //var vDriverId = 0
+    // List GetDriver
+    //$.get('/api/APIResEmployee/ResEmployeeGET',
+    //    {
+    //        pQueryTypeId: '400',
+
+    //    },
+    //    function (data, status) {
+    //        var vDataJSON = JSON.parse(data);
+    //        console.log(vDataJSON)
+    //        $.each(vDataJSON, function (i, Driver) {
+    //            console.log(Driver)
+    //            $('#Driver').append('<option data-id="' + Driver.ResEmployeeId + '" value="' + Driver.ResEmployeeId + '" sort-id="' + i + '">' + Driver.ResEmployeeNameL1 + '</option>')
+    //            if (i == 0) {
+    //                vDriverId = Driver.DriverId;
+    //            }
+    //        })
+    //        $('#Driver').val(vDriverId);
+    //        // Refresh Select Picker
+    //        $('.Driver').selectpicker('refresh');
+    //    })
+
+    function funDriver(Data) {
+            var vDataJSON = JSON.parse(Data);
+            $.each(vDataJSON, function (i, Driver) {
+                $('#Driver').append('<option data-id="' + Driver.ResEmployeeId + '" value="' + Driver.ResEmployeeId + '" sort-id="' + i + '">' + Driver.ResEmployeeNameL1 + '</option>')
+                if (i == 0) {
+                    vDriverId = Driver.DriverId;
+                }
+            })
+            $('#Driver').val(vDriverId);
+            // Refresh Select Picker
+           $('#Driver').selectpicker('refresh');
+        }
+</script>
+<script>
+
+
+
+    //function Append
+    function funGlVoucherRowConfig(pGLVoucherRow) {
+        var InvoiceDtl = JSON.stringify(pGLVoucherRow.InvoiceDTL)
+        var Total = (pGLVoucherRow.Total).toFixed(2)
+        // Content
+        var RowContent = '<tr class="tblGlVoucherRow" data-id="' + pGLVoucherRow.InvId + '" Customer-Name="' + pGLVoucherRow.CustomerName + '" Site="' + pGLVoucherRow.SiteNameL1 + '" Driver="' + pGLVoucherRow.Delivery + '" Price="' + Total + '">' +
+            //'<td><input type="checkbox" class="clsChk" name="chkIsValid" data-id="' + pGLVoucherRow.InvId + '"/></td> ' +
+            '<td class="d-none clsData">' + InvoiceDtl + '</td>' +
+            '<td class="code">' + pGLVoucherRow.InvCode + '</td>' +
+            '<td>' + pGLVoucherRow.InvDate + '</td>' +
+            '<td>' + pGLVoucherRow.ResEmployeeNameL1 + '</td>' +
+            '<td>' + (Total) + '</td>' +
+            +'</tr > '
+        return RowContent
+    }
+    function funGetGLVoucherData(DocNo, psDateFrom, psDateTo, phGLVoucherRef, phGLVoucherRefDate, phGLVoucherNote, phNumbers, phInvType) {
+        var vDataResult;
+        $.get('/api/APIINVInvoice/INVInvoiceGET',
+            {
+                // Head Parameters
+               // phInvId: DocNo,
+                psGLVoucherNo: DocNo,
+                psDateFrom: psDateFrom,
+                psDateTo: psDateTo,
+                phInvRef: phGLVoucherRef,
+                phNotes: phGLVoucherNote,
+                phNumbers: phNumbers,
+                pDeliveryInvoice: true,
+                //phIsDeleted: false,
+                // Query Type Id
+                pQueryTypeId: '401',
+                phInvtype: 33,
+    branchId:@BranchId,
+            },
+            function (data, status) {
+
+                // JSON Parse
+                vDataResult = JSON.parse(data);
+
+                $('.tblGlVoucherBody').html('');
+                $.each(vDataResult, function (m, GLVoucherData) {
+                    // GET Cash Desk Row Content
+                    var vAccountRowContent = funGlVoucherRowConfig(vDataResult[m]);
+
+                    // Append Row Content
+                    $('.tblGlVoucherBody').append(vAccountRowContent);
+                });
+            })
+        return vDataResult
+    }
+    // Action Search
+    $('.btnSearch').on('click', function () {
+        var vDocSearchNo = $('.txtDocSearchNo').val();
+     
+
+              var timeFrom = $('.timeFrom').val()
+            var timeTo=$('.timeTo').val()
+            var vDateFrom = $('.dtpDateFrom').val()+' '+timeFrom
+            var vDateTo = $('.dtpDateTo').val()+' '+timeTo
+
+        var vRefNum = $('.txtRefNum').val();
+        var vRefDate = $('.txtRefDate').val();
+        var vText = $('#txtNote').val();
+        var vhInvTypeId = $('.txtInvType').val();
+
+        // Get Row
+        funGetGLVoucherData(vDocSearchNo, vDateFrom, vDateTo, vRefNum, vRefDate, vText, null, vhInvTypeId)
+    })
+    // Actione Load
+    $(document).ready(function () {
+         var vhInvTypeId = $('.txtInvType').val();
+        var vDateFrom = $('.txtDateFrom').val();
+        var vDateTo = $('.txtDateTo').val();
+        console.log(vDateFrom)
+        console.log(vDateTo)
+        // Get Row
+        funGetGLVoucherData(null, vDateFrom, vDateTo, null, null, null, null, vhInvTypeId)
+    });
+
+</script>
+<script>
+
+    // CheckBox Selector
+    $(".btnCheckAll").click(function () {
+        var vChecked = $(this).attr('data-checked');
+
+        if (vChecked == 'true') {
+            $(this).attr('data-checked', 'false');
+            $("input[name='chkIsValid']").prop("checked", false);
+        }
+        else {
+            $(this).attr('data-checked', 'true');
+            vChecked = $(this).attr('data-checked');
+            $("input[name='chkIsValid']").prop("checked", true);
+        }
+    });
+
+</script>
+<!--ON CLICK ROW-->
+<script>
+    $('.tblGlVoucherBody').on('click', '.tblGlVoucherRow', function () {
+        $('.tblGlVoucherRow').removeClass('clsSelected')
+        $(this).addClass('clsSelected')
+
+        var Element = $(this).attr('data-id')
+        var Data = $(this).find('.clsData').text()
+
+        var vDataResult = JSON.parse(Data)
+        var TableRow = $('.tblDtlBody')
+        TableRow.html('')
+        $.each(vDataResult, function (i, Dtl) {
+            TableRow.append(funDtlRowConfig(Dtl))
+        })
+    })
+    function funDtlRowConfig(pGLVoucherRow) {
+        // Content
+        var RowContent = '<tr class="tblGlVoucherRow" data-id="' + pGLVoucherRow.InvId + '"  >' +
+            '<td class="text-center">' + pGLVoucherRow.InvItemName + '</td>' +
+            '<td class="text-center">' + pGLVoucherRow.Qty + '</td>' +
+            '<td class="text-center">' + pGLVoucherRow.Price + '</td>' +
+            +'</tr >'
+        return RowContent
+    }
+
+
+    $('.btnSelect').on('click', function () {
+        var InvId = $('.clsSelected').attr('data-id')
+        console.log(InvId)
+        if (InvId) {
+            $.get('/POS/GetReport',
+                {
+                    pInvId: InvId,
+                    phNumbers: null,
+                }, function () {
+                })
+        }
+    })
+    //Close
+    $('.btnClose').on('click', function () {
+        $('#AccountDataModal').modal('hide');
+    })
+</script>
+<script>
+    var InvId;
+    $('table').on('click', 'tr', function () {
+        var Element = $(this)
+        InvId = Element.attr('data-id')
+        var CustomerName = Element.attr('Customer-Name')
+        var Site = Element.attr('Site')
+        var Driver = Element.attr('Driver')
+        var Price = Element.attr('Price')
+        $('.CustomerName').val(CustomerName)
+        $('.SiteName').val(Site)
+        $('.InvoicePrice').val(Price)
+        $('.Driver').val(Driver)
+        $('.Driver').selectpicker('refresh');
+    })
+    $('.clsEdit').on('click', function () {
+        var Driv = $('#Driver').val();
+        console.log(Driv)
+        $.get('/api/APIINVInvoice/INVInvoiceGET',
+            {
+                // Head Parameters
+                phInvId: InvId,
+                pDelivery: Driv,
+                // Query Type Id
+                pQueryTypeId: '202',
+                //phInvtype: 33,
+            },
+            function (data, status) {
+                funNotification('تم التعديل', 1)
+            })
+    });
+
+
+</script>

@@ -1,0 +1,15 @@
+﻿@model  IEnumerable<appSERP.Models.InvoiceDtl>
+@{
+    Layout = null;
+}
+ @foreach (var pGLVoucherRow in Model)
+ {
+     double? t = pGLVoucherRow.Qty * pGLVoucherRow.Price;
+    <tr class="tblGlVoucherRow" data-id="@pGLVoucherRow.InvId">
+        <td class="code"> @pGLVoucherRow.InvItemName </td>
+        <td> @pGLVoucherRow.Qty </td>
+        <td>@pGLVoucherRow.Price </td>
+        <td>@pGLVoucherRow.VatTotal</td>
+        <td>@t </td>
+    </tr>
+    }

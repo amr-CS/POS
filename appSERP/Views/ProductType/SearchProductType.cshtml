@@ -1,0 +1,170 @@
+﻿@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "ProductTypeSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divProductType {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divProductTypeSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divProductTypeSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divProductTypeNo {
+        width: 60px;
+    }
+</style>
+
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">@appResource._Parent</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+<div class="divProductType">
+    <table class="table table-bordered tblData border">
+        <thead>
+        </thead>
+        <tbody class="tblBodyProductType"></tbody>
+    </table>
+</div>
+
+
+<!-- ProductType GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // ProductType GET
+        funProductTypeGET();
+    })
+
+    // ProductType GET
+    function funProductTypeGET() {
+
+        $.get('/api/APIProductType/ProductTypeGET',
+            {
+                pProductTypeLevel:"2",
+
+            }, function (data, status) {
+
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyProductType');
+
+
+                // ProductTypes
+                $.each(vDataResult, function (i, ProductTypeData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].ProductTypeId + '">';
+
+                        var vProductTypeName = vDataResult[i].ProductTypeNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vProductTypeName = vDataResult[i].ProductTypeNameL2;
+                             }
+                    var vProductTypeTypeName = vDataResult[i].ProductTypeTypeNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vProductTypeTypeName = vDataResult[i].ProductTypeTypeNameL2;
+                    }
+                    var vCountryName = vDataResult[i].CountryNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCountryName = vDataResult[i].CountryNameL2;
+                    }
+                    var vCityName = vDataResult[i].CityNameL1;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vCityName = vDataResult[i].CityNameL2;
+                        }
+
+                        vRowContent += '<td data-id="' + vDataResult[i].ProductTypeId + '">';
+                            vRowContent += '<div class="divProductTypeSelect d-flex p-2" data-id="' + vDataResult[i].ProductTypeId + '">';
+                                vRowContent += '<div class="divProductTypeNo px-4">' + vDataResult[i].ProductTypeCode + '</div>';
+                               vRowContent += '<div class="divProductTypeName px-4">' + vDataResult[i].ProductTypeNameL1 + '</div>';
+                              vRowContent += '<div class="divProductTypeNameL2 px-4">' + vDataResult[i].ProductTypeNameL2 + '</div>';
+                    vRowContent += '<div class="divProductTypeShortName px-4">' + vDataResult[i].ShortName + '</div>';
+                    vRowContent += '<div class="divProductTypeLevel px-4">' + vDataResult[i].ProductTypeLevel + '</div>';
+                          
+
+                    vRowContent += '<div visibil class="divProductTypeIsActive d-none px-4" ><input type="checkbox" class="chkProductTypeIsActive"  id=chkProductTypeIsActive'+i+'"  checked="' + vDataResult[i].ProductTypeIsActive + '" /></div>';
+                                //vRowContent += '<div class="divProductTypeCurrencyFactor d-none px-4">' + vDataResult[i].CurrencyExchange + '</div>';
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+    }
+
+</script>
+
+<!-- Search ProductType -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        if (vSearchInput) {
+
+            // Check All
+            $('.divProductTypeSelect').each(function () {
+
+                // Get ProductType Code
+                var vProductTypeCode = $(this).find('.divProductTypeNo').text();
+                var vProductTypeName = $(this).find('.divProductTypeName').text();
+
+                if (vProductTypeCode.search(vSearchInput) != -1 || vProductTypeName.search(vSearchInput) != -1) {
+
+                    $(this).addClass('table-success');
+                    $(this).hide();
+
+                    console.log('found')
+                }
+                else {
+                    $(this).removeClass('table-success');
+                    $(this).show();
+                }
+
+            })
+
+        }
+        else {
+            $('.divProductTypeSelect').removeClass('table-success');
+            $(this).show();
+        }
+    })
+</script>
+

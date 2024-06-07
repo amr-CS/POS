@@ -1,0 +1,199 @@
+﻿<!-- Account -->
+@model System.Data.DataTable
+@using System.Data
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.dbCode.ACC
+@using appSERP.appCode.Setting.User
+@{ DataTable vDtData = @Model;}
+
+
+<!-- Header -->
+<div >
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource._Account })
+</div>
+<!-- Data Container -->
+<div  id="divContainer">
+    <!-- DataTable  -->
+    <table class="table table-hover tblData" id="tblData" >
+        <!-- DataTable Header -->
+        <thead>
+            <tr>
+                <th>@appResource._Account</th>
+                <th>@appResource._Currency</th>
+                <th>@appResource.CurrencyFactorId</th>
+                <th>@appResource.SecurityGradeId</th>
+                <th>@appResource.AccountTypeId</th>
+                <th>@appResource.CashFlowTypeId</th>
+                <th>@appResource._Parent</th>
+                <th>@appResource._Level</th>
+                <th>@appResource._IsDebit</th>
+                <th>@appResource.btnReport</th>
+                <th>@appResource._IsAccumulative</th>
+                <th>@appResource._IsActive</th>
+                <th class="thActions">@appResource._Actions</th>
+            </tr>
+        </thead> <!-- End of DataTable Header -->
+        <!-- DataTable Body -->
+        <tbody>
+            @foreach (DataRow vDrwData in vDtData.Rows)
+            {
+                <tr data-active="@vDrwData["AccountIsActive"]" data-id="@vDrwData["AccountId"]">
+                    <!-- Data -->
+                    @if (clsUser.vUserLanguageId == 1)
+                    {
+                        <td title="@vDrwData["AccountNameL1"]">@vDrwData["AccountNameL1"]</td>
+                        <td title="@vDrwData["CurrencyNameL1"]">@vDrwData["CurrencyNameL1"]</td>
+                        <td title="@vDrwData["CurrencyFactorNameL1"]">@vDrwData["CurrencyFactorNameL1"]</td>
+                        <td title="@vDrwData["SecurityGradeNameL1"]">@vDrwData["SecurityGradeNameL1"]</td>
+                        <td title="@vDrwData["AccountTypeNameL1"]">@vDrwData["AccountTypeNameL1"]</td>
+                        <td title="@vDrwData["CashFlowTypeNameL1"]">@vDrwData["CashFlowTypeNameL1"]</td>
+                    }
+                    else
+                    {
+                        <td title="@vDrwData["AccountNameL2"]">@vDrwData["AccountNameL2"]</td>
+                        <td title="@vDrwData["CurrencyNameL2"]">@vDrwData["CurrencyNameL2"]</td>
+                        <td title="@vDrwData["CurrencyFactorNameL2"]">@vDrwData["CurrencyFactorNameL2"]</td>
+                        <td title="@vDrwData["SecurityGradeNameL2"]">@vDrwData["SecurityGradeNameL2"]</td>
+                        <td title="@vDrwData["AccountTypeNameL2"]">@vDrwData["AccountTypeNameL2"]</td>
+                        <td title="@vDrwData["CashFlowTypeNameL2"]">@vDrwData["CashFlowTypeNameL2"]</td>
+                    }
+                    <td title="@vDrwData["AccountParentId"]">@vDrwData["AccountParentId"]</td>
+                    <td title="@vDrwData["AccountLevel"]">@vDrwData["AccountLevel"]</td>
+                    <td title="@vDrwData["AccountIsDebit"]">@vDrwData["AccountIsDebit"]</td>
+                    <td title="@vDrwData["AccountingReportId"]">@vDrwData["AccountingReportId"]</td>
+                    <td title="@vDrwData["AccountIsCumulative"]">@vDrwData["AccountIsCumulative"]</td>
+
+                    <td class="dataIsActive"><input type="checkbox" class="fa fa-check"  ></td>
+                    <!-- Actions -->
+                    <td>
+                        <!-- Edit -->
+                        <button type="button" class="btn btnEdit" data-id="@vDrwData["AccountId"]">
+                            <i class="icoEdit"></i>
+                        </button>
+                        <!-- Delete -->
+                        <button type="button" class="btn btnDelete" data-id="@vDrwData["AccountId"]" data-name="@vDrwData["AccountNameL1"]">
+                            <i class="icoDelete"></i>
+                        </button>
+                    </td> <!-- End of Actions Cell -->
+                </tr>
+            }
+        </tbody><!-- End of DataTable Body -->
+    </table> <!-- End of DataTable -->
+</div> <!-- End of Data Container -->
+<!-- Data Modal -->
+<div id="dataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="dataModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+
+<div id="divTreeView">
+
+</div>
+<div id="divTreeView2">
+    <ul><li><a href="#">1</a><ul><li><a href="#">2</a></li><li><a href="#">3</a></li></ul></li><li><a href="#">4</a></li></ul>
+</div>
+@*style="padding-right: 1000px !important;"*@
+
+<!-- Script Create / Edit / Delete -->
+<script>
+    // Data Model URL
+    var vDataURL = '/Account/DataModel/';
+    // Data Model Elements [Create / Edit]
+    var vDataModelElements = $('.btnCreate, .btnEdit');
+    // Click Event
+    vDataModelElements.on('click', function () {
+        // Id
+        var vDataId = $(this).attr('data-id');
+
+        // Modal
+        $('#dataModalContent').load(vDataURL + vDataId);
+        // Check Modal Input
+        funCheckModalInput();
+        // Modal Show
+        $('#dataModal').modal('show');
+    });</script>
+<script>
+    $('.btnDelete').on('click', function () {
+        // Id - NameAr - NameEn
+        var vDataId = $(this).attr('data-id');
+        var vDataName = $(this).attr('data-name');
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        $.get(
+            // URL
+            vDataURL,
+            // Parameters
+            {
+                id: vDataId,
+                pName: vDataName,
+            },
+            // Function
+            function (data, status) {
+                // Modal
+                $('#confirmDeleteModalContent').html(data);
+                $('#confirmDeleteModal').modal('show');
+                // Click Event [Delete Confirm]
+                $("body").on("click", "#btnDeleteConfirm", function () {
+                    // Delete Action URL
+                    var vDeleteActionURL = '/Account/DataModel/';
+                    // Delete
+                    $.post(vDeleteActionURL, { id: vDataId, pIsDelete: true }, function () {
+                        window.location.href = '/Account';
+                    });
+                });
+            });
+    }); // End of Click Event [Delete Button]
+</script>
+
+
+
+<!-- Notification -->
+
+<script src="~/Scripts/Notification/jquery.toast.js"></script>
+<script src="~/Scripts/Notification/jsNotifications.js" type="text/javascript"></script>
+
+<script src="~/Scripts/TreeView/jsTreeView.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var Accounts = [];
+        var Parents = [];
+        var AccountsDisplayName = [];
+
+
+        $.post('/Account/GetTreeViewList/',
+            {
+            },
+            function (data, status) {
+
+                //Accounts = data.split(",");
+                var vDataJSON = JSON.parse(data);
+                $.each(vDataJSON, function (i, Account) {
+                    Accounts.push(Account.AccountId)
+                    Parents.push(Account.AccountParentId)
+                    AccountsDisplayName.push(Account.AccountDisplayName)
+                })
+
+                fnbuildtreeview(Accounts, Parents, $("#divTreeView"), AccountsDisplayName);
+                $("#divTreeView").filetree();
+            });
+
+    });
+
+</script>
+<script>
+</script>
+
+<script>
+    funNotification('@dbAccount.vSQLResult', '@dbAccount.vSQLResultTypeId');
+    @{ dbAccount.vSQLResult = string.Empty;}
+</script>
+

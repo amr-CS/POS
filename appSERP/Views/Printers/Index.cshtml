@@ -1,0 +1,1667 @@
+﻿@using appSERP.Views.Shared.appResource;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewBag.Title = "الطابعات";
+}
+
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+
+
+
+
+
+
+    .cardHeader {
+        background-color: #D3EDFF;
+    }
+</style>
+<!--Scrolling Table-->
+<style>
+    #table-wrapper {
+        position: relative;
+    }
+
+    #table-wrapper-DTL {
+        position: relative;
+    }
+
+    #table-scroll {
+        height: 250px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    #table-scroll-DTL {
+        height: 300px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    #table-wrapper table thead th .text {
+        position: absolute;
+        top: -20px;
+    }
+
+    #table-wrapper-DTL table thead th .text {
+        position: absolute;
+        top: -20px;
+    }
+
+    .clsDiv {
+        /*position: fixed;*/
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        position: absolute;
+        top: -20px;
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        background-color: #D3EDFF !important;
+        background-color: #D3EDFF !important;
+    }
+</style>
+@*<div class="container-fluid">
+        <div class="row bg-white border rounded p-3 ">
+            <div>
+                <input type="submit" value="استعلام" class="btn btn-success btnSearch" />
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Edit -->
+                    <!-- ADD -->
+                    <button class="btn btnCreate btnUtilityCreate" title="@appResource.ttAdd"><i class="fa fa-save"></i></button>
+                    <!-- Cut -->
+                    <button class="btn btnUtility btnCut" title="@appResource.btnDelete"><i class="fa fa-cut"></i></button>
+                </div>
+                <div class="btn-group m-2" role="group" aria-label="First group">
+                    <!-- Next -->
+                    <button class="btn btnUtility   btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                    <!-- Prev -->
+                    <button class="btn btnUtility   btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                    <!-- First -->
+                    <button class="btn btnUtility btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                    <!-- Last -->
+                    <button class="btn btnUtility btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </div>*@
+
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = "", pIsNew = false })
+</div>
+@*<div class="container-fluid">*@
+<div class="bg-white border rounded p-3">
+    <div class="w-100">
+        <div class="d-flex justify-content-end">
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Save -->
+                <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+            </div>
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Copy -->
+                <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                <!-- Cut -->
+                <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                <!-- Paste -->
+                <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Print -->
+                <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                <!-- Sort Asc -->
+                <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                <!-- Sort Asc -->
+                <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- ADD -->
+                <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                <!-- Edit -->
+                <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- PDF -->
+                <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                <!-- Excel -->
+                <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                <!-- Word -->
+                <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Close -->
+                <button class="btn btnUtility btnClose" title="@appResource.ttClose"><i class="fa fa-close"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Next -->
+                <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                <!-- Prev -->
+                <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                <!-- First -->
+                <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                <!-- Last -->
+                <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Full Screen -->
+                <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <div class="dropdown">
+                    <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-table"></i>
+                    </button>
+                    <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*</div>*@
+@*<div class="container-fluid">*@
+
+@*<div class="row bg-white border rounded p-3 divPrinter" id="table-wrapper">
+    <div id="table-scroll">*@
+<div class="bg-white" id="table-wrapper">
+    <div id="table-scroll">
+        <div class=" clsDiv"><div style="visibility:hidden;">1</div></div>
+        @*<table class="tblPrinter border" width="100%">*@
+        <table class="tblPrinter" width="100%">
+            <!-- Head -->
+
+            <thead class="cardHeader">
+                <tr class="tblHead">
+
+                    <th>
+                        <div class="text"></div>
+
+                    </th>
+
+                    <th>
+                        <div class="text">@appResource.PrinterNo</div>
+
+                    </th>
+                    <th>
+                        <div class="text"> @appResource._Desc - عربي</div>
+
+                    </th>
+                    <th>
+
+                        <div class="text">@appResource._Desc - لاتيني</div>
+                    </th>
+                    <th>
+                        <div class="text"> @appResource.PrinterDesc - عربي</div>
+                    </th>
+                    <th>
+                        <div class="text">@appResource.PrinterDesc - لاتيني</div>
+                    </th>
+                    <th align="left">
+                        <div class="text" align="left">@appResource._IsActive</div>
+                    </th>
+                    @*class="thActions"*@
+                    <th class="thActions" align="center">
+                        <div class="text" align="center"> @appResource._Actions</div>
+
+                    </th>
+
+                </tr>
+            </thead>
+
+
+            <!-- Body -->
+            <tbody class="tblPrinterBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+@*</div>*@
+
+
+
+
+
+
+@*<div class="container-fluid divPrinterDTL" id="table-wrapper-DTL">*@
+<div class="divPrinterDTL" id="table-wrapper-DTL">
+    @*<div class="bg-white" id="table-wrapper-DTL">*@
+
+    @*<div class="row bg-white border  " id="table-scroll-DTL">*@
+    <div class="bg-white" id="table-scroll-DTL">
+        <div class=" clsDiv"><div style="visibility:hidden;">1</div></div>
+        <table class="tblPrinterDTL border" width="100%">
+            @*<table class="tblPrinterDTL" width="100%">*@
+            <!-- Head -->
+            <thead>
+                <tr>
+                    <th width="3%"> <div class="text"></div></th>
+                    <th width="5%"><div class="text">@appResource._Code</div> </th>
+                    <th colspan="2" width="20%"><div class="text">@appResource._Dep</div></th>
+                    <th width="10%"><div class="text">@appResource.PrinterName</div></th>
+                    <th width="10%"> <div class="text">IP</div></th>
+                    <th width="10%"><div class="text">@appResource.PortType</div></th>
+                    <th width="10%"> <div class="text">@appResource.PortNo</div></th>
+                    <th width="10%"><div class="text">@appResource.PrinterType</div></th>
+                    <th width="10%"><div class="text">@appResource.CopiesNo</div></th>
+                    <th><div class="text">@appResource._IsActive</div></th>
+                    <th class="thActions"><div class="text">@appResource._Actions</div></th>
+
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblPrinterDTLBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="InvTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="InvTypeDataModalContent"></div>
+    </div>
+</div>
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="confirmDeleteModalContent"></div>
+    </div>
+</div>
+<!-- PrinterData Modal -->
+<div id="PrinterDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="PrinterDataModalContent"></div>
+    </div>
+
+</div>
+
+
+<script>
+    var vSelectListPortTypeEmpty = '';
+    var vSelectListDirectPrintEmpty = '';
+    var vAllData = '';
+    var vFilteredData = '';
+    //funGetPrinters();
+    funGetAllPrinters(0);
+
+    function funClearDTL() {
+        $('.tblPrinterDTLBody').html('');
+        funFillSelectListPortType()
+        funFillSelectListDirectPort()
+                         setTimeout(function () {
+                             var vRowContent = '<tr class="tblRow" data-id="0">' +
+                                 '<td><button class="btn btn-sm btn-light btnPrinterDTLAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                 '<td width="7%"><input type="text" class="form-control PrinterDTLCode" disabled /></td>' +
+                                 '<td width="7%"><input type="text" class="form-control InvTypeId" data-id="0"  /></td>' +
+                                 '<td><input type="text" class="form-control  InvTypeNameL1" disabled  /></td>' +
+                                 '<td><input type="text" class="form-control PrinterName"   /></td>' +
+                                 '<td><input type="text" class="form-control PrinterIP"  /></td>' +
+                                 '<td><div>' +
+                                 vSelectListPortTypeEmpty
+                                 + '</div></td > ' +
+                                 '<td><input type="text" class="form-control PortNo"  /></td>' +
+                                 '<td><div>' +
+                                 vSelectListDirectPrintEmpty
+                                 + '</div></td >' +
+                                 '<td><input type="text" class="form-control PrintNum"   /></td>' +
+                                 '<td><input type="checkbox" class="form-control PrinterDTLIsActive "   /></td>' +
+                                 '<td><button class="btn btn-light btn-sm btnPrinterDTLDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                 '</tr>';
+
+                             $('.tblPrinterDTLBody').append(vRowContent);
+
+                }, 1100);
+
+
+        //var VSelectListPortType2 = '';
+        //var vRowContent3 = '';
+        //$.post('/Printers/GetPortType', {}, function (data, status) {
+        //    if (data != undefined && data != '') {
+        //        var vDataResult = JSON.parse(data);
+        //        VSelectListPortType2 = '<select   data-val="0"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+        //        $.each(vDataResult, function (i, PortType) {
+        //            VSelectListPortType2 += '<option value = "' + PortType.PortTypeId + '" > ' + PortType.PortTypeNameL1 + '</option >'
+        //        })
+        //        VSelectListPortType2 += '</select >'
+
+        //        vSelectListPortTypeEmpty = VSelectListPortType2
+
+        //        vRowContent3 += '<tr class="tblRow" data-id="0">' +
+        //            '<td><button class="btn btn-sm btn-light btnPrinterDTLAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+        //            '<td width="7%"><input type="text" class="form-control PrinterDTLCode" disabled /></td>' +
+        //            '<td width="7%"><input type="text" class="form-control InvTypeId" data-id="0"  /></td>' +
+        //            '<td><input type="text" class="form-control InvTypeNameL1"   /></td>' +
+        //            '<td><input type="text" class="form-control PrinterName"   /></td>' +
+        //            '<td><input type="text" class="form-control PrinterIP"  /></td>' +
+        //            '<td><div>' +
+        //            vSelectListPortTypeEmpty
+        //            + '</div></td > ' +
+        //            '<td><input type="text" class="form-control PortNo"  /></td>' +
+        //            '<td><div>' +
+        //            vSelectListDirectPrintEmpty;
+        //        + '</div></td >';
+        //            //'<td><input type="text" class="form-control PrintNum"   /></td>' +
+        //            //'<td><input type="checkbox" class="form-control PrinterDTLIsActive "   /></td>' +
+        //            //'<td><button class="btn btn-light btn-sm btnPrinterDTLDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+        //            //'</tr>';
+
+
+        //        //$('.tblPrinterDTLBody').append(vRowContent3);
+
+
+
+        //        var VSelectListDirectPrint2 = '';
+        //        $.post('/Printers/GetDirectPrint', {}, function (data, status) {
+        //            if (data != undefined && data != '') {
+        //                var vDataResult = JSON.parse(data);
+        //                VSelectListDirectPrint2 = '<select   data-val="0"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+        //                $.each(vDataResult, function (i, DirectPrint) {
+        //                    VSelectListDirectPrint2 += '<option value = "' + DirectPrint.DirectPrintId + '" > ' + DirectPrint.DirectPrintNameL1 + '</option >'
+        //                })
+        //                VSelectListDirectPrint2 += '</select >'
+        //                vSelectListDirectPrintEmpty = VSelectListDirectPrint2
+
+        //                vRowContent3 +=  '<td><input type="text" class="form-control PortNo"  /></td>' +
+        //                    '<td><div>' +
+        //                    vSelectListDirectPrintEmpty
+        //                    + '</div></td >' +
+        //                    '<td><input type="text" class="form-control PrintNum"   /></td>' +
+        //                    '<td><input type="checkbox" class="form-control PrinterDTLIsActive "   /></td>' +
+        //                    '<td><button class="btn btn-light btn-sm btnPrinterDTLDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+        //                    '</tr>';
+        //                $('.tblPrinterDTLBody').append(vRowContent3);
+
+        //            }
+
+        //        })
+
+
+        //    }
+
+        //})
+
+
+
+
+
+    }
+    $('.divPrinter').on('click', 'table tr', function () {
+        var vPrinterId = $(this).attr('data-id');
+        var vCurrentRow = $(this)
+        localStorage.setItem('vPrinterId', vPrinterId);
+
+        //funGetPrintersDTL(vPrinterId);
+        //var vCurrentRowIndex = vCurrentRow.index();
+        var vCurrentRowIndex = vCurrentRow.attr('data-index');
+        if (vAllData != undefined && vAllData != '') {
+            if (vFilteredData == '') {
+                console.log('')
+                if (vCurrentRowIndex <= vAllData.length - 1) {
+                    if (vCurrentRowIndex > -1) {
+                        funDtlRowConfig(vAllData[vCurrentRowIndex].tblPrinterDTL, vAllData[vCurrentRowIndex].PortType, vAllData[vCurrentRowIndex].DirectPrint, vAllData[vCurrentRowIndex])
+                    }
+                    else {
+                        $('.tblPrinterDTLBody').html('');
+                        funAddEmptyRowDTL();
+                    }
+
+                }
+                else {
+                    $('.tblPrinterDTLBody').html('');
+                    funAddEmptyRowDTL();
+                }
+            }
+            else {
+                if (vCurrentRowIndex <= vFilteredData.length - 1) {
+                    if (vCurrentRowIndex > -1) {
+                        funDtlRowConfig(vFilteredData[vCurrentRowIndex].tblPrinterDTL, vFilteredData[vCurrentRowIndex].PortType, vFilteredData[vCurrentRowIndex].DirectPrint, vFilteredData[vCurrentRowIndex])
+                    }
+                    else {
+                        $('.tblPrinterDTLBody').html('');
+                        funAddEmptyRowDTL();
+                    }
+                }
+                else {
+                    $('.tblPrinterDTLBody').html('');
+                    funAddEmptyRowDTL();
+                }
+            }
+
+        }
+        else {
+            $('.tblPrinterDTLBody').html('');
+            funAddEmptyRowDTL();
+        }
+
+
+    });
+
+    $('body').on('focus', '.PrinterDescL1,.PrinterDescL2,.ReportNameL1,.ReportNameL2', function () {
+
+
+        var vCurrentElement = $(this);
+        var vCurrentRow = $(this).closest('.tblRow');
+        var vPrinterId = vCurrentRow.attr('data-id');
+        localStorage.setItem('vPrinterId', vPrinterId);
+        //data - index = "' + pIndex+'"
+        console.log('vsessssion click' + localStorage.getItem('vPrinterId'))
+        console.log(vAllData)
+        //var vCurrentRowIndex = vCurrentRow.index();
+        var vCurrentRowIndex = vCurrentRow.attr('data-index');
+        if (vAllData != undefined && vAllData != '') {
+            if (vFilteredData == '') {
+                if (vCurrentRowIndex <= vAllData.length - 1) {
+                    if (vCurrentRowIndex > -1) {
+                        funDtlRowConfig(vAllData[vCurrentRowIndex].tblPrinterDTL, vAllData[vCurrentRowIndex].PortType, vAllData[vCurrentRowIndex].DirectPrint, vAllData[vCurrentRowIndex])
+                    }
+                    else {
+                        $('.tblPrinterDTLBody').html('');
+                        funAddEmptyRowDTL();
+                    }
+                }
+                else {
+                    $('.tblPrinterDTLBody').html('');
+                    funAddEmptyRowDTL();
+                }
+            }
+            else {
+                if (vCurrentRowIndex <= vFilteredData.length - 1) {
+                    if (vCurrentRowIndex > -1) {
+                        funDtlRowConfig(vFilteredData[vCurrentRowIndex].tblPrinterDTL, vFilteredData[vCurrentRowIndex].PortType, vFilteredData[vCurrentRowIndex].DirectPrint, vFilteredData[vCurrentRowIndex])
+                    }
+                    else {
+                        $('.tblPrinterDTLBody').html('');
+                        funAddEmptyRowDTL();
+                    }
+                }
+                else {
+                    $('.tblPrinterDTLBody').html('');
+                    funAddEmptyRowDTL();
+                }
+            }
+
+        }
+        else {
+            $('.tblPrinterDTLBody').html('');
+            funAddEmptyRowDTL();
+        }
+
+
+
+    });
+    function funGetAllPrinters(pOnlyRefresh) {
+        var vTableBody = $('.tblPrinterBody');
+        vTableBody.html('');
+        $.post('/Printers/GetAllPrinters', {}, function (data, status) {
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+                console.log('AllData')
+                vAllData = vDataResult;
+                console.log(vDataResult)
+                $.each(vDataResult, function (i, Printer) {
+
+                    if (pOnlyRefresh == 0) {
+                        funRowConfig(Printer,i);
+                    }
+                    if (i == vDataResult.length - 1) {
+                        if ($('.tblPrinterBody > tr').length > 0) {
+
+                            if (vFilteredData == '') {
+                                $(".tblPrinterBody tr:first").find('.PrinterDescL1').focus();
+                            }
+
+
+                        }
+                    }
+
+
+
+            })
+        }
+    })
+    }
+    function funRowConfig(pRow,pIndex)
+    {
+        var vTableBody = $('.tblPrinterBody');
+        var vChecked = ''
+        if (pRow.PrinterIsActive) {
+            vChecked = 'Checked ';
+        }
+        //width = "20%"
+        //width = "3%"
+        var vRowContent = '<tr class="tblRow" data-id="' + pRow.PrinterId + '" data-changed = "0" data-lastchanged = "0" data-index = "' + pIndex+'">' +
+            '<td width = "3%"><button class="btn btn-sm btn-light btnPrinterAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control PrinterCode" disabled value="' + pRow.PrinterCode + '" /></td>' +
+            '<td width="20%"><input type="text" class="form-control PrinterDescL1"  value="' + pRow.PrinterDescL1 + '" /></td>' +
+            '<td width="20%"><input type="text" class="form-control PrinterDescL2"  value="' + pRow.PrinterDescL2 + '" /></td>' +
+            '<td width="20%"><input type="text" class="form-control ReportNameL1"  value="' + pRow.ReportNameL1 + '" /></td>' +
+            '<td width="20%"><input type="text" class="form-control ReportNameL2"  value="' + pRow.ReportNameL2 + '" /></td>' +
+            '<td width="5%" align="right" ><input type="checkbox" class="form-control PrinterIsActive "' + vChecked + '"   /></td>' +
+            '<td width="3%" align="center" ><button class="btn btn-light btn-sm btnPrinterDelete" data-id="' + pRow.PrinterId + '"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+
+
+        vTableBody.append(vRowContent);
+        //funDtlRowConfig(pRow.tblPrinterDTL, pRow.PortType, pRow.DirectPrint, pRow)
+
+    }
+    function funDtlRowConfig(pRowDTL, pSelectListPortType, pSelectListDirectPrint, pRow,pIndex)
+    {
+        console.log(pRowDTL)
+        var vTableBody = $('.tblPrinterDTLBody');
+        vTableBody.html('');
+        var vRowContent = ''
+        if (pRowDTL != null) {
+            for (var x = 0; x < pRowDTL.length; x++) {
+
+                var vSelected;
+                var vChecked = ''
+                if (pRowDTL[x].PrinterDTLIsActive) {
+                    vChecked = 'Checked ';
+                }
+
+                pSelectListPortType = '<select   data-val="' + pRow.PortTypeId + '"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+                for (var m = 0; m < pRow.PortType.length; m++) {
+                    if (pRowDTL[x].PortTypeId == pRow.PortType[m].PortTypeId) {
+                        vSelected = "selected";
+                        pSelectListPortType += '<option    selected = "' + vSelected + '" value = "' + pRow.PortType[m].PortTypeId + '" > ' + pRow.PortType[m].PortTypeNameL1 + '</option >'
+                    }
+                    else {
+                        pSelectListPortType += '<option value = "' + pRow.PortType[m].PortTypeId + '" > ' + pRow.PortType[m].PortTypeNameL1 + '</option >'
+                    }
+
+                }
+                pSelectListPortType += '</select > '
+                pSelectListDirectPrint = '<select   data-val="' + pRow.DirectPrintId + '"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+                for (var m = 0; m < pRow.DirectPrint.length; m++) {
+
+                    if (pRowDTL[x].DirectPrintId == pRow.DirectPrint[m].DirectPrintId) {
+                        vSelected = "selected";
+                        pSelectListDirectPrint += '<option   selected = "' + vSelected + '" value = "' + pRow.DirectPrint[m].DirectPrintId + '" > ' + pRow.DirectPrint[m].DirectPrintNameL1 + '</option >'
+                    }
+                    else {
+                        pSelectListDirectPrint += '<option value = "' + pRow.DirectPrint[m].DirectPrintId + '" > ' + pRow.DirectPrint[m].DirectPrintNameL1 + '</option >'
+                    }
+
+                }
+                pSelectListDirectPrint += '</select > '
+
+                vRowContent += '<tr class="tblRow" data-id="' + pRowDTL[x].PrinterDTLId + '" data-changed = "0" data-lastchanged = "0" data-index = "' + pIndex +'">' +
+                    '<td><button class="btn btn-sm btn-light btnPrinterDTLAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                    '<td width="7%"><input type="text" class="form-control PrinterDTLCode" disabled value="' + pRowDTL[x].PrinterDTLCode + '" /></td>' +
+                    '<td width="7%"><input type="text" class="form-control fullHeightInput InvTypeId" data-id="' + pRowDTL[x].InvTypeId + '"  value="' + pRowDTL[x].InvTypeCode + '" /></td>' +
+                    '<td><input type="text" class="form-control InvTypeNameL1" disabled  value="' + pRowDTL[x].InvTypeNameL1 + '" /></td>' +
+                    '<td><input type="text" class="form-control fullHeightInput PrinterName"  value="' + pRowDTL[x].PrinterName + '" /></td>' +
+                    '<td><input type="text" class="form-control fullHeightInput PrinterIP"  value="' + pRowDTL[x].PrinterIP + '" /></td>' +
+                    '<td><div>' +
+                    //<input type = "text" class="form-control PortTypeId"  value = "' + PrinterDTL.PortTypeId + '" />
+                    pSelectListPortType
+                    + '</div></td > ' +
+                    '<td><input type="text" class="form-control fullHeightInput PortNo"  value="' + pRowDTL[x].PortNo + '" /></td>' +
+                    '<td><div>' +
+                    //< input type = "text" class="form-control DirectPrintId"  value = "' + PrinterDTL.DirectPrintId + '" /> ' +
+                    pSelectListDirectPrint
+                    + '</div></td >' +
+                    '<td><input type="text" class="form-control fullHeightInput PrintNum"  value="' + pRowDTL[x].PrintNum + '" /></td>' +
+                    '<td align="center"><input type="checkbox" class="form-control PrinterDTLIsActive "' + vChecked + '"   /></td>' +
+                    '<td align="center"><button class="btn btn-light btn-sm btnPrinterDTLDelete" data-id="' + pRowDTL[x].PrinterDTLId + '"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>';
+
+
+            }
+        }
+        else {
+            funAddEmptyRowDTL()
+        }
+
+        vTableBody.append(vRowContent);
+
+    }
+    function funAddEmptyRowDTL() {
+        var vTableBody = $('.tblPrinterDTLBody');
+        var vSelectListPortType = '';
+        var vSelectListDirectPrint = '';
+        var vChecked = 'Checked ';
+        if (vAllData != undefined && vAllData != '' && vFilteredData =='' ) {
+            vSelectListPortType = '<select   data-val="' + vAllData[0].PortTypeId + '"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+            for (var m = 0; m < vAllData[0].PortType.length; m++) {
+
+                vSelectListPortType += '<option value = "' + vAllData[0].PortType[m].PortTypeId + '" > ' + vAllData[0].PortType[m].PortTypeNameL1 + '</option >'
+            }
+            vSelectListPortType += '</select > '
+            vSelectListDirectPrint = '<select   data-val="' + vAllData[0].DirectPrintId + '"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+            for (var m = 0; m < vAllData[0].DirectPrint.length; m++) {
+                vSelectListDirectPrint += '<option value = "' + vAllData[0].DirectPrint[m].DirectPrintId + '" > ' + vAllData[0].DirectPrint[m].DirectPrintNameL1 + '</option >'
+            }
+            vSelectListDirectPrint += '</select > '
+        }
+        else if (vFilteredData != '') {
+            vSelectListPortType = '<select   data-val="' + vFilteredData[0].PortTypeId + '"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+            for (var m = 0; m < vFilteredData[0].PortType.length; m++) {
+
+                vSelectListPortType += '<option value = "' + vFilteredData[0].PortType[m].PortTypeId + '" > ' + vFilteredData[0].PortType[m].PortTypeNameL1 + '</option >'
+            }
+            vSelectListPortType += '</select > '
+            vSelectListDirectPrint = '<select   data-val="' + vFilteredData[0].DirectPrintId + '"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+            for (var m = 0; m < vFilteredData[0].DirectPrint.length; m++) {
+                vSelectListDirectPrint += '<option value = "' + vFilteredData[0].DirectPrint[m].DirectPrintId + '" > ' + vFilteredData[0].DirectPrint[m].DirectPrintNameL1 + '</option >'
+            }
+            vSelectListDirectPrint += '</select > '
+        }
+        else {
+            $.post('/Printers/GetSelectLists', {}, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    vSelectListPortType = '<select   data-val="0"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+                    for (var m = 0; m < vDataResult[0].PortType.length; m++) {
+
+                        vSelectListPortType += '<option value = "' + vDataResult[0].PortType[m].PortTypeId + '" > ' + vDataResult[0].PortType[m].PortTypeNameL1 + '</option >'
+                    }
+                    vSelectListPortType += '</select >'
+                    vSelectListDirectPrint = '<select   data-val="0"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+                    for (var m = 0; m < vDataResult[0].DirectPrint.length; m++) {
+                        vSelectListDirectPrint += '<option value = "' + vDataResult[0].DirectPrint[m].DirectPrintId + '" > ' + vDataResult[0].DirectPrint[m].DirectPrintNameL1 + '</option >'
+                    }
+                    vSelectListDirectPrint += '</select >'
+                }
+            })
+
+        }
+
+
+
+
+        var vRowContent = '<tr class="tblRow" data-id="0" data-changed = "0" data-lastchanged = "0">' +
+            '<td><button class="btn btn-sm btn-light btnPrinterDTLAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control PrinterDTLCode" disabled /></td>' +
+            '<td width="7%"><input type="text" class="form-control InvTypeId" data-id="0"  /></td>' +
+            '<td><input type="text" class="form-control InvTypeNameL1" disabled   /></td>' +
+            '<td><input type="text" class="form-control PrinterName"   /></td>' +
+            '<td><input type="text" class="form-control PrinterIP"   /></td>' +
+            '<td><div>' +
+            //<input type = "text" class="form-control PortTypeId"  value = "' + PrinterDTL.PortTypeId + '" />
+            vSelectListPortType
+            + '</div></td > ' +
+            '<td><input type="text" class="form-control PortNo" /></td>' +
+            '<td><div>' +
+            //< input type = "text" class="form-control DirectPrintId"  value = "' + PrinterDTL.DirectPrintId + '" /> ' +
+            vSelectListDirectPrint
+            + '</div></td >' +
+            '<td><input type="text" class="form-control PrintNum"   /></td>' +
+            '<td align="center"><input type="checkbox" class="form-control PrinterDTLIsActive "' + vChecked + '"   /></td>' +
+            '<td align="center"><button class="btn btn-light btn-sm btnPrinterDTLDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+        vTableBody.append(vRowContent);
+
+
+    }
+    function funAddReturnEmptyRowDTL() {
+        var vTableBody = $('.tblPrinterDTLBody');
+        var vSelectListPortType = '';
+        var vSelectListDirectPrint = '';
+        var vChecked = 'Checked ';
+        if (vAllData != undefined && vAllData != '' && vFilteredData == '') {
+            vSelectListPortType = '<select   data-val="' + vAllData[0].PortTypeId + '"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+            for (var m = 0; m < vAllData[0].PortType.length; m++) {
+
+                vSelectListPortType += '<option value = "' + vAllData[0].PortType[m].PortTypeId + '" > ' + vAllData[0].PortType[m].PortTypeNameL1 + '</option >'
+            }
+            vSelectListPortType += '</select > '
+            vSelectListDirectPrint = '<select   data-val="' + vAllData[0].DirectPrintId + '"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+            for (var m = 0; m < vAllData[0].DirectPrint.length; m++) {
+                vSelectListDirectPrint += '<option value = "' + vAllData[0].DirectPrint[m].DirectPrintId + '" > ' + vAllData[0].DirectPrint[m].DirectPrintNameL1 + '</option >'
+            }
+            vSelectListDirectPrint += '</select > '
+        }
+        else if (vFilteredData != '') {
+            vSelectListPortType = '<select   data-val="' + vFilteredData[0].PortTypeId + '"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+            for (var m = 0; m < vFilteredData[0].PortType.length; m++) {
+
+                vSelectListPortType += '<option value = "' + vFilteredData[0].PortType[m].PortTypeId + '" > ' + vFilteredData[0].PortType[m].PortTypeNameL1 + '</option >'
+            }
+            vSelectListPortType += '</select > '
+            vSelectListDirectPrint = '<select   data-val="' + vFilteredData[0].DirectPrintId + '"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+            for (var m = 0; m < vFilteredData[0].DirectPrint.length; m++) {
+                vSelectListDirectPrint += '<option value = "' + vFilteredData[0].DirectPrint[m].DirectPrintId + '" > ' + vFilteredData[0].DirectPrint[m].DirectPrintNameL1 + '</option >'
+            }
+            vSelectListDirectPrint += '</select > '
+        }
+        else {
+            $.post('/Printers/GetSelectLists', {}, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    vSelectListPortType = '<select   data-val="0"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+                    for (var m = 0; m < vDataResult[0].PortType.length; m++) {
+
+                        vSelectListPortType += '<option value = "' + vDataResult[0].PortType[m].PortTypeId + '" > ' + vDataResult[0].PortType[m].PortTypeNameL1 + '</option >'
+                    }
+                    vSelectListPortType += '</select >'
+                    vSelectListDirectPrint = '<select   data-val="0"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+                    for (var m = 0; m < vDataResult[0].DirectPrint.length; m++) {
+                        vSelectListDirectPrint += '<option value = "' + vDataResult[0].DirectPrint[m].DirectPrintId + '" > ' + vDataResult[0].DirectPrint[m].DirectPrintNameL1 + '</option >'
+                    }
+                    vSelectListDirectPrint += '</select >'
+                }
+            })
+
+        }
+
+
+
+
+        var vRowContent = '<tr class="tblRow" data-id="0" data-changed = "0" data-lastchanged = "0">' +
+            '<td><button class="btn btn-sm btn-light btnPrinterDTLAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control PrinterDTLCode" disabled /></td>' +
+            '<td width="7%"><input type="text" class="form-control InvTypeId" data-id="0"  /></td>' +
+            '<td><input type="text" class="form-control InvTypeNameL1" disabled   /></td>' +
+            '<td><input type="text" class="form-control PrinterName"   /></td>' +
+            '<td><input type="text" class="form-control PrinterIP"   /></td>' +
+            '<td><div>' +
+            //<input type = "text" class="form-control PortTypeId"  value = "' + PrinterDTL.PortTypeId + '" />
+            vSelectListPortType
+            + '</div></td > ' +
+            '<td><input type="text" class="form-control PortNo" /></td>' +
+            '<td><div>' +
+            //< input type = "text" class="form-control DirectPrintId"  value = "' + PrinterDTL.DirectPrintId + '" /> ' +
+            vSelectListDirectPrint
+            + '</div></td >' +
+            '<td><input type="text" class="form-control PrintNum"   /></td>' +
+            '<td align="center"><input type="checkbox" class="form-control PrinterDTLIsActive "' + vChecked + '"   /></td>' +
+            '<td align="center"><button class="btn btn-light btn-sm btnPrinterDTLDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+       return vRowContent;
+
+
+    }
+
+    function funGetPrinters() {
+
+        //funClearDTL()
+        var vTableBody = $('.tblPrinterBody');
+        vTableBody.html('');
+        $.post('/Printers/GetPrinter', {
+            //pItemId: pElement.attr('data-id'),
+        }, function (data, status) {
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+                console.log('data' + vDataResult);
+
+                $.each(vDataResult, function (i, Printer) {
+                    var vChecked = ''
+                    if (Printer.PrinterIsActive) {
+                        vChecked = 'Checked ';
+                    }
+                    // Row Content
+
+
+                    var vRowContent = '<tr class="tblRow" data-id="' + Printer.PrinterId + '">' +
+                        '<td><button class="btn btn-sm btn-light btnPrinterAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        '<td width="7%"><input type="text" class="form-control PrinterCode" disabled value="' + Printer.PrinterCode + '" /></td>' +
+                        //'<td width="7%"><input type="text" class="form-control PrinterSeq" disabled value="' + Printer.PrinterSeq + '" /></td>' +
+                        '<td><input type="text" class="form-control PrinterDescL1"  value="' + Printer.PrinterDescL1 + '" /></td>' +
+                        '<td><input type="text" class="form-control PrinterDescL2"  value="' + Printer.PrinterDescL2 + '" /></td>' +
+                        '<td><input type="text" class="form-control ReportNameL1"  value="' + Printer.ReportNameL1 + '" /></td>' +
+                        '<td><input type="text" class="form-control ReportNameL2"  value="' + Printer.ReportNameL2 + '" /></td>' +
+                        '<td align="center"><input type="checkbox" class="form-control PrinterIsActive "' + vChecked+ '"   /></td>' +
+                        '<td align="center"><button class="btn btn-light btn-sm btnPrinterDelete" data-id="' + Printer.PrinterId + '"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>';
+
+                    vTableBody.append(vRowContent);
+
+                })
+            }
+            else {
+
+                var vRowContent = '<tr class="tblRow" data-id="0">' +
+                    '<td><button class="btn btn-sm btn-light btnPrinterAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                    '<td width="7%"><input type="text" class="form-control PrinterCode" disabled /></td>' +
+                    //'<td width="7%"><input type="text" class="form-control PrinterSeq" disabled  /></td>' +
+                    '<td><input type="text" class="form-control PrinterDescL1"   /></td>' +
+                    '<td><input type="text" class="form-control PrinterDescL2"   /></td>' +
+                    '<td><input type="text" class="form-control ReportNameL1"  /></td>' +
+                    '<td><input type="text" class="form-control ReportNameL2"   /></td>' +
+                    '<td align="center"><input type="checkbox" class="form-control PrinterIsActive"   /></td>' +
+                    '<td align="center"><button class="btn btn-light btn-sm btnPrinterDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>';
+
+
+                vTableBody.append(vRowContent);
+
+
+            }
+            $('.tblPrinterDTLBody').html('');
+            funGetPrintersDTL(0)
+
+            })
+        //funClearDTL()
+
+
+
+    }
+    function funGetPrintersDTL(pPrinterId) {
+        var vTableBody = $('.tblPrinterDTLBody');
+        vTableBody.html('');
+        funFillSelectListPortType()
+        funFillSelectListDirectPort()
+        $.post('/Printers/GetPrinterDTL', {
+            pPrinterId: pPrinterId,
+        }, function (data, status) {
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+                $.each(vDataResult, function (i, PrinterDTL) {
+                    var vChecked = ''
+                    if (PrinterDTL.PrinterDTLIsActive) {
+                        vChecked = 'Checked ';
+                    }
+                    var VSelectListPortType = '';
+                    var VSelectListDirectPrint = '';
+                    //if (i== 0) {
+                    VSelectListPortType = '<select   data-val="' + PrinterDTL.PortTypeId + '"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+                    for (var m = 0; m < PrinterDTL.PortType.length; m++) {
+                        VSelectListPortType += '<option value = "' + PrinterDTL.PortType[m].PortTypeId + '" > ' + PrinterDTL.PortType[m].PortTypeNameL1 + '</option >'
+                    }
+                    VSelectListPortType += '</select > '
+                    VSelectListDirectPrint = '<select   data-val="' + PrinterDTL.DirectPrintId + '"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+                    for (var m = 0; m < PrinterDTL.DirectPrint.length; m++) {
+                        VSelectListDirectPrint += '<option value = "' + PrinterDTL.DirectPrint[m].DirectPrintId + '" > ' + PrinterDTL.DirectPrint[m].DirectPrintNameL1 + '</option >'
+                    }
+                    VSelectListDirectPrint += '</select > '
+                    //}
+
+
+                    var vRowContent = '<tr class="tblRow" data-id="' + PrinterDTL.PrinterDTLId + '" data-changed="0" data-lastchanged = "0" >' +
+                        '<td><button class="btn btn-sm btn-light btnPrinterDTLAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                        '<td width="7%"><input type="text" class="form-control PrinterDTLCode" disabled value="' + PrinterDTL.PrinterDTLCode + '" /></td>' +
+                        '<td width="7%"><input type="text" class="form-control InvTypeId" data-id="' + PrinterDTL.InvTypeId + '"  value="' + PrinterDTL.InvTypeCode+ '" /></td>' +
+                        '<td><input type="text" class="form-control InvTypeNameL1" disabled  value="' + PrinterDTL.InvTypeNameL1 + '" /></td>' +
+                        '<td><input type="text" class="form-control PrinterName"  value="' + PrinterDTL.PrinterName + '" /></td>' +
+                        '<td><input type="text" class="form-control PrinterIP"  value="' + PrinterDTL.PrinterIP + '" /></td>' +
+                        '<td><div>'+
+                        //<input type = "text" class="form-control PortTypeId"  value = "' + PrinterDTL.PortTypeId + '" />
+                        VSelectListPortType
+                        + '</div></td > ' +
+                        '<td><input type="text" class="form-control PortNo"  value="' + PrinterDTL.PortNo + '" /></td>' +
+                        '<td><div>'+
+                        //< input type = "text" class="form-control DirectPrintId"  value = "' + PrinterDTL.DirectPrintId + '" /> ' +
+                        VSelectListDirectPrint
+                        +'</div></td >' +
+                        '<td><input type="text" class="form-control PrintNum"  value="' + PrinterDTL.PrintNum + '" /></td>' +
+                        '<td><input type="checkbox" class="form-control PrinterDTLIsActive "' + vChecked + '"   /></td>' +
+                        '<td><button class="btn btn-light btn-sm btnPrinterDTLDelete" data-id="' + PrinterDTL.PrinterDTLId + '"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>';
+
+                    vTableBody.append(vRowContent);
+
+                })
+                SetValueSelectList();
+            }
+            else {
+
+
+                console.log('vSelectListPortTypeEmpty' + vSelectListPortTypeEmpty)
+                console.log('vSelectListDirectPrintEmpty' + vSelectListDirectPrintEmpty)
+                var vRowContent = '<tr class="tblRow" data-id="0" data-changed="0" data-lastchanged = "0">' +
+                    '<td><button class="btn btn-sm btn-light btnPrinterDTLAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                    '<td width="7%"><input type="text" class="form-control PrinterDTLCode" disabled /></td>' +
+                    '<td width="7%"><input type="text"  class="form-control InvTypeId" data-id="0"  /></td>' +
+                    '<td><input type="text" class="form-control InvTypeNameL1"  disabled /></td>' +
+                    '<td><input type="text" class="form-control PrinterName"   /></td>' +
+                    '<td><input type="text" class="form-control PrinterIP"  /></td>' +
+                    '<td><div>' +
+                    vSelectListPortTypeEmpty
+                    + '</div></td > ' +
+                    '<td><input type="text" class="form-control PortNo"  /></td>' +
+                    '<td><div>' +
+                    vSelectListDirectPrintEmpty
+                    + '</div></td >' +
+                    '<td><input type="text" class="form-control PrintNum"   /></td>' +
+                    '<td><input type="checkbox" class="form-control PrinterDTLIsActive "   /></td>' +
+                    '<td><button class="btn btn-light btn-sm btnPrinterDTLDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>';
+
+                vTableBody.append(vRowContent);
+
+            }
+
+
+
+            //SetValueSelectList();
+
+            })
+
+
+    }
+    function SetValueSelectList() {
+        // Select List Value From DataBase
+        $('table > tbody > tr > td > div > select').each(function () {
+            console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
+            var vSelectValue = $(this).attr('data-val')
+            for (i = 0; i < $(this).children().length; i++) {
+                var vOptionValue = $(this).children()[i].value
+                console.log('vOptionValue' + vOptionValue );
+                console.log('vSelectValue' + vSelectValue );
+
+                if (vOptionValue == vSelectValue) {
+                    $(this).children()[i].selected = true
+                }
+            }
+        })
+    }
+    function funFillSelectListPortType() {
+        var VSelectListPortType2 = '';
+        $.post('/Printers/GetPortType', {}, function (data, status) {
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+                VSelectListPortType2 = '<select   data-val="0"  class="PortTypeId form-control select" id = "PortTypeId" name = "PortTypeId" >';
+                $.each(vDataResult, function (i, PortType) {
+                    VSelectListPortType2 += '<option value = "' + PortType.PortTypeId + '" > ' + PortType.PortTypeNameL1 + '</option >'
+
+                })
+                VSelectListPortType2 += '</select >'
+                console.log('VSelectListPortType2' + VSelectListPortType2)
+
+                vSelectListPortTypeEmpty = VSelectListPortType2
+        //return VSelectListPortType2;
+
+            }
+
+        })
+
+
+
+    }
+    function funFillSelectListDirectPort() {
+        var VSelectListDirectPrint2 = '';
+        $.post('/Printers/GetDirectPrint', {}, function (data, status) {
+            if (data != undefined && data != '') {
+                var vDataResult = JSON.parse(data);
+                VSelectListDirectPrint2 = '<select   data-val="0"  class="DirectPrintId form-control select" id = "DirectPrintId" name = "DirectPrintId" >';
+                $.each(vDataResult, function (i, DirectPrint) {
+                    VSelectListDirectPrint2 += '<option value = "' + DirectPrint.DirectPrintId + '" > ' + DirectPrint.DirectPrintNameL1 + '</option >'
+                    console.log('yesssssssssssssss' + DirectPrint.DirectPrintId);
+                })
+                VSelectListDirectPrint2 += '</select >'
+                console.log('VSelectListDirectPrint2' + VSelectListDirectPrint2)
+                vSelectListDirectPrintEmpty = VSelectListDirectPrint2
+
+            }
+
+        })
+
+        //return VSelectListDirectPrint2;
+    }
+
+
+
+    function funPrinterAddRow() {
+        var vRowContent3 = '<tr class="tblRow" data-id="0" data-changed="0" data-lastchanged = "0" data-index="' + $('.tblPrinterBody > tr').length +'"">' +
+            '<td><button class="btn btn-sm btn-light btnPrinterAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control PrinterCode" disabled /></td>' +
+            //'<td width="7%"><input type="text" class="form-control PrinterSeq" disabled  /></td>' +
+            '<td><input type="text" class="form-control PrinterDescL1"   /></td>' +
+            '<td><input type="text" class="form-control PrinterDescL2"   /></td>' +
+            '<td><input type="text" class="form-control ReportNameL1"  /></td>' +
+            '<td><input type="text" class="form-control ReportNameL2"   /></td>' +
+            '<td align="center"><input type="checkbox" class="form-control PrinterIsActive"   /></td>' +
+            '<td align="center"><button class="btn btn-light btn-sm btnPrinterDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+        $('.tblPrinterBody').append(vRowContent3);
+
+
+    }
+
+    function funPrinterReturnAddRow() {
+        var vRowContent3 = '<tr class="tblRow" data-id="0" data-changed="0" data-lastchanged = "0" data-index="' + $('.tblPrinterBody > tr').length+'">' +
+            '<td><button class="btn btn-sm btn-light btnPrinterAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+            '<td width="7%"><input type="text" class="form-control PrinterCode" disabled /></td>' +
+            //'<td width="7%"><input type="text" class="form-control PrinterSeq" disabled  /></td>' +
+            '<td><input type="text" class="form-control PrinterDescL1"   /></td>' +
+            '<td><input type="text" class="form-control PrinterDescL2"   /></td>' +
+            '<td><input type="text" class="form-control ReportNameL1"  /></td>' +
+            '<td><input type="text" class="form-control ReportNameL2"   /></td>' +
+            '<td align="center"><input type="checkbox" class="form-control PrinterIsActive"   /></td>' +
+            '<td align="center"><button class="btn btn-light btn-sm btnPrinterDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+            '</tr>';
+        return vRowContent3;
+
+    }
+    $('body').on('click', '.btnPrinterAddRow', function () {
+        //funPrinterAddRow();
+
+
+        var vTableRow = $(this).closest('.tblRow');
+        var vCurrentRowIndex = vTableRow.index();
+        var vRowContent = funPrinterReturnAddRow();
+        //vTableRow.attr('data-index', $('.tblPrinterBody > tr').length)
+        $('.tblPrinterBody > tr').eq(vCurrentRowIndex).after(vRowContent);
+    })
+    $('body').on('click', '.btnPrinterDTLAddRow', function () {
+
+
+
+
+
+
+        //funAddEmptyRowDTL();
+
+
+        var vTableRow = $(this).closest('.tblRow');
+        var vCurrentRowIndex = vTableRow.index();
+        var vRowContent = funAddReturnEmptyRowDTL();
+        //vTableRow.attr('data-index', $('.tblPrinterBody > tr').length)
+        $('.tblPrinterDTLBody > tr').eq(vCurrentRowIndex).after(vRowContent);
+
+
+
+
+
+    })
+    $('body').on('change', '.PrinterDescL1,.PrinterDescL2,.ReportNameL1,.ReportNameL2,.PrinterIsActive', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+
+        vTableRow.attr('data-changed', '1');
+
+    })
+    $('body').on('change', '.InvTypeId,.PrinterName,.PrinterIP,.PrintNum,.PortTypeId,.DirectPrintId,.PrinterDTLIsActive', function () {
+
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        vTableRow.attr('data-changed', '1');
+        // check If The Last row In The Table
+        if ($('.tblPrinterDTLBody tr:last').index() == vTableRow.index()) {
+            vTableRow.attr('data-lastchanged', '1');
+            $(".tblPrinterDTLBody > tr").not(vTableRow).attr('data-lastchanged', '0');
+        }
+        else {
+            $(".tblPrinterDTLBody > tr").each(function () {
+
+                var vCurrentRow = $(this);
+
+
+                // Check if The Last modified Row
+                if (vCurrentRow.index() >= vTableRow.index()) {
+                    // check If Changed
+                    if (vCurrentRow.attr('data-changed') == 1) {
+                        vCurrentRow.attr('data-lastchanged', '1')
+                        $(".tblPrinterDTLBody > tr").not(vCurrentRow).attr('data-lastchanged', '0');
+                    }
+
+                }
+            });
+        }
+
+    })
+
+    function funSavePrinter() {
+        var vIsValid = true;
+        $(".tblPrinterBody > tr").each(function () {
+
+            var vPrinterIsActive;
+            var vRowData = $(this);
+            if (vRowData.attr('data-changed') != '0') {
+                vPrinterIsActive = vRowData.find('.PrinterIsActive').prop('checked');
+
+
+                var vRowData = $(this);
+                var vPrinterId = vRowData.attr('data-id');
+                if (vRowData.find('.ReportNameL1').val().trim() == '') {
+                    vIsValid = false;
+                }
+                else {
+                    $.post('/Printers/SavePrinter', {
+                        pPrinterId: vPrinterId,
+                        pReportNameL1: vRowData.find('.ReportNameL1').val(),
+                        pReportNameL2: vRowData.find('.ReportNameL2').val(),
+                        pPrinterDescL1: vRowData.find('.PrinterDescL1').val(),
+                        pPrinterDescL2: vRowData.find('.PrinterDescL2').val(),
+                        pPrinterIsActive: vPrinterIsActive,
+
+                    }, function (data, status) {
+
+                        if (data != undefined && data != '') {
+                            if (vRowData.attr ('data-changed') != '0') {
+                                if (vRowData.attr('data-id') == '0') {
+                                    var vDataResult = JSON.parse(data);
+                                    vRowData.find('.PrinterCode').val(vDataResult[0].PrinterCode);
+                                    vRowData.attr('data-id', vDataResult[0].PrinterId);
+                                }
+                                vRowData.attr('data-changed', '0')
+                                vFilteredData = '';
+                            }
+                        }
+                    }
+                    )
+                }
+            }
+
+
+        })
+
+        funSavePrinterDTL();
+        //setTimeout(function () {
+        //    funGetPrinters()
+
+        //}, 1500);
+
+          if (!vIsValid) {
+            // Notification - Field Required
+            funNotification('@appResource.msgRequired', 2);
+        }
+        else {
+            // Notification
+            funNotification('@appResource.msgSave', 1);
+        }
+
+    }
+            function funSavePrinterDTL() {
+
+
+                $(".tblPrinterDTLBody > tr").each(function () {
+
+            var vPrinterDTLIsActive;
+            var vRowData = $(this);
+            vPrinterDTLIsActive = vRowData.find('.PrinterDTLIsActive').prop('checked');
+            if (vRowData.attr('data-changed') != '0') {
+                   console.log('yes')
+
+                //vRowData.find('.PrinterDTLIsActive')
+                var vPrinterId = localStorage.getItem('vPrinterId');
+                console.log('vPrinterIdvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv' + vPrinterId)
+                var vRowData = $(this);
+                var vPrinterDTLId = vRowData.attr('data-id');
+                //if (vRowData.find('.InvTypeId').val().trim() == '') {
+
+                //}
+                //else {
+
+
+                    $.post('/Printers/SavePrinterDTL', {
+                        pPrinterDTLId: vPrinterDTLId,
+                        //pInvTypeId: vRowData.find('.InvTypeId').val(),
+                        pInvTypeId: vRowData.find('.InvTypeId').attr('data-id'),
+                        pPrinterName: vRowData.find('.PrinterName').val(),
+                        pPrinterIP: vRowData.find('.PrinterIP').val(),
+                        pPortTypeId: vRowData.find('.PortTypeId').val(),
+                        pPortNo: vRowData.find('.PortNo').val(),
+                        pDirectPrintId: vRowData.find('.DirectPrintId').val(),
+                        pPrintNum: vRowData.find('.PrintNum').val(),
+                        pPrinterId: vPrinterId,
+                        pPrinterDTLIsActive: vPrinterDTLIsActive,
+
+                    }, function (data, status) {
+                             console.log('yeeeeeeeees')
+                        //funGetPrinters();
+                        if (data != undefined && data != '') {
+                            if (vRowData.attr('data-changed') != '0') {
+                                var vDataResult = JSON.parse(data);
+                                if (vRowData.attr('data-id') == '0') {
+            console.log('vDataResultyyyyyyyyyyyyyyyyyyyyyyyyyyyy' + vDataResult);
+              vRowData.find('.PrinterDTLCode').val(vDataResult[0].PrinterDTLCode);
+                                    vRowData.attr('data-id', vDataResult[0].PrinterDTLId);
+                                }
+                                vAllData = vDataResult[0].tblAllData;
+
+                                vRowData.attr('data-changed', '0')
+                                vFilteredData = '';
+                                //if (vRowData.attr('data-lastchanged') != '0') {
+                                //    var vDataResultAll = JSON.parse(data);
+                                //    vAllData = vDataResultAll[0].tblAllData
+                                //    //funGetAllPrinters(0);
+
+
+                                //}
+                            }
+                        }
+
+                    }
+                    )
+               // }
+
+            }
+
+
+        })
+
+    }
+    $('.btnSave').on('click', function () {
+    //$('.btnUtilityCreate').on('click', function () {
+        funSavePrinter();
+    })
+    // InvType Code, Name - F9
+    $('body').on('keydown dblclick', '.InvTypeId', function (e) {
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Check F9
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstcurrentInvTypetxt', '0')
+            localStorage.setItem('lstInvTypecurrentindex', vTableRow.index)
+
+
+            // Get InvType Data
+            var vInvTypeIdElement = vTableRow.find('.InvTypeId');
+            var vInvTypeNameElement = vTableRow.find('.InvTypeNameL1');
+
+
+            // Search InvType
+            var vURL = '/InvType/SearchInvType';
+            // Load Content of InvType Search
+            $('#InvTypeDataModalContent').load(vURL);
+            // Modal Show
+            $('#InvTypeDataModal').modal('show');
+            // Focus
+            $('#InvTypeDataModal').on('shown.bs.modal', function () {
+                $('.txtSearch').focus();
+                // Select InvType
+                $('body').on('click', '.divInvTypeSelect', function () {
+                    if (localStorage.getItem('lstInvTypecurrentindex') == vTableRow.index) {
+                        $('.txtSearch').focus();
+
+                        // InvType Id
+                        var vInvTypeId = $(this).attr('data-id');
+
+                        // Get Values
+                        var vInvTypeCodeValue = $(this).find('.divInvTypeNo').text();
+                        var vInvTypeNameValue = $(this).find('.divInvTypeName').text();
+
+
+
+                        // Set Value
+                        vInvTypeIdElement.val(vInvTypeCodeValue);
+                        vInvTypeIdElement.attr('data-id', vInvTypeId);
+                        vInvTypeNameElement.val(vInvTypeNameValue);
+                         vTableRow.attr('data-changed', '1')
+                        // Modal Show
+                        $('#InvTypeDataModal').modal('hide');
+                        vTableRow = '';
+                    }
+
+
+
+                })
+            })
+        }
+    })
+
+    $('body').on('click', '.btnPrinterDelete', function (e) {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get Unit Data
+        //var vUnitIdElement = vTableRow.find('.UnitId');
+        var vPrinterId = vTableRow.attr('data-id')
+
+
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.PrinterDescL1').val();
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdel', vTableRow.index)
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdel') == vTableRow.index) {
+                                // Delete
+                                $.post('/Printers/DeletePrinter',
+                                    {
+                                        pPrinterId: vPrinterId,
+                                    }, function (data, status) {
+                                        vElement.closest('.tblRow').remove();
+                                        if (data != undefined && data != '') {
+                                            var vDataResult = JSON.parse(data);
+                                            vAllData = vDataResult[0].tblAllData;
+                                            console.log('printer vAllData' + vAllData)
+                                        }
+                                        //vTableRow.remove();
+
+                                        var vLastRow = $('.tblPrinterBody').find('tr').attr('data-id')
+                                        if (vLastRow == undefined) {
+                                            funPrinterAddRow();
+
+                                        }
+                                        // Clear the Details
+                                        $(".tblPrinterDTLBody").html('');
+                                        funAddEmptyRowDTL();
+
+
+
+                                        //------------------------------------------
+                                        //$('.tblPrinterBody').html('')
+                                        //funGetPrinters()
+                                        //------------------------------------------
+
+                                        //funClearDTL()
+                                        //var vRowContentbarcodebody = '<tr class="tblRow" data-id="0">' +
+                                        //    '<td><button class="btn btn-sm btn-light btnPrinterAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                        //    '<td width="7%"><input type="text" class="form-control PrinterCode" disabled /></td>' +
+                                        //    '<td width="7%"><input type="text" class="form-control PrinterSeq" disabled  /></td>' +
+                                        //    '<td><input type="text" class="form-control PrinterDescL1"   /></td>' +
+                                        //    '<td><input type="text" class="form-control PrinterDescL2"   /></td>' +
+                                        //    '<td><input type="text" class="form-control ReportNameL1"  /></td>' +
+                                        //    '<td><input type="text" class="form-control ReportNameL2"   /></td>' +
+                                        //    '<td><input type="checkbox" class="form-control PrinterIsActive"   /></td>' +
+                                        //    '<td><button class="btn btn-light btn-sm btnPrinterDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                        //    '</tr>';
+
+
+                                        //$('.tblPrinterBody').append(vRowContentbarcodebody);
+                                    }
+
+                                )
+
+                                funNotification('@appResource.msgSave', 1);
+                                vTableRow = '';
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblPrinterBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    funAddEmptyRow();
+
+                                }
+                            }
+                        })
+                    })
+
+                }
+                else {
+                    // Only Delete The Row
+                    vElement.closest('tr').remove();
+                    // Check If IT The Last Row
+                    var vLastRow = $('.tblPrinterBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddEmptyRow();
+
+                    }
+                }
+            })
+
+
+
+
+
+
+    })
+
+    $('body').on('click', '.btnPrinterDTLDelete', function (e) {
+        // Id - NameAr - NameEn
+        var vElement = $(this)
+        // Get Closest Row
+        var vTableRow = $(this).closest('.tblRow');
+        // Get Unit Data
+        //var vUnitIdElement = vTableRow.find('.UnitId');
+        var vPrinterDTLId = vTableRow.attr('data-id');
+
+
+
+
+        var vDataId = vTableRow.attr('data-id');
+        var vDataName = vTableRow.find('.PrinterName').val();
+        // URL
+        var vDataURL = '/ViewSetting/ViewSettingConfirmDelete/';
+        // Get HTML Content of [Confirm Delete] Partial View
+        localStorage.setItem('lstdeldtl', vTableRow.index)
+
+        $.get(
+            // URL
+            vDataURL,
+            {
+                id: vDataId,
+                pName: vDataName,
+            }, function (data, status) {
+                if (vDataId > 0) {
+                    // Modal
+                    $('#confirmDeleteModalContent').html(data);
+                    $('#confirmDeleteModal').modal('show');
+                    $('#confirmDeleteModal').on('shown.bs.modal', function () {
+
+                        $("body").on("click", "#btnDeleteConfirm", function () {
+                            if (localStorage.getItem('lstdeldtl') == vTableRow.index) {
+                                //vTableRow.remove();
+
+                                $.post('/Printers/DeletePrinterDTL',
+                                    {
+                                        pPrinterDTLId: vPrinterDTLId,
+                                    }, function (data, status) {
+                                        console.log('vtablerowww' + vTableRow);
+                                        vElement.closest('tr').remove();
+                                        var vLastRow = $('.tblPrinterDTLBody').find('tr').attr('data-id')
+                                        if (data != undefined && data != '') {
+                                            var vDataResult = JSON.parse(data);
+                                            vAllData = vDataResult[0].tblAllData
+                                        }
+                                        if (vLastRow == undefined) {
+                                            funAddEmptyRowDTL();
+                                        }
+
+                                        //---------------------------------------------------------
+                                        //$('.tblPrinterDTLBody').html('')
+                                        //funGetPrintersDTL(vPrinterDTLId)
+                                        //-----------------------------------------------------------------
+                                        //funClearDTL()
+                                        //var vRowContentbarcodebody = '<tr class="tblRow" data-id="0">' +
+                                        //    '<td><button class="btn btn-sm btn-light btnPrinterAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
+                                        //    '<td width="7%"><input type="text" class="form-control PrinterCode" disabled /></td>' +
+                                        //    '<td width="7%"><input type="text" class="form-control PrinterSeq" disabled  /></td>' +
+                                        //    '<td><input type="text" class="form-control PrinterDescL1"   /></td>' +
+                                        //    '<td><input type="text" class="form-control PrinterDescL2"   /></td>' +
+                                        //    '<td><input type="text" class="form-control ReportNameL1"  /></td>' +
+                                        //    '<td><input type="text" class="form-control ReportNameL2"   /></td>' +
+                                        //    '<td><input type="checkbox" class="form-control PrinterIsActive"   /></td>' +
+                                        //    '<td><button class="btn btn-light btn-sm btnPrinterDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
+                                        //    '</tr>';
+
+
+                                        //$('.tblPrinterBody').append(vRowContentbarcodebody);
+                                    }
+
+                                )
+                                funNotification('@appResource.msgSave', 1);
+                                vTableRow = '';
+                            }
+                            else {
+                                // Only Delete The Row
+                                vElement.closest('tr').remove();
+                                // Check If IT The Last Row
+                                var vLastRow = $('.tblPrinterDTLBody').find('tr').attr('data-id')
+                                // Add Row If Empty
+                                if (vLastRow == undefined) {
+                                    funAddEmptyRowDTL();
+
+                                }
+                            }
+                        })
+                    })
+
+
+
+
+                }
+                else {
+                    vElement.closest('tr').remove();
+                    var vLastRow = $('.tblPrinterDTLBody').find('tr').attr('data-id')
+                    // Add Row If Empty
+                    if (vLastRow == undefined) {
+                        funAddEmptyRowDTL();
+
+                    }
+
+
+                }
+
+            })
+
+
+
+
+
+
+
+
+    })
+
+
+    // Function bur
+            $('body').on('blur', '.InvTypeId', function (e) {
+
+                var vTableRow = $(this).closest('.tblRow');
+                vTableRow.attr('data-changed', '1');
+        if ($(this).val().trim() == '') {
+            vTableRow.find('.InvTypeNameL1').val('')
+        }
+        else {
+            console.log('current indexxxxxxxxxxxx' + vTableRow.index())
+
+            vTableRow.find('.InvTypeId').css("border-color", "");
+            //$.post('/InvType/GetInvTypeByCode', {
+            $.post('/Lookup/LookupGET', {
+                //pInvTypeCode: vTableRow.find('.InvTypeId').val()
+                pLookupId: 3,
+                pdORD: vTableRow.find('.InvTypeId').val(),
+                pQueryTypeId: 404
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, inv) {
+                        //vTableRow.find('.InvTypeId').attr('data-id', inv.InvTypeId);
+                        //vTableRow.find('.InvTypeNameL1').val(inv.InvTypeNameL1);
+                        vTableRow.find('.InvTypeId').attr('data-id', inv.LookupDtlId);
+                        vTableRow.find('.InvTypeNameL1').val(inv.LookupDtlDesc);
+                    })
+
+                }
+
+
+            })
+
+        }
+    })
+
+
+
+
+    // Search PrinterDataModal
+    $('.btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/Printers/SearchPrinter';
+        // Load Content of CostCenter Search
+        $('#PrinterDataModalContent').load(vURL);
+        // Modal Full
+        $('#PrinterDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#PrinterDataModal').modal('show');
+    })
+
+    $('body').on('click', '.btnSelect', function () {
+        var vPrinterList = ''
+        var vPrinterArray = []
+        var count = $("input[name='chkIsValid']:checked").length;
+        console.log('countttttttttttttt ' + count);
+        if (count == 0) {
+            $('#PrinterDataModal').modal('hide');
+            vFilteredData = ''
+        }
+        else {
+            $('.tblPrinterSearch > tbody > tr ').each(function (i) {
+                // Element
+                var vElement = $(this).find('.clsChk')
+                var vSelectedChk = vElement.prop('checked')
+                // Get Id
+                var vPrinterId = vElement.attr('data-code');
+                // Check
+                if (vSelectedChk) {
+                    vPrinterArray.push(vPrinterId);
+                    console.log('vPrinterArray' + vPrinterArray.toString() )
+                    //vPrinterList += vPrinterId + ','
+                    //if (i == $('.tblPrinterSearch > tbody > tr ').length - 1) {
+
+                    // close The Modal
+                    $('#PrinterDataModal').modal('hide');
+                    //}
+
+                }
+            })
+
+
+
+
+        }
+
+        // Count Of Checked Rows
+        if (count > 0) {
+            $.post('/Printers/GetPrintersList', {
+                pPrintersList: vPrinterArray.toString()
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vTableBody = $('.tblPrinterBody');
+                    vTableBody.html('');
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Printer) {
+                        funRowConfig(Printer,i);
+                    })
+                    vFilteredData = vDataResult;
+                    $(".tblPrinterBody tr:first").find('.PrinterDescL1').focus();
+
+                }
+
+            })
+        }
+        else {
+
+        }
+
+
+    })
+
+
+
+</script>
+
+<script>
+    // Print
+    $('.btnPrint').on('click', function () {
+        @*location.href = '/Account/ChartAccountReport?pCompanyId=' + '@clsUser.vUserCompanyId'*@
+        var url = '/Printers/PrintersReport'
+        var popupWindow = window.open(url);
+    });
+    //SimpleInSameWin()
+
+
+</script>
+

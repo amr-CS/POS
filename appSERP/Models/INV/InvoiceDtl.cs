@@ -1,0 +1,105 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace appSERP.Models
+{
+    public partial class InvoiceDtl
+    {
+        public long InvDtlId { get; set; }
+        public int? InvId { get; set; }
+        public string InvCode { get; set; }
+        public DateTime? InvDate { get; set; }
+        public string CustomerName { get; set; }
+        public string InvPhoneNo { get; set; }
+        public string InvItemName { get; set; }
+        public double? Total { get; set; }
+        public int? InvType { get; set; }
+        public int? Year { get; set; }
+        public int? StoreId { get; set; }
+        public string ItemId { get; set; }
+        public int? UnitId { get; set; }
+        public DateTime? ExpireDate { get; set; }
+        public int? BackType { get; set; }
+        public int? BackId { get; set; }
+        public int? BackYear { get; set; }
+        public double? ItemPrice { get; set; }
+        public double? ItemCurValue { get; set; }
+        public double? ItemQty { get; set; }
+        public DateTime? GuaranteeDate { get; set; }
+        public float? TotalItemCredit { get; set; }
+        public double? TotalItemDebit { get; set; }
+        public double? TotalBaseItemCredit { get; set; }
+        public double? TotalBaseItemDebit { get; set; }
+        public int? DiscType { get; set; }
+        public float? DiscValue { get; set; }
+        public float? DiscAmtCredit { get; set; }
+        public float? DiscAmtDebit { get; set; }
+        public float? DiscBaseCredit { get; set; }
+        public float? DiscBaseDebit { get; set; }
+        public bool? IsPosted { get; set; }
+        public string Notes { get; set; }
+        public string Username { get; set; }
+        public DateTime? Timestamp { get; set; }
+        public string AccountId { get; set; }
+        public double? ItemCostDebit { get; set; }
+        public double? ItemCostCredit { get; set; }
+        public int? SellAccId { get; set; }
+        public int? CostAccId { get; set; }
+        public int? DiscAccId { get; set; }
+        public string TaxAccId { get; set; }
+        public double? TaxDebit { get; set; }
+        public double? TaxBaseDebit { get; set; }
+        public double? ItemCost { get; set; }
+        public double? TaxBaseCredit { get; set; }
+        public double? TaxCredit { get; set; }
+        public string BackSellAccId { get; set; }
+        public string BackBuyAccId { get; set; }
+        public double? ItemStoreCurValue { get; set; }
+        public int? ItemCur { get; set; }
+        public double? TotalItemSbaseCredit { get; set; }
+        public double? TotalItemSbaseDebit { get; set; }
+        public short? ItemDefCur { get; set; }
+        public double? TransSeq { get; set; }
+        public string EmpAccId { get; set; }
+        public double? EmpAmt { get; set; }
+        public double? EmpBaseAmt { get; set; }
+        public int? EmpRatio { get; set; }
+        public double? EmpCurValue { get; set; }
+        public double? ItemCostBase { get; set; }
+        public int? DelivId { get; set; }
+        public int? DelYear { get; set; }
+        public int? DelTransSeq { get; set; }
+        public int? InStoreId { get; set; }
+        public string NonDescribe { get; set; }
+        public DateTime? Date { get; set; }
+        public string ItemName { get; set; }
+        public float? VatAmt { get; set; }
+        public string VatDebitAccId { get; set; }
+        public string VatCreditAccId { get; set; }
+        public decimal? AddAmt { get; set; }
+        public bool? DelSheepRemain { get; set; }
+        public decimal? DiscAmt { get; set; }
+        public int? ItemUnitId { get; set; }
+        public double? Price { get; set; }
+        public float? Qty { get; set; }
+        public float? QtyPlate { get; set; }
+        public int? SheepRemainder { get; set; }
+        public int? Tag { get; set; }
+        public float? VatPrice { get; set; }
+        public double? VatTotal { get; set; }
+        public int? ItemType { get; set; }
+        public bool? InvIsCancel { get; set; }
+        public int? CompanyId { get; set; }
+        public bool? InvIsActive { get; set; }
+        public bool? IsDeleted { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public int? LastUpdatedBy { get; set; }
+        public DateTime? LastUpdatedOn { get; set; }
+        public float QtyOrder { get; set; }
+        public float QtyRemain { get; set; }
+        public float QtyTransfer { get; set; }
+        public float QtyExp { get; set; }
+        public int dtlref { get; set; }
+    }
+}

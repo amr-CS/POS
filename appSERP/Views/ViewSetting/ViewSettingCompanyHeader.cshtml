@@ -1,0 +1,25 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.Setting.User
+@{
+    Layout = null;
+}
+
+<!-- Company Data -->
+<div class="divCompanyData">
+    <div class="row">
+        <div class="divCompanyImage m-2">
+
+            <img src="data:image/gif;base64, @clsCompany.vCompanyImage" width="75" />
+
+        </div>
+
+        <div class="divCompanyName">
+            <div>
+             
+                    <b>@clsCompany.vCompanyName</b>
+
+            </div>
+        </div>
+    </div>
+</div>

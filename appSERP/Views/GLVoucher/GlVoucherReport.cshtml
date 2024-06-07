@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "GlVoucherReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="bg-white border rounded p-3">
+
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4"><a href="@Url.Action("Download_PDF", "GlVoucher", new { pGLVoucherId = @ViewBag.vbGLVoucherId})" target="_blank" class="btn btn-primary" style="margin-top:20px;">Download_PDF</a></div>
+            <div class="col-4"></div>
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="bg-white border rounded p-3">
+
+        <iframe name="theFrame" style="width:100%; height:700Px !important"></iframe>
+    </div>
+
+    </div>
+
+    <script>
+        SimpleInSameWin();
+        function SimpleInSameWin() {
+            console.log('viewbagggg' + '@ViewBag.vbGLVoucherId')
+            @*window.open("/GLVoucher/ShowSimple?pGLVoucherId" + '@ViewBag.vbGLVoucherId', "theFrame"); // calling action*@
+              window.open("/GLVoucher/ShowSimple", "theFrame"); // calling action
+        }
+    </script>
+

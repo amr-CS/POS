@@ -1,0 +1,44 @@
+﻿@using System.Data
+@{
+    Layout = null;
+    DataTable Orders = ViewBag.InvData;
+
+}
+
+<!DOCTYPE html>
+
+@foreach (DataRow order in Orders.Rows)
+{
+    <tr class="tblCustomerOrderRow">
+        
+            <td width="20%"><div><input style="background-color:seagreen" type="text" class="form-control form-control-sm OrderId" data-id="0" value="@order["InvId"]" Readonly></div></td>
+            <td><div><input style="background-color:seagreen" type="text" class="form-control form-control-sm CustomerName" data-id="0" value="@order["CustomerName"]" Readonly></div></td>
+       
+        <td class="d-none"><div><textarea class="clsData"> @order["InvoiceDtl"]  </textarea></div></td>
+        <td class="d-none">
+            <div>
+
+                <input class="clsHeader"
+                       Order-Date="@order["ORDER_DATE"]"
+                       DELIVERY_DATE="@order["DELIVERY_DATE"]"
+                       DELIVERY_Time="@order["DELIVERY_Time"]"
+                       ORDER_STATUS="@order["ORDER_STATUS"]"
+                       PERIOD_TYPE="@order["PERIOD_TYPE"]"
+                       NOTES="@order["NOTES"]"
+                       DELIVERY="@order["DELIVERY"].ToString()"
+                       PAY_CASH="@order["PAY_CASH"]"
+                       PAY_NET="@order["PAY_NET"]"
+                       CREDIT="@order["CREDIT"]"
+                       ORDER_No_NUMBER="@order["ORDER_PHONE_NO"]"
+                       ORDER_PHONE_NUMBER="@order["ORDER_PHONE_NO"]"
+                       CustomerId="@order["CustomerId"]"
+                       Discount="@order["Discount"]"
+                       PERIOD_TYPEName="@order["PERIOD_TYPEName"]"
+                       @*ADDRESS="@order["LocationAddress"]"*@
+                       PRICE_CAT="@order["PRICE_CAT"]" />
+
+            </div>
+        </td>
+    </tr>
+
+}

@@ -1,0 +1,44 @@
+﻿@using appSERP.Views.Shared.appResource;
+
+@{
+    ViewBag.Title = "AssetExcel";
+}
+
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = @appResource.lblAsset })
+</div>
+<!-- Utlity -->
+<div class="divUtilityBar d-flex ">
+    @Html.Partial("~/Views/ViewSetting/ViewSettingUtilityBar.cshtml")
+</div>
+
+<!-- Header -->
+<div class="alert alert-warning">
+    @appResource.msgExcel
+</div>
+<div class="divViewHeader">
+    <!-- Title -->
+    <div class="row d-flex bd-highlight">
+
+        <!-- Header Content -->
+        <div class="divViewHeaderTitle col-md-12">
+
+            <div class="p-2 w-100 bd-highlight divViewHeaderTitle">
+
+                @using (Html.BeginForm("AssetExcelFile", "Asset", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <input type="file" class="form-control" name="pExcelFile" accept=".xlsx, .xls, .csv" />
+                    <input type="submit" value="@appResource.btnImportAsset" class="btn btn-success form-control">
+                }
+            </div>
+
+
+            <div class="p-2 flex-shrink-1 bd-highlight">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

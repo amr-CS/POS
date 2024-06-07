@@ -1,0 +1,252 @@
+﻿@using appSERP.Views.Shared.appResource;
+@using appSERP.appCode.Setting.User;
+@using appSERP.appCode.Setting.Company;
+@using appSERP.appCode.Setting.GD;
+@using System.Data;
+@using appSERP.Views.Shared.appResource.loginResource;
+@using appSERP.appCode.dbCode.SETT;
+
+@{
+    Layout = null;
+    // DataTable vDtLanguage = dbLanguage.funUserLanguageGET();
+    HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+    FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+    string name = ticket.Name;
+    string Id = ticket.UserData;
+    int UserId = Convert.ToInt32(Request.Cookies["UserId"].Value);
+    int BranchId = 0;
+    if (Request.Cookies["BranchId"] != null)
+    { BranchId = Convert.ToInt32(Request.Cookies["BranchId"].Value); };
+    string BranchName = "";
+    if (Request.Cookies["BranchName"] != null)
+    { BranchName = Request.Cookies["BranchName"].Value; };
+
+}
+
+<!-- BranchSettingData Modal -->
+<div id="BranchSettingDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="BranchSettingDataModalContent"></div>
+    </div>
+</div>
+<!-- Nav -->
+<div class="divNav fixed-top">
+    <!-- Nav Content -->
+    <div class="divNavContent d-flex">
+        <!-- Company Data -->
+        <div class="w-100 d-flex">
+            <div class="divNavBrand mr-2 ml-2">
+                <a href="/Home">
+                    <img src="data:image/gif;base64, @ViewBag.DevCompanySetting.DevCompanyImage" width="75" />
+                </a>
+            </div>
+            <div class="divNavAppName mr-2 ml-2  text-light">
+                @*<p>@BranchName</p>*@
+
+                @if (clsUser.vUserLanguageId == 1)
+                {
+                    <div><p>@BranchName</p></div>
+                }
+                else
+                {
+                    <div>@BranchName</div>
+                }
+            </div>
+
+
+        </div> <!-- End of Company Data -->
+        <!-- User Data -->
+        <div class="flex-shrink-1 d-flex divNavData">
+
+            <button class="btn btn-success btnCairo d-none">Cairo</button>
+            <button class="btn btn-success btnDubai d-none">Dubai</button>
+            @*<input class="btn btn-success InsuranceCategory d-none" value="'@InsuranceCategory'"/>*@
+
+            @if (Request.IsAuthenticated)
+            {
+                <!-- If The User Is Admin -->
+
+                //if (clsUserType.vUserTypeIdAdmin == clsUser.vUserTypeId)
+                if (1 == clsUser.vUserTypeId)
+                {
+                    <!-- DashBoard Button -->
+                    <button type="button" class="btn btn-sm btn-secondary btnDashBoard" />
+                }
+
+
+
+                <!-- User Language -->@* <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-light btn-sm">
+
+                        @foreach (DataRow vDrwLanguage in vDtLanguage.Rows)
+                    {
+                    if (Convert.ToBoolean(vDrwLanguage["IsUserLanguage"]))
+                    {
+                    <img src="@vDrwLanguage[" LanguageImage"]" width="25" class="dropDownImage" />
+                    @vDrwLanguage["LanguageNameL1"]
+                    }
+                    }
+
+                        </button>
+                        @*<button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                            @foreach (DataRow vDrwLanguage in vDtLanguage.Rows)
+                            {
+                                if (!Convert.ToBoolean(vDrwLanguage["IsUserLanguage"]))
+                                {
+                                    <a class="dropdown-item btnLang" href="#" data-id="@vDrwLanguage["LanguageId"]" data-culture="@vDrwLanguage["CultureName"]">
+                                        <img src="@vDrwLanguage["LanguageImage"]" width="25" class="dropDownImage" />
+                                        @vDrwLanguage["LanguageNameL1"]
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>*@<!-- User Info --><div class="btn-group btn-group-sm mr-2 ml-2">
+                    @if (name == "admin")
+                    {
+                        <button type="button" class="btn btn-light btn-sm d-flex" id="btnSearch">
+
+
+
+                            <!-- User Name -->
+                            <div class="mr-2 ml-2 mt-1">
+                                الفروع
+                                @*<div class="divUserId d-none">@UserId</div>*@
+                                @*@clsUser.vUserFullName*@
+                            </div>
+
+
+                        </button>
+                    }
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                        <button class="btn btn-sm bg-transparent mr-2 ml-2 text-secondary">
+                            بحث
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- User Info -->
+                <div class="btn-group btn-group-sm mr-2 ml-2">
+                    <button type="button" class="btn btn-light btn-sm d-flex">
+
+                        <!-- User Image -->
+                        <div class="mr-2 ml-2">
+                            <img src="@clsUser.vUserImage" width="20" />
+                        </div>
+
+                        <!-- User Name -->
+                        <div class="mr-2 ml-2 mt-1">
+                            @name
+                            <div class="divUserId d-none">@UserId</div>
+                            @*@clsUser.vUserFullName*@
+                        </div>
+
+
+                    </button>
+                    <button type="button" class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                        <a href="/Home/Logout" class="btn btn-sm bg-transparent mr-2 ml-2 text-secondary">
+                            @appResource.btnLogout
+                        </a>
+
+                    </div>
+                </div>
+
+
+                clsUser.vUserName = User.Identity.Name;
+            }
+
+
+            <!- User Name --->
+            <div class="d-flex">
+                @if (Request.IsAuthenticated)
+                {
+
+                }
+                else
+                {
+                    <div class="btn-group h-75 align-middle">
+                        <!-- Login -->
+                        @Html.ActionLink(appResource.btnLogin, "Login", "Home", " ", htmlAttributes: new { @class = "btn btn-light" })
+                    </div>
+                }
+
+            </div> <!-- End of User Login Data -->
+
+        </div> <!-- End of User Data -->
+
+    </div> <!-- End of Content -->
+
+</div> <!-- End of Nav -->
+
+<script>
+    // Click to Change Language
+    $('.btnLang').on('click', function () {
+
+        // Get Language Id
+        var vLanguageId = $(this).attr('data-id');
+        // Get Culture
+        var vLanguageCulture = $(this).attr('data-culture');
+        // Change
+        $.post('/Home/ChangeUserLanguage/',
+            {
+                pLanguageId: vLanguageId,
+                pLanguageCulture: vLanguageCulture
+            },
+            function (data, status) {
+                // Reload
+                window.location.reload();
+            });
+    });
+    // Click DashBoard
+    $('.btnDashBoard').on('click', function () {
+
+        var vPath = '/DashBoard/Index/'
+        // Redirect To DashBoard
+        window.location.href = vPath;
+    });
+
+    $('#btnSearch').on('click', function () {
+        // Search CostCenter
+        var vURL = '/BranchSetting/SearchBranchSetting';
+        // Load Content of CostCenter Search
+        $('#BranchSettingDataModalContent').load(vURL);
+        // Modal Full
+        $('#BranchSettingDataModalContent').parent().addClass('modal-dialog-full');
+        // Modal Show
+        $('#BranchSettingDataModal').modal('show');
+    })
+    $('body').on('click', '.btnSelectBranch', function () {
+        // Selected Permissions
+        var vSelected = '';
+        // Check If All True Or False
+        var vBranchSettingId;
+        var vBranchSettingname;
+        var vBranchSettingphone;
+        $('table > tbody > tr ').each(function () {
+            // Element
+            var vElement = $(this).find('.clsChk')
+            var vSelectedChk = vElement.prop('checked')
+            // Check
+            if (vSelectedChk) {
+                // Get Id
+                vBranchSettingId = vElement.attr('data-id');
+                vBranchSettingname = vElement.attr('data-name');
+                vBranchSettingphone = vElement.attr('data-phone');
+                // Add Selected Action
+                vSelected += vBranchSettingId + ',';
+                //vCount += $(this).length
+            }
+        });
+
+        $.post('/Login/SetCookieBranch', { BranchId: parseFloat(vBranchSettingId), BranchName: vBranchSettingname, BranchPhone: vBranchSettingphone }, function (data, status) {
+
+            location.reload();
+        })
+    })
+</script>

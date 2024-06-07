@@ -1,0 +1,75 @@
+﻿
+@model System.Data.DataTable
+@using System.Data;
+@if (Model.Rows.Count > 0)
+{
+    <div class="divCategory pt-2" dir="rtl" style="border-bottom:2px solid #0081c6">
+
+        @foreach (DataRow pData in Model.Rows)
+        {
+            <div>
+                <button type="button" class="btn btn-light clsButton overflow-visible border m-1" Order="@pData["row_num"]" data-id="@pData["LookupDtlId"]" value="@pData["LookupDtlDesc"]">
+                    @pData["LookupDtlDesc"]
+                </button>
+                <textarea Order="@pData["row_num"]" class="clsData d-none">@pData["Meal"]</textarea>
+            </div>
+        }
+    </div>
+}
+<script>
+    $('.divCategory').slick({
+        dots: false,
+        accessibility: true,
+        infinite: false,
+        rtl: true,
+        speed: 300,
+        slidesToShow: 5,
+        slidesToScroll: 3,
+        adaptiveHeight: true,
+    });
+    var Order = localStorage.getItem('Order')
+    funTabs(Order)
+    function funTabs(Order) {
+        $('.clsButton').removeClass('fa fa-check')
+        $('.clsButton').removeClass('clsTabs')
+        $('.clsButton[Order=' + Order + ']').addClass('fa fa-check')
+        $('.clsButton[Order=' + Order + ']').addClass('clsTabs')
+
+    }
+
+
+    // Append Meal
+    function funConfigMeal(DataMeal) {
+        $('.divMeal').html('');
+        if (DataMeal != '') {
+            var DataResult = JSON.parse(DataMeal)
+
+            $.each(DataResult, function (g, Meal) {
+
+                var ItemAdd = JSON.stringify(Meal.ItemAdd)
+                if (parseInt(Meal.ItemQty) > 0 && parseInt(Meal.ItemQty) != 0 || parseInt(Meal.ShowItem) === 1) {
+                    $('.divMeal').append('<button type="button" class="btn info clsButtonItem m-1  overflow-visible" show="' + Meal.ShowItem+'"  Points="' + Meal.Points + '" Order="' + g + '" data-id="' + Meal.InvItemId + '" Qty="' + Meal.ItemQty + '" Price="' + Meal.Price + '" unitid="'+Meal.UnitId+'" data-name="' + Meal.InvItemNameL1 + '" value="' + Meal.InvItemNameL1 + Meal.ItemQty + '" >' + Meal.InvItemNameL1 + '<div data-id="' + Meal.InvItemId + '" class="clsQty">' + Meal.ItemQty + '</div>' + '</button><textarea Order="' + g + '" class="clsItemAdd d-none">' + ItemAdd + '</textarea>')
+                }
+                else {
+                    $('.divMeal').append('<input type="button" class="btn  clsButtonItemD m-1  overflow-visible" Points="' + Meal.Points + '" disabled Order="' + g + '" data-id="' + Meal.InvItemId + '" Qty="' + Meal.ItemQty + '" Price="' + Meal.Price + '" data-name="' + Meal.InvItemNameL1 + '" value="' + Meal.InvItemNameL1 + Meal.ItemQty + '" /><textarea Order="' + g + '" class="clsItemAdd d-none">' + ItemAdd + '</textarea>')
+                }
+
+                if (g % 2 == 0) {
+                    $('.clsButtonItem[Order=' + g + ']').removeClass('info')
+                    $('.clsButtonItem[Order=' + g + ']').addClass('success')
+                }
+
+            })
+        }
+    }
+
+
+        var Data = $('.clsData[Order=' + Order + ']').text();
+    function callback() {
+        $(".divMeal").append('qwerty');
+    };
+    $(document).ready(function () {
+
+        funConfigMeal(Data)
+    });
+</script>

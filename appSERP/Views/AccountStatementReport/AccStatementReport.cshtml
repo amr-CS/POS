@@ -1,0 +1,3349 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header -->
+<div class="">
+    @Html.Action("ViewSettingHeader", "ViewSetting", new { pHeaderTitle = appResource.lblCategoryAccount, pIsNew = false })
+</div>
+<link href="~/Content/print.css" rel="stylesheet" />
+<style>
+    .btnUtility {
+        background-color: #dfe6e9;
+        color: #444;
+    }
+
+    /* expanding input CSS only */
+    #myInput {
+        width: 130px;
+        -webkit-transition: width 0.3s ease-in-out;
+    }
+
+        #myInput:focus {
+            width: 100%;
+            -webkit-transition: width 0.5s ease-in-out;
+        }
+
+    #table-wrapper {
+        position: relative;
+    }
+
+    #table-scroll {
+        height: 250px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+</style>
+<style media="print" type="text/css">
+
+    .divTableContainer {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .divCategoryAccount, .divAccount {
+        max-height: 27vh;
+        overflow-y: scroll;
+    }
+
+    .divSectionTitle {
+        background-color: rgba(41, 128, 185, 0.04);
+        font-weight: bold;
+        color: #2980b9;
+    }
+
+
+    /*** Print Style ***/
+    @@media print {
+        /*.tblRPTData,th, .tblRPTData.td {
+            border: 3px solid black !important;
+        }*/
+        body {
+            /*padding-top: 0 !important;*/
+            /*padding-bottom: 5px !important;*/
+            padding-right: 20px !important;
+        }
+
+        div.footer {
+            /*display: block;*/
+            /*text-align: center;*/
+        }
+
+        td.clssum {
+            /*background-color:red !important;
+            -webkit-print-color-adjust:exact !important;*/
+        }
+
+        table {
+            float: none !important;
+        }
+
+        div {
+            float: none !important;
+        }
+
+        .divcontainer {
+            position: absolute !important;
+        }
+
+        .navbar {
+            display: none;
+        }
+
+        .divNav {
+            display: none;
+        }
+
+        #sidebar-wrapper {
+            display: none;
+        }
+
+        .divViewHeader {
+            display: none;
+        }
+
+        #container {
+            display: none;
+        }
+
+
+        .divChildAccount {
+            display: none;
+        }
+
+        .divRpt {
+            width: 93% !important;
+            display: inline-block !important;
+            position: absolute !important;
+        }
+
+        tblRPTDataBody {
+            width: 100% !important;
+            /*position: absolute !important;*/
+        }
+
+        .container-fluid {
+            display: none;
+        }
+
+        .btnReportShow {
+            display: none;
+        }
+        /*.div1sttable {
+            display: none;
+        }*/
+    }
+
+    @@page {
+        /*size: A4;*/
+        size: auto;
+        margin: 1mm 1mm 1mm 1mm;
+    }
+
+    .lbltitle {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .lblTel {
+        margin-top: 15px;
+        font-size: 15px;
+    }
+
+    .lblWeb {
+        margin-top: 15px;
+        margin-bottom: 30px;
+        font-size: 15px;
+    }
+
+    hr {
+        display: block;
+        height: 1px;
+        background: transparent;
+        width: 100%;
+        border: none;
+        border-top: solid 1px #aaa;
+    }
+</style>
+
+
+@*<div class="container-fluid">*@
+
+<div class="bg-white border rounded p-3">
+    <div class="w-100">
+        <div class="d-flex justify-content-end">
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Save -->
+                <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
+
+            </div>
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Copy -->
+                <button class="btn btnUtility btnCopy" title="@appResource.ttCopy"><i class="fa fa-copy"></i></button>
+                <!-- Cut -->
+                <button class="btn btnUtility btnCut" title="@appResource.ttCut"><i class="fa fa-cut"></i></button>
+                <!-- Paste -->
+                <button class="btn btnUtility btnPaste" title="@appResource.ttPaste"><i class="fa fa-paste"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Print -->
+                <button class="btn btnUtility btnPrint btnDataTablePrint" title="@appResource.ttPrint "><i class="fa fa-print"></i></button>
+                <!-- Sort Asc -->
+                <button class="btn btnUtility btnSortAsc" title="@appResource.ttSortAsc"><i class="fa fa-sort-asc"></i></button>
+                <!-- Sort Asc -->
+                <button class="btn btnUtility btnSortDesc" title="@appResource.ttSortDesc"><i class="fa fa-sort-desc"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- ADD -->
+                <button class="btn btnUtility" title="@appResource.ttAdd"><i class="fa fa-plus"></i></button>
+                <!-- Edit -->
+                <button class="btn btnUtility " id="btnEdit" title="@appResource.ttEdit"><i class="fa fa-edit"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- PDF -->
+                <button class="btn btnUtility btnPDF" title="@appResource.ttPDF"><i class="fa fa-file-pdf-o"></i></button>
+                <!-- Excel -->
+                <button class="btn btnUtility btnExcel btnDataTablePrint " title="@appResource.ttExcel"><i class="fa fa-file-excel-o"></i></button>
+                <!-- Word -->
+                <button class="btn btnUtility btnWord" id="btnWord" title="@appResource.ttWord"><i class="fa fa-file-word-o"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Close -->
+                <button class="btn btnUtility btnClose" title="@appResource.ttClose"><i class="fa fa-close"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Next -->
+                <button class="btn btnUtility   btnFirst" id="btnFirst" title=" @appResource.ttFirst"><i class="fa  fa-fast-forward"></i></button>
+                <!-- Prev -->
+                <button class="btn btnUtility   btnNext" id="btnNext" title="@appResource.ttNext"><i class="fa  fa-forward "></i></button>
+                <!-- First -->
+                <button class="btn btnUtility btnPrev" id="btnPrev" title="@appResource.ttPrev"><i class="fa fa-backward"></i></button>
+                <!-- Last -->
+                <button class="btn btnUtility btnLast" id="btnLast" title="@appResource.ttLast"><i class="fa fa-fast-backward"></i></button>
+            </div>
+
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <!-- Full Screen -->
+                <button class="btn btnUtility btnFullScreen" title="@appResource.ttFullScreen"><i class="fa fa-window-maximize"></i></button>
+            </div>
+
+            <div class="btn-group m-2" role="group" aria-label="First group">
+                <div class="dropdown">
+                    <button class="btn btnUtility dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-table"></i>
+                    </button>
+                    <div id="chkboxdiv" class="flex-shrink-1 dropdown-menu" aria-labelledby="dropdownMenuButton"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class=" bg-white  pt-3 pb-3 container-fluid">
+    <div class="row">
+
+
+        <div class="row col-md-4">
+            <div class=" col-sm-2">
+                <label class="control-label">@appResource.DateFrom</label>
+            </div>
+            <div class=" col-sm-8">
+                @*@DateTime.Now.ToString("yyyy-MM-dd")*@
+                <input type="date" class="form-control DateFrom" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            </div>
+        </div>
+        <div class="row col-md-4">
+            <div class=" col-sm-2">
+                <label class="control-label">@appResource.DateTo</label>
+            </div>
+            <div class=" col-sm-8">
+                <input type="date" class="form-control DateTo" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            </div>
+        </div>
+        <div class="row col-sm-2">
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid bg-white">
+    <table class="table" style="margin-bottom: 0rem;">
+        <tbody>
+            <tr>
+                <td>
+
+                    <div class="mb-4">
+                        <input type="radio" name="gender" value="1" id="rdbtn1"> <label class="control-label">@appResource.SpecificAccount</label>
+                    </div>
+                    <div class="mb-4">
+                        <input type="radio" name="gender" value="2" id="rdbtn2">  <label class="control-label">@appResource.FromAccountToAccount</label>
+                    </div>
+                    <div class="mb-4">
+                        <input type="radio" name="gender" value="3" id="rdbtn3"> <label class="control-label">@appResource.SpecificType</label>
+                    </div>
+                    <div class="mb-4">
+                        <input type="radio" name="gender" value="4" id="rdbtn4">  <label class="control-label">@appResource.SpecificCustomer</label>
+                    </div>
+                    <div class="mb-4">
+                        <input type="radio" name="gender" value="5" id="rdbtn5"> <label class="control-label">@appResource._CostCenter</label>
+                    </div>
+                    @*</div>*@
+                </td>
+                <td>
+
+                    @*<div class=" col-md-8">*@
+                    <div class="row mb-1">
+                        <div class="col-md-1">
+                            <label class="control-label">@appResource._Account</label>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="d-flex">
+                                <input type="text" class="form-control w-25" id="txtAccountId" data-id="0" />
+                                <input type="text" class="form-control w-75" readonly id="txtAccountName" data-id="0" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-md-1">
+                            <label class="control-label">@appResource.FromAccount</label>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="d-flex">
+                                <input type="text" class="form-control w-25" id="txtFromAccountId" data-id="0" />
+                                <input type="text" class="form-control w-75" readonly id="txtFromAccountName" data-id="0" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-md-1">
+                            <label class="control-label">@appResource.ToAccount</label>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="d-flex">
+                                <input type="text" class="form-control w-25" id="txtToAccountId" data-id="0" />
+                                <input type="text" class="form-control w-75" readonly id="txtToAccountName" data-id="0" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-md-1">
+                            <label class="control-label">@appResource._Type</label>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="d-flex">
+                                <input type="text" class="form-control w-25" id="txtTypeId" data-id="0" />
+                                <input type="text" class="form-control w-75" readonly id="txtTypeName" data-id="0" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-md-1">
+                            <label class="control-label">@appResource._Customer</label>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="d-flex">
+                                <input type="text" class="form-control w-25" id="txtCustomerId" data-id="0" />
+                                <input type="text" class="form-control w-75" readonly id="txtCustomerName" data-id="0" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-md-1">
+                            <label class="control-label">@appResource._CostCenter</label>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="d-flex">
+                                <input type="text" class="form-control w-25" id="txtCostCenterId" data-id="0" />
+                                <input type="text" class="form-control w-75" readonly id="txtCostCenterName" data-id="0" />
+                            </div>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class=" bg-white border pt-3 pb-3 container-fluid">
+    <div class=" bg-white border pt-3 pb-3 container-fluid">
+        <div class="row chkReportType">
+            <div class="col-sm-2">
+                <input type="checkbox" name="PausedAccounts<" value="1"> <label class="control-label">@appResource.ShowPausedAccounts</label>
+            </div>
+            <div class="col-sm-2">
+                <input type="checkbox" name="CostCenter" value="2"> <label class="control-label">@appResource.BasedOnCostCenter</label>
+            </div>
+            <div class="col-sm-2">
+                <input type="checkbox" name="PreviousBalance" value="3"> <label class="control-label">@appResource.ShowPreviousBalance</label>
+            </div>
+            <div class="col-sm-2">
+                <input type="checkbox" name="Total" value="4"> <label class="control-label">@appResource.Total</label>
+            </div>
+            <div class="col-sm-2">
+                <input type="checkbox" name="ZeroAccounts" value="5"> <label class="control-label">@appResource.ShowZeroAccounts</label>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*<div class="bg-white" id="table-wrapper">
+    <div id="table-scroll">*@
+<div class="divChildAccount bg-white border p-2">
+    <input type="submit" value="PDF" class="btn btn-primary btnPdf" />
+</div>
+<div class="divChildAccount bg-white border p-2" id="table-wrapper">
+
+    <div id="table-scroll">
+        @*<input type="submit" value="PDF" class="btn btn-primary btnPdf" />*@
+
+        <table class="table tblChildAccount">
+            <!-- Head -->
+            <thead>
+                <tr>
+                    @*<th width="20px"></th>*@
+                    <th>@appResource._Code</th>
+                    <th>@appResource._Account</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="tblChildAccountBody"></tbody>
+        </table>
+        @*<input type="submit" value="@appResource.btnView" class="btn btn-success btnReportShow" />*@
+
+    </div>
+</div>
+
+    <div class="divRpt bg-white  ">
+
+        @*<div class="div1sttable " style="height:1170px !important;">*@
+        <div class="div1sttable " style="height:1160px !important;">
+            <table width="100%">
+                <tr>
+                    <td width="30%">
+                        <table>
+                            <tr><td><label class="lbltitle">مطعم الوليمة</label></td></tr>
+
+                            <tr>
+                                <td>
+                                    مطاعم ركن الوليمة
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="lblTel">
+                                        ت:01148637732
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <label class="lblWeb">
+                                        www.alwaleemah.com
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="30%" align="center">
+                        <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" width="100" />
+                    </td>
+                    <td width="30%" align="left">
+                        <table>
+                            <tr><td><label class="lbltitle">Waaleemah Restaurant</label></td></tr>
+                            <tr>
+                                <td>
+                                    Waaleemah Restaurant
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="lblTel">
+                                        ت:01148637732
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="lblWeb">
+                                        www.alwaleemah.com
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!-- Divder -->
+            <div class="divider">
+                <hr size="5" style="background-color:gray">
+            </div>
+            <div class="divRptHeader row " style="text-align:center">
+
+                <label class="control-label lblReportTitle col-md-12" style="font-size:large;font-weight:bold">@appResource.ReportAccountStatementTitle</label>
+            </div>
+            <table>
+                <tbody>
+                    <tr class="">
+                        <td width="7%"> <label class="control-label " style="font-size:18px;font-weight:bold; width:20px;">    @appResource._Branch </label></td>
+                        <td width="7%"> <label class="control-label lblBranchNo" style="font-size:medium;font-weight:bold; width:20px;">  1  </label></td>
+                        <td width="15%"> <label class="control-label lblBranchName" style="font-size:18px;font-weight:bold;">    مطاعم ركن الوليمة                        </label></td>
+                        <td width="71%"></td>
+                    </tr>
+                    <tr class="mt-10">
+                        <td width="7%"><label class="control-label " style="font-size:medium;font-weight:bold; width:55px;">    @appResource._Account  </label></td>
+                        <td width="7%">     <label id="lblfirstAccountId" class="control-label lblAccountNo" style="font-size:medium;font-weight:bold; width:55px;">  1 </label></td>
+                        <td width="7%"><label class="control-label lblAccount" style="font-size:medium;font-weight:bold;">   اسم الحساب                      </label></td>
+                        <td width="7%"><label id="lblfirstAccountName" class="control-label lblAccountName" style="font-size:medium;font-weight:bold;">    مطاعم ركن الوليمة                        </label></td>
+                    </tr>
+                </tbody>
+            </table>
+            @* اجمالي مع مركز تكلفه *@
+            <table class="table  tblRptTotal table-bordered border ">
+
+                <thead>
+
+                    <tr class="tblReportTotalHead">
+                        <th width="5%">رقم الحساب</th>
+                        <th width="20%">اسم الحساب</th>
+                        <th width="13%">رصيد سابق مدين بعمله الحساب</th>
+                        <th width="13%">رصيد سابق دائن بعمله الحساب</th>
+                        <th width="13%">العمليات الماليه مدين بعمله الحساب</th>
+                        <th width="13%">العمليات الماليه دائن بعمله الحساب</th>
+                        <th width="13%">الرصيد مدين بعمله الحساب</th>
+                        <th width="13%"> الرصيد  دائن بعمله الحساب</th>
+
+                    </tr>
+
+                </thead>
+                <tbody class="tblReportTotalData"></tbody>
+            </table>
+
+            @* تفصيلي*@
+            <table class="table table-bordered table-hover tblRPTData ">
+                <thead style="-webkit-print-color-adjust: exact;">
+                    <tr class="divheader" style="-webkit-print-color-adjust: exact !important;background-color:red !important;">
+                        <th></th>
+                        <th>@appResource.RptTransactionType</th>
+                        <th>@appResource.RptTransactionNo</th>
+                        <th>@appResource.RptTransactionDate</th>
+                        <th>@appResource.RptNote</th>
+                        <th>@appResource.RptDebitBase</th>
+                        <th>@appResource.RptCreditBase</th>
+                        <th>@appResource.Balance </th>
+                    </tr>
+                </thead>
+                <tbody class="tblRPTDataBody"></tbody>
+            </table>
+
+
+            <div class="divTotal" style="height:20px !important;">
+
+            </div>
+        </div>
+
+        @*<div class='footer MainFooter' style="height:5px !important; direction: ltr;">*@
+        <div class='footer MainFooter' style="direction: ltr;">
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">
+                    <label style="font-weight:bold">@clsUser.vUserFullName</label>
+                </div>
+                <div class="col-sm-4" style="font-weight:bold">
+                    <label>Page</label> <label style="font:bold">1</label> <label style="font:bold">From</label> <label style="font:bold" class="lbltotal">1</label>
+                </div>
+
+                <div class="col-sm-6" style="font-weight:bold">@DateTime.Now.ToString("yyyy-MM-dd")</div>
+            </div>
+        </div>
+        @*style="bottom:0;right:0;"*@
+
+        @*mb-1*@
+        <div class="row ">
+            <div class="col-md-7">
+            </div>
+            <div class="col-md-1">
+                <div class="divTafkeet">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="divtables"></div>
+        <div class="divtablestotal"></div>
+    </div>
+    <div id="AccountDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="AccountDataModalContent"></div>
+        </div>
+    </div>
+    <div id="TransactionTypeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="TransactionTypeDataModalContent"></div>
+        </div>
+    </div>
+    <div id="CustomerDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="CustomerDataModalContent"></div>
+        </div>
+    </div>
+    <div id="CostCenterDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="CostCenterDataModalContent"></div>
+        </div>
+    </div>
+    <div id="AccountCategoryDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="AccountCategoryDataModalContent"></div>
+        </div>
+    </div>
+
+
+    <script>
+    // Total
+    var vTotalPreviousDebitBase = 0;
+    var vTotalPreviousCreditBase = 0;
+    var vTotalTransactionDebit = 0;
+    var vTotalTransactionCredit = 0;
+    var vTotalBalanceDebit = 0;
+    var vTotalBalanceCredit = 0;
+    // Variable For The Total Count Of The Report Pages
+    var vTotalPages = 0;
+    // Variable For The Current Page Number
+    var vCurrentPage = 0;
+    // varible Balance
+    var vBalance = 0;
+    var vTafkeet = "";
+
+        $('.divRpt').css("display", "none");
+        $('.btnReportShow').on('click', function () {
+         // Date Value
+        var vDateFrom = $('.DateFrom').val();
+        var vDateTo = $('.DateTo').val();
+        // split Date
+        var vDateFrom = vDateFrom.split("-");
+            var vDateTo = vDateTo.split("-");
+
+        // Create New Date
+        var DateFrom = new Date(vDateFrom[0], vDateFrom[1], vDateFrom[2]);
+        var DateTo = new Date(vDateTo[0], vDateTo[1], vDateTo[2]);
+        // Check Valid Date
+        if (DateFrom > DateTo) {
+            //funNotification('(يجب ان يكون (من تاريخ) اكبر من (الي تاريخ', 2)
+            funNotification('@appResource.msgDateBetween', 2)
+        }
+        else {
+
+            var arrSelectedRow = [];
+            var vSelected = '';
+            $('.chkReportType input:checked').each(function () {
+
+                // Current Object Id
+                var vCurrentObjectActionId = $(this).attr('value');
+                arrSelectedRow.push(vCurrentObjectActionId);
+                vSelected += vCurrentObjectActionId + ','
+
+            })
+
+            // CostCenter And Details
+            if (vSelected == '2,') {
+                console.log('تفصيلي مركز تكلفه')
+                ////funReportDetail(404)
+                //funReportDetailAll(406)
+                var url = '/AccountStatementReport/GLDetailsCostCenterReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + "&&pChildAccounts=" + vlstLastchildsDisplayNames.toString();
+                var popupWindow = window.open(url);
+            }
+            // Totals
+            else if (vSelected == '4,') {
+                console.log('اجمالي')
+                //funReportCostCenterDetail(403);
+                var url = '/AccountStatementReport/GLTotalReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + "&&pChildAccounts=" + vlstLastchildsDisplayNames.toString();
+                var popupWindow = window.open(url);
+
+            }
+            // Totals With CostCenter
+            else if (vSelected == '2,4,') {
+                console.log('اجمالي مع مركز تكلفه')
+
+                // Totals With CostCenter
+                //funReportCostCenterDetail(402);
+
+                var url = '/AccountStatementReport/GLTotalCostCenterReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + "&&pChildAccounts=" + vlstLastchildsDisplayNames.toString();
+                var popupWindow = window.open(url);
+            }
+            // Details
+            else {
+
+                //console.log('تفصيلي ')
+
+                ////// Report Details
+                ////funReportDetail(400)
+
+
+                //funReportDetailAll(406)
+
+                var url = '/AccountStatementReport/GLReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + "&&pChildAccounts=" + vlstLastchildsDisplayNames.toString();
+                var popupWindow = window.open(url);
+
+
+
+            }
+
+
+
+
+        } // Check  Date Availabilty
+    });
+    $('.btnPdf').on('click', function () {
+
+        $.get('/AccountStatementReport/PrintPDF',null, function () {
+
+
+        })
+    });
+
+    // Cost Center With Total Report
+    function funReportCostCenterDetail(pQueryTypeId) {
+        $('.tblRptTotal').removeClass('d-none')
+        $('.tblRPTData').addClass('d-none')
+        $('.div1sttable').removeClass('d-none')
+        $('.divtables').addClass('d-none')
+        $('.divtablestotal').removeClass('d-none')
+        $('.MainFooter').removeClass('d-none')
+        // Date Value
+        var vAccountId = $('#txtAccountId').val();
+        var vAccountName = $('#txtAccountName').val();
+
+        // Date
+        var vDateFrom = $('.DateFrom').val();
+        var vDateTo = $('.DateTo').val();
+
+         vTotalPages = 0;
+         vCurrentPage = 0;
+
+        var vLstBranchesAccountsNo = vlstLastchildsDisplayNames.toString()
+        console.log('accccounts' + vlstLastchildsDisplayNames.toString())
+        if (vLstBranchesAccountsNo.indexOf(",") < 0) {
+            vLstBranchesAccountsNo +=','
+        }
+        $('#lblfirstAccountId').text(vAccountId);
+        $('#lblfirstAccountName').text(vAccountName);
+
+        $.post('/AccountStatementReport/GetAccountStatementReport', {
+
+            pAccountId: vAccountId,
+            pDateFrom: vDateFrom,
+            pDateTo: vDateTo,
+            pChildAccounts: vLstBranchesAccountsNo,
+            pQueryTypeId: pQueryTypeId
+
+        }, function (data, status) {
+            var vDataResult = JSON.parse(data)
+            //console.log(vDataResult)
+
+            $('.tblReportTotalData').html('')
+            for (var i = 0; i <= vDataResult.length - 1; i++) {
+                if (i< 28) {
+                    vTotalPreviousDebitBase += vDataResult[i].PreviousDebitBase
+                    vTotalPreviousCreditBase += vDataResult[i].PreviousCreditBase
+                    vTotalTransactionDebit += vDataResult[i].TransactionDebit
+                    vTotalTransactionCredit += vDataResult[i].TransactionCredit
+                    vTotalBalanceDebit += vDataResult[i].BalanceDebit
+                    vTotalBalanceCredit += vDataResult[i].BalanceCredit
+                }
+
+                if (i<28) {
+                    $('.tblReportTotalData').append(funCongDtlContent(vDataResult[i]))
+                }
+
+                if (i == 28) {
+                    //fnReportLoop(pStartIndex, PMaxPageLimit, pRecordsNumber, pData, vTotalDebit, vTotalCredit, pDivContainer, vChildAccountName, vChildAccountNo, pType)
+                    fnReportLoop(i, i + 28, vDataResult.length - 1, vDataResult, 0, 0, $('.divtablestotal'), vAccountName, vAccountId, 'total')
+
+
+                }
+            }
+            if (vDataResult.length - 1 < 28) {
+                //// Row Total
+                var vTotalRow =
+                    '<tr>' +
+                    '<td colspan ="2">' +
+                    '    <div class="" style=" text-align:center">' + "@appResource._Total" + '</div>' +
+                    ' </td>' +
+                    '<td>' +
+                    '    <div class="" style=" text-align:center">' + vTotalPreviousDebitBase + '</div>' +
+                    ' </td>' +
+                    ' <td>' +
+                    '    <div class="" style=" text-align:center">' + vTotalPreviousCreditBase + '</div>' +
+                    '  </td>' +
+
+                    ' <td>' +
+                    '    <div class="" style=" text-align:center">' + vTotalTransactionDebit + '</div>' +
+                    '  </td>' +
+                    ' <td>' +
+                    '    <div class="" style=" text-align:center">' + vTotalTransactionCredit + '</div>' +
+                    '  </td>' +
+                    ' <td>' +
+                    '    <div class="" style=" text-align:center">' + vTotalBalanceDebit + '</div>' +
+                    '  </td>' +
+                    ' <td>' +
+                    '    <div class="" style=" text-align:center">' + vTotalBalanceCredit + '</div>' +
+                    '  </td>' +
+                    '</tr>';
+                $('.tblReportTotalData').append(vTotalRow)
+            }
+
+            $('.lbltotal').text((vTotalPages + 1).toString());
+            vTotalPages = 0;
+
+            vCurrentPage = 0;
+            funPrint();
+            // Total
+             vTotalPreviousDebitBase = 0;
+             vTotalPreviousCreditBase = 0;
+             vTotalTransactionDebit = 0;
+             vTotalTransactionCredit = 0;
+             vTotalBalanceDebit = 0;
+            vTotalBalanceCredit = 0;
+            // Pages
+
+            $('.lbltotal').text('');
+            $('.divtablestotal').html('');
+        })
+
+    }
+
+
+    function funCongDtlContent(pData) {
+        var CostCenterName = pData.CostCenterNameL1
+        console.log(CostCenterName)
+        if (CostCenterName = 'undefined') {
+            CostCenterName = '';
+        }
+        var vDtlContent =
+            '<tr style = "line-height: 10px !important;">' +
+            '<td>' +
+            '    <div class=""  style=" text-align:center">' + pData.AccountId + '</div>' +
+            ' </td>' +
+            ' <td>' +
+            '    <div class="" style=" text-align:center">' + pData.AccountNameL1 + '  ' + CostCenterName + '</div>' +
+            '  </td>' +
+            '<td>' +
+            '    <div class="" style=" text-align:center">' + pData.PreviousDebitBase + '</div>' +
+            ' </td>' +
+            ' <td>' +
+            '    <div class="" style=" text-align:center">' + pData.PreviousCreditBase + '</div>' +
+            '  </td>' +
+
+            ' <td>' +
+            '    <div class="" style=" text-align:center">' + pData.TransactionDebit + '</div>' +
+            '  </td>' +
+            ' <td>' +
+            '    <div class="" style=" text-align:center">' + pData.TransactionCredit + '</div>' +
+            '  </td>' +
+            ' <td>' +
+            '    <div class="" style=" text-align:center">' + pData.BalanceDebit + '</div>' +
+            '  </td>' +
+            ' <td>' +
+            '    <div class="" style=" text-align:center">' + pData.BalanceCredit + '</div>' +
+            '  </td>' +
+
+            '</tr>';
+
+        return vDtlContent;
+    }
+
+
+
+
+
+
+
+    // Report Account Details
+    function funReportDetail(pQueryTypeId) {
+
+        $('.tblRptTotal').addClass('d-none');
+        $('.tblRPTData').removeClass('d-none');
+        $('.div1sttable').addClass('d-none');
+        $('.divtables').removeClass('d-none');
+        $('.divtablestotal').addClass('d-none');
+        $('.MainFooter').addClass('d-none');
+        var vAccountId = $('#txtAccountId').val();
+        var vDateFrom = $('.DateFrom').val();
+        var vDateTo = $('.DateTo').val();
+        var vAccountFrom = $('#txtFromAccountId').val();
+        var vAccountTo = $('#txtToAccountId').val();
+
+        // Table Body
+        var vTableBody = $('.tblRPTDataBody');
+        var vFirstTableTafkeet = '';
+        var vFirstTableBody = '';
+        var vFirstTotalDebit = 0;
+        var vFirstTotalCredit = 0;
+        var vFirstTotalBalance = 0;
+
+        vTotalPages = 0;
+        vCurrentPage = 0;
+        if (vAccountId != undefined && vAccountId != '') {
+               //////// END Of First Table
+            //$.post('/AccountStatementReport/GetAccountStatementReport', {
+
+            //    pAccountId: vAccountId,
+            //    pDateFrom: vDateFrom,
+            //    pDateTo: vDateTo
+
+
+            //}, function (data, status) {
+
+
+
+            //    vTableBody.html('');
+            //    var vDataResult = JSON.parse(data);
+            //    var RowNo = 0
+            //    $.each(vDataResult, function (i, GLTransaction) {
+            //        vFirstTotalDebit += GLTransaction.TransactionDebitBase
+            //        vFirstTotalCredit += GLTransaction.TransactionCreditBase
+            //        // Row Count
+            //        RowNo++
+            //        //vTableBody.append(
+            //        vFirstTableBody +=
+            //            '<tr  style="line-height: 5px !important;">' +
+            //            '<td width="3%" align="center">' +
+            //            RowNo +
+            //            '</td>' +
+            //            '<td width="10%" align="center">' +
+            //            GLTransaction.TransactionTypeNameL1 +
+            //            '</td>' +
+            //            '<td width="10%" align="center">' +
+            //            GLTransaction.TransactionSeq +
+            //            '</td>' +
+            //            '<td width="10%" align="center">' +
+            //            GLTransaction.TransactionDate.toString("yyyy-MM-dd") +
+            //            '</td>' +
+            //            '<td width="10%" align="center">' +
+            //            GLTransaction.TransactionNote +
+            //            '</td>' +
+            //            '<td width="10%" align="center">' +
+            //            GLTransaction.TransactionDebitBase +
+            //            '</td>' +
+            //            '<td width="10%" align="center">' +
+            //            GLTransaction.TransactionCreditBase +
+            //            '</td>' +
+            //            '<td width="10%" align="center">' +
+            //            GLTransaction.Balance +
+            //            '</td>' +
+            //            '</tr>';
+            //        //)
+            //        if (i == length) {
+            //            vFirstTableTafkeet = GLTransaction.SumBalanceTafkeet
+            //            vFirstTotalBalance = GLTransaction.SumBalance
+            //        }
+
+            //    })
+            //    var vDiff = vFirstTotalDebit - vFirstTotalCredit;
+
+            //    // Total And Diff Rows
+            //    vFirstTableBody +=
+            //        '<tr style="line-height: 10px !important;">' +
+            //        '<td  align="left" colspan ="5">' +
+            //        '<label class="control-label" style="font-weight:bold;"> اجمالي المدين والدائن </label>' +
+            //        '</td>' +
+            //        '<td align="center" class="clssum"  bgcolor="#00FF00" style="font-weight:bold;">' +
+            //        vFirstTotalDebit +
+            //        '</td>' +
+            //        '<td align="center" class="clssum" bgcolor="#00FF00" style="font-weight:bold;" >' +
+            //        vFirstTotalCredit +
+            //        '</td>' +
+            //        '<td align="center" class="clssum"  bgcolor="#00FF00" >' +
+            //        '</td>' +
+            //        '</tr>';
+
+            //    vFirstTableBody +=
+            //        '<tr style="line-height: 10px !important;">' +
+            //        '<td   colspan ="5" align="left">' +
+            //        '<label class="control-label"  style="font-weight:bold;"> الفرق </label>' +
+            //        '</td>' +
+            //        '<td align="center" class="clssum" bgcolor="#00FF00" style="font-weight:bold;">' +
+            //        vDiff +
+            //        '</td>' +
+            //        '<td align="center" class="clssum" bgcolor="#00FF00">' +
+            //        '</td>' +
+            //        '<td align="center" class="clssum" bgcolor="#00FF00">' +
+            //        '</td>' +
+            //        '</tr>';
+            //    vFirstTableBody +=
+            //        '<tr style="line-height: 10px !important;align="left"">' +
+            //        '<td   colspan ="5">' +
+            //        '<label class="control-label" style="font-weight:bold;">' + vFirstTableTafkeet + '</label>' +
+            //        '</td>' +
+            //        '<td align="center" class="clssum" bgcolor="Yellow" style="font-weight:bold;">' +
+            //        vFirstTotalBalance +
+            //        '</td>' +
+            //        '<td align="center" class="clssum" bgcolor="Yellow">' +
+            //        '</td>' +
+            //        '<td align="center" class="clssum" bgcolor="Yellow">' +
+            //        '</td>' +
+            //        '</tr>';
+            //    vTableBody.append(vFirstTableBody);
+
+            //})
+            //////// END Of First Table
+
+            //Looop Through Child Account
+            //Check All Rows
+            $('.divtables').html('');
+            var vIndex = 0;
+            var vtafkeet = '';
+            var vCurrentIndex = 0;
+            // Get Report fot childs
+            //$.post('/AccountStatementReport/GetAccountStatementReport', {
+            //    pDateFrom: vDateFrom,
+            //    pDateTo: vDateTo,
+            //    pChildAccounts: vlstLastchildsDisplayNames.toString(),
+            //}, function (data, status) {
+            //    var vDataResultChild = JSON.parse(data);
+            //              fnReportLoop(0, 29, vDataResultChild.length - 1, vDataResultChild, 0, 0, $('.divtables'), 'vChildAccountName', '1','Detail')
+            //            $('.lbltotal').text(vTotalPages.toString());
+            //});
+            // END Get Report fot childs
+            $(".tblChildAccountBody > tr").each(function (index) {
+                vIndex++;
+
+                // Row Data
+                var vRowData = $(this);
+                // Get ChildAccountId
+                var vChildAccountId = vRowData.attr('data-id');
+                // Get ChildAccountNo
+                var vChildAccountNo = vRowData.attr('data-AccountNo');
+                var vChildAccountName = vRowData.attr('data-AccountName');
+                // Table Body
+                //var vDivContainer = $('.divRpt');
+                var vDivContainer = $('.divtables');
+                var vTableHeadBody = '';
+                var vTableDtlBody = '';
+                var vTableFooter = '';
+                var vTableRowsBody = '';
+                var vTotalDebit = 0;
+                var vTotalCredit = 0;
+                var vTotalBalance = 0;
+                var vDbCrDiff = 0;
+                var vRowHeader =
+                    ' <table class="clsHeader" width = "100%" style="padding-top:50px !important ;" >' +
+                    '<tr>' +
+                    '<td width="30%">' +
+                    '<table>' +
+                    ' <tr><td><label class="lbltitle">مطعم الوليمة</label></td></tr>' +
+                    '<tr>' +
+                    '  <td>   مطاعم ركن الوليمة  </td>' +
+                    '   </tr>' +
+                    ' <tr>' +
+                    ' <td>' +
+                    '  <label class="lblTel">  ت:01148637732  </label> </td>' +
+                    ' </tr>' +
+                    '   <tr>' +
+                    ' <td><label class="lblWeb">www.alwaleemah.com </label></td>' +
+                    '</tr>' +
+                    ' </table>' +
+                    ' </td>' +
+                    //'  <td width="30%" align="center"> <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" width="100" /> </td>' +
+                    '  <td width="30%" align="center"> <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" width="150" /> </td>' +
+                    ' <td width="30%" align="left">' +
+                    ' <table>' +
+                    '  <tr><td><label class="lbltitle">Waaleemah Restaurant</label></td></tr>' +
+                    ' <tr> <td> Waaleemah Restaurant  </td> </tr>' +
+                    ' <tr> <td><label class="lblTel"> ت:01148637732 </label>' +
+                    '  </td></tr> <tr>' +
+                    '  <td>' +
+                    '  <label class="lblWeb">   www.alwaleemah.com </label>' +
+                    '  </td></tr>' +
+                    '</table>' +
+                    '</td>' +
+                    '</tr>' +
+                    '</table >' +
+                    '<div class="divider" style="padding-top:50px !important ;" >' +
+                    ' <hr size="5" style="background-color:gray">' +
+                    ' </div>';
+
+
+                //  vDivContainer.append(vRowHeader)
+                var vlast = 0;
+                if (vChildAccountNo == undefined || vChildAccountNo == '') {
+
+                }
+                else {
+                    $.post('/AccountStatementReport/GetAccountStatementReport', {
+                        pAccountId: vChildAccountNo,
+                        pDateFrom: vDateFrom,
+                        pDateTo: vDateTo,
+                        //pChildAccounts: vlstLastchildsDisplayNames.toString(),
+                    }, function (data, status) {
+                        var vDataResultChild = JSON.parse(data);
+                        var vRowNo = 0;
+                        //fnReportLoop(pStartIndex, PMaxPageLimit, pRecordsNumber, pData, vTotalDebit, vTotalCredit, pDivContainer, vChildAccountName, vChildAccountNo, pType)
+                        //fnReportLoop(0, 29, vDataResultChild.length - 1, vDataResultChild, 0, 0, $('.divtables'), vChildAccountName, vChildAccountNo, 'Detail')
+                        fnReportLoop(0, 32, vDataResultChild.length - 1, vDataResultChild, 0, 0, $('.divtables'), vChildAccountName, vChildAccountNo, 'Detail')
+
+                        $('.lbltotal').text(vTotalPages.toString());
+                        //if (index === $(".tblChildAccountBody > tr").length-1) {
+                        //        // Print
+                        //        funPrint();
+                        //        vTotalPages = 0;
+
+                        //        vCurrentPage = 0;
+
+
+                        //}
+
+                        ////// Original append Code
+
+                          ////// END  Original append Code
+
+                    });
+                }
+                //}
+
+            });
+
+            // Wait 2 Seconds
+            setTimeout(function () {
+                // Print
+                funPrint();
+                vTotalPages = 0;
+
+                vCurrentPage = 0;
+            },
+                3500
+                //2000
+            );
+            $('.lbltotal').text('');
+
+            //$('.tblBody').html('');
+
+
+            $('.divRpt').css("display", "none");
+
+        }
+        else if ((vAccountFrom != undefined && vAccountFrom != '') && (vAccountTo != undefined && vAccountTo != '')) {
+            $.post('/AccountStatementReport/GetAccountStatementReport', {
+                pAccountId: vAccountFrom,
+                pDateFrom: vDateFrom,
+                pDateTo: vDateTo
+            }, function (data, status) {
+
+
+                // Table Body
+                var vTableBody = $('.tblRPTDataBody');
+
+                var vDataResult = JSON.parse(data);
+
+                $.each(vDataResult, function (i, GLTransaction) {
+
+                    console.log('yessssss')
+                    //vTableBody.append(
+                    vFirstTableBody +=
+                        '<tr>' +
+                        '<td width="10%" align="center">' +
+                        GLTransaction.TransactionTypeNameL1 +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        GLTransaction.TransactionSeq +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        GLTransaction.TransactionDate.toString("yyyy-MM-dd") +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        GLTransaction.TransactionNote +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        GLTransaction.TransactionDebitBase +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        GLTransaction.TransactionCreditBase +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        GLTransaction.Balance +
+                        '</td>' +
+                        '</tr>';
+                    //)
+                    if (i == length) {
+                        vFirstTableTafkeet = GLTransaction.SumBalanceTafkeet
+                    }
+
+                })
+                //vTableBody.append(
+                vFirstTableBody +=
+                    '<tr>' +
+                    '<td align="Right" style="vertical-align:bottom;"  colspan ="7" rowspan="3" >' +
+                    '<label class="control-label" style="font-size:large;font-weight:bold;">' + vFirstTableTafkeet + '</label>' +
+                    '</td>' +
+                    '</tr>';
+                //);
+
+                vTableBody.append(vFirstTableBody);
+
+            })
+            //Looop Through Child Account
+            //Check All Rows
+            $('.divtables').html('');
+            var vIndex = 0;
+            var vtafkeet = '';
+            $(".tblChildAccountBody > tr").each(function () {
+                vIndex++;
+                // Row Data
+                var vRowData = $(this);
+                // Get ChildAccountId
+                var vChildAccountId = vRowData.attr('data-id');
+                // Get ChildAccountNo
+                var vChildAccountNo = vRowData.attr('data-AccountNo');
+                var vChildAccountName = vRowData.attr('data-AccountName');
+                // Table Body
+                //var vDivContainer = $('.divRpt');
+                var vDivContainer = $('.divtables');
+                var vTableBody = '';
+                var vTableRowsBody = '';
+
+                var vlast = 0;
+                if (vChildAccountNo == undefined || vChildAccountNo == '') {
+
+                }
+                else {
+                    $.post('/AccountStatementReport/GetAccountStatementReport', {
+                        pAccountId: vChildAccountNo,
+                        pDateFrom: vDateFrom,
+                        pDateTo: vDateTo
+                    }, function (data, status) {
+                        var vDataResultChild = JSON.parse(data);
+                        $.each(vDataResultChild, function (m, GLTransactionChild) {
+                            // Find The Current Table Body
+                            vTableRowsBody +=
+                                '<tr>' +
+                                '<td width="10%" align="center">' +
+                                GLTransactionChild.TransactionTypeNameL1 +
+                                '</td>' +
+                                '<td width="10%" align="center">' +
+                                GLTransactionChild.TransactionSeq +
+                                '</td>' +
+                                '<td width="10%" align="center">' +
+                                GLTransactionChild.TransactionDate.toString("yyyy-MM-dd") +
+                                '</td>' +
+                                '<td width="25%" align="center">' +
+                                GLTransactionChild.TransactionNote +
+                                '</td>' +
+                                '<td width="10%" align="center">' +
+                                GLTransactionChild.TransactionDebitBase +
+                                '</td>' +
+                                '<td width="10%" align="center">' +
+                                GLTransactionChild.TransactionCreditBase +
+                                '</td>' +
+                                '<td width="10%" align="center">' +
+                                GLTransactionChild.Balance +
+                                '</td>' +
+                                '</tr>';
+
+                            if (m == length) {
+                                vlast = 1;
+                                vtafkeet = GLTransactionChild.SumBalanceTafkeet;
+                            }
+
+                        })
+
+                        vTableRowsBody +=
+                            '<tr>' +
+                            '<td align="Right" style="vertical-align:bottom"  colspan ="7" rowspan="3" >' +
+                            '<label class="control-label" style="font-size:large;font-weight:bold;">' + vtafkeet + '</label>' +
+                            '</td>' +
+                            '</tr>';
+                        vTableBody = '<div class="divtable" style = "height:950px !important;" >' +
+                        //vTableBody = '<div class="divtable" style = "height:1000px !important;" >' +
+                            '<table class="table table-bordered table-hover tblRPTData2" style = "position:absolute !important"  >' +
+                            '<thead>' +
+                            '<tr align="center">' +
+                            '<th align="center" colspan="7">' +
+                            '<div class="divRptHeader">' +
+                            '<label class="control-label lblReportTitle" style="font-size:large;font-weight:bold;">@appResource.ReportAccountStatementTitle</label>' +
+                            '<div>' +
+                            '<div style="padding-right:400px">' +
+                            '<label class="control-label " style="font-size:medium;font-weight:bold; width:55px;">    @appResource._Branch </label>' +
+                            '<label class="control-label lblBranchNo" style="font-size:medium;font-weight:bold; width:55px;"> 1 </label>' +
+                            ' <label class="control-label lblBranchName" style="font-size:medium;font-weight:bold;">مطاعم ركن الوليمة  </label>' +
+                            '</div>' +
+
+                            '</div>' +
+                            '<div>' +
+                            '<div style="padding-right:400px">' +
+                            '<label class="control-label " style="font-size:medium;font-weight:bold; width:55px;">    @appResource._Account                            </label>' +
+                            '<label class="control-label lblAccountNo" style="font-size:medium;font-weight:bold; width:55px;">' + vChildAccountNo + '</label>' +
+                            '<label class="control-label lblAccountName" style="font-size:medium;font-weight:bold;">' + vChildAccountName + '</label>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</th>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<th>@appResource.Balance</th>' +
+                            '<th>@appResource._CreditBase</th>' +
+                            '<th>@appResource._DebitBase</th>' +
+                            '<th>@appResource._Note</th>' +
+                            '<th>@appResource._Date</th>' +
+                            '<th>@appResource._Seq</th>' +
+                            '<th>@appResource.TransactionTypeId</th>' +
+                            '</tr>' +
+                            '</thead>' +
+                            '<tbody class="tblRPTDataBody' + vIndex + ' tblBody">' + vTableRowsBody + '</tbody>' +
+                            '</table>' +
+                            '</div>';
+
+                        vDivContainer.append(vTableBody);
+                        var vOriginalReportTitleText = '@appResource.ReportAccountStatementTitle';
+                        // Set The Label Header For Report Title
+                        $('.lblReportTitle').text(vOriginalReportTitleText + '  ' + $('.DateFrom').val() + '   @appResource.ReportAccountStatementTo ' + '  ' + $('.DateTo').val());
+
+                    });
+                }
+                //}
+
+            });
+            // Wait 2 Seconds
+            setTimeout(function () {
+                // Print
+                funPrint();
+            }, 3000);
+
+            //$('.tblBody').html('');
+
+            $('.divRpt').css("display", "none");
+
+        }
+    }
+    function funReportDetailAll(pQueryTypeId)
+    {
+          $('.tblRptTotal').addClass('d-none');
+        $('.tblRPTData').removeClass('d-none');
+        $('.div1sttable').addClass('d-none');
+        $('.divtables').removeClass('d-none');
+        $('.divtablestotal').addClass('d-none');
+        $('.MainFooter').addClass('d-none');
+        var vAccountId = $('#txtAccountId').val();
+        var vDateFrom = $('.DateFrom').val();
+        var vDateTo = $('.DateTo').val();
+        var vAccountFrom = $('#txtFromAccountId').val();
+        var vAccountTo = $('#txtToAccountId').val();
+
+        // Table Body
+        var vTableBody = $('.tblRPTDataBody');
+        var vFirstTableTafkeet = '';
+        var vFirstTableBody = '';
+        var vFirstTotalDebit = 0;
+        var vFirstTotalCredit = 0;
+        var vFirstTotalBalance = 0;
+
+
+        var vDivContainer = $('.divtables');
+        var vTableHeadBody = '';
+        var vTableDtlBody = '';
+        var vTableFooter = '';
+        var vTableRowsBody = '';
+        var vTotalDebit = 0;
+        var vTotalCredit = 0;
+        var vTotalBalance = 0;
+        var vDbCrDiff = 0;
+        var vRowHeader =
+            ' <table class="clsHeader" width = "100%" style="padding-top:50px !important ;" >' +
+            '<tr>' +
+            '<td width="30%">' +
+            '<table>' +
+            ' <tr><td><label class="lbltitle">مطعم الوليمة</label></td></tr>' +
+
+            '<tr>' +
+            '  <td>   مطاعم ركن الوليمة  </td>' +
+            '   </tr>' +
+            ' <tr>' +
+            ' <td>' +
+            '  <label class="lblTel">  ت:01148637732  </label> </td>' +
+            ' </tr>' +
+            '   <tr>' +
+            ' <td><label class="lblWeb">www.alwaleemah.com </label></td>' +
+            '</tr>' +
+            ' </table>' +
+            ' </td>' +
+            //'  <td width="30%" align="center"> <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" width="100" /> </td>' +
+            '  <td width="30%" align="center"> <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" width="150" /> </td>' +
+            ' <td width="30%" align="left">' +
+            ' <table>' +
+            '  <tr><td><label class="lbltitle">Waaleemah Restaurant</label></td></tr>' +
+            ' <tr> <td> Waaleemah Restaurant  </td> </tr>' +
+            ' <tr> <td><label class="lblTel"> ت:01148637732 </label>' +
+            '  </td></tr> <tr>' +
+            '  <td>' +
+            '  <label class="lblWeb">   www.alwaleemah.com </label>' +
+            '  </td></tr>' +
+            '</table>' +
+            '</td>' +
+            '</tr>' +
+            '</table >' +
+            '<div class="divider" style="padding-top:50px !important ;" >' +
+            ' <hr size="5" style="background-color:gray">' +
+            ' </div>';
+
+        vTotalPages = 0;
+        vCurrentPage = 0;
+        //if (vAccountId != undefined && vAccountId != '') {
+            //Looop Through Child Account
+            //Check All Rows
+            $('.divtables').html('');
+            var vIndex = 0;
+            var vtafkeet = '';
+            var vCurrentIndex = 0;
+            var printnow = 0;
+            $.post('/AccountStatementReport/GetAccountStatementReport', {
+                pDateFrom: vDateFrom,
+                pDateTo: vDateTo,
+                pChildAccounts: vlstLastchildsDisplayNames.toString(),
+            }, function (data, status) {
+                console.log('beginnig loopppppppp');
+                var vDataResultChild = JSON.parse(data);
+
+                if (vDataResultChild[0].LstCountRows != undefined && vDataResultChild[0].LstCountRows != '') {
+
+                    var myStringArray = []
+                    var myStringIndex = []
+                    myStringArray = vDataResultChild[0].LstCountRows.split(',');
+                    myStringIndex = vDataResultChild[0].LstCountRows.split(',');
+                    var vLastMax = 0;
+                    for (var g = 1; g < myStringArray.length; g++) {
+                        var vRecordNumbers = parseInt(myStringArray[g])
+                        var vCurrentMax = vRecordNumbers
+                        console.log('current rows num' + vCurrentMax);
+                        if (g == 1) {
+                            vCurrentMax = vRecordNumbers
+                            //fnReportLoop(0, 29, vCurrentMax, vDataResultChild, 0, 0, $('.divtables'), 'vChildAccountName', 'vChildAccountNo', 'Detail', g, 1)
+                            fnReportLoop(0, 32, vCurrentMax, vDataResultChild, 0, 0, $('.divtables'), 'vChildAccountName', 'vChildAccountNo', 'Detail', g, 1)
+
+                        }
+                        else {
+
+
+
+                            vCurrentMax = vLastMax + vCurrentMax + 1
+                            //console.log('gettttfirststart' + (vLastMax + 1));
+                            //console.log('gettttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt' + vCurrentMax);
+                            //fnReportLoop(vLastMax + 1, (vLastMax + 1) + 29, vCurrentMax, vDataResultChild, 0, 0, $('.divtables'), 'vChildAccountName', 'vChildAccountNo', 'Detail', g, 1)
+                            fnReportLoop(vLastMax + 1, (vLastMax + 1) + 32, vCurrentMax, vDataResultChild, 0, 0, $('.divtables'), 'vChildAccountName', 'vChildAccountNo', 'Detail', g, 1)
+                            }
+                        vLastMax = vCurrentMax
+                        if (g == myStringArray.length) {
+
+                            printnow = 1
+                        }
+
+
+
+                        //fnReportLoop(0, 29, 80, vDataResultChild, 0, 0, $('.divtables'), 'vChildAccountName', 'vChildAccountNo', 'Detail')
+                    }
+                    //if (printnow == 1) {
+                        //funPrint();
+                    //}
+
+
+
+
+                }
+
+            })
+            ////// Wait 2 Seconds
+            setTimeout(function () {
+                // Print
+                funPrint();
+                vTotalPages = 0;
+
+                vCurrentPage = 0;
+            },
+               3500
+               //3500
+                //2000
+            );
+            $('.lbltotal').text('');
+
+            $('.divRpt').css("display", "none");
+
+        //}
+
+    }
+    // Function To Loop Through report
+    function fnReportLoop(pStartIndex, PMaxPageLimit, pRecordsNumber, pData, vTotalDebit, vTotalCredit, pDivContainer, vChildAccountName, vChildAccountNo, pType, pStartSumIndex, pIsStart,pLastBalance) {
+        var vTableRowsBody = '';
+        var vRowHeader = '';
+        var vDbCrDiff = 0;
+        var vTableHeadBody = '';
+        var vStartDebiteArray = [];
+        var vStartDebit = 0;
+        var vStartCrediteArray = [];
+        var vStartCredit = 0;
+        for (var i = pStartIndex; i <= PMaxPageLimit; i++) {
+            if (i <= pRecordsNumber) {
+                if (pType != 'Detail') {
+                    vTotalPreviousDebitBase += pData[i].PreviousDebitBase
+                    vTotalPreviousCreditBase += pData[i].PreviousCreditBase
+                    vTotalTransactionDebit += pData[i].TransactionDebit
+                    vTotalTransactionCredit += pData[i].TransactionCredit
+                    vTotalBalanceDebit += pData[i].BalanceDebit
+                    vTotalBalanceCredit += pData[i].BalanceCredit
+                }
+            }
+
+            if (i == pStartIndex) {
+                if (pType == 'Detail') {
+                    console.log()
+                    var vBalanceArray = []
+                    //var vTafkeetArray = []
+                    if (pIsStart == 1) {
+                        vBalanceArray = pData[i].LstPreviousBalance.split(',');
+                        //vTafkeetArray = pData[i].LstSumTafkeet.split(',');
+                        vBalance = Number(vBalanceArray[pStartSumIndex])
+                    }
+                    //if (pIsStart == 0) {
+                    //    vBalance = pLastBalance;
+
+                    //}
+
+
+                    //if (pIsStart == 1) {
+
+
+
+
+
+                }
+
+                    // Append Header
+                    vRowHeader =
+                        //' <table class="clsHeader" width = "100%" >' +
+                    ' <table class="clsHeader" width = "98%" >' +
+                        '<tr>' +
+                        '<td width="30%">' +
+                        '<table>' +
+                        ' <tr><td><label class="lbltitle">مطعم الوليمة</label></td></tr>' +
+                        '<tr>' +
+                        '  <td>   مطاعم ركن الوليمة  </td>' +
+                        '   </tr>' +
+                        ' <tr>' +
+                        ' <td>' +
+                        '  <label class="lblTel">  ت:01148637732  </label> </td>' +
+                        ' </tr>' +
+                        '   <tr>' +
+                        ' <td><label class="lblWeb">www.alwaleemah.com </label></td>' +
+                        '</tr>' +
+                        ' </table>' +
+                        ' </td>' +
+                    //'  <td width="30%" align="center"> <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" width="100" /> </td>' +
+                    '  <td width="30%" align="center"> <img src="https://www.freelogodesign.org/Content/img/logo-ex-7.png" width="150" /> </td>' +
+                        ' <td width="30%" align="left">' +
+                        ' <table>' +
+                        '  <tr><td><label class="lbltitle">Waaleemah Restaurant</label></td></tr>' +
+                        ' <tr> <td> Waaleemah Restaurant  </td> </tr>' +
+                        ' <tr> <td><label class="lblTel"> ت:01148637732 </label>' +
+                        '  </td></tr> <tr>' +
+                        '  <td>' +
+                        '  <label class="lblWeb">   www.alwaleemah.com </label>' +
+                        '  </td></tr>' +
+                        '</table>' +
+                        '</td>' +
+                        '</tr>' +
+                        '</table >' +
+                        '<div class="divider">' +
+                        ' <hr size="5" style="background-color:gray">' +
+                        ' </div>';
+
+
+
+            }
+
+
+            if (i < pRecordsNumber && i < PMaxPageLimit) {
+
+                vBalance += (pData[i].TransactionDebitBase - pData[i].TransactionCreditBase )
+                console.log('pData[i]'+ i + pData[i]  );
+                    // append The Report Records In The Page
+                    // Find The Current Table Body
+                    vTotalDebit += pData[i].TransactionDebitBase
+                    vTotalCredit += pData[i].TransactionCreditBase
+                if (pType == 'Detail') {
+                    vStartDebiteArray = pData[i].LstPreviousDebit.split(',');
+                    vStartDebit = Number(vStartDebiteArray[pStartSumIndex])
+                    vStartCrediteArray = pData[i].LstPreviousCredit.split(',');
+                    vStartCredit = Number(vStartCrediteArray[pStartSumIndex])
+                    var vTransactionDebitBase = 0;
+                    var vTransactionCreditBase = 0;
+                    if ((pData[i].TransactionTypeNameL1).indexOf("رصيد سابق") > -1) {
+                        vTransactionDebitBase = vStartDebit;
+                        vTransactionCreditBase = vStartCredit;
+                        console.log('prevvvvvvvvvvvvv');
+
+                    }
+                    else {
+                        vTransactionDebitBase = pData[i].TransactionDebitBase;
+                        vTransactionCreditBase = pData[i].TransactionCreditBase;
+                        console.log('nooooooooot prevvvvvvvvvvvvv');
+                    }
+                    //if (vBalance < 0) {
+                    //    vBalance = 0
+                    //}
+                    vTableRowsBody +=
+                        '<tr style="line-height: 5px !important;">' +
+                        '<td width="3%" align="center">' +
+                        (i + 1) +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionTypeNameL1 +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                    pData[i].TransactionSeq +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionDate.toString("yyyy-MM-dd") +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionNote +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        //pData[i].TransactionDebitBase +
+                         vTransactionDebitBase.toString() +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        //pData[i].TransactionCreditBase +
+                            vTransactionCreditBase.toString() +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                    //pData[i].Balance +
+                    vBalance +
+                        '</td>' +
+                        '</tr>';
+                }
+                else {
+                    vTableRowsBody += funCongDtlContent(pData[i]);
+
+                }
+
+            }
+            // The Page Reaches Its Max But There Is Still Records
+            if (i == PMaxPageLimit && i < pRecordsNumber) {
+
+                    // Append The Last Row And Append The Footer Then Loop Again
+                    vTotalDebit += pData[i].TransactionDebitBase
+                    vTotalCredit += pData[i].TransactionCreditBase
+                if (pType == 'Detail') {
+
+                    vStartDebiteArray = pData[i].LstPreviousDebit.split(',');
+                    vStartDebit = Number(vStartDebiteArray[pStartSumIndex])
+                    vStartCrediteArray = pData[i].LstPreviousCredit.split(',');
+                    vStartCredit = Number(vStartCrediteArray[pStartSumIndex])
+                    var vTransactionDebitBase = 0;
+                    var vTransactionCreditBase = 0;
+                    if ((pData[i].TransactionTypeNameL1).indexOf("رصيد سابق") > -1) {
+                        vTransactionDebitBase = vStartDebit;
+                        vTransactionCreditBase = vStartCredit;
+
+                    }
+                    else {
+                        vTransactionDebitBase = pData[i].TransactionDebitBase;
+                        vTransactionCreditBase = pData[i].TransactionCreditBase;
+                    }
+
+                    vBalance += (pData[i].TransactionDebitBase - pData[i].TransactionCreditBase)
+                    //if (vBalance < 0) {
+                    //    vBalance = 0
+                    //}
+                    vTableRowsBody +=
+                        '<tr style="line-height: 5px !important;">' +
+                        '<td width="3%" align="center">' +
+                        (i + 1) +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionTypeNameL1 +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionSeq +
+
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionDate.toString("yyyy-MM-dd") +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionNote +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        //pData[i].TransactionDebitBase +
+                        vTransactionDebitBase.toString() +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        //pData[i].TransactionCreditBase +
+                    vTransactionCreditBase.toString() +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                    //pData[i].Balance +
+                    vBalance.toString() +
+                        '</td>' +
+                        '</tr>';
+                }
+                else {
+                    vTableRowsBody += funCongDtlContent(pData[i]);
+                }
+
+                    // Set The Current Page No And The Total Page Count
+                    vCurrentPage++;
+                    vTotalPages++;
+                    // Append the Full Table For The Page
+                if (pType == 'Detail') {
+                    console.log('current pagezzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz ' + vCurrentPage.toString()+ pData[i].AccountNameL1);
+                     // Head
+                    vTableHeadBody =
+                        '<div class="divtable" style = "height:950px !important;" >' +
+                        //'<div class="divtable" style = "height:1000px !important;" >' +
+                        //'<div class="divtable" style = "postion:absolute !important;">' +
+                        ' <table>' +
+                    ' <tbody>' +
+                          '<tr>' +
+                       '<div class="divRptHeader row " style="text-align:center; padding-top:5px; !important;">'+
+
+                       '<label class="control-label lblReportTitle col-md-12" style="font-size:large;font-weight:bold">@appResource.ReportAccountStatementTitle</label>'+
+                     '</div>'+
+                           +'</tr>'+
+                        '  <tr>' +
+                        ' <td width="7%"> <label class="control-label " style="font-size:18px;font-weight:bold; ">    @appResource._Branch </label></td>' +
+                        '<td width="7%"> <label class="control-label lblBranchNo" style="font-size:medium;font-weight:bold; "> 1 </label></td>' +
+                        '<td width="20%"> <label class="control-label lblBranchName" style="font-size:18px;font-weight:bold;">مطاعم ركن الوليمة  </label></td>' +
+                        ' <td width=66%"></td>' +
+                        ' </tr>' +
+                        '<tr class="mt-10">' +
+                        '  <td width="7%"><label class="control-label " style="font-size:medium;font-weight:bold;">    @appResource._Account  </label></td>' +
+                    ' <td width="7%">     <label class="control-label lblAccountNo" style="font-size:medium;font-weight:bold; ">  ' + pData[i].AccountId + ' </label></td>' +
+                        ' <td width="15%"><label class="control-label lblAccount" style="font-size:medium;font-weight:bold;">  اسم الحساب                 </label></td>' +
+                    '  <td width="71%"><label class="control-label lblAccountName" style="font-size:medium;font-weight:bold;">   ' + pData[i].AccountNameL1 + '                        </label></td>' +
+                        '</tr>' +
+                        ' </tbody>' +
+                        ' </table>';
+                    vTableDtlBody =
+                        '<table class="table table-bordered table-hover tblRPTData">' +
+                        '<thead style="-webkit-print-color-adjust: exact;"> ' +
+                    //' <tr class="divheader" style="-webkit-print-color-adjust: exact !important;background-color:red !important;">' +
+                    ' <tr class="divheader">' +
+                        '  <th></th>' +
+                        '  <th>@appResource.RptTransactionType</th>' +
+                        '  <th>@appResource.RptTransactionNo</th>' +
+                        ' <th>@appResource.RptTransactionDate</th>' +
+                        ' <th>@appResource.RptNote</th>' +
+                        '<th>@appResource.RptDebitBase</th>' +
+                        ' <th>@appResource.RptCreditBase</th>' +
+                        '<th>@appResource.Balance </th>' +
+                        '</tr>' +
+                        '  </thead>' +
+                        ' <tbody class="tblRPTDataBody">' + vTableRowsBody + '</tbody>' +
+                        ' </table>';
+                    vTableFooter =
+                        '</div>' +
+                    //'<div class="footer" style="height:5px !important; direction: ltr;">' +
+                    '<div class="footer" style="direction: ltr;">' +
+                    //'<hr style="height:20px;"/>' +
+                    ' <hr size="5" style="background-color:gray">'+
+                        '<div class="row">' +
+                        '<div class="col-sm-2">' +
+                        '<label style="font-weight:bold">' + "@clsUser.vUserFullName" + '</label>' +
+                        ' </div>' +
+                        '<div class="col-sm-4" style="font-weight:bold">' +
+                    '<label >Page</label> <label style="font:bold">' + vCurrentPage.toString() + '</label> <label style="font:bold">From</label> <label style="font:bold" class="lbltotal">' + (vTotalPages).toString() + '</label>' +
+                        ' </div>' +
+
+                        '<div class="col-sm-6" style="font-weight:bold">@DateTime.Now.ToString("yyyy-MM-dd")</div>' +
+                        ' </div> </div>';
+
+
+                    $('.lbltotal').text(vTotalPages.toString());
+
+
+                    pDivContainer.append(vRowHeader + vTableHeadBody + vTableDtlBody + vTableFooter);
+                    var vOriginalReportTitleText = '@appResource.ReportAccountStatementTitle';
+                    // Set The Label Header For Report Title
+                    $('.lblReportTitle').text(vOriginalReportTitleText + '  ' + $('.DateFrom').val() + '   @appResource.ReportAccountStatementTo ' + '  ' + $('.DateTo').val());
+
+                }
+                else {
+
+
+                       // Head
+                    vTableHeadBody =
+                        '<div class="divtable" style = "height:950px !important;" >' +
+                        //'<div class="divtable" style = "height:1000px !important;" >' +
+                        ' <table>' +
+                    ' <tbody>' +
+                         '<tr>' +
+                       '<div class="divRptHeader row " style="text-align:center">'+
+
+                       '<label class="control-label lblReportTitle col-md-12" style="font-size:large;font-weight:bold">@appResource.ReportAccountStatementTitle</label>'+
+                     '</div>'+
+                           +'</tr>'+
+                        '  <tr>' +
+                        ' <td width="7%"> <label class="control-label " style="font-size:18px;font-weight:bold; ">    @appResource._Branch </label></td>' +
+                        '<td width="7%"> <label class="control-label lblBranchNo" style="font-size:medium;font-weight:bold; "> 1 </label></td>' +
+                        '<td width="20%"> <label class="control-label lblBranchName" style="font-size:18px;font-weight:bold;">مطاعم ركن الوليمة  </label></td>' +
+                        ' <td width=66%"></td>' +
+                        ' </tr>' +
+                        '<tr class="mt-10">' +
+                        '  <td width="7%"><label class="control-label " style="font-size:medium;font-weight:bold;">    @appResource._Account  </label></td>' +
+                    ' <td width="7%">     <label class="control-label lblAccountNo" style="font-size:medium;font-weight:bold; ">  ' + vChildAccountNo+ ' </label></td>' +
+                        ' <td width="15%"><label class="control-label lblAccount" style="font-size:medium;font-weight:bold;">  اسم الحساب                 </label></td>' +
+                    '  <td width="71%"><label class="control-label lblAccountName" style="font-size:medium;font-weight:bold;">   ' + vChildAccountName+ '                        </label></td>' +
+                        '</tr>' +
+                        ' </tbody>' +
+                        ' </table>';
+
+
+
+                    vTableDtlBody =
+
+                        //' <table class="table  tblRptTotal table-bordered border "  >' +
+                    ' <table class="table  tblRptTotal" style = "border: 1px solid black; !important;"  >' +
+                        ' <thead  > ' +
+                        ' <tr class="tblReportTotalHead" >' +
+                        '     <th width="5%" style = "border: 1px solid black; !important;">رقم الحساب </th>' +
+                        '   <th width="20%" style = "border: 1px solid black; !important;"> اسم الحساب</th>' +
+                        '  <th width="13%" style = "border: 1px solid black; !important;"> رصيد سابق مدين بعمله الحساب</th>' +
+                        ' <th width="13%" style = "border: 1px solid black; !important;">   رصيد سابق دائن بعمله الحساب</th>' +
+                        ' <th width="13%" style = "border: 1px solid black; !important;">  العمليات الماليه مدين بعمله الحساب</th>' +
+                        '<th width="13%" style = "border: 1px solid black; !important;">  العمليات الماليه دائن بعمله الحساب</th>' +
+                        ' <th width="13%" style = "border: 1px solid black; !important;">  الرصيد مدين بعمله الحساب</th>' +
+                        '  <th width="13%" style = "border: 1px solid black; !important;">  الرصيد  دائن بعمله الحساب</th>' +
+                        '</tr>' +
+                        '  </thead>' +
+                        '  <tbody class="tblReportTotalData">' + vTableRowsBody + '</tbody>' +
+                        ' </table>';
+
+
+                      vTableFooter =
+                        '</div>' +
+                      //'<div class="footer" style="height:5px !important; direction: ltr;">' +
+                      '<div class="footer" style="direction: ltr;">' +
+                        //'<hr style="height:20px;" />' +
+                     ' <hr size="5" style="background-color:gray">'+
+                        '<div class="row">' +
+                        '<div class="col-sm-2">' +
+                        '<label style="font-weight:bold">' + "@clsUser.vUserFullName" + '</label>' +
+                        ' </div>' +
+                        '<div class="col-sm-4" style="font-weight:bold">' +
+                        '<label >Page</label> <label style="font:bold">' + (vCurrentPage+1).toString() + '</label> <label style="font:bold">From</label> <label style="font:bold" class="lbltotal">' + (i + 1).toString() + '</label>' +
+                        ' </div>' +
+
+                        '<div class="col-sm-6" style="font-weight:bold">@DateTime.Now.ToString("yyyy-MM-dd")</div>' +
+                        ' </div> </div>';
+                    pDivContainer.append(vRowHeader + vTableHeadBody + vTableDtlBody + vTableFooter);
+
+
+                }
+
+                    // Loop Again
+                fnReportLoop(i + 1, i + PMaxPageLimit, pRecordsNumber, pData, vTotalDebit, vTotalCredit, pDivContainer, vChildAccountName, vChildAccountNo, pType, pStartSumIndex, 0, vBalance)
+                vBalance = 0
+            }
+            if (i == pRecordsNumber) {
+                    // Set The Current Page No And The Total Page Count
+                    vCurrentPage++;
+                vTotalPages++;
+                if (pType == 'Detail') {
+                    console.log('currrrrrrent last  index'+i.toString())
+                    vBalance += (pData[i].TransactionDebitBase - pData[i].TransactionCreditBase)
+                     // append The Report Records In The Page And Append The Footer
+                    var vtafkeet = pData[i].SumBalanceTafkeet;
+                    //var vTotalBalance = pData[i].SumBalance;
+                    var vTotalBalance = vBalance;
+                    vTotalDebit += pData[i].TransactionDebitBase
+                    vTotalCredit += pData[i].TransactionCreditBase
+
+
+                    var vTafkeetArray = []
+                    //if (pIsStart == 1) {
+
+                        vTafkeetArray = pData[i].LstSumTafkeet.split(',');
+                        vtafkeet = vTafkeetArray[pStartSumIndex]
+                    //}
+                    //if (pIsStart == 0) {
+
+
+                    //}
+                    vStartDebiteArray = pData[i].LstPreviousDebit.split(',');
+                    vStartDebit = Number(vStartDebiteArray[pStartSumIndex])
+                    vStartCrediteArray = pData[i].LstPreviousCredit.split(',');
+                    vStartCredit = Number(vStartCrediteArray[pStartSumIndex])
+                    var vTransactionDebitBase = 0;
+                    var vTransactionCreditBase = 0;
+                    if ((pData[i].TransactionTypeNameL1).indexOf("رصيد سابق") > -1) {
+                        vTransactionDebitBase = vStartDebit;
+                        vTransactionCreditBase = vStartCredit;
+
+                    }
+                    else {
+                        vTransactionDebitBase = pData[i].TransactionDebitBase;
+                        vTransactionCreditBase = pData[i].TransactionCreditBase;
+                    }
+                    //if (vBalance < 0) {
+                    //    vBalance = 0
+                    //}
+
+                    vTableRowsBody +=
+                        '<tr style="line-height: 5px !important;">' +
+                        '<td width="3%" align="center">' +
+                        (i + 1) +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionTypeNameL1 +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                         pData[i].TransactionSeq +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionDate.toString("yyyy-MM-dd") +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        pData[i].TransactionNote +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        //pData[i].TransactionDebitBase +
+                    vTransactionDebitBase.toString() +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                        //pData[i].TransactionCreditBase +
+                    vTransactionCreditBase.toString() +
+                        '</td>' +
+                        '<td width="10%" align="center">' +
+                    //pData[i].Balance +
+                    vBalance.toString() +
+                        '</td>' +
+                        '</tr>';
+
+                    vDbCrDiff = vTotalDebit - vTotalCredit;
+
+
+                    // Total And Diff Rows
+                    vTableRowsBody +=
+                        '<tr style="line-height: 10px !important;">' +
+                        '<td  align="left" colspan ="5">' +
+                        '<label class="control-label" style="font-weight:bold;"> اجمالي المدين والدائن </label>' +
+                        '</td>' +
+                        '<td align="center" class="clssum"  bgcolor="#00FF00" style="font-weight:bold;">' +
+                        vTotalDebit +
+                        '</td>' +
+                        '<td align="center" class="clssum" bgcolor="#00FF00" style="font-weight:bold;" >' +
+                        vTotalCredit +
+                        '</td>' +
+                        '<td align="center" class="clssum"  bgcolor="#00FF00" >' +
+                        '</td>' +
+                        '</tr>';
+                    if (vDbCrDiff >= 0) {
+                        vTableRowsBody +=
+                            '<tr style="line-height: 10px !important;">' +
+                            '<td   colspan ="5" align="left">' +
+                            '<label class="control-label"  style="font-weight:bold;"> الرصيد </label>' +
+                            '</td>' +
+                            '<td align="center" class="clssum" bgcolor="#00FF00" style="font-weight:bold;">' +
+                            vDbCrDiff +
+                            '</td>' +
+                            '<td align="center" class="clssum" bgcolor="#00FF00">' +
+                            '</td>' +
+                            '<td align="center" class="clssum" bgcolor="#00FF00">' +
+                            '</td>' +
+                            '</tr>';
+                    }
+                    else {
+                        vDbCrDiff = 0;
+                        vTableRowsBody +=
+                            '<tr style="line-height: 10px !important;">' +
+                            '<td   colspan ="5" align="left">' +
+                            '<label class="control-label"  style="font-weight:bold;"> الرصيد </label>' +
+                            '</td>' +
+                            '<td align="center" class="clssum" bgcolor="#00FF00" style="font-weight:bold;">' +
+                           '</td>' +
+                        '<td align="center" class="clssum" bgcolor="#00FF00">' +
+                        vDbCrDiff +
+                            '</td>' +
+                            '<td align="center" class="clssum" bgcolor="#00FF00">' +
+                            '</td>' +
+                            '</tr>';
+
+                    }
+
+                    vTableRowsBody +=
+                        '<tr style="line-height: 10px !important;">' +
+                        '<td   colspan ="5">' +
+                        '<label class="control-label" style="font-weight:bold;">' + vtafkeet + '</label>' +
+                        '</td>' +
+                        '<td align="center" class="clssum" bgcolor="Yellow" style="font-weight:bold;">' +
+                    //vTotalBalance
+                    //+
+                        '</td>' +
+                        '<td align="center" class="clssum" bgcolor="Yellow">' +
+                        '</td>' +
+                        '<td align="center" class="clssum" bgcolor="Yellow">' +
+                        '</td>' +
+                        '</tr>';
+
+
+                    var vHeight = '<div class="divtable" style = "height:1000px !important;" >'
+                    if (pRecordsNumber <=29 ) {
+                        vHeight = '<div class="divtable" style = "height:950px !important;" >'
+                    }
+                    else if (pRecordsNumber > 29) {
+                        vHeight =   '<div class="divtable" style = "height:1020px !important;" >'
+                    }
+                    // Head
+                    vTableHeadBody = vHeight +
+                        //'<div class="divtable" style = "height:"' + vHeight+'"px !important;" >' +
+                        //'<div class="divtable" style = "height:1020px !important;" >' +
+
+                        //'<div class="divtable" style = "height:1000px !important;" >' +
+                        //'<div class="divtable" style = "postion:absolute !important;">' +
+                        ' <table>' +
+                    ' <tbody>' +
+                           '<tr>' +
+                       '<div class="divRptHeader row " style="text-align:center">'+
+
+                       '<label class="control-label lblReportTitle col-md-12" style="font-size:large;font-weight:bold">@appResource.ReportAccountStatementTitle</label>'+
+                     '</div>'+
+                           +'</tr>'+
+                        '  <tr>' +
+                        ' <td width="7%"> <label class="control-label " style="font-size:18px;font-weight:bold; ">    @appResource._Branch </label></td>' +
+                        '<td width="7%"> <label class="control-label lblBranchNo" style="font-size:medium;font-weight:bold; "> 1 </label></td>' +
+                        '<td width="20%"> <label class="control-label lblBranchName" style="font-size:18px;font-weight:bold;">مطاعم ركن الوليمة  </label></td>' +
+                        ' <td width=66%"></td>' +
+                        ' </tr>' +
+                        '<tr class="mt-10">' +
+                        '  <td width="7%"><label class="control-label " style="font-size:medium;font-weight:bold;">    @appResource._Account  </label></td>' +
+                    ' <td width="7%">     <label class="control-label lblAccountNo" style="font-size:medium;font-weight:bold; ">  ' + pData[i].AccountId + ' </label></td>' +
+                        ' <td width="15%"><label class="control-label lblAccount" style="font-size:medium;font-weight:bold;">  اسم الحساب                 </label></td>' +
+                    '  <td width="71%"><label class="control-label lblAccountName" style="font-size:medium;font-weight:bold;">   ' + pData[i].AccountNameL1 + '                        </label></td>' +
+                        '</tr>' +
+                        ' </tbody>' +
+                        ' </table>';
+                    vTableDtlBody =
+                        '<table class="table table-bordered table-hover tblRPTData">' +
+                        '<thead style="-webkit-print-color-adjust: exact;"> ' +
+                    //' <tr class="divheader" style="-webkit-print-color-adjust: exact !important;background-color:red !important;">' +
+                    ' <tr class="divheader">' +
+                        '  <th></th>' +
+                        '  <th>@appResource.RptTransactionType</th>' +
+                        '  <th>@appResource.RptTransactionNo</th>' +
+                        ' <th>@appResource.RptTransactionDate</th>' +
+                        ' <th>@appResource.RptNote</th>' +
+                        '<th>@appResource.RptDebitBase</th>' +
+                        ' <th>@appResource.RptCreditBase</th>' +
+                        '<th>@appResource.Balance </th>' +
+                        '</tr>' +
+                        '  </thead>' +
+                        ' <tbody class="tblRPTDataBody">' + vTableRowsBody + '</tbody>' +
+                        ' </table>';
+                    vTableFooter =
+                        '</div>' +
+                    //'<div class="footer" style="height:5px !important; direction: ltr;">' +
+                    '<div class="footer"  style="direction: ltr;">' +
+                    '<hr size="5" style="background-color:gray">'+
+                        //'<hr style="height:20px;" />' +
+                        '<div class="row">' +
+                        '<div class="col-sm-2">' +
+                        '<label style="font-weight:bold">' + "@clsUser.vUserFullName" + '</label>' +
+                        ' </div>' +
+                        '<div class="col-sm-4" style="font-weight:bold">' +
+                    '<label >Page</label> <label style="font:bold">' + (vCurrentPage).toString() + '</label> <label style="font:bold">From</label> <label style="font:bold" class="lbltotal">' + vTotalPages.toString() + '</label>' +
+                        ' </div>' +
+
+                        '<div class="col-sm-6" style="font-weight:bold">@DateTime.Now.ToString("yyyy-MM-dd")</div>' +
+                        ' </div> </div>';
+
+
+                    $('.lbltotal').text(vTotalPages.toString());
+
+
+                    pDivContainer.append(vRowHeader + vTableHeadBody + vTableDtlBody + vTableFooter);
+                    var vOriginalReportTitleText = '@appResource.ReportAccountStatementTitle';
+                    // Set The Label Header For Report Title
+                    $('.lblReportTitle').text(vOriginalReportTitleText + '  ' + $('.DateFrom').val() + '   @appResource.ReportAccountStatementTo ' + '  ' + $('.DateTo').val());
+
+                    vBalance = 0;
+
+                }
+                else {
+                       // Row Total
+            var vTotalRow =
+                '<tr>' +
+                '<td colspan ="2">' +
+                '    <div class="" style=" text-align:center">' + "@appResource._Total" + '</div>' +
+                ' </td>' +
+                '<td>' +
+                '    <div class="" style=" text-align:center">' + vTotalPreviousDebitBase + '</div>' +
+                ' </td>' +
+                ' <td>' +
+                '    <div class="" style=" text-align:center">' + vTotalPreviousCreditBase + '</div>' +
+                '  </td>' +
+
+                ' <td>' +
+                '    <div class="" style=" text-align:center">' + vTotalTransactionDebit + '</div>' +
+                '  </td>' +
+                ' <td>' +
+                '    <div class="" style=" text-align:center">' + vTotalTransactionCredit + '</div>' +
+                '  </td>' +
+                ' <td>' +
+                '    <div class="" style=" text-align:center">' + vTotalBalanceDebit + '</div>' +
+                '  </td>' +
+                ' <td>' +
+                '    <div class="" style=" text-align:center">' + vTotalBalanceCredit + '</div>' +
+                '  </td>' +
+                '</tr>';
+            //$('.tblReportTotalData').append(vTotalRow)
+                    vTableRowsBody += funCongDtlContent(pData[i]);
+                          // Head
+                    vTableHeadBody =
+                        '<div class="divtable" style = "height:950px !important;" >' +
+                        //'<div class="divtable" style = "height:1000px !important;" >' +
+                        ' <table>' +
+                        ' <tbody>' +
+                         '  <tr>' +
+                       '<div class="divRptHeader row " style="text-align:center">'+
+
+                       '<label class="control-label lblReportTitle col-md-12" style="font-size:large;font-weight:bold">@appResource.ReportAccountStatementTitle</label>'+
+                     '</div>'+
+                         +'</tr>' +
+                         '<tr>' +
+                        ' <td width="7%"> <label class="control-label " style="font-size:18px;font-weight:bold; ">    @appResource._Branch </label></td>' +
+                        '<td width="7%"> <label class="control-label lblBranchNo" style="font-size:medium;font-weight:bold; "> 1 </label></td>' +
+                        '<td width="20%"> <label class="control-label lblBranchName" style="font-size:18px;font-weight:bold;">مطاعم ركن الوليمة  </label></td>' +
+                        ' <td width=66%"></td>' +
+                        ' </tr>' +
+                        '<tr class="mt-10">' +
+                        '  <td width="7%"><label class="control-label " style="font-size:medium;font-weight:bold;">    @appResource._Account  </label></td>' +
+                         ' <td width="7%">     <label class="control-label lblAccountNo" style="font-size:medium;font-weight:bold; ">  ' + vChildAccountNo+ ' </label></td>' +
+                        ' <td width="15%"><label class="control-label lblAccount" style="font-size:medium;font-weight:bold;">  اسم الحساب                 </label></td>' +
+                         '  <td width="71%"><label class="control-label lblAccountName" style="font-size:medium;font-weight:bold;">   ' + vChildAccountName + '                        </label></td>' +
+                        '</tr>' +
+                        ' </tbody>' +
+                        ' </table>';
+                    vTableDtlBody =
+
+                        //' <table class="table  tblRptTotal table-bordered border " >' +
+                    ' <table class="table  tblRptTotal" style = "border: 1px solid black; !important;"  >' +
+                        ' <thead style = "border: 1px solid black;"> ' +
+                        ' <tr class="tblReportTotalHead">' +
+                        '     <th width="5%" style = "border: 1px solid black; !important;">رقم الحساب </th>' +
+                        '   <th width="20%" style = "border: 1px solid black; !important;"> اسم الحساب</th>' +
+                        '  <th width="13%" style = "border: 1px solid black; !important;"> رصيد سابق مدين بعمله الحساب</th>' +
+                        ' <th width="13%" style = "border: 1px solid black; !important;">   رصيد سابق دائن بعمله الحساب</th>' +
+                        ' <th width="13%" style = "border: 1px solid black; !important;">  العمليات الماليه مدين بعمله الحساب</th>' +
+                        '<th width="13%" style = "border: 1px solid black; !important;">  العمليات الماليه دائن بعمله الحساب</th>' +
+                        ' <th width="13%" style = "border: 1px solid black; !important;">  الرصيد مدين بعمله الحساب</th>' +
+                        '  <th width="13%" style = "border: 1px solid black; !important;">  الرصيد  دائن بعمله الحساب</th>' +
+                        '</tr>' +
+                        '  </thead>' +
+                    '  <tbody class="tblReportTotalData">' + vTableRowsBody + vTotalRow+ '</tbody>' +
+                        ' </table>';
+
+                        vTableFooter =
+                        '</div>' +
+                        //'<div class="footer" style="height:5px !important; direction: ltr;">' +
+                        '<div class="footer" style=" direction: ltr;">' +
+                        ' <hr size="5" style="background-color:gray">'+
+                        //'<hr style="height:20px;" />' +
+                        '<div class="row">' +
+                        '<div class="col-sm-2">' +
+                        '<label style="font-weight:bold">' + "@clsUser.vUserFullName" + '</label>' +
+                        ' </div>' +
+                        '<div class="col-sm-4" style="font-weight:bold">' +
+                        '<label >Page</label> <label style="font:bold">' + (vCurrentPage + 1).toString() + '</label> <label style="font:bold">From</label> <label style="font:bold" class="lbltotal">' + (i + 1).toString() + '</label>' +
+                        ' </div>' +
+
+                        '<div class="col-sm-6" style="font-weight:bold">@DateTime.Now.ToString("yyyy-MM-dd")</div>' +
+                        ' </div> </div>';
+                    pDivContainer.append(vRowHeader + vTableHeadBody + vTableDtlBody + vTableFooter);
+                    @*console.log('vusername' + @clsUser.vUserFullName);*@
+
+                }
+
+            }
+            // The Record Number less Than The Page limit
+            if (i > pRecordsNumber) {
+                break;
+            }
+
+        }
+
+    }
+
+
+
+    </script>
+    <script>
+
+
+        // Print
+        function funPrint() {
+            window.print();
+        }
+    </script>
+    <script>
+    $('#txtAccountId').on('keydown dblclick', function (e) {
+
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+
+            localStorage.setItem('lstparent', 'txtAccountId');
+            var vURL = '/Account/SearchAccountModal';
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divAccountSelect', function () {
+                vElementGroupAccount = $('body').find('#txtGroupAccountId');
+                // Account Id
+                var vAccountId = $(this).attr('data-id');
+
+                // Get Values
+                var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                var vAccountNameValue = $(this).find('.divAccountName').text();
+              // Check The Controller Who Fires The Data Modal
+                if (localStorage.getItem('lstparent') == 'txtAccountId') {
+                    // Set Value
+                    $('#txtAccountId').val(vAccountCodeValue);
+                    $('#txtAccountId').attr('data-id', vAccountId)
+                    $('#txtAccountName').val(vAccountNameValue);
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    //fnGetChilds();
+                    fnGetGetAccounts(vAccountId);
+                }
+            })
+        }
+    })
+    // When Change Value Of Id
+    $('#txtAccountId').on('change',  function () {
+        var vAccountNo = $(this).val();
+        // List GetAccount
+        $.get('/api/APIAccount/AccountGET',
+            {
+                pAccountNo: vAccountNo,
+                pQueryTypeId: 400
+            },
+            function (data, status) {
+                if (data == '') {
+                    funNotification('@appResource.msgChooseCorrectAccount', '2')
+                    // Set Value
+                    $('#txtAccountId').val('');
+                    $('#txtAccountId').attr('data-id', '0')
+                    $('#txtAccountName').val('');
+                }
+                else {
+                    var vDataJSON = JSON.parse(data);
+                    $.each(vDataJSON, function (i, Account) {
+                        // Account Id
+                        var vAccountId = Account.AccountId;
+                        // Set Value
+
+                        $('#txtAccountId').val(Account.AccountNo);
+                        $('#txtAccountId').attr('data-id', Account.AccountId)
+                        $('#txtAccountName').val(Account.AccountNameL1);
+                        fnGetGetAccounts(vAccountId);
+
+                    });
+                }
+            });
+    });
+
+
+
+
+    $('#txtFromAccountId').on('keydown dblclick', function (e) {
+
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstparent', 'txtFromAccountId');
+            var vURL = '/Account/SearchAccountModal';
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divAccountSelect', function () {
+                vElementGroupAccount = $('body').find('#txtGroupAccountId');
+                // Account Id
+                var vAccountId = $(this).attr('data-id');
+
+                // Get Values
+                var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                var vAccountNameValue = $(this).find('.divAccountName').text();
+              // Check The Controller Who Fires The Data Modal
+                if (localStorage.getItem('lstparent') == 'txtFromAccountId') {
+                    // Set Value
+                    $('#txtFromAccountId').val(vAccountCodeValue);
+                    $('#txtFromAccountId').attr('data-id', vAccountId)
+                    $('#txtFromAccountName').val(vAccountNameValue);
+                }
+                // Modal Show
+                $('#AccountDataModal').modal('hide');
+            })
+
+        }
+        })
+        // When Change Value Of Id
+        $('#txtFromAccountId').on('change', function () {
+            var vAccountNo = $(this).val();
+            // List GetAccount
+            $.get('/api/APIAccount/AccountGET',
+                {
+                    pAccountNo: vAccountNo,
+                    pQueryTypeId: 400
+                },
+                function (data, status) {
+                    if (data == '') {
+                           funNotification('@appResource.msgChooseCorrectAccount', '2')
+                        // Set Value
+                        $('#txtFromAccountId').val('');
+                        $('#txtFromAccountId').attr('data-id', '0')
+                        $('#txtFromAccountName').val('');
+                    }
+                    else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Account) {
+                            // Account Id
+                            var vAccountId = Account.AccountId;
+                            // Set Value
+
+                            $('#txtFromAccountId').val(Account.AccountNo);
+                            $('#txtFromAccountId').attr('data-id', Account.AccountId)
+                            $('#txtFromAccountName').val(Account.AccountNameL1);
+
+                        });
+                    }
+                });
+        });
+    $('#txtToAccountId').on('keydown dblclick', function (e) {
+
+        if (e.keyCode == 120 || e.type == 'dblclick') {
+            localStorage.setItem('lstparent', 'txtToAccountId');
+            var vURL = '/Account/SearchAccountModal';
+            $('#AccountDataModalContent').load(vURL);
+            // Modal Show
+            $('#AccountDataModal').modal('show');
+            // Select Account
+            $('body').on('click', '.divAccountSelect', function () {
+                vElementGroupAccount = $('body').find('#txtGroupAccountId');
+                // Account Id
+                var vAccountId = $(this).attr('data-id');
+
+                // Get Values
+                var vAccountCodeValue = $(this).find('.divAccountNo').text();
+                var vAccountNameValue = $(this).find('.divAccountName').text();
+               // Check The Controller Who Fires The Data Modal
+                if (localStorage.getItem('lstparent') == 'txtToAccountId') {
+                    // Set Value
+                    $('#txtToAccountId').val(vAccountCodeValue);
+                    $('#txtToAccountId').attr('data-id', vAccountId)
+                    $('#txtToAccountName').val(vAccountNameValue);
+                    // Modal Show
+                    $('#AccountDataModal').modal('hide');
+                    //fnGetChilds();
+                    fnGetAccountsByType();
+                }
+
+
+
+            })
+
+        }
+        })
+
+        // When Change Value Of Id
+        $('#txtToAccountId').on('change', function () {
+            var vAccountNo = $(this).val();
+            // List GetAccount
+            $.get('/api/APIAccount/AccountGET',
+                {
+                    pAccountNo: vAccountNo,
+                    pQueryTypeId: 400
+                },
+                function (data, status) {
+                    if (data == '') {
+                              funNotification('@appResource.msgChooseCorrectAccount', '2')
+                        // Set Value
+                        $('#txtToAccountId').val('');
+                        $('#txtToAccountId').attr('data-id', '0')
+                        $('#txtToAccountName').val('');
+                    }
+                    else {
+                        var vDataJSON = JSON.parse(data);
+                        $.each(vDataJSON, function (i, Account) {
+                            // Account Id
+                            var vAccountId = Account.AccountId;
+                            // Set Value
+
+                            $('#txtToAccountId').val(Account.AccountNo);
+                            $('#txtToAccountId').attr('data-id', Account.AccountId)
+                            $('#txtToAccountName').val(Account.AccountNameL1);
+                            fnGetAccountsByType();
+                        });
+                    }
+                });
+        });
+    // OnChange Account
+
+
+
+    function fnGetChilds() {
+        // Set The Label Header For Account No
+        $('.lblAccountNo').text($('#txtAccountId').val());
+        // Set The Label Header For Account Name
+        $('.lblAccountName').text($('#txtAccountName').val());
+        // The First Part Of Report Title
+         var vOriginalReportTitleText = '@appResource.ReportAccountStatementTitle';
+        // Set The Label Header For Report Title
+        $('.lblReportTitle').text(vOriginalReportTitleText + '  ' + $('.DateFrom').val() + '   @appResource.ReportAccountStatementTo ' + '  ' + $('.DateTo').val());
+
+        var vAccountParentId = $('#txtAccountId').attr('data-id');
+        // Table Body
+        var vTableBody = $('.tblChildAccountBody');
+        vTableBody.html('');
+        if ($('#txtAccountId').val() != undefined && $('#txtAccountId').val() != '' ) {
+            $.post('/AccountStatementReport/GetAccountsChilds', {
+                pAccountParentId: vAccountParentId
+            }, function (data, status) {
+
+                if (data == undefined || data == '') {
+
+                }
+                else {
+                    var vDataResult = JSON.parse(data);
+                    vTableBody.html('')
+                    $.each(vDataResult, function (i, Account) {
+                        vTableBody.append(
+                            '<tr data-id=' + Account.AccountId + ' data-AccountNo=' + Account.AccountNo + ' data-AccountName=' + Account.AccountNameL1 + '>' +
+                            '<td  align="center">' +
+                            Account.AccountNo +
+                            '</td>' +
+                            '<td  align="center">' +
+                            Account.AccountNameL1 +
+                            '</td>' +
+                            '</tr>'
+                        )
+                    })
+                }
+
+
+            })
+        }
+        else if ($('#txtFromAccountId').val() != undefined && $('#txtFromAccountId').val() != ''&&
+            $('#txtToAccountId').val() != undefined && $('#txtToAccountId').val() != '') {
+            // Set The Label Header For Account No
+            $('.lblAccountNo').text($('#txtFromAccountId').val());
+            // Set The Label Header For Account Name
+            $('.lblAccountName').text($('#txtFromAccountName').val());
+
+            var vDateFrom = $('.DateFrom').val();
+            var vDateTo = $('.DateTo').val();
+            var vAccountFrom = $('#txtFromAccountId').val();
+            var vAccountTo = $('#txtToAccountId').val();
+            $.post('/AccountStatementReport/GetAccounts', {
+                        pDateFrom: vDateFrom,
+                       pDateTo: vDateTo,
+                       pAccountFrom: vAccountFrom,
+                        pAccountTo: vAccountTo
+            }, function (data, status) {
+
+                if (data == undefined || data == '') {
+
+                }
+                else {
+
+                    var vDataResult = JSON.parse(data);
+                    $.each(vDataResult, function (i, Account) {
+                        vTableBody.append(
+                            '<tr data-id=' + Account.AccountId + ' data-AccountNo=' + Account.AccountNo + ' data-AccountName=' + Account.AccountNameL1 + '>' +
+                            '<td  align="center">' +
+                            Account.AccountNo +
+                            '</td>' +
+                            '<td  align="center">' +
+                            Account.AccountNameL1 +
+                            '</td>' +
+                            '</tr>'
+                        )
+                    })
+                }
+
+
+            })
+        }
+
+
+    }
+    </script>
+    <script>
+        // Set The First Radio Button  Checked By Default
+        $("#rdbtn1").prop("checked", true);
+        $('#txtFromAccountId').prop('disabled', true);
+        $('#txtToAccountId').prop('disabled', true);
+        $('#txtCustomerId').prop('disabled', true);
+        $('#txtCostCenterId').prop('disabled', true);
+        $('#txtTypeId').prop('disabled', true);
+
+
+
+
+
+        $('input[type=radio][name=gender]').change(function () {
+            console.log(this.value);
+            if (this.value == '1') {
+                $('#txtAccountId').prop('disabled', false);
+                $('#txtFromAccountId').prop('disabled', true);
+                $('#txtToAccountId').prop('disabled', true);
+                $('#txtCustomerId').prop('disabled', true);
+                $('#txtCostCenterId').prop('disabled', true);
+                $('#txtTypeId').prop('disabled', true);
+                $('#txtAccountId').val('');
+                $('#txtAccountId').attr('data-id', '0');
+                $('#txtFromAccountId').val('');
+                $('#txtFromAccountId').attr('data-id', '0');
+                $('#txtToAccountId').val('');
+                $('#txtToAccountId').attr('data-id', '0');
+                $('#txtCustomerId').val('');
+                $('#txtCustomerId').attr('data-id', '0');
+                $('#txtCostCenterId').val('');
+                $('#txtCostCenterId').attr('data-id', '0');
+                $('#txtTypeId').val('');
+                $('#txtTypeId').attr('data-id', '0');
+
+
+
+                $('#txtAccountName').val('');
+                $('#txtFromAccountName').val('');
+                $('#txtToAccountName').val('');
+                $('#txtCustomerName').val('');
+                $('#txtCostCenterName').val('');
+                $('#txtTypeName').val('');
+
+                $('.tblChildAccountBody').html('');
+
+            }
+            else if (this.value == '2') {
+                $('#txtAccountId').prop('disabled', true);
+                $('#txtFromAccountId').prop('disabled', false);
+                $('#txtToAccountId').prop('disabled', false);
+                $('#txtCustomerId').prop('disabled', true);
+                $('#txtCostCenterId').prop('disabled', true);
+                $('#txtTypeId').prop('disabled', true);
+                $('#txtAccountId').val('');
+                $('#txtAccountId').attr('data-id', '0');
+                $('#txtFromAccountId').val('');
+                $('#txtFromAccountId').attr('data-id', '0');
+                $('#txtToAccountId').val('');
+                $('#txtToAccountId').attr('data-id', '0');
+                $('#txtCustomerId').val('');
+                $('#txtCustomerId').attr('data-id', '0');
+                $('#txtCostCenterId').val('');
+                $('#txtCostCenterId').attr('data-id', '0');
+                $('#txtTypeId').val('');
+                $('#txtTypeId').attr('data-id', '0');
+
+
+
+                $('#txtAccountName').val('');
+                $('#txtFromAccountName').val('');
+                $('#txtToAccountName').val('');
+                $('#txtCustomerName').val('');
+                $('#txtCostCenterName').val('');
+                $('#txtTypeName').val('');
+                $('.tblChildAccountBody').html('');
+            }
+            else if (this.value == '3') {
+                $('#txtAccountId').prop('disabled', true);
+                $('#txtFromAccountId').prop('disabled', true);
+                $('#txtToAccountId').prop('disabled', true);
+                $('#txtCustomerId').prop('disabled', true);
+                $('#txtCostCenterId').prop('disabled', true);
+                $('#txtTypeId').prop('disabled', false);
+                $('#txtAccountId').val('');
+                $('#txtAccountId').attr('data-id', '0');
+                $('#txtFromAccountId').val('');
+                $('#txtFromAccountId').attr('data-id', '0');
+                $('#txtToAccountId').val('');
+                $('#txtToAccountId').attr('data-id', '0');
+                $('#txtCustomerId').val('');
+                $('#txtCustomerId').attr('data-id', '0');
+                $('#txtCostCenterId').val('');
+                $('#txtCostCenterId').attr('data-id', '0');
+                $('#txtTypeId').val('');
+                $('#txtTypeId').attr('data-id', '0');
+
+
+
+                $('#txtAccountName').val('');
+                $('#txtFromAccountName').val('');
+                $('#txtToAccountName').val('');
+                $('#txtCustomerName').val('');
+                $('#txtCostCenterName').val('');
+                $('#txtTypeName').val('');
+                $('.tblChildAccountBody').html('');
+
+            }
+            else if (this.value == '4') {
+                $('#txtAccountId').prop('disabled', true);
+                $('#txtFromAccountId').prop('disabled', true);
+                $('#txtToAccountId').prop('disabled', true);
+                $('#txtCustomerId').prop('disabled', false);
+                $('#txtCostCenterId').prop('disabled', true);
+                $('#txtTypeId').prop('disabled', true);
+                $('#txtAccountId').val('');
+                $('#txtAccountId').attr('data-id', '0');
+                $('#txtFromAccountId').val('');
+                $('#txtFromAccountId').attr('data-id', '0');
+                $('#txtToAccountId').val('');
+                $('#txtToAccountId').attr('data-id', '0');
+                $('#txtCustomerId').val('');
+                $('#txtCustomerId').attr('data-id', '0');
+                $('#txtCostCenterId').val('');
+                $('#txtCostCenterId').attr('data-id', '0');
+                $('#txtTypeId').val('');
+                $('#txtTypeId').attr('data-id', '0');
+
+
+
+                $('#txtAccountName').val('');
+                $('#txtFromAccountName').val('');
+                $('#txtToAccountName').val('');
+                $('#txtCustomerName').val('');
+                $('#txtCostCenterName').val('');
+                $('#txtTypeName').val('');
+                $('.tblChildAccountBody').html('');
+
+            }
+            else if (this.value == '5') {
+                $('#txtAccountId').prop('disabled', true);
+                $('#txtFromAccountId').prop('disabled', true);
+                $('#txtToAccountId').prop('disabled', true);
+                $('#txtCustomerId').prop('disabled', true);
+                $('#txtCostCenterId').prop('disabled', false);
+                $('#txtTypeId').prop('disabled', true);
+                $('#txtAccountId').val('');
+                $('#txtAccountId').attr('data-id', '0');
+                $('#txtFromAccountId').val('');
+                $('#txtFromAccountId').attr('data-id', '0');
+                $('#txtToAccountId').val('');
+                $('#txtToAccountId').attr('data-id', '0');
+                $('#txtCustomerId').val('');
+                $('#txtCustomerId').attr('data-id', '0');
+                $('#txtCostCenterId').val('');
+                $('#txtCostCenterId').attr('data-id', '0');
+                $('#txtTypeId').val('');
+                $('#txtTypeId').attr('data-id', '0');
+
+
+
+
+                $('#txtAccountName').val('');
+                $('#txtFromAccountName').val('');
+                $('#txtToAccountName').val('');
+                $('#txtCustomerName').val('');
+                $('#txtCostCenterName').val('');
+                $('#txtTypeName').val('');
+                $('.tblChildAccountBody').html('');
+
+            }
+        });
+
+    </script>
+    <script>
+        $('#txtTypeId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                localStorage.setItem('lstAccountCategory', 'txtAccountCategoryId');
+                //var vURL = '/AccountCategory/SearchAccountCategory';
+                var vURL = '/VAccountCategory/SearchAccountCategory';
+                $('#AccountCategoryDataModalContent').load(vURL);
+                // Modal Show
+                $('#AccountCategoryDataModal').modal('show');
+                // Select AccountCategory
+                $('body').on('click', '.divAccountCategorySelect', function () {
+                    // AccountCategory Id
+                    var vAccountCategoryId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vAccountCategoryCodeValue = $(this).find('.divAccountCategoryNo').text();
+                    var vAccountCategoryNameValue = $(this).find('.divAccountCategoryName').text();
+
+                    // Set Value
+                    $('#txtTypeId').val(vAccountCategoryCodeValue);
+                    $('#txtTypeId').attr('data-id', vAccountCategoryId)
+                    $('#txtTypeName').val(vAccountCategoryNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#AccountCategoryDataModal').modal('hide');
+                    //fnGetChilds();
+                    fnGetAccountsByType();
+
+                })
+
+            }
+        })
+        $('#txtTypeId').on('change', function () {
+            vCodeId = $(this).val().trim();
+            if (vCodeId != '') {
+                $.post('/VAccountCategory/SearchAccountCategoryByCode',
+                    { pCodeId: vCodeId},
+                    function (data, status) {
+                        if (data != undefined && data != '') {
+                            var vDataResult = JSON.parse(data);
+                            $('#txtTypeName').val(vDataResult[0].LookupDtlDesc);
+                            $('#txtTypeId').attr('data-id', vDataResult[0].LookupDtlId);
+                            fnGetAccountsByType();
+                        }
+
+                    })
+            }
+            else {
+                $('#txtTypeName').val('');
+                $('#txtTypeId').attr('data-id', '0');
+                funNotification('@appResource.msgWrongCode', '2')
+            }
+      
+
+            })
+        $('#txtCustomerId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                localStorage.setItem('lstCustomer', 'txtCustomerId');
+                //var vURL = '/CS/SearchCustomer';
+                var vURL = '/GLCustomer/SearchCustomerModal';
+                $('#CustomerDataModalContent').load(vURL);
+                // Modal Show
+                $('#CustomerDataModal').modal('show');
+                // Select Customer
+                $('body').on('click', '.divCustomerSelect', function () {
+                    // Customer Id
+                    var vCustomerId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vCustomerCodeValue = $(this).find('.divCustomerNo').text();
+                    var vCustomerNameValue = $(this).find('.divCustomerName').text();
+
+                    // Set Value
+                    $('#txtCustomerId').val(vCustomerCodeValue);
+                    $('#txtCustomerId').attr('data-id', vCustomerId)
+                    $('#txtCustomerName').val(vCustomerNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#CustomerDataModal').modal('hide');
+                    fnGetAccountsByType();
+
+                })
+
+            }
+        })
+        $('#txtCustomerId').on('change', function () {
+            vCodeId = $(this).val().trim();
+            if (vCodeId != '') {
+                $.post('/GLCustomer/SearchCustomerByCode', {
+                    pCustomerCode: vCodeId
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $('#txtCustomerName').val(vDataResult[0].CustomerNameL1);
+                        $('#txtCustomerId').attr('data-id', vDataResult[0].CustomerId);
+                        fnGetAccountsByType();
+                    }
+                    else {
+                        $('#txtCustomerName').val('');
+                        $('#txtCustomerId').attr('data-id', '0');
+                          funNotification('@appResource.msgWrongCode', '2')
+                    }
+
+                })
+            }
+            else {
+                $('#txtCustomerName').val('');
+                $('#txtCustomerId').attr('data-id', '0');
+            }
+          
+        })
+        $('#txtCostCenterId').on('keydown dblclick', function (e) {
+
+            if (e.keyCode == 120 || e.type == 'dblclick') {
+                localStorage.setItem('lstCostCenter', 'txtCostCenterId');
+                var vURL = '/CostCenter/SearchCostCenter';
+                $('#CostCenterDataModalContent').load(vURL);
+                // Modal Show
+                $('#CostCenterDataModal').modal('show');
+                // Select CostCenter
+                $('body').on('click', '.divCostCenterSelect', function () {
+                    // CostCenter Id
+                    var vCostCenterId = $(this).attr('data-id');
+
+                    // Get Values
+                    var vCostCenterCodeValue = $(this).find('.divCostCenterCode').text();
+                    var vCostCenterNameValue = $(this).find('.divCostCenterName').text();
+
+                    // Set Value
+                    $('#txtCostCenterId').val(vCostCenterCodeValue);
+                    $('#txtCostCenterId').attr('data-id', vCostCenterId)
+                    $('#txtCostCenterName').val(vCostCenterNameValue);
+                    //}
+
+
+                    // Modal Show
+                    $('#CostCenterDataModal').modal('hide');
+                    fnGetAccountsByType();
+
+                })
+
+            }
+        })
+        $('#txtCostCenterId').on('change', function () {
+            vCodeId = $(this).val().trim();
+            if (vCodeId != '') {
+                $.post('/CostCenter/SearchCostCenterByCode', {
+                    pCostCenterCode: vCodeId
+                }, function (data, status) {
+                    if (data != undefined && data != '') {
+                        var vDataResult = JSON.parse(data);
+                        $('#txtCostCenterName').val(vDataResult[0].CostCenterNameL1);
+                        $('#txtCostCenterId').attr('data-id', vDataResult[0].CostCenterId);
+                        fnGetAccountsByType();
+                    }
+                    else {
+                        $('#txtCostCenterName').val('');
+                        $('#txtCostCenterId').attr('data-id', '0');
+                          funNotification('@appResource.msgWrongCode', '2')
+                    }
+
+                })
+            }
+            else {
+                $('#txtCostCenterName').val('');
+                $('#txtCostCenterId').attr('data-id', '0');
+            }
+
+        })
+
+
+    </script>
+
+    <script>
+        //
+        var vlstLastchilds = [];
+        var vlstLastchildsDisplayNames = [];
+        var vlstDirectchilds = [];
+        var execludeditems = [];
+        var vlstAccounts = [];
+        var vlstParents = [];
+        var vlstAccountsNo = [];
+        var vAccountsNames = [];
+        var vLstAccountsNames = [];
+
+        var Accounts = [];
+        var Parents = [];
+        var DisplayNames = [];
+        var vLastChilsAccountsNames = [];
+        var vLstIsAccumulative = [];
+        //fnGetGetAccounts(1);
+        function fnGetGetAccounts(pAccountId) {
+
+            // List GetAccount
+            //$.get('/api/APIAccount/AccountGET',
+            $.post('/AccountStatementReport/GetAllAccounts',
+                {
+
+                },
+                function (data, status) {
+                    var vAccountId = $('#txtAccountId').attr('data-id');
+                    var vAccountNo = $('#txtAccountId').val();
+                    var vAccountName = $('#txtAccountName').val();
+                    console.log(data)
+                    if (data == '') {
+                        alert('jfjfj')
+
+                        $('.tblChildAccountBody').append(
+                            '<tr data-id=' + vAccountId + ' data-AccountNo=' + vAccountNo + ' data-AccountName=' + vAccountName + '>' +
+                            '<td  align="center">' +
+                            vAccountNo +
+                            '</td>' +
+                            '<td  align="center">' +
+                            //vLastChilsAccountsNames[j] +
+                            vAccountName +
+                            '</td>' +
+                            '</tr>')
+
+                    }
+                    else {
+                        console.log('data' + data);
+                        var vDataJSON = JSON.parse(data);
+
+                        vlstLastchilds = [];
+                        vlstLastchildsDisplayNames = [];
+                        vlstDirectchilds = [];
+                        execludeditems = [];
+                        vlstAccounts = [];
+                        vlstParents = [];
+                        vlstAccountsNo = [];
+                        vAccountsNames = [];
+
+                        Accounts = [];
+                        Parents = [];
+                        DisplayNames = [];
+                        vLastChilsAccountsNames = [];
+                        $.each(vDataJSON, function (i, Account) {
+                            console.log('Accountno' + Account.AccountId);
+                            // Set Value
+                            // Lst Account Id
+                            //vlstAccounts.push(Account.AccountId);
+                            Accounts.push(Account.AccountId);
+                            // Lst Account Parent Id
+                            //vlstParents.push(Account.AccountParentId);
+                            Parents.push(Account.AccountParentId);
+                            // Lst Account No
+                            vlstAccountsNo.push(Account.AccountNo);
+                            DisplayNames.push(Account.AccountNo);
+                            // Account Names
+                            vAccountsNames.push(Account.AccountNameL1);
+                            vLstIsAccumulative.push(Account.AccountIsCumulative);
+
+                            //vLstAccountsNames.push(Account.AccountNameL1);
+                            if (i >= vDataJSON.length - 1) {
+                                console.log('lstnamezzzzzzzzz' + vAccountsNames.toString())
+                                GetDirectChilds(pAccountId);
+                                fnAppendTable();
+                            }
+
+
+                        });
+
+                    }
+
+                    //console.log('Accounts' + vlstAccountsNo.toString());
+                    ////Accounts = vlstAccounts;
+                    ////Parents = vlstParents;
+                    ////DisplayNames = vlstAccountsNo;
+                    ////vAccountsNames = vLstAccountsNames;
+                    //console.log('lst of names' + vAccountsNames.toString());
+
+
+                    //console.log('lastbranches Display Names' + vlstLastchildsDisplayNames.toString());
+                    //console.log('lastbranchesId' + vlstLastchilds.toString());
+                    //console.log('lastbranches Names' + vLastChilsAccountsNames.toString());
+
+
+
+                });
+        }
+        function fnGetAccountsByType() {
+            var vLstAccountsNoByType = [];
+            var vLstAccountsIdByType = [];
+
+            vlstLastchilds = [];
+            vlstLastchildsDisplayNames = [];
+            vlstDirectchilds = [];
+            execludeditems = [];
+            vlstAccounts = [];
+            vlstParents = [];
+            vlstAccountsNo = [];
+            vAccountsNames = [];
+
+            Accounts = [];
+            Parents = [];
+            DisplayNames = [];
+            vLastChilsAccountsNames = [];
+            vLstIsAccumulative = [];
+
+
+            console.log('1st lst directChilds' + vlstLastchildsDisplayNames.toString());
+            $.post('/AccountStatementReport/GetAccountsByType', {
+                //pAccountTypeId: $('#txtTypeId').attr('data-id'),
+                pAccountCategoryId: $('#txtTypeId').attr('data-id'),
+                pAccountFrom: $('#txtFromAccountId').attr('data-id'),
+                pAccountTo: $('#txtToAccountId').attr('data-id'),
+                pCostCenterId: $('#txtCostCenterId').attr('data-id'),
+                pCustomerId: $('#txtCustomerId').attr('data-id'),
+            }, function (data, status) {
+                if (data != undefined && data != '') {
+                    var vDataResult = JSON.parse(data);
+                    console.log('dataaaaaaaaa' + vDataResult.toString());
+                    $.each(vDataResult, function (i, Account) {
+                        // If Not By Customer
+                        if ($('#txtCustomerId').attr('data-id') == '0' && $('#txtTypeId').attr('data-id') == '0') {
+                            console.log('tttttttttttttttt ' + Account.AccountNo.toString());
+                            // Set Value
+                            vlstAccounts.push(Account.AccountId);
+                            vlstParents.push(Account.AccountParentId);
+                            vlstAccountsNo.push(Account.AccountNo);
+                            vAccountsNames.push(Account.AccountNameL1);
+                            vLstIsAccumulative.push(Account.AccountIsCumulative);
+                            console.log('account nameeee' + Account.AccountNameL1);
+
+                            //console.log('tr' + Account.AccountNo);
+                            if (i == vDataResult.length - 1) {
+
+                                //if (Account.AccDtl != undefined && Account.AccDtl != '') {
+                                Accounts = vlstAccounts;
+                                Parents = vlstParents;
+                                DisplayNames = vlstAccountsNo;
+
+
+                                for (var m = 0; m <= Account.AccDtl.length - 1; m++) {
+
+                                    vLstAccountsNoByType.push(Account.AccDtl[m].AccountNo);
+                                    vLstAccountsIdByType.push(Account.AccDtl[m].AccountId);
+                                    GetDirectChilds(Account.AccDtl[m].AccountId);
+
+
+
+                                }
+
+
+                                fnAppendTable()
+
+                                //}
+
+                            }
+                        }
+                        // If By Customer
+                        else if ($('#txtCustomerId').attr('data-id') != '0') {
+                            if (i == vDataResult.length - 1) {
+                                $('.tblChildAccountBody').html('');
+                                if (Account.AccDtl != undefined && Account.AccDtl != '') {
+                                    vlstLastchilds = [];
+                                    vlstLastchildsDisplayNames = [];
+                                    vLastChilsAccountsNames = [];
+                                    for (var m = 0; m <= Account.AccDtl.length - 1; m++) {
+
+                                        vlstLastchilds.push(Account.AccDtl[m].AccountId);
+                                        vlstLastchildsDisplayNames.push(Account.AccDtl[m].AccountNo);
+                                        vLastChilsAccountsNames.push(Account.AccDtl[m].AccountNameL1);
+                                        $('.tblChildAccountBody').append(
+                                            '<tr data-id=' + Account.AccDtl[m].AccountId + ' data-AccountNo=' + Account.AccDtl[m].AccountNo + ' data-AccountName=' + Account.AccDtl[m].AccountNameL1 + '>' +
+                                            '<td  align="center">' +
+                                            Account.AccDtl[m].AccountNo +
+                                            '</td>' +
+                                            '<td  align="center">' +
+                                            //vLastChilsAccountsNames[j] +
+                                            Account.AccDtl[m].AccountNameL1 +
+                                            '</td>' +
+                                            '</tr>')
+
+
+
+                                    }
+                                }
+
+
+
+                            }
+                        }
+                        else if ($('#txtTypeId').attr('data-id') != '0') {
+
+                            //if (i == vDataResult.length - 1) {
+                            if (i == 0) {
+                                $('.tblChildAccountBody').html('');
+                                if (Account.AccDtl != undefined && Account.AccDtl != '') {
+                                    vlstLastchilds = [];
+                                    vlstLastchildsDisplayNames = [];
+                                    vLastChilsAccountsNames = [];
+                                    for (var m = 0; m <= Account.AccDtl.length - 1; m++) {
+                                        if (Account.AccDtl[m].AccountIsCumulative == false) {
+
+                                            vlstLastchilds.push(Account.AccDtl[m].AccountId);
+                                            vlstLastchildsDisplayNames.push(Account.AccDtl[m].AccountNo);
+                                            vLastChilsAccountsNames.push(Account.AccDtl[m].AccountNameL1);
+
+                                            $('.tblChildAccountBody').append(
+                                                '<tr data-id=' + Account.AccDtl[m].AccountId + ' data-AccountNo=' + Account.AccDtl[m].AccountNo + ' data-AccountName=' + Account.AccDtl[m].AccountNameL1 + '>' +
+                                                '<td  align="center">' +
+                                                Account.AccDtl[m].AccountNo +
+                                                '</td>' +
+                                                '<td  align="center">' +
+                                                //vLastChilsAccountsNames[j] +
+                                                Account.AccDtl[m].AccountNameL1 +
+                                                '</td>' +
+                                                '</tr>')
+
+                                        }
+
+
+
+
+
+                                    }
+                                }
+
+
+
+                            }
+                        }
+
+                    })
+
+                }
+            })
+        }
+        function fnAppendTable() {
+            // get
+            var vTableBody = $('.tblChildAccountBody');
+            vTableBody.html('');
+            if (!vlstLastchilds.length) {
+
+
+                var vAccountId = $('#txtAccountId').attr('data-id');
+                var vAccountNo = $('#txtAccountId').val();
+                var vAccountName = $('#txtAccountName').val();
+                //vlstLastchildsDisplayNames.push(vAccountNo + ',');
+                vlstLastchildsDisplayNames.push(vAccountNo);
+
+                console.log("Arr    " + vlstLastchildsDisplayNames)
+                vTableBody.append(
+                    '<tr data-id=' + vAccountId + ' data-AccountNo=' + vAccountNo + ' data-AccountName=' + vAccountName + '>' +
+                    '<td  align="center">' +
+                    vAccountNo +
+                    '</td>' +
+                    '<td  align="center">' +
+                    //vLastChilsAccountsNames[j] +
+                    vAccountName +
+
+                    '</td>' +
+                    '</tr>')
+
+            } else {
+
+                for (var j = 0; j < vlstLastchilds.length; j++) {
+                    vTableBody.append(
+                        '<tr data-id=' + vlstLastchilds[j] + ' data-AccountNo=' + vlstLastchildsDisplayNames[j] + ' data-AccountName=' + vLastChilsAccountsNames[j] + '>' +
+                        '<td  align="center">' +
+                        vlstLastchildsDisplayNames[j] +
+                        '</td>' +
+                        '<td  align="center">' +
+                        //vLastChilsAccountsNames[j] +
+                        vAccountsNames[DisplayNames.indexOf(vlstLastchildsDisplayNames[j])] +
+
+                        '</td>' +
+                        '</tr>')
+
+                    //console.log('namesss' + vLastChilsAccountsNames[j])
+                    console.log('namessstest' + vAccountsNames.toString())
+                }
+
+            }
+
+
+
+
+
+        }
+
+
+        function GetDirectChilds(vParent) {
+            var LstDirectChilds = []
+            var vlevelsofparents = 0;
+            // Check If The Item Had Checked Before
+            if (jQuery.inArray(vParent, execludeditems) == -1) {
+                if (vParent != '0') {
+                    vlevelsofparents = getlevelsforparent(vParent);
+                }
+                // Loop Through Accounts
+                for (var s = 0; s < Accounts.length; s++) {
+                    if (jQuery.inArray(vParent, execludeditems) == -1) {
+
+                        if (Parents[s] == vParent) {
+                            LstDirectChilds.push(vParent);
+
+                            if (getlevelsforparent(Accounts[s]) > 0) {
+                                //have childs
+                            }
+                            else {
+
+
+                                //have no Branches
+                                if (LstDirectChilds.indexOf(Accounts[s]) > -1) {
+
+                                }
+                                else {
+                                    if (vLstIsAccumulative[s] == true) {
+
+                                    }
+                                    else {
+                                        LstDirectChilds.push(Accounts[s]);
+                                    }
+
+                                }
+                                if (vlstLastchildsDisplayNames.indexOf(DisplayNames[s]) > -1) {
+
+                                }
+                                else {
+                                    if (vLstIsAccumulative[s] == true) {
+
+                                    }
+                                    else {
+                                        vlstLastchildsDisplayNames.push(DisplayNames[s]);
+                                    }
+                                }
+                                if (vlstLastchilds.indexOf(Accounts[s]) > -1) {
+
+                                }
+                                else {
+                                    if (vLstIsAccumulative[s] == true) {
+
+                                    }
+                                    else {
+                                        vlstLastchilds.push(Accounts[s]);
+                                    }
+                                }
+                                if (vLastChilsAccountsNames.indexOf(vAccountsNames[s]) > -1) {
+
+                                }
+                                else {
+                                    if (vLstIsAccumulative[s] == true) {
+
+                                    }
+                                    else {
+                                        vLastChilsAccountsNames.push(vAccountsNames[s]);
+                                    }
+
+                                }
+
+
+
+                                if (vParent != '0') {
+
+                                }
+                                else if (vParent = '0') {
+                                    // Is Not direct Root
+                                }
+
+                            }
+                            // Loop Again To get The Childs
+                            GetDirectChilds(Accounts[s]);
+                            // Insert The Item In Excluded Items Array For Not to Be Searched Again
+                            execludeditems.push(Accounts[s]);
+
+
+                        }
+                    }
+
+                }
+            }
+
+        }
+        function getlevelsforparent(vParents2) {
+            var levelforparent = 0
+            for (var w = 0; w < Accounts.length; w++) {
+                if (Parents[w] == vParents2) {
+                    levelforparent++;
+
+                }
+            }
+            return levelforparent;
+        }
+
+
+    </script>
+
+
+    <script>
+        // Print
+        $('.btnPrint').on('click', function () {
+            // Date Value
+            var vDateFrom = $('.DateFrom').val();
+            var vDateTo = $('.DateTo').val();
+            // split Date
+            var vDateFrom = vDateFrom.split("-");
+            var vDateTo = vDateTo.split("-");
+
+            // Create New Date
+            var DateFrom = new Date(vDateFrom[0], vDateFrom[1], vDateFrom[2]);
+            var DateTo = new Date(vDateTo[0], vDateTo[1], vDateTo[2]);
+            // Check Valid Date
+            if (DateFrom > DateTo) {
+                funNotification('@appResource.msgDateBetween', '2')
+            }
+            else {
+
+                var arrSelectedRow = [];
+                var vSelected = '';
+                $('.chkReportType input:checked').each(function () {
+
+                    // Current Object Id
+                    var vCurrentObjectActionId = $(this).attr('value');
+                    arrSelectedRow.push(vCurrentObjectActionId);
+                    vSelected += vCurrentObjectActionId + ','
+
+                })
+
+                // CostCenter And Details
+                if (vSelected == '2,') {
+                    console.log('تفصيلي مركز تكلفه')
+                    ////funReportDetail(404)
+                    //funReportDetailAll(406)
+                    var url = '/AccountStatementReport/GLDetailsCostCenterReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + "&&pChildAccounts=" + vlstLastchildsDisplayNames.toString();
+                    var popupWindow = window.open(url);
+                }
+                // Totals
+                else if (vSelected == '4,') {
+                    console.log('اجمالي')
+                    //funReportCostCenterDetail(403);
+                    var url = '/AccountStatementReport/GLTotalReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + "&&pChildAccounts=" + vlstLastchildsDisplayNames.toString();
+                    var popupWindow = window.open(url);
+
+                }
+                // Totals With CostCenter
+                else if (vSelected == '2,4,') {
+                    console.log('اجمالي مع مركز تكلفه')
+
+                    // Totals With CostCenter
+                    //funReportCostCenterDetail(402);
+
+                    var url = '/AccountStatementReport/GLTotalCostCenterReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + "&&pChildAccounts=" + vlstLastchildsDisplayNames.toString();
+                    var popupWindow = window.open(url);
+                }
+                // Details
+                else {
+
+                    //console.log('تفصيلي ')
+
+                    ////// Report Details
+                    ////funReportDetail(400)
+
+
+                    //funReportDetailAll(406)
+
+                    var url = '/AccountStatementReport/GLReport?pDateFrom=' + vDateFrom + '&&pDateTo=' + vDateTo + "&&pChildAccounts=" + vlstLastchildsDisplayNames.toString();
+                    var popupWindow = window.open(url);
+
+
+
+                }
+
+
+
+
+            } // Check  Date Availabilty
+        });
+                //SimpleInSameWin()
+
+
+    </script>
+
+

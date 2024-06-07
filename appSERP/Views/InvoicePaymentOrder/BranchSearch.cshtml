@@ -1,0 +1,162 @@
+﻿
+@using appSERP.appCode.SQL.QueryType
+@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.User
+@{
+    ViewBag.Title = "BranchSearch";
+    Layout = "~/Views/Shared/appLayout/_ModalLayout.cshtml";
+}
+
+<style>
+    .divBranch {
+        max-height: 80vh;
+        overflow: scroll;
+    }
+
+    .divBranchSelect {
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .divBranchSelect:hover {
+            font-weight: bold;
+            background-color: #2980b9;
+            color: #FFF;
+        }
+
+    .divBranchNo {
+        width: 60px;
+    }
+</style>
+
+<!-- Header -->
+<div class="">
+    <div class="w-100 bg-white border font-weight-bold p-4">الفروع</div>
+</div>
+
+<!-- Search -->
+<div class="">
+    <div class="w-100 bg-white border p-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control txtSearch" placeholder="@appResource.btnSearch">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divBranch">
+
+    <table class="table table-bordered tblData border">
+        <thead>
+
+        </thead>
+        <tbody class="tblBodyBranch"></tbody>
+    </table>
+
+</div>
+
+
+<!-- Branch GET -->
+<script>
+
+    // On Load
+    $(document).ready(function () {
+
+        // Focus on Search
+        $('.txtSearch').focus();
+
+        // Branch GET
+        funBranchGET();
+    })
+    // Branch GET
+    function funBranchGET() {
+
+        $.get('/api/APIBranchSetting/BranchSettingGET',
+            {
+                pQueryTypeId: '@clsQueryType.qSelect',
+
+            }, function (data, status) {
+                // JSON
+                var vDataResult = JSON.parse(data);
+                // Table Body
+                var vTableBody = $('.tblBodyBranch');
+
+                console.log(vDataResult)
+                // Branchs
+                $.each(vDataResult, function (i, BranchData) {
+
+                    var vRowContent = '<tr data-id="' + vDataResult[i].BranchSettingId + '">';
+
+                    var vBranchName = vDataResult[i].BranchDesc;
+                        if ('@clsUser.vUserLanguageId' == '2') {
+                            vBranchName = vDataResult[i].BranchDescL;
+                        }
+                    vRowContent += '<td data-id="' + vDataResult[i].BranchSettingId + '">';
+                    vRowContent += '<div class="divBranchSelect d-flex p-2" data-id="' + vDataResult[i].BranchSettingId + '">';
+                    vRowContent += '<div class="divBranchCode px-4">' + vDataResult[i].BranchSettingCode + '</div>';
+                    vRowContent += '<div class="divBranchName  px-4">' + vDataResult[i].BranchDesc + '</div>';
+
+
+                            vRowContent += '</div>';
+                        vRowContent += '</td>';
+
+                    vRowContent += '</tr>';
+
+                    // Append Row Content
+                    vTableBody.append(vRowContent);
+                })
+
+            })
+
+
+
+
+    }
+
+</script>
+
+<!-- Search Branch -->
+<script>
+    // Search
+    $('.txtSearch').on('keyup', function () {
+
+        // Search Input
+        var vSearchInput = $(this).val();
+
+        // Check Input
+        if (vSearchInput) {
+
+            // Check All
+            $('.divBranchSelect').each(function () {
+
+                // Get Branch Code
+                var vBranchCode = $(this).find('.divBranchId').text();
+                var vBranchName = $(this).find('.divBranchName').text();
+
+                // Check Result
+                if (vBranchCode.search(vSearchInput) != -1 || vBranchName.search(vSearchInput) != -1) {
+
+                    // Show Results
+                    $(this).addClass('d-flex');
+                    $(this).removeClass('d-none');
+                }
+                else {
+                    // Hide
+                    $(this).addClass('d-none');
+                    $(this).removeClass('d-flex');
+                }
+
+            })
+
+        }
+        else {
+            // Show All
+            $(this).removeClass('d-none');
+            $(this).addClass('d-flex');
+        }
+    })
+</script>

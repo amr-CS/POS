@@ -1,0 +1,103 @@
+﻿@model appSERP.Models.FA.FixedAssetCompanyModel
+@using appSERP.Views.Shared.appResource
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <!-- Header -->
+        <div class="container-fluid">
+            @Html.Action("ViewSettingModalHeader", "ViewSetting", new { pModalHeaderTitle = appResource.FixedAssetCompanyId, pId = Model.FixedAssetCompanyId })
+        </div>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.HiddenFor(model => model.FixedAssetCompanyId, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.HiddenFor(model => model.FixedAssetCompanyId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FixedAssetCompanyId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FixedAssetCompanyCode, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FixedAssetCompanyCode, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                @Html.ValidationMessageFor(model => model.FixedAssetCompanyCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FixedAssetCompanyNameL1, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FixedAssetCompanyNameL1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FixedAssetCompanyNameL1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FixedAssetCompanyNameL2, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FixedAssetCompanyNameL2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FixedAssetCompanyNameL2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FixedAssetCompanyTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                <select id="selectFixedAssetCompanyType" class="selectpicker form-control form-control" name="FixedAssetCompanyTypeId" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true"></select>
+                @Html.ValidationMessageFor(model => model.FixedAssetCompanyTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group m-3">
+            <div class="custom-control custom-checkbox col-md-12">
+                @Html.EditorFor(model => model.FixedAssetCompanyIsActive, new { htmlAttributes = new { @class = "custom-control-input", @id = "customCheck1" } })
+                @Html.LabelFor(model => model.FixedAssetCompanyIsActive, htmlAttributes: new { @class = "custom-control-label", @for = "customCheck1" })
+            </div>
+        </div>
+
+        <div class="form-group divModalFooter">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="@appResource.btnSave" class="btn btn-success" />
+                <button type="button" class="btn btn-light" data-dismiss="modal">@appResource.btnClose</button>
+            </div>
+        </div>
+    </div>
+    }
+
+
+</body>
+</html>
+<script>
+    var vFixedAssetCompanyTypeId = 0;
+        // List GetFixedAssetCompanyType
+    $.post('/Home/GetFixedAssetCompanyType',
+        null,
+        function (data, status) {
+            var vDataJSON = JSON.parse(data);
+            $.each(vDataJSON, function (i, FixedAssetCompanyType) {
+                $('#selectFixedAssetCompanyType').append('<option data-id="' + FixedAssetCompanyType.FixedAssetCompanyTypeId + '" value="' + FixedAssetCompanyType.FixedAssetCompanyTypeId + '" sort-id="' + i + '">' + FixedAssetCompanyType.FixedAssetCompanyTypeNameL1 + '</option>')
+                if (i == 0) {
+                    vFixedAssetCompanyTypeId = FixedAssetCompanyType.FixedAssetCompanyTypeId;
+                }
+            })
+                    if (parseInt('@ViewBag.vbcFixedAssetCompanyTypeId') > 0) {
+                        vFixedAssetCompanyTypeId  = parseInt('@ViewBag.vbcFixedAssetCompanyTypeId');
+            }
+            $('#selectFixedAssetCompanyType').val(vFixedAssetCompanyTypeId);
+            // Refresh Select Picker
+            $('.selectpicker').selectpicker('refresh');
+        }
+    )
+</script>

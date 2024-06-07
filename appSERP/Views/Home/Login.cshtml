@@ -1,0 +1,731 @@
+﻿@using System.Data
+@using appSERP.appCode.Setting.User
+@using appSERP.appCode.dbCode.GD
+@using appSERP.Views.Shared.appResource.loginResource
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.Setting.GD
+
+@{
+    ViewBag.Title = "تسجيل الدخول";
+    Layout = "~/Views/Shared/appLayout/_LoginLayout.cshtml";
+}
+
+
+
+<!-- SET DEV COMPANY DATA -->
+@ViewBag.DevCompanySetting.SetDevCompanySetting();
+
+@*dbSystem.funSystemDataGET();*@
+<!-- GET SYSTEMS -->
+@{DataTable vDtSystem = ViewBag.dbSystem; }
+
+<style>
+    body {
+        background-color: #193048;
+        padding-top: 20px !important;
+    }
+
+    .divContainer {
+        width: 50vw;
+        margin: auto;
+        display: flex;
+        transition: all 0.5s;
+    }
+
+
+
+
+    .divLoginContent {
+        background-color: #FFF;
+        width: 50%;
+        padding: 29px 29px 0 29px;
+    }
+
+    .divSystemContent {
+        width: 50%;
+        background-color: #eee;
+    }
+
+    .divCompanyLogo {
+        padding: 0.75rem 0rem 0.75rem 0rem;
+    }
+
+    .divAppImage {
+        text-align: center;
+    }
+
+    .divLoginLabel {
+        font-size: 24px !important;
+        text-align: center;
+    }
+
+    .divLoginNote {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        font-size: 13px !important;
+        text-align: center;
+    }
+
+    .divSystemContent {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .imgSystem {
+        margin-right: 1rem;
+        margin-left: 1rem;
+    }
+
+    .btnForm {
+        text-shadow: none;
+        font-weight: 400;
+        color: #FFF;
+        -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.75);
+        -moz-box-shadow: 0 1px 1px 0 rgba(0,0,0,.75);
+        box-shadow: 0 1px 1px 0 rgba(0,0,0,.75);
+        min-width: 100px;
+        display: inline-block;
+        padding: 6px 12px;
+        line-height: 1.428571429;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+        -webkit-appearance: button;
+        text-transform: none;
+        height: 44px;
+        margin-top: 3rem;
+    }
+
+
+    #imgCaptcha {
+        opacity: 0.7;
+    }
+
+    .divLoginAgreementNote {
+        padding-right: 7rem;
+        padding-left: 7rem;
+    }
+
+    .divLoginFooter {
+        text-align: center;
+        background-color: #ECEEF1;
+        margin-top: 29px;
+        padding: 15px;
+    }
+
+    .divCopyRight {
+        color: rgba(236, 238, 241, 0.80);
+        display: block;
+        padding-top: 0.75rem;
+    }
+
+    @@media(max-width: 1200px) {
+        .divContainer {
+            width: 70vw;
+        }
+    }
+
+    @@media(max-width: 700px) {
+        .divContainer {
+            width: 100vw;
+            display: block;
+        }
+
+        .divLoginContent {
+            width: 100%;
+        }
+
+        .divSystemContent {
+            width: 100%;
+        }
+
+        .divCompanyLogo {
+            text-align: center;
+            padding-bottom: 30px;
+        }
+    }
+</style>
+
+<div class="divContainer d-flex">
+    <div class="divCompanyLogo w-100">
+        <img src="data:image/gif;base64, @ViewBag.DevCompanySetting.DevCompanyImage" width="100" />
+    </div>
+    <div class="flex-shrink-1 pt-4">
+        <!-- Language -->
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-globe"></i>
+            </button>
+            <!-- Language [Select] -->
+            <div class="divLang dropdown-menu" aria-labelledby="dropdownMenuButton">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="divContainer">
+
+    <!-- System Content -->
+    <div class="divSystemContent">
+
+        <div class="text-center">
+            @foreach (DataRow vDrwSystem in vDtSystem.Rows)
+            {
+                <img src="@vDrwSystem["SystemImageLogo"]" class="imgSystem mx-auto" width="75" />
+            }
+        </div>
+
+    </div>
+
+    <!-- Login -->
+    <div class="divLoginContent">
+        <div class="">
+            <div class="divAppImage">
+                <img src="data:image/gif;base64, @ViewBag.DevCompanySetting.DevAppImage" width="75" />
+            </div>
+            <hr />
+        </div>
+
+
+        <div class="">
+            <!-- Login -->
+            <div class="divLogin">
+
+                <div class="divLoginLabel">
+                    @loginResource.lblLogin
+                </div>
+
+
+                <div class="divLoginNote">
+                    @loginResource.msgLogintoProducts1
+                    <b>@ViewBag.DevCompanySetting.DevAppNameL1</b>
+                    @loginResource.msgLogintoProducts2
+                </div>
+                <hr />
+
+                <form>
+                    <div class="form-group mt-4">
+                        <label for="txtUserName">@loginResource.UserName</label>
+                        <input type="text" class="form-control mt-2" id="txtUserName" required placeholder="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtUserPassword">@loginResource.UserPassword</label>
+                        <input type="password" class="form-control mt-2" id="txtUserPassword" required placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="chkRememberMe">
+                            <label class="custom-control-label" for="chkRememberMe">@loginResource.RememberMe</label>
+                        </div>
+                    </div>
+
+
+
+                    @*@if (!ViewBag.vbCheck)
+                        {
+                            <div id="divCaptcha form-group">
+                                <label for="UserPassword">@loginResource.msgPrivacy</label>
+                                <br />
+                                <img src="/Login/ShowCaptchaImage" id="imgCaptcha" class="m-1" />
+
+                                <div class="form-group">
+                                    <input type="text" id="txtCaptcha" class="form-control" required placeholder="" autocomplete="off" />
+                                    <input type="text" id="txtCaptchaText" style="display:none" />
+                                </div>
+                            </div>
+                        }*@
+
+
+                    <div class="form-group">
+                        <button type="button" id="btnLogin" class="btn btn-success btn-block btnForm">@loginResource.Login</button>
+                    </div>
+
+                    <div class="divLoginAgreementNote small text-center">
+                        @loginResource.msgPrivacy
+                    </div>
+
+                </form>
+
+                <hr />
+                <div class="divLoginForgot text-center">
+                    <a href="#" id="btnForgetPassword">@loginResource.ForgotPassword</a>
+                </div>
+
+                <div class="alert alert-danger text-center my-3 mx-2 divResult" style="display:none"></div>
+
+
+                <div class="divLoginFooter small">
+                    <a href="@ViewBag.DevCompanySetting.DevCompanyWebsite">@ViewBag.DevCompanySetting.DevCompanyNameL1</a>
+                </div>
+            </div> <!-- End of Login -->
+            <!-- Forgot Password -->
+            <div class="divForgotPassword d-none">
+
+                <!-- Forgot Password -->
+                <div class="lblLogin">@loginResource.ForgotPassword</div>
+
+                <div class="form-group">
+                    <form class="formForgotPassword">
+
+                        <label class="control-label">@loginResource.gEmail</label>
+                        <input type="email" class="form-control" id="txtForgotPasswordEmail" required />
+                        <br />
+                        <button type="submit" class="btn btn-primary btn-block btnForm btnSendCode">@loginResource.btnSendCode</button>
+
+                    </form>
+                    <br />
+                    <div class="alert alert-danger d-none divEmailWrong">@loginResource.msgEmailNotFound</div>
+                </div>
+
+                <div class="form-group divCheckCode d-none">
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="chkUserName">
+                            <label class="custom-control-label" for="chkUserName">نسيت اسم المتسخدم</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" checked id="chkPassword">
+                            <label class="custom-control-label" for="chkPassword">@loginResource.ForgotPassword</label>
+                        </div>
+                    </div>
+                    <form class="formCodeCheck">
+                        <label class="control-label">@loginResource.gCode</label>
+                        <input type="text" id="txtCodeCheck" class="form-control" required />
+                        <br />
+                        <button type="submit" class="btn btn-primary btn-block btnForm  btnCodeCheck">@loginResource.btnCheckCode</button>
+                    </form>
+                </div>
+
+            </div> <!-- End of Forgot Password -->
+            <!-- Update Password -->
+            <div class="divUpdatePassword d-none">
+
+                <div class="lblLogin">@loginResource.lblUpdatePassword</div>
+
+
+                <form class="formUpdatedPassword">
+
+                    <div class="alert alert-warning divPasswordLenghtNote" style="font-size:12px; display:none">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label">@loginResource.lblNewPassword</label>
+                        <div class="">
+                            <span class="bg-transparent text-success d-none spanLenghtCheck" id="basic-addon1"><i class="fa fa-check"></i></span>
+                            <input type="password" id="txtPassword" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">@loginResource.lblNewPasswordConfirm</label>
+                        <div class="">
+                            <span class="bg-transparent text-success d-none spanMatchCheck" id="basic-addon1"><i class="fa fa-check"></i></span>
+                            <input type="password" id="txtPasswordConfirm" class="form-control" required />
+                        </div>
+                    </div>
+
+
+
+                    <!-- Change Password -->
+                    <button type="button" class="btn btn-success btn-block btnForm btnChangePassword d-none mb-4">@loginResource.btnChangePassword</button>
+
+
+                    <div class="alert alert-success divSuccess d-none">
+                        @loginResource.msgPasswordChange
+
+                        <br />
+                        @*<a href="/Login/Login" class="btn btn-link btn-block">@loginResource.lblLogin</a>*@
+                        <a href="/Login/Login" class="btn btn-link btn-block">@loginResource.lblLogin</a>
+                    </div>
+                    <div class="alert alert-danger divError d-none">
+                        @loginResource.msgPasswordFound
+
+                    </div>
+                    <div class="alert alert-danger divPasswordNotMatch d-none">
+                        @loginResource.msgPasswordNotMatch
+
+                    </div>
+                </form>
+
+
+            </div>
+            <div class="divUserName d-none">
+                <div class="lblUserName alert alert-secondary">@loginResource.UserName - @clsUser.vUserName </div>
+            </div>
+
+            <div class="alert alert-success Success d-none">
+                @loginResource.msgPasswordChange
+
+                <br />
+            </div>
+        </div> <!-- End of Main Container -->
+
+    </div> <!-- End of Login Box -->
+
+
+
+
+</div> <!-- End of Page Content -->
+
+<div class="divContainer">
+    <div class="divCopyRight small">
+        @if (clsUser.vUserLanguageId == 1)
+        {
+            <div>© @DateTime.Now.Year @ViewBag.DevCompanySetting.DevCompanyNameL1 -  جميع الحقوق محفوظة</div>
+        }
+        else
+        {
+            <div>© @DateTime.Now.Year @ViewBag.DevCompanySetting.DevCompanyNameL2 -  All Rights Reserved</div>
+        }
+    </div>
+</div>
+
+<!-- Result -->
+<div id="divData"></div>
+
+<script>
+    $.post("/Login/ShowCaptchaText", null, function (data) {
+        $('#txtCaptchaText').val(data)
+    });
+</script>
+
+
+
+<!-- AutoComplete Off -->
+<script>
+    $(document).ready(function () {
+        $("input:text").attr("autocomplete", "off");
+        $("input:password").attr("autocomplete", "off");
+    })
+</script>
+
+
+<!-- Forget Password -->
+<script>
+    $('.formForgotPassword').submit(function (e) {
+        e.preventDefault();
+
+        // Check Mail First
+
+        // Get Written Email
+        var vEmail = $('#txtForgotPasswordEmail').val();
+        // Add to LocalStorage
+        localStorage.setItem('lsEmail', vEmail);
+
+        // Check User Email
+        $.post('/Login/CheckUserEmail', { pEmail: vEmail }, function (data, status) {
+
+
+            if (data == 'True') {
+
+                // Get Code
+                $.post('/Login/GenerateRandomCode', null, function (data, status) {
+                    // Generated Code
+                    var vGeneratedCode = data;
+                    // Localstorage Set Item
+                    localStorage.setItem('lsGeneratedCode', vGeneratedCode);
+
+                })
+
+                var vCode = localStorage.getItem('lsGeneratedCode');
+                // Send Code
+                $.post('/Login/SendCode', { pMail: vEmail, pCode: vCode }, function (data, status) {
+
+                    // Remove Error
+                    $('.divEmailWrong').addClass('d-none');
+
+                    // Status = Success
+                    if (status == "success") {
+
+
+                        // Hide Send Code
+                        $('.formForgotPassword').addClass('d-none');
+                        // Show Check Code
+                        $('.divCheckCode').removeClass('d-none');
+
+                        // Check Code
+                        $('.formCodeCheck').submit(function (e) {
+
+                            e.preventDefault();
+                            // Get Code Written By user
+                            var vCodetoCheck = $('#txtCodeCheck').val();
+
+                            // Check Code
+                            if (vCodetoCheck == vCode) {
+
+                                // Hide - Update Password
+                                $('.divForgotPassword').addClass('d-none');
+                                if ($('#chkUserName').is(":checked")) {
+
+
+
+                                    // Show - Login Form With UserName
+                                    $('.divLogin').removeClass('d-none');
+
+                                    // Get UserName
+                                    var VUserName='@clsUser.vUserName'
+                                    $('#txtUserName').val(VUserName)
+
+                                }
+                                else {
+                                    // Show - Update Password
+                                    $('.divUpdatePassword').removeClass('d-none');
+                                }
+                            }
+                            else {
+
+
+                            }
+
+                        })
+
+                    }
+
+                })
+
+            } // End Check If Email Valid
+            else {
+
+                // SHOW ERROR
+                $('.divEmailWrong').removeClass('d-none');
+
+            }
+
+        }) // End Check User Email
+
+    });
+
+
+    // Password, Check Confirm
+    $('#txtPassword, #txtPasswordConfirm').on('keyup', function () {
+
+        // Password, Confirm
+        var vPassword = $('#txtPassword').val();
+        var vPasswordConfirm = $('#txtPasswordConfirm').val();
+
+
+
+        // Check If Password Lenght
+        if (vPassword.length >= 1 && vPassword.length <= 10) {
+
+            // Remove Warning
+            $('.spanLenghtCheck').removeClass('d-none');
+            $('#txtPassword').removeClass('bg-danger');
+
+            // Check Password
+            if (vPassword == vPasswordConfirm && vPassword != '') {
+
+                // Remove Warning
+                $('.spanMatchCheck').removeClass('d-none');
+
+                // Hide Error Not Match
+                $('.divPasswordNotMatch').addClass('d-none');
+
+                // Show Change Password Button
+                $('.btnChangePassword').removeClass('d-none');
+
+                // Change Passord
+                $('.btnChangePassword').on('click', function () {
+
+
+                    // Add to LocalStorage
+                    var vUserEmail = localStorage.getItem('lsEmail');
+
+                    // Change Password
+                    $.post('/Login/funChangePassword', { pEmail: vUserEmail, pPassword: vPassword }, function (data, status) {
+
+
+                        // Check Status
+                        if (data == 'True') {
+
+                            //// Show Success
+                            //$('.divSuccess').removeClass('d-none');
+                            //// Show Error
+                            //$('.divError').addClass('d-none');
+
+                            //// Clear
+                            //$('#txtPassword').val("");
+                            //$('#txtPasswordConfirm').val("");
+
+                            $('.divUpdatePassword').addClass('d-none');
+
+                            $('.divLogin').removeClass('d-none');
+
+                            $('.Success').removeClass('d-none');
+                        }
+                        else {
+
+                            // Show Error
+                            $('.divError').removeClass('d-none');
+                        }
+                    })
+                })
+
+            } // End Check Password Similarity
+            else {
+                // Remove Warning
+                $('.spanMatchCheck').addClass('d-none');
+                // Hide Change Password Button
+                $('.btnChangePassword').addClass('d-none');
+                // Show Error Not Match
+                $('.divPasswordNotMatch').removeClass('d-none');
+            }
+
+        } // End Check Min, Max
+        else {
+
+            // Remove Warning
+            $('.spanLenghtCheck').addClass('d-none');
+            $('#txtPassword').addClass('bg-danger');
+            // Hide Change Password Button
+            $('.btnChangePassword').addClass('d-none');
+
+        }
+
+    });
+
+</script>
+
+<!-- Login -->
+<script>
+    function fnLogIn() {
+
+        if (@ViewBag.vbCheck='True')
+        {
+            // Check Captcha
+            var vCaptchaRealText = $('#txtCaptchaText').val();
+            var vCaptchaUser = $('#txtCaptcha').val();
+            // Compare
+            if (vCaptchaRealText != vCaptchaUser) {
+
+                $('.divResult').text('خطأ في رمز التحقق');
+                $('.divResult').fadeIn().delay(2500).fadeOut();
+                return;
+            }
+        }
+
+
+        // Get Values
+        var vUserName = $('#txtUserName').val();
+        var vUserPassword = $('#txtUserPassword').val();
+
+        // Check User Input
+        if (vUserName != '' && vUserPassword != '') {
+
+            $.post('/Login/CheckLogin/',
+                {
+                    pUserName: vUserName,
+                    pUserPassword: btoa(vUserPassword)
+                },
+                function (data, status) {
+
+                    // JSON
+                    var vDataResult = JSON.parse(data);
+                      // No Message or Error - Login Valid
+                    if (!vDataResult.length) {
+                    console.log(!vDataResult.length)
+
+                        // Go to Home/Index
+                        window.location = "/Home/Index";
+
+                    }
+                    else {
+
+                        // GET LOGIN RESULT CODE
+                        var vLoginResultCode = vDataResult[0];
+                        // GET LOGIN RESULT MESSAGE
+                        var vLoginResultMessage = vDataResult[1];
+
+                        // Check Code
+                        if (vLoginResultCode == @clsUser.vLoginIsAdmin) {
+
+                            // Admin
+                            window.location = "/CPanel/Admin";
+                        }
+                        else if (vLoginResultCode == @clsUser.vLoginIsLocked) {
+
+                            // Locked
+                            funLoginResultMessageShow(vLoginResultMessage);
+                        }
+                        else if (vLoginResultCode == @clsUser.vLoginIsInValid) {
+
+                            // InValid
+                            funLoginResultMessageShow(vLoginResultMessage);
+                        }
+
+                    }
+
+                    // Login Result Message Show
+                    function funLoginResultMessageShow(pMessage) {
+                        // Message
+                        $('.divResult').text(pMessage);
+                        $('.divResult').fadeIn().delay(3500).fadeOut();
+                    }
+
+                });
+
+        }
+    }
+
+    $('#btnLogin').on('click', function () {
+       // window.location = "/Home/Index";
+        fnLogIn();
+
+    });
+    $("#txtUserPassword,#txtCaptcha").keyup(function (e) {
+        var code = e.which; // recommended to use e.which, it's normalized across browsers
+        if (code == 13) e.preventDefault();
+        if (code == 13) {
+            fnLogIn();
+        }
+    });
+</script>
+
+<!-- Forget Password -->
+<script>
+    $('#btnForgetPassword').on('click', function () {
+
+        // Hide - Login Div
+        $('.divLogin').addClass('d-none');
+        // Show - Forgot Password
+        $('.divForgotPassword').removeClass('d-none');
+
+    });
+
+    // Change Check Box PROP
+    $('#chkPassword').on('change', function () {
+
+        if ($('#chkPassword').is(':checked')) {
+            // ChkPassword Is No Checked
+            $('#chkUserName').prop('checked', false);
+        }
+        else {
+            $('#chkUserName').prop('checked', true);
+        }
+
+    })
+
+    // Change Check Box PROP
+    $('#chkUserName').on('change', function () {
+
+        if ($('#chkUserName').is(':checked')) {
+            // ChkPassword Is No Checked
+            $('#chkPassword').prop('checked', false);
+        }
+        else {
+            $('#chkPassword').prop('checked', true);
+        }
+
+    })
+</script>

@@ -1,0 +1,47 @@
+﻿@{
+    Layout = null;
+}
+<div class="card-body">
+    <div class="row Period" periodId="@ViewBag.PeriodId">
+        <div class="col-md-2">
+            <div class="mt-4">
+
+                <label class=" ">اغلاق  الفترة</label>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div>
+                من تاريخ
+                <input type="datetime" disabled class="form-control" id="DateFrom" value="@ViewBag.DateFrom" readonly>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div>
+                الي تاريخ
+                <input type="datetime" disabled class="form-control" id="DateTo" value="@ViewBag.DateTo" readonly>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="mt-4">
+                <label class=" ">فتح  الفترة</label>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div>
+                من تاريخ
+                <input type="datetime" class="form-control" id="NewDateFrom" value="@ViewBag.OpenDateFrom">
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div>
+                الي تاريخ
+                <input type="datetime" class="form-control" id="NewDateTo" value="@ViewBag.OpenDateTo">
+                @*<input type="date" disabled class="form-control" id="DepDate" value="@(DateTime.Now.ToString("yyyy-MM-dd"))">*@
+            </div>
+        </div>
+    </div>
+</div>
+

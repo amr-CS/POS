@@ -1,0 +1,38 @@
+﻿@using appSERP.Views.Shared.appResource
+@using appSERP.appCode.Setting.Company
+@using appSERP.appCode.Setting.User
+@{
+    Layout = null;
+}
+
+<!-- Is New -->
+@{ bool vIsNew = ViewBag.vbIsNew;}
+<!-- Is New [Permission] -->
+@{ bool vIsNewPermission = ViewBag.vbIsNewPermission;}
+
+<!-- Header -->
+<div class="divViewHeader">
+    <!-- Title -->
+    <div class="row d-flex bd-highlight">
+        <!-- Header Content -->
+        <div class="divViewHeaderTitle col-md-12">
+
+            <div class="p-2 w-100 bd-highlight divViewHeaderTitle">
+                <!-- View Title -->
+                @ViewBag.vbHeaderTitle
+            </div>
+
+            <div class="p-2 flex-shrink-1 bd-highlight">
+                @if (vIsNew && vIsNewPermission)
+                {
+                    <!-- New Button -->
+                    <button type="button" class="btn btn-success text-white btnCreate" data-id="0">
+                        @appResource.btnCreate
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

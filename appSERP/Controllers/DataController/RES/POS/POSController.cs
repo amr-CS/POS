@@ -2444,11 +2444,11 @@ DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pCashierId = null, in
             ViewBag.MealData = _dbInvItem.ItemCostMinMaxData( DateFrom,  DateTo,  ItemId);
             return View();
         }
-
-        public string SendInvoice(int pInvId,int? pOrderId)
+        
+        public string SendInvoice(int pInvId, int? pOrderId)
         {
-            if(pInvId < 1 && pOrderId == null)
-                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("تجربة إعادة إرسال الفاتورة الى الهيئة"));
+            if (pInvId < 1 && pOrderId == null)
+                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("رقم الفاتورة او الطلب غير صحيح"));
             var result = _prepareInvoiceBeforeSendingToZatca.ResendInvoice(pInvId, pOrderId);
             return result;
         }

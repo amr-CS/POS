@@ -17,7 +17,7 @@ namespace appSERP
         {
             app.MapSignalR();
         }
-
+        
 
     }
 }

@@ -255,6 +255,7 @@
         var vDateTo = $('.txtDateTo').val() + ' ' + timeTo;
         // Get Row
         funGetInvoicesData(vDateFrom, vDateTo);
+        //isButtonActive = true;
     }
     function funGetInvoicesData(pDateFrom, pDateTo) {
         var vDataResult;
@@ -277,9 +278,9 @@
                     vDataResult = JSON.parse(data);
                     //funNotification(vDataResult[0].InvCode, 3);
                     $.each(vDataResult, function (m, InvoicesData) {
-                        if (vDataResult[m].IsPassed == '0')
+                        if (vDataResult[m].IsPassed != '1') // if (vDataResult[m].IsPassed == '0')
                             countNotPassed += 1;
-                        //var vRow = funRowInvoices(vDataResult[m]);                       
+                        //var vRow = funRowInvoices(vDataResult[m]);
                         var vRow = funRowInvoices(InvoicesData);
                         // Append Row Content
                         vTableBody.append(vRow);
@@ -290,10 +291,12 @@
                     funEmptyRow(vTableBody);
                     lengthRow = 0;
                 }
-                //funNotification('تمت إرجاع النتائج', 1);
-                funNotification('عدد الفواتير = ' + lengthRow, 1);
+                
                 $('.divUtilityBar').find('.txtCount').val('عدد الفواتير = ' + lengthRow +'  &  الغير مجتازة = ' + countNotPassed);
-                funNotification('عدد الفواتير الغير مجتازة = '+countNotPassed, 3);
+                //funNotification('تمت إرجاع النتائج', 1);
+                //funNotification('عدد الفواتير = ' + lengthRow, 1);
+                //funNotification('عدد الفواتير الغير مجتازة = ' + countNotPassed, 3);
+
             })
     }
 
@@ -306,7 +309,7 @@
         vbtnResendBackground = "color:white"
         if (pRow.IsPassed == 1 || pRow.IsPassed == 'true') {
             vColorClass = "clsColorGreen"
-            vbtnResendDisabled = "disabled"            
+            vbtnResendDisabled = "disabled"
         }
         else {
             vColorClass = "clsColorRed"
@@ -347,7 +350,16 @@
 
     }
 
+    var isButtonActive = true;
     $('body').on('click', '.btnResend', function () {
+        $('#loading').show();
+
+        if (!isButtonActive) {
+            $('#loading').hide();
+            return; // تجاهل النقرات الإضافية إذا كان الزر غير نشط
+        }
+        isButtonActive = false; // تعطيل الزر
+
         //var vInvId = $(this).closest('tr').attr('data-id');
         var vInvId = $(this).attr('data-id');
         //funNotification(vInvId, 3);
@@ -356,7 +368,7 @@
         //var vOrderId = $(this).closest('tr').find('.txtOrderId').val()
         //var vElement = $(this).closest('tr')
         //var vOrderId = vElement.find('.txtOrderId').val();
-       
+
         if (window.navigator.onLine == false) {
             funNotification('الانترنت لا يعمل', 3);
             return
@@ -366,24 +378,54 @@
             funNotification('من فضلك إنتظر', 2);
 
             // Send
-            $.get('/POS/sendInvoice',
-                {
+            //$.get('/POS/sendInvoice',
+            //    {
+            //        pInvId: vInvId,
+            //        pOrderId: vOrderId
+            //    }, function (data) {
+            //        console.log(data)
+            //        if (data != undefined || data != null || data != '') {
+            //            var vResultData = JSON.parse(data);
+            //            if (vResultData[0].SuccessStatus) {
+            //                funNotification(vResultData[0].SystemMessageText, 1);
+            //                funSearchData();
+            //            }
+            //            else
+            //                funNotification(vResultData[0].SystemMessageText, 3);
+            //        }
+            //        $('#loading').hide();
+            //});
+            
+
+            $.ajax({
+                url: '/POS/sendInvoice',
+                type: 'GET',
+                data: {
                     pInvId: vInvId,
                     pOrderId: vOrderId
-                }, function (data) {
-                    console.log(data)
+                },
+                async: false, // جعل الاستدعاء متزامنًا
+                success: function (data) {
+                    console.log(data);
                     if (data != undefined || data != null || data != '') {
                         var vResultData = JSON.parse(data);
                         if (vResultData[0].SuccessStatus) {
                             funNotification(vResultData[0].SystemMessageText, 1);
                             funSearchData();
-                        }
-                        else
+                        } else {
                             funNotification(vResultData[0].SystemMessageText, 3);
+                        }
                     }
-                });
-        }
+                    $('#loading').hide();
+                }
+            });           
 
+        }
+        setTimeout(function () {
+            isButtonActive = true; // تفعيل الزر
+        }, 2000);
+        //isButtonActive = true; // تفعيل الزر
+        $('#loading').hide();
     });
 
 

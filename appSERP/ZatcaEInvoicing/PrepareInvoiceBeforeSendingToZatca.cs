@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace appSERP.ZatcaEInvoicing
 {
@@ -29,22 +28,60 @@ namespace appSERP.ZatcaEInvoicing
             _api = api;
         }
 
-        // دالة إعادة ارسال الفاتورة الى الهيئة للموافقة عليها\
+        // دالة إعادة ارسال الفاتورة الى الهيئة للموافقة عليها
         public string ResendInvoice(int pInvId, int? pOrderId)
         {
-            InvoiceResponseDto dto = new InvoiceResponseDto();
-            if (pOrderId != null && pOrderId > 0)
-                dto = SendToZatcaOrder((int)pOrderId);
-            else
+            // نتحقق من الفاتورة انه تم مصادقتها
+            var json = _dbINVInvoice.funInvoiceOrderOrPOS(pInvId: pInvId, pQueryTypeId: 401).ToString();
+            if(string.IsNullOrWhiteSpace(json) || json.Trim().Length<1)
+                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("لا يوجد فاتورة بهذا الرقم"));
+            var dtpInv = JsonConvert.DeserializeObject<DataTable>(json);
+            bool isPassed = Convert.ToBoolean(dtpInv.Rows[0].Field<bool>("IsPassed").ToString());
+            //return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت إرسالها سابقا"));
+            if (isPassed == false)
             {
-                DataTable dt = GetInvoicePOSData(pInvId);
-                dto = _SendToZatcaPOS(pInvId, dt);
+                InvoiceResponseDto dto = new InvoiceResponseDto();
+                if (pOrderId != null && pOrderId > 0)
+                    dto = SendToZatcaOrder((int)pOrderId);
+                else
+                {
+                    DataTable dt = GetInvoicePOSData(pInvId);
+                    dto = _SendToZatcaPOS(pInvId, dt);
+                }
+                if (dto.isSuccess)
+                    return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت الإعادة بنجاح"));
+                else
+                    return SystemMessageCode.ToJSON(SystemMessageCode.GetError("فشلت العملية"));
             }
-            if(dto.status=="passed")
-            return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت الإعادة بنجاح"));
             else
-                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("فشلت العملية"));
+                return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تم إجتياز الفاتورة مسبقا"));
 
+        }
+        // test
+        public string ResendInvoiceTest(int pInvId, int? pOrderId)
+        {
+            string str = SendDelayTest();
+            return str;
+        }
+        //public string ResendInvoiceTest(int pInvId, int? pOrderId)
+        //{
+        //    string str= SendDelayTest().Result;
+        //    return str;
+        //}
+        //private async Task<string> SendDelayTest()
+        //{
+        //    await Task.Delay(5000);// 60000 , 120000
+        //    return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت الإعادة بنجاح يا بدش"));
+        //}
+        private string SendDelayTest()
+        {
+            //BackgroundJob.Enqueue(() => DelayedMethod());
+            return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت الإعادة بنجاح يا بدش"));
+        }
+        public async Task DelayedMethod()
+        {
+            await Task.Delay(TimeSpan.FromMinutes(5));
+            // العملية المؤجلة التي تحتاج للتنفيذ بعد فترة زمنية
         }
         #region Send Invoice POS To Zatca
         private DataTable GetInvoicePOSData(int InvId)
@@ -52,21 +89,21 @@ namespace appSERP.ZatcaEInvoicing
             DataTable Data = _dbInvItem.funInvItemGET(InvId, null);
             return Data;
         }
-        
+
         public void SendToZatcaPOS(DataTable dataTable)
         {
             //Task.Run(async()=> await Task.Delay(120000));
             int InvId = Convert.ToInt32(dataTable.Rows[0].Field<int>("InvId").ToString());
-            _SendToZatcaPOS(InvId,dataTable);
+            _SendToZatcaPOS(InvId, dataTable);
 
         }
-        private InvoiceResponseDto _SendToZatcaPOS(int InvId,DataTable dataTable)
+        private InvoiceResponseDto _SendToZatcaPOS(int InvId, DataTable dataTable)
         {
-            var TokenDb = dataTable.Rows[0].Field<string>("LinkProApi").ToString();           
+            var TokenDb = dataTable.Rows[0].Field<string>("LinkProApi").ToString();
             InvoiceCreateRequest obj = SetZatcaInvoicePOSValues(dataTable);
             InvoiceResponseDto dto = SendInvoice(TokenDb, obj);
-            string responseJson = "";
-            if (dto.status== "passed")
+            string responseJson = string.Empty;
+            if (dto.isSuccess)
             {
                 responseJson = JsonConvert.SerializeObject(dto);
                 //responseJson = JsonConvert.SerializeObject(dto, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -74,7 +111,7 @@ namespace appSERP.ZatcaEInvoicing
             }
             return dto;
         }
-        void PassedInvoicePOS(int InvId, string responseJson,bool isPassed=true)
+        void PassedInvoicePOS(int InvId, string responseJson, bool isPassed = true)
         {
             // تعديل الموافقة على الفاتورة وإجتيازها
             // تعديل حالة موافقة الضرائب للفاتورة عندنا
@@ -140,7 +177,7 @@ namespace appSERP.ZatcaEInvoicing
                 obj = new InvoiceCreateRequest()
                 {
                     account_id = account_id,
-                    invoice_code = "invoice",
+                    invoice_code = InvoiceCode.InvoiceCodeType(IsReturn), //invoice, credit, debit
                     invoice_pk = InvCode,
                     payment_method = "10",
                     discount_amount = Discount,
@@ -155,7 +192,7 @@ namespace appSERP.ZatcaEInvoicing
                 obj = new InvoiceCreateRequest()
                 {
                     account_id = account_id,
-                    invoice_code = "invoice",
+                    invoice_code = InvoiceCode.InvoiceCodeType(IsReturn),
                     invoice_pk = InvCode,
                     payment_method = "10",
                     discount_amount = Discount,
@@ -176,7 +213,7 @@ namespace appSERP.ZatcaEInvoicing
         public InvoiceResponseDto SendToZatcaOrder(int OrderId)
         {
             DataTable dt = GetInvoiceOrderData(OrderId);
-            return _SendToZatcaOrder(OrderId,dt);
+            return _SendToZatcaOrder(OrderId, dt);
         }
         //public void SendToZatcaOrder(DataTable dataTable)
         //{
@@ -194,8 +231,8 @@ namespace appSERP.ZatcaEInvoicing
             var TokenDb = dataTable.Rows[0].Field<string>("LinkProApi").ToString();
             InvoiceCreateRequest obj = SetZatcaInvoiceOrderValues(dataTable);
             InvoiceResponseDto dto = SendInvoice(TokenDb, obj);
-            string responseJson = "";
-            if (dto.status=="passed")
+            string responseJson = string.Empty;
+            if (dto.isSuccess)
             {
                 responseJson = JsonConvert.SerializeObject(dto);
                 //responseJson = JsonConvert.SerializeObject(dto, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -209,7 +246,7 @@ namespace appSERP.ZatcaEInvoicing
             List<InvoiceItem> itemlst = new List<InvoiceItem>() { };
             string organization = dataTable.Rows[0].Field<string>("organization").ToString();
             string tax_number = dataTable.Rows[0].Field<string>("tax_number").ToString();
-
+            string IsReturn = "false";
             InvoiceCustomer customerLinkPro = new InvoiceCustomer()
             {
                 organization = organization,
@@ -247,7 +284,7 @@ namespace appSERP.ZatcaEInvoicing
                 obj = new InvoiceCreateRequest()
                 {
                     account_id = account_id,
-                    invoice_code = "invoice",
+                    invoice_code = InvoiceCode.InvoiceCodeType(IsReturn), //"invoice",
                     invoice_pk = InvCode,
                     payment_method = "10",
                     discount_amount = Discount,
@@ -262,7 +299,7 @@ namespace appSERP.ZatcaEInvoicing
                 obj = new InvoiceCreateRequest()
                 {
                     account_id = account_id,
-                    invoice_code = "invoice",
+                    invoice_code = InvoiceCode.InvoiceCodeType(IsReturn),//"invoice",
                     invoice_pk = InvCode,
                     payment_method = "10",
                     discount_amount = Discount,
@@ -285,7 +322,6 @@ namespace appSERP.ZatcaEInvoicing
         {
             try
             {
-
                 //await Task.Delay(120000); // تأخير دقيقتين
                 // await Task.Delay(60000); // تأخير دقيقة
                 if (obj.items.Count > 0)
@@ -293,16 +329,18 @@ namespace appSERP.ZatcaEInvoicing
                     //IZatcaEInvoice _api = new ZatcaEInvoiceAPI();
                     var result = Task.Run(() => _api.SendInvoice(TokenDb, obj));
                     InvoiceResponseDto invoiceResponseDto = result.Result;
-                    /*invoiceResponseDto.isSuccess = false;
-                    if (invoiceResponseDto != null && (invoiceResponseDto.statusCode != "200" || invoiceResponseDto.statusCode != "201" || invoiceResponseDto.statusCode != "202")
+                    invoiceResponseDto.isSuccess = false;
+                    if (invoiceResponseDto != null && (invoiceResponseDto.statusCode == "200" || invoiceResponseDto.statusCode == "201" || invoiceResponseDto.statusCode == "202")
                         && invoiceResponseDto.status != "rejected" && invoiceResponseDto.status != "failed")
-                        invoiceResponseDto.isSuccess = true; // (passed - passed with warnings - rejected) - failed*/
+                        invoiceResponseDto.isSuccess = true; // (passed - passed with warnings - rejected) - failed
+                               
                     return invoiceResponseDto;
                 }
                 else
                 {
                     return new InvoiceResponseDto() { isSuccess = false };
                 }
+
             }
             catch (Exception ex)
             {

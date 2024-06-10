@@ -1618,6 +1618,7 @@
     </Compile>
     <Compile Include="ZatcaEInvoicing\LinkPro\ApiHelper.cs" />
     <Compile Include="ZatcaEInvoicing\LinkPro\IZatcaEInvoice.cs" />
+    <Compile Include="ZatcaEInvoicing\LinkPro\Model\InvoiceCode.cs" />
     <Compile Include="ZatcaEInvoicing\LinkPro\Model\InvoiceCustomer.cs" />
     <Compile Include="ZatcaEInvoicing\LinkPro\Model\InvoiceCreateRequest.cs" />
     <Compile Include="ZatcaEInvoicing\LinkPro\Model\InvoiceItem.cs" />

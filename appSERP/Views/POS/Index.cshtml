@@ -364,8 +364,8 @@ else if (Period != false)
                     <button class="btn clsButtonActions btn-block  btn-lg mb-2 btnInsBack orange" @ViewBag.ReturnInvoice>اعادة تأمين<img src="~/Image/POS/reload.png" style="width:20px" /></button>
                     <button class="btn btn-block clsButtonActions  mb-2 btn-lg btnItemAdd orange">اضافات الفاتورة<img src="~/Image/POS/plus.png" style="width:20px" /></button>
 
-                    <button class="btn btn-block clsButtonActions  mb-2 btn-lg btnWait orange">تعليق<img src="~/Image/POS/pause.png" style="width:20px" /></button>
-                    <button class="btn clsButtonActions mb-2 btn-block  btn-lg btnCustomer orange">العملاء <img src="~/Image/POS/user.png" style="width:20px" /></button>
+                    <button class="btn btn-block clsButtonActions mb-2 btn-lg btnWait orange disabled">تعليق<img src="~/Image/POS/pause.png" style="width:20px" /></button>
+                    <button class="btn clsButtonActions mb-2 btn-block btn-lg btnCustomer orange">العملاء <img src="~/Image/POS/user.png" style="width:20px" /></button>
                     @if (ViewBag.tableId == null)
                     {
                         <button class="btn clsButtonActions mb-2 btn-block  btn-lg  btnDeliv orange" value="false">توصيل<img src="~/Image/POS/icons8-delivery-48.png" style="width:20px" /></button>
@@ -1968,7 +1968,7 @@ else if (Period != false)
     // Wait
     $('.btnWait').on('click', function () {
         //
-        Save(true,1);
+       // Save(true,1);
     })
     $('.btnTableSave').on('click', function () {
         //

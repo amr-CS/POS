@@ -35,9 +35,12 @@ namespace appSERP.ZatcaEInvoicing
             var json = _dbINVInvoice.funInvoiceOrderOrPOS(pInvId: pInvId, pQueryTypeId: 401).ToString();
             if(string.IsNullOrWhiteSpace(json) || json.Trim().Length<1)
                 return SystemMessageCode.ToJSON(SystemMessageCode.GetError("لا يوجد فاتورة بهذا الرقم"));
-            var dtpInv = JsonConvert.DeserializeObject<DataTable>(json);
+            var dtpInv = JsonConvert.DeserializeObject<DataTable>(json);           
+            DateTime invDate = Convert.ToDateTime(dtpInv.Rows[0].Field<DateTime>("InvDate").ToString());       
+            if(invDate > DateTime.Now.AddMinutes(-2))
+             return SystemMessageCode.ToJSON(SystemMessageCode.GetError("انتظر دقيقتين ثم أعد إرسالها لإنها فاتورة جديدة"));
+
             bool isPassed = Convert.ToBoolean(dtpInv.Rows[0].Field<bool>("IsPassed").ToString());
-            //return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت إرسالها سابقا"));
             if (isPassed == false)
             {
                 InvoiceResponseDto dto = new InvoiceResponseDto();
@@ -147,6 +150,7 @@ namespace appSERP.ZatcaEInvoicing
 
             foreach (DataRow item in dataTable.Rows)
             {
+                // فاتورة كاشير فقط إرسال الاصناف للضريبة بدون التأمين والاضافات
                 if (item["ItemType"].ToString() == "1")
                 {
                     itemlst.Add(
@@ -261,7 +265,8 @@ namespace appSERP.ZatcaEInvoicing
 
             foreach (DataRow item in dataTable.Rows)
             {
-                if (item["CategoryId"].ToString() != item["PlateCode"].ToString())
+                // فاتورة طلب فقط إرسال الاصناف للضريبة بدون التأمين
+                if (item["CategoryId"].ToString() != item["PlateCode"].ToString())  
                 {
                     itemlst.Add(
                      new InvoiceItem()
@@ -329,9 +334,11 @@ namespace appSERP.ZatcaEInvoicing
                     //IZatcaEInvoice _api = new ZatcaEInvoiceAPI();
                     var result = Task.Run(() => _api.SendInvoice(TokenDb, obj));
                     InvoiceResponseDto invoiceResponseDto = result.Result;
+                    invoiceResponseDto.status = invoiceResponseDto.status.ToLower();
                     invoiceResponseDto.isSuccess = false;
                     if (invoiceResponseDto != null && (invoiceResponseDto.statusCode == "200" || invoiceResponseDto.statusCode == "201" || invoiceResponseDto.statusCode == "202")
-                        && invoiceResponseDto.status != "rejected" && invoiceResponseDto.status != "failed")
+                        && invoiceResponseDto.qrcode != null && string.IsNullOrWhiteSpace(invoiceResponseDto.qrcode) == false
+                        && invoiceResponseDto.status != "rejected"  && invoiceResponseDto.status != "error" && invoiceResponseDto.status != "failed")
                         invoiceResponseDto.isSuccess = true; // (passed - passed with warnings - rejected) - failed
                                
                     return invoiceResponseDto;

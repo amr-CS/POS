@@ -421,7 +421,7 @@
                             <label class="control-label">رقم الحساب</label>
                         </div>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control form-control-sm" id="txtAccount_id" />
+                            <input type="text" class="form-control form-control-sm" id="txtAccountId" data-id="0" />
                         </div>
                     </div>
                 </div>
@@ -1265,7 +1265,7 @@
         var pLengthPeriodDay = $('#txtLengthPeriodDay').val()
         var pOrderEmp = $('#txtOrderEmp').val()
         var pBranchAddress = $('#txtBranchAddress').val()
-        var pAccountId = $('#txtAccount_id').val()
+        var pAccountId = $('#txtAccountId').val()
         var pLinkProApi = $('#txtLinkProApi').val()
         var pOrderPhone = $('#txtOrderPhone').val()
         var pBranchPhoneOrder = $('#txtBranchPhoneOrder').val()
@@ -1539,7 +1539,7 @@
         $('#txtBranchPhoneOrder').val(pBranchSetting.BranchPhoneOrder)
         $('#txtDefaultLocationDelivery').attr('data-id', pBranchSetting.DefaultLocationDelivery)
 
-        $('#txtAccount_id').val(pBranchSetting.account_id)
+        $('#txtAccountId').val(pBranchSetting.account_id)
         $('#txtLinkProApi').val(pBranchSetting.LinkProApi)
 
         
@@ -2902,7 +2902,9 @@
                     $('#txtDeliveryTrans').val(vDataJSON[0].DeliveryTrans);
                         $('#txtCompanyId').val(vDataJSON[0].BranchId);
                         $('#txtBranchDesc').val(vDataJSON[0].BranchDesc);
-                        $('#txtBranchDescL').val(vDataJSON[0].BranchDescL);
+                    $('#txtBranchDescL').val(vDataJSON[0].BranchDescL);
+                    $('#txtAccountId').val(vDataJSON[0].account_id);
+                    $('#txtLinkProApi').val(vDataJSON[0].LinkProApi);
                     $('#txtQtyPlateRice').val(vDataJSON[0].QtyPlateRice);
                     $('#txtPlateCode').val(vDataJSON[0].CatPlate);
                     $('#txtPlateCode').attr('data-id', vDataJSON[0].PlateCode);

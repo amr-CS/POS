@@ -3,6 +3,7 @@
     ViewBag.Title = "SimplePOSHtmlReport";
     Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
     DataTable Data = ViewBag.MealData;
+
     var CashData = Data.AsEnumerable().Select(x => new { col1 = x["CashName"].ToString() }).ToList().Distinct();
 
     double TotalAll = 0;

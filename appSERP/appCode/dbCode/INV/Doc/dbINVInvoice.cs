@@ -1309,13 +1309,11 @@ namespace appSERP.appCode.dbCode.INV.Doc
             return _clsADO.funFillDataTable("inv.POSSearch", vlstParam, "Data GET");
         }
 
-        // يستدعي إجراء مخزن مشترك للفواتير التابعة للكاشير والطلبات بحيث يكون فيه ثلاث دوال او وظائف
-        public object funInvoiceOrderOrPOS(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
-            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pBranchId = null, string pInvCode=null)
+        #region spInvoiceOrderOrPOS
+        
+        private List<SqlParameter> SetParam_spInvoiceOrderOrPOS(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
+            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null)
         {
-            // Declaration 
-            //DataTable vData;
-            // Parameters
             List<SqlParameter> vlstParam = new List<SqlParameter>();
             vlstParam.Add(new SqlParameter("InvId", pInvId));
             vlstParam.Add(new SqlParameter("orderId", pOrderId));
@@ -1324,14 +1322,44 @@ namespace appSERP.appCode.dbCode.INV.Doc
             vlstParam.Add(new SqlParameter("ZatcaResponse", pZatcaResponse));
             vlstParam.Add(new SqlParameter("DateFrom", pDateFrom));
             vlstParam.Add(new SqlParameter("DateTo", pDateTo));
+            vlstParam.Add(new SqlParameter("InvType", pInvType));
             vlstParam.Add(new SqlParameter("BranchId", pBranchId));
             vlstParam.Add(new SqlParameter("QueryTypeId", pQueryTypeId));
 
+            return vlstParam;
+        }
+        private string getProcName_spInvoiceOrderOrPOS => "RES.spInvoiceOrderOrPOS";
+        
+        // يستدعي إجراء مخزن مشترك للفواتير التابعة للكاشير والطلبات بحيث يكون فيه ثلاث دوال او وظائف
+        public object funInvoiceOrderOrPOS(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
+            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null,int? pInvType=null, int? pBranchId = null, string pInvCode=null)
+        {
+            // Declaration 
+            //DataTable vData;
+            // Parameters
+            List<SqlParameter> vlstParam = SetParam_spInvoiceOrderOrPOS(pInvId: pInvId, pOrderId: pOrderId, pInvCode: pInvCode,
+                pIsPassed: pIsPassed, pZatcaResponse: pZatcaResponse, pDateFrom: pDateFrom, pDateTo: pDateTo, pInvType: pInvType
+                , pBranchId: pBranchId, pQueryTypeId: pQueryTypeId);
+
             // vData = _clsADO.funFillDataTable("RES.spInvoiceOrderOrPOS", vlstParam, "Data GET");
             // return vData;
-            return _clsADO.funExecuteScalar("RES.spInvoiceOrderOrPOS", vlstParam, "Data GET");
+            return _clsADO.funExecuteScalar(getProcName_spInvoiceOrderOrPOS, vlstParam, "Data GET");
 
         }
+
+        public DataTable funInvoiceOrderOrPOSDT(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 402
+            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null)
+        {
+            List<SqlParameter> vlstParam = SetParam_spInvoiceOrderOrPOS(pInvId: pInvId, pOrderId: pOrderId, pInvCode: pInvCode,
+                pIsPassed: pIsPassed, pZatcaResponse: pZatcaResponse, pDateFrom: pDateFrom, pDateTo: pDateTo, pInvType: pInvType
+                , pBranchId: pBranchId, pQueryTypeId: pQueryTypeId);
+
+            DataTable vData = _clsADO.funFillDataTable(getProcName_spInvoiceOrderOrPOS, vlstParam, "Data GET");
+            return vData;
+
+        }
+
+        #endregion
 
     }
 }

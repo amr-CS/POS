@@ -32,70 +32,73 @@
     {
         foreach (DataRow item in Data.Rows)
         {
-      
+
             double TotalRow = Convert.ToDouble(item["InvCurValue"].ToString());
-<tr>
-    <td style="text-align: center; vertical-align: middle;">
-        @item["InvId"]
-        <br />
-    </td>
-    <td style="text-align: center; vertical-align: middle;padding-right:20px">
-        @item["OrderId"]
-    </td>
-    <td style="text-align:center; vertical-align: middle; ">
-        @item["CustomerName"]
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">
+                    @item["InvId"]
+                    <br />
+                </td>
+                <td style="text-align: center; vertical-align: middle;padding-right:20px">
+                    @item["OrderId"]
+                </td>
+                <td style="text-align:center; vertical-align: middle; ">
+                    @item["CustomerName"]
 
-    </td>
+                </td>
 
-    <td style="text-align:center; vertical-align: middle; ">
-        @item["InvDate"]
+                <td style="text-align:center; vertical-align: middle; ">
+                    @item["InvDate"]
 
-    </td>
+                </td>
 
 
-    <td style="text-align: center; vertical-align: middle;">
-        @item["CashNameL1"]
+                <td style="text-align: center; vertical-align: middle;">
+                    @item["CashNameL1"]
 
-    </td>
-    <td style="text-align: center; vertical-align: middle;">
-        @item["InvCurValue"]
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    @item["InvCurValue"]
 
-    </td>
-    <td style="text-align: center; vertical-align: middle;">
-        @item["ItemName"]
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    @item["ItemName"]
 
-    </td>
+                </td>
 
-</tr>
-           
+            </tr>
+
             Total = Total + TotalRow;
         }
     }
-<tr class="total">
-    <td style="text-align: center;font:bold; vertical-align: middle;">
-        الاجمالي الكلي:
-        <br />
-    </td>
-    <td style="text-align: center; vertical-align: middle;padding-right:20px">
-    </td>
+    <tr class="total">
+        <td style="text-align: center;font:bold; vertical-align: middle;">
+            الاجمالي الكلي:
+            <br />
+        </td>
+        <td style="text-align: center; vertical-align: middle;padding-right:20px">
+        </td>
 
-    <td style="text-align: center; vertical-align: middle;">
-    </td>
-    <td style="text-align: center; vertical-align: middle;">
-    </td>
+        <td style="text-align: center; vertical-align: middle;">
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+        </td>
 
-    <td style="text-align:center;vertical-align: middle;">
-   
+        <td style="text-align:center;vertical-align: middle;">
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+            @Math.Round(Total, 2, MidpointRounding.ToEven)
 
-    </td>
-    <td style="text-align: center; vertical-align: middle;">
-        @Math.Round(Total, 2, MidpointRounding.ToEven)
+        </td>
 
-    </td>
-
-    <td style="text-align: center; vertical-align: middle;">
-
-    </td>
-</tr>
+        <td style="text-align: center; vertical-align: middle;">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="10" style="text-align: center; vertical-align: middle; font-weight:bolder;color:darkred;font-size:larger">
+            @ViewBag.ExistenceOfData
+        </td>
+    </tr>
 </table>
+
 

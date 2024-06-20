@@ -3,6 +3,7 @@ using appSERP.ZatcaEInvoicing.LinkPro.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace appSERP.ZatcaEInvoicing.LinkPro
     {
         HttpClient client = ApiHelper.ApiClient;
         private async Task<HttpResponseMessage> post(string TokenDb, InvoiceCreateRequest entity)
-        {
+        {         
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", TokenDb);
             HttpResponseMessage response = await client.PostAsJsonAsync("invoices/", entity);
            string s= response.StatusCode.ToString();
@@ -32,6 +33,14 @@ namespace appSERP.ZatcaEInvoicing.LinkPro
         public async Task<InvoiceResponseDto> SendInvoice(string TokenDb, InvoiceCreateRequest entity)
         {
             InvoiceResponseDto result = new InvoiceResponseDto();
+            if (CheckInternetConnection() == false)
+            {
+                result.isSuccess = false;
+                result.statusCode = "800";
+                result.status = "Not Internet";
+                result.note = "لا يوجد اتصال بالإنترنت";
+                return result;
+            }
             try
             {
                 //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", TokenDb);
@@ -48,6 +57,7 @@ namespace appSERP.ZatcaEInvoicing.LinkPro
             catch (Exception)
             {
                 result.statusCode = "900";
+                result.status = "Exception";
                 return result;
                 //throw new ArgumentException("");
             }
@@ -76,7 +86,25 @@ namespace appSERP.ZatcaEInvoicing.LinkPro
                 //throw new ArgumentException("");
             }
         }
-        
-       
+
+
+        static bool CheckInternetConnection()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    using (client.OpenRead("http://clients3.google.com/generate_204"))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }

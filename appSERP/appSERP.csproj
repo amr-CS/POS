@@ -2625,6 +2625,7 @@
     <Content Include="Views\InvoicePaymentOrder\OpeneingBalanceOrder.cshtml" />
     <Content Include="Views\InvoicePaymentOrder\BranchSearch.cshtml" />
     <Content Include="Views\POS\FollowUpOnStatusOfInvoicesWithZatca.cshtml" />
+    <Content Include="Views\POS\InvoicesSentHtmlReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="appCode\dbCode\GD\" />

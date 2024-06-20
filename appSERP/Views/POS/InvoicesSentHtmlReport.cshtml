@@ -1,0 +1,106 @@
+﻿
+
+@using System.Data;
+
+@{
+    //ViewBag.Title = "الفواتير المرسلة الى الهيئة ";
+    ViewBag.Title = ViewBag.ReportName;
+    Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
+    DataTable Data = ViewBag.vDT;
+    if (Data != null)
+    {
+        DataRow DRow = Data.Rows[0];
+    }
+    double Total = 0;
+    double TotalTax = 0;
+    double TotalSales = 0;
+    double TotalVatTotal = 0;
+}
+
+
+<table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+    <thead style="">
+        <tr>
+            <th>رقم الفاتورة </th>
+            <th>@ViewBag.SecondColumn</th>
+            <th>التاريخ </th>
+            <th>مبلغ الفاتورة </th>
+            <th>الضريبة</th>
+            <th width="30%">الصنف </th>
+        </tr>
+    </thead>
+    @if (Data != null)
+    {
+        foreach (DataRow item in Data.Rows)
+        {
+
+            double TotalRow = Convert.ToDouble(item["TotalInvoiceBeforeTax"].ToString());
+            double TotalTaxRow = Convert.ToDouble(item["Tax"].ToString());
+<tr>
+    <td style="text-align: center; vertical-align: middle;">
+        @item["InvCode"]
+        <br />
+    </td>
+    <td style="text-align: center; vertical-align: middle;padding-right:20px">
+        @*@item["OrderId"]*@
+        @item[ViewBag.SecondColumnDB]
+    </td>
+
+
+    <td style="text-align:center; vertical-align: middle; ">
+        @item["InvDate"]
+
+    </td>
+
+
+    <td style="text-align: center; vertical-align: middle;">
+        @item["TotalInvoiceBeforeTax"]
+
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+        @item["Tax"]
+
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+        @item["ItemName"]
+
+        </td>
+
+</tr>
+
+            Total = Total + TotalRow;
+            TotalTax = TotalTax + TotalTaxRow;
+        }
+    }
+    <tr class="total">
+        <td colspan="3" style="text-align: center; font: bold; vertical-align: middle; font-weight: bolder; font-size: larger;">
+            الاجمالي الكلي :
+            <br />
+        </td>
+        @*<td style="text-align: center; vertical-align: middle;padding-right:20px">
+        </td>
+
+        <td style="text-align: center; vertical-align: middle;">
+        </td>*@
+        <td style="text-align: center; vertical-align: middle; font-weight:bolder;font-size:larger;">
+            @Math.Round(Total, 2, MidpointRounding.ToEven)
+        </td>
+
+        <td style="text-align: center; vertical-align: middle; font-weight: bolder; font-size: larger; color: black">
+            @Math.Round(TotalTax, 2, MidpointRounding.ToEven)
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+            
+
+        </td>
+
+      
+    </tr>
+    <tr>
+        <td colspan="10" style="text-align: center; vertical-align: middle; font-weight:bolder;color:darkred;font-size:larger">
+            @ViewBag.ExistenceOfData
+        </td>
+    </tr>
+</table>
+
+

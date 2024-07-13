@@ -492,10 +492,11 @@ namespace appSERP.Controllers.DataAPI.INV.Doc
 
         // BH
         [HttpGet]
-        public object funInvoiceOrderOrPOS(DateTime pDateFrom , DateTime pDateTo, int pBranchId, string pInvCode = null)
+        public object funInvoiceOrderOrPOS(DateTime pDateFrom , DateTime pDateTo, int pBranchId, string pInvCode = null, bool? pIsPassed=null)
         {
             object vData = _dbINVInvoice.funInvoiceOrderOrPOS(
                 pDateFrom: pDateFrom, pDateTo: pDateTo, pBranchId: pBranchId, pInvCode: pInvCode, pQueryTypeId: 400
+                , pIsPassed: pIsPassed
                 );
 
             return vData;

@@ -11,8 +11,10 @@
     {
         DataRow DRow = Data.Rows[0];
     }
+    int index = 1;
     double Total = 0;
     double TotalTax = 0;
+    double TotalDiscount = 0;
     double TotalSales = 0;
     double TotalVatTotal = 0;
 }
@@ -21,11 +23,13 @@
 <table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
     <thead style="">
         <tr>
+            <th>م</th>
             <th>رقم الفاتورة </th>
             <th>@ViewBag.SecondColumn</th>
             <th>التاريخ </th>
             <th>مبلغ الفاتورة </th>
             <th>الضريبة</th>
+            <th>الخصم</th>
             <th width="30%">الصنف </th>
         </tr>
     </thead>
@@ -34,9 +38,13 @@
         foreach (DataRow item in Data.Rows)
         {
 
-            double TotalRow = Convert.ToDouble(item["TotalInvoiceBeforeTax"].ToString());
-            double TotalTaxRow = Convert.ToDouble(item["Tax"].ToString());
+            double TotalRow = Convert.ToDouble(item["TotalAfterDiscount"].ToString());
+            double TotalTaxRow = Convert.ToDouble(item["TaxAfterDiscount"].ToString());
+            double TotalDiscountRow = Convert.ToDouble(item["DiscountBeforeVAT"].ToString());
 <tr>
+    <td style="text-align: center; vertical-align: middle;">
+        @index
+    </td>
     <td style="text-align: center; vertical-align: middle;">
         @item["InvCode"]
         <br />
@@ -54,48 +62,56 @@
 
 
     <td style="text-align: center; vertical-align: middle;">
-        @item["TotalInvoiceBeforeTax"]
+        @item["TotalAfterDiscount"]
 
     </td>
     <td style="text-align: center; vertical-align: middle;">
-        @item["Tax"]
+        @item["TaxAfterDiscount"]
+
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+        @item["DiscountBeforeVAT"]
 
     </td>
     <td style="text-align: center; vertical-align: middle;">
         @item["ItemName"]
 
-        </td>
+    </td>
 
 </tr>
-
+            index += 1;
             Total = Total + TotalRow;
             TotalTax = TotalTax + TotalTaxRow;
+            TotalDiscount = TotalDiscount + TotalDiscountRow;
         }
     }
-    <tr class="total">
-        <td colspan="3" style="text-align: center; font: bold; vertical-align: middle; font-weight: bolder; font-size: larger;">
-            الاجمالي الكلي :
-            <br />
-        </td>
-        @*<td style="text-align: center; vertical-align: middle;padding-right:20px">
+<tr class="total" style="font-weight: bolder; font-size: larger;">
+    <td colspan="4" style="text-align: center; font: bold; vertical-align: middle;">
+        الاجمالي الكلي :
+        <br />
+    </td>
+    @*<td style="text-align: center; vertical-align: middle;padding-right:20px">
         </td>
 
         <td style="text-align: center; vertical-align: middle;">
         </td>*@
-        <td style="text-align: center; vertical-align: middle; font-weight:bolder;font-size:larger;">
-            @Math.Round(Total, 2, MidpointRounding.ToEven)
-        </td>
+    <td style="text-align: center; vertical-align: middle; ">
+        @Math.Round(Total, 2, MidpointRounding.ToEven)
+    </td>
 
-        <td style="text-align: center; vertical-align: middle; font-weight: bolder; font-size: larger; color: black">
-            @Math.Round(TotalTax, 2, MidpointRounding.ToEven)
-        </td>
-        <td style="text-align: center; vertical-align: middle;">
-            
+    <td style="text-align: center; vertical-align: middle;">
+        @Math.Round(TotalTax, 2, MidpointRounding.ToEven)
+    </td>
 
-        </td>
+    <td style="text-align: center; vertical-align: middle;"> @*font-weight: bolder; font-size: larger; color: black*@
+        @Math.Round(TotalDiscount, 2, MidpointRounding.ToEven)
+    </td>
 
-      
-    </tr>
+    <td style="text-align: center; vertical-align: middle;">
+    </td>
+
+
+</tr>
     <tr>
         <td colspan="10" style="text-align: center; vertical-align: middle; font-weight:bolder;color:darkred;font-size:larger">
             @ViewBag.ExistenceOfData

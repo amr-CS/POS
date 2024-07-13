@@ -1312,13 +1312,13 @@ namespace appSERP.appCode.dbCode.INV.Doc
         #region spInvoiceOrderOrPOS
         
         private List<SqlParameter> SetParam_spInvoiceOrderOrPOS(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
-            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null)
+            , string pZatcaResponse = null, bool? pIsPassed = null, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null)
         {
             List<SqlParameter> vlstParam = new List<SqlParameter>();
             vlstParam.Add(new SqlParameter("InvId", pInvId));
             vlstParam.Add(new SqlParameter("orderId", pOrderId));
             vlstParam.Add(new SqlParameter("InvCode", pInvCode));
-            vlstParam.Add(new SqlParameter("IsPassed", pIsPassed ?? true));
+            vlstParam.Add(new SqlParameter("IsPassed", pIsPassed));
             vlstParam.Add(new SqlParameter("ZatcaResponse", pZatcaResponse));
             vlstParam.Add(new SqlParameter("DateFrom", pDateFrom));
             vlstParam.Add(new SqlParameter("DateTo", pDateTo));
@@ -1332,7 +1332,7 @@ namespace appSERP.appCode.dbCode.INV.Doc
         
         // يستدعي إجراء مخزن مشترك للفواتير التابعة للكاشير والطلبات بحيث يكون فيه ثلاث دوال او وظائف
         public object funInvoiceOrderOrPOS(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
-            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null,int? pInvType=null, int? pBranchId = null, string pInvCode=null)
+            , string pZatcaResponse = null, bool? pIsPassed = null, DateTime? pDateFrom = null, DateTime? pDateTo = null,int? pInvType=null, int? pBranchId = null, string pInvCode=null)
         {
             // Declaration 
             //DataTable vData;
@@ -1348,7 +1348,7 @@ namespace appSERP.appCode.dbCode.INV.Doc
         }
 
         public DataTable funInvoiceOrderOrPOSDT(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 402
-            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null)
+            , string pZatcaResponse = null, bool? pIsPassed = null, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null)
         {
             List<SqlParameter> vlstParam = SetParam_spInvoiceOrderOrPOS(pInvId: pInvId, pOrderId: pOrderId, pInvCode: pInvCode,
                 pIsPassed: pIsPassed, pZatcaResponse: pZatcaResponse, pDateFrom: pDateFrom, pDateTo: pDateTo, pInvType: pInvType

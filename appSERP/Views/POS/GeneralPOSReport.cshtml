@@ -319,7 +319,7 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="d-flex txtProdLine">
-                            <input class="timeFrom" type="time" name="appt-time" value="04:00">
+                            <input class="timeFrom" type="time" name="appt-time" step="1" value="04:00">
 
                             <input type="date" class="form-control dtpDateFrom" value="@dateTimeFrom.ToString("yyyy-MM-dd")" />
 
@@ -332,7 +332,7 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="d-flex ">
-                            <input class="timeTo" type="time" value="04:00" />
+                            <input class="timeTo" type="time" step="1" value="04:00" />
 
                             <input type="date" class="form-control dtpDateTo" value="@dateTimeTo.ToString("yyyy-MM-dd")" />
 
@@ -980,6 +980,11 @@
                         var url = '/POS/InvoicesSentHtmlReport?type_is_invoice=' + true + '&&pDateFrom=' + DateFrom+ '&&pDateTo=' + DateTo + '&&branchId=' + branch
                         window.open(url);
                     }
+                    //else if ($('#chkInvoicesSent').prop('checked')) {
+
+                    //    var url = '/POS/ExportToExcel?type_is_invoice=' + true + '&&pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&branchId=' + branch
+                    //    window.open(url);
+                    //}
                     else if ($('#chkReturnSent').prop('checked')) {
                         var url = '/POS/InvoicesSentHtmlReport?type_is_invoice=' + false + '&&pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&branchId=' + branch
                         var popupWindow = window.open(url);

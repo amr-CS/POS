@@ -42,6 +42,7 @@ using appSERP.ZatcaEInvoicing.LinkPro.Model;
 using appSERP.ZatcaEInvoicing;
 using appSERP.Utils;
 using appSERP.appCode.Setting.Company;
+using OfficeOpenXml;
 
 namespace appSERP.Controllers.DataController.RES.POS
 {
@@ -879,7 +880,8 @@ namespace appSERP.Controllers.DataController.RES.POS
             string Vat = dataRow["Vat"].ToString();
             string EncodData = InvoiceQR.encodeQrText(CompanyName, VatCode, Date, Total, Vat);
             ViewBag.ImgPath = GenerateQRCode(EncodData);
-            PrintKHtml(Data);
+            //PrintKHtml(Data);
+            Task.Run(() => PrintKHtml(Data));
             Task.Run(() => _prepareInvoiceBeforeSendingToZatca.SendToZatcaPOS(Data));
             return PartialView();
         }
@@ -1401,7 +1403,7 @@ namespace appSERP.Controllers.DataController.RES.POS
             {
                 DataRow dataRow = vDT.Rows[0];
                 ViewBag.vDT = vDT;
-                
+
                 ViewBag.CompanyBranchNameL2 = dataRow["CompanyBranchNameL2"];
                 ViewBag.CompanyBranchNameL1 = dataRow["CompanyBranchNameL1"];
                 ViewBag.CompanyBranchTel = dataRow["CompanyBranchTel"];
@@ -1420,7 +1422,7 @@ namespace appSERP.Controllers.DataController.RES.POS
             {
                 DataRow dataRow = vDT.Rows[0];
                 ViewBag.vDT = vDT;
-                
+
                 ViewBag.CompanyBranchNameL2 = dataRow["CompanyBranchNameL2"];
                 ViewBag.CompanyBranchNameL1 = dataRow["CompanyBranchNameL1"];
                 ViewBag.CompanyBranchTel = dataRow["CompanyBranchTel"];
@@ -1440,7 +1442,7 @@ namespace appSERP.Controllers.DataController.RES.POS
             {
                 DataRow dataRow = vDT.Rows[0];
                 ViewBag.vDT = vDT;
-                
+
                 ViewBag.CompanyBranchNameL2 = dataRow["CompanyBranchNameL2"];
                 ViewBag.CompanyBranchNameL1 = dataRow["CompanyBranchNameL1"];
                 ViewBag.CompanyBranchTel = dataRow["CompanyBranchTel"];
@@ -1512,6 +1514,7 @@ namespace appSERP.Controllers.DataController.RES.POS
                 invType = 34; // الفواتير المرتجعة التي يسمح إجتيازها الى الهيئة
             string ExistenceOfData = "";
             DataTable vDT = _dbINVInvoice.funInvoiceOrderOrPOSDT(pDateFrom: pDateFrom, pDateTo: pDateTo, pInvType: invType, pBranchId: branchId);
+            
             if (vDT.Rows.Count > 0)
             {
                 ViewBag.vDT = vDT;
@@ -1542,6 +1545,31 @@ namespace appSERP.Controllers.DataController.RES.POS
             ViewBag.DateFrom = pDateFrom;
             return View();
         }
+        public ActionResult ExportToExcel(bool type_is_invoice = true, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? branchId = null)
+        {
+            int invType = 33;
+            if (type_is_invoice == false)
+                invType = 34; // الفواتير المرتجعة التي يسمح إجتيازها الى الهيئة
+            DataTable dataTable = _dbINVInvoice.funInvoiceOrderOrPOSDT(pDateFrom: pDateFrom, pDateTo: pDateTo, pInvType: invType, pBranchId: branchId);
+
+            string Worksheets = "Sheet1";
+            string fileNamePrefix = "Invoices";
+            Worksheets = fileNamePrefix;
+            var excludedColumns = new List<string> { "IsPassed", "InvStatus", "TotalInvoiceBeforeTax", "invRef" }; // قائمة الأعمدة المراد استثناؤها
+            var excelBytes = ExportToFiles.ToExcel(dataTable, excludedColumns, Worksheets);
+
+            // Set the response headers
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            //Response.AddHeader("Content-Disposition", "attachment; filename=ExportedData.xlsx");
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + fileNamePrefix + "Data_" + DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss") + ".xlsx");
+            Response.AddHeader("Content-Length", excelBytes.Length.ToString());
+
+            // Write the Excel file to the response
+            Response.BinaryWrite(excelBytes);
+
+            return new EmptyResult();
+        }
 
         #endregion
         public ActionResult SimplePOSInsuranceHtmlReport(
@@ -1551,7 +1579,7 @@ namespace appSERP.Controllers.DataController.RES.POS
             if (vDT.Rows.Count > 0)
             {
                 DataRow dataRow = vDT.Rows[0];
-                ViewBag.vDT = vDT;                
+                ViewBag.vDT = vDT;
                 ViewBag.CompanyBranchNameL2 = dataRow["CompanyBranchNameL2"];
                 ViewBag.CompanyBranchNameL1 = dataRow["CompanyBranchNameL1"];
                 ViewBag.CompanyBranchTel = dataRow["CompanyBranchTel"];
@@ -1569,7 +1597,7 @@ namespace appSERP.Controllers.DataController.RES.POS
             {
                 DataRow dataRow = vDT.Rows[0];
                 ViewBag.vDT = vDT;
-               
+
                 ViewBag.CompanyBranchNameL2 = dataRow["CompanyBranchNameL2"];
                 ViewBag.CompanyBranchNameL1 = dataRow["CompanyBranchNameL1"];
                 ViewBag.CompanyBranchTel = dataRow["CompanyBranchTel"];
@@ -1598,7 +1626,7 @@ DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pCashierId = null, in
             {
                 DataRow dataRow = vDT.Rows[0];
                 ViewBag.vDT = vDT;
-                
+
                 ViewBag.CompanyBranchNameL2 = dataRow["CompanyBranchNameL2"];
                 ViewBag.CompanyBranchNameL1 = dataRow["CompanyBranchNameL1"];
                 ViewBag.CompanyBranchTel = dataRow["CompanyBranchTel"];
@@ -2504,6 +2532,101 @@ DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pCashierId = null, in
             return View();
         }
 
+        // تصدير اكسل في شاشة الهيئة حسب نتيجة البحث
+        public ActionResult ExportToExcelFollowUpOnStatusOfInvoicesWithZatca(DateTime pDateFrom, DateTime pDateTo, int branchId, string pInvCode = null, bool? pIsPassed = null)
+        {            
+            var json = _dbINVInvoice.funInvoiceOrderOrPOS(pDateFrom: pDateFrom, pDateTo: pDateTo, pIsPassed: pIsPassed, pInvCode: pInvCode, pBranchId: branchId, pQueryTypeId:400).ToString();
+            DataTable dataTable = JsonConvert.DeserializeObject<DataTable>(json);
+            string Worksheets = "Sheet1";
+            string fileNamePrefix = "FollowUpOnStatusOfInvoicesWithZatca";
+            //Worksheets = fileNamePrefix;
+            var excludedColumns = new List<string> { "InvId", "OrderId", "IsPassed", "CustomerId", "Tax", "ZatcaResponse", "InvStatus", "CreatedBy", "BranchId" }; // قائمة الأعمدة المراد استثناؤها
+            var excelBytes = ExportToFiles.ToExcel(dataTable, excludedColumns, Worksheets);
+
+            // Set the response headers
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            //Response.AddHeader("Content-Disposition", "attachment; filename=ExportedData.xlsx");
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + fileNamePrefix + "Data_" + DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss") + ".xlsx");
+            Response.AddHeader("Content-Length", excelBytes.Length.ToString());
+
+            // Write the Excel file to the response
+            Response.BinaryWrite(excelBytes);
+
+            return new EmptyResult();
+        }
+        public string SendInvoices(ICollection<UnsentInvoices> invoices)
+        {
+            if (invoices == null || invoices.Count < 1)
+                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("لا يوجد فواتير لكي نجتازها"));
+
+            bool lastSharedStatus = GlobalVariables.SharedStatus;
+            if (lastSharedStatus == true)
+            {
+                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("من فضلك انتظر حتى تعود نتائج الضغطه الاولى من السيرفر"));
+            }
+            else
+            {
+                GlobalVariables.SharedStatus = true;
+                foreach (var item in invoices)
+                {
+                    if (item.pInvId < 1 && item.pOrderId == null)
+                        return SystemMessageCode.ToJSON(SystemMessageCode.GetError("رقم الفاتورة او الطلب غير صحيح"));
+                }
+                StringBuilder messageResult = new StringBuilder();
+                int SuccessStatus = 0;
+                int ErrorStatus = 0;
+                foreach (var item in invoices)
+                {
+                    var resultAPI = SendInvoice(item.pInvId, item.pOrderId);
+                    if (resultAPI.Item1)
+                        SuccessStatus += 1;
+                    else
+                        ErrorStatus += 1;
+                    //await Task.Run(() => Task.Delay(9000));
+                    //resultAPI = SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تم الإرسال بنجاح"));
+                }
+                if (SuccessStatus > 0)
+                    messageResult.Append("عدد الفواتير المجتازة حاليا = " + SuccessStatus);
+
+                if (ErrorStatus > 0)
+                {
+                    messageResult.Append("عدد الفواتير الغير مجتازة حاليا = " + ErrorStatus);
+                    messageResult.Append("هناك فواتير تم رفضها بسبب شروط في نظامنا او من الهيئة يجب إعادة إرسالها");
+                }
+                GlobalVariables.SharedStatus = false;
+                if (SuccessStatus > 0)
+                    return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess(messageResult.ToString()));
+                else
+                    return SystemMessageCode.ToJSON(SystemMessageCode.GetError(messageResult.ToString()));
+
+                //GlobalVariables.SharedStatus = false;
+                //return resultAPI;
+            }
+
+            /* حق التاريخ
+            string lastSharedValue = GlobalVariables.SharedValue;
+            if (string.IsNullOrWhiteSpace(lastSharedValue) == false && Convert.ToDateTime(lastSharedValue) > DateTime.Now.AddMinutes(-3))
+            {
+                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("انتظر ثلاث دقائق ثم أعد إرسالها لإنها فاتورة جديدة"));
+            }
+            else
+            {
+                GlobalVariables.SharedValue = DateTime.Now.ToString();
+                // أكواد التنفيذ
+            }
+
+            */
+
+        }
+        public Tuple<bool, string> SendInvoice(int pInvId, int? pOrderId)
+        {
+            if (pInvId < 1 && pOrderId == null)
+                return Tuple.Create(false,"رقم الفاتورة او الطلب غير صحيح");
+            var result = _prepareInvoiceBeforeSendingToZatca.ResendInvoice(pInvId, pOrderId);
+            return result;
+        }
+        /*
         public string SendInvoice(int pInvId, int? pOrderId)
         {
             if (pInvId < 1 && pOrderId == null)
@@ -2511,7 +2634,7 @@ DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pCashierId = null, in
             var result = _prepareInvoiceBeforeSendingToZatca.ResendInvoice(pInvId, pOrderId);
             return result;
         }
-
+        */
         /*
         #region Send To Zatca
         public void SendToZatca(DataTable dataTable)

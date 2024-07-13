@@ -31,18 +31,20 @@ namespace appSERP.ZatcaEInvoicing
         }
 
         // دالة إعادة ارسال الفاتورة الى الهيئة للموافقة عليها
-        public string ResendInvoice(int pInvId, int? pOrderId)
+        public Tuple<bool, string> ResendInvoice(int pInvId, int? pOrderId)
         {
+            bool SuccessStatus = false;
             // نتحقق من الفاتورة انه تم مصادقتها
             var json = _dbINVInvoice.funInvoiceOrderOrPOS(pInvId: pInvId, pQueryTypeId: 401).ToString();
             if (string.IsNullOrWhiteSpace(json) || json.Trim().Length < 1)
-                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("لا يوجد فاتورة بهذا الرقم"));
-            var dtpInv = JsonConvert.DeserializeObject<DataTable>(json);
-            DateTime invDate = Convert.ToDateTime(dtpInv.Rows[0].Field<DateTime>("InvDate").ToString());
+                //return SystemMessageCode.ToJSON(SystemMessageCode.GetError("لا يوجد فاتورة بهذا الرقم"));
+                return Tuple.Create(SuccessStatus, "لا يوجد فاتورة بهذا الرقم");
+            var dtInv = JsonConvert.DeserializeObject<DataTable>(json);
+            DateTime invDate = Convert.ToDateTime(dtInv.Rows[0].Field<DateTime>("InvDate").ToString());
             if (invDate > DateTime.Now.AddMinutes(-2))
-                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("انتظر دقيقتين ثم أعد إرسالها لإنها فاتورة جديدة"));
+                return Tuple.Create(SuccessStatus, "انتظر دقيقتين ثم أعد إرسالها لإنها فاتورة جديدة");
 
-            bool isPassed = Convert.ToBoolean(dtpInv.Rows[0].Field<bool>("IsPassed").ToString());
+            bool isPassed = Convert.ToBoolean(dtInv.Rows[0].Field<bool>("IsPassed").ToString());
             if (isPassed == false)
             {
                 InvoiceResponseDto dto = new InvoiceResponseDto();
@@ -54,26 +56,16 @@ namespace appSERP.ZatcaEInvoicing
                     dto = _SendToZatcaPOS(pInvId, dt);
                 }
                 if (dto.isSuccess)
-                    return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت الإعادة بنجاح"));
+                    return Tuple.Create(true, "تمت الإعادة بنجاح");
                 else
-                    return SystemMessageCode.ToJSON(SystemMessageCode.GetError("فشلت العملية"));
+                    return Tuple.Create(SuccessStatus, "فشلت العملية");
             }
             else
-                return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تم إجتياز الفاتورة مسبقا"));
+                return Tuple.Create(true, "تم إجتياز الفاتورة مسبقا");
 
         }
 
 
-        private string SendDelayTest()
-        {
-            //BackgroundJob.Enqueue(() => DelayedMethod());
-            return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت الإعادة بنجاح يا بدش"));
-        }
-        public async Task DelayedMethod()
-        {
-            await Task.Delay(TimeSpan.FromMinutes(5));
-            // العملية المؤجلة التي تحتاج للتنفيذ بعد فترة زمنية
-        }
         #region Send Invoice POS To Zatca
         private DataTable GetInvoicePOSData(int InvId)
         {
@@ -329,7 +321,7 @@ namespace appSERP.ZatcaEInvoicing
                     invoiceResponseDto.isSuccess = false;
                     if (invoiceResponseDto != null && (invoiceResponseDto.statusCode == "200" || invoiceResponseDto.statusCode == "201" || invoiceResponseDto.statusCode == "202")
                         && invoiceResponseDto.qrcode != null && string.IsNullOrWhiteSpace(invoiceResponseDto.qrcode) == false
-                        && invoiceResponseDto.status != "rejected" && invoiceResponseDto.status != "error" && invoiceResponseDto.status != "failed")
+                        && string.IsNullOrWhiteSpace(invoiceResponseDto.status) != true && invoiceResponseDto.status != "rejected" && invoiceResponseDto.status != "error" && invoiceResponseDto.status != "failed")
                         invoiceResponseDto.isSuccess = true; // (passed - passed with warnings - rejected) - failed
 
                     return invoiceResponseDto;

@@ -96,6 +96,15 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=7.2.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.7.2.1\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=6.1.1.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.6.1.1\lib\net35\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing, Version=6.1.1.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.System.Drawing.6.1.1\lib\net35\EPPlus.System.Drawing.dll</HintPath>
+    </Reference>
     <Reference Include="FastMember, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FastMember.1.5.0\lib\net461\FastMember.dll</HintPath>
     </Reference>
@@ -1050,6 +1059,7 @@
     <Compile Include="Models\RES\ResEmployeeModel.cs" />
     <Compile Include="Models\RES\ResOrderDtl.cs" />
     <Compile Include="Models\RES\SupplierMenuModel.cs" />
+    <Compile Include="Models\RES\UnsentInvoices.cs" />
     <Compile Include="Models\RES\VehicleDriverModel.cs" />
     <Compile Include="Models\RES\VehicleModel.cs" />
     <Compile Include="Models\sampleDb.Context.cs">
@@ -1453,9 +1463,9 @@
     </Compile>
     <Compile Include="Reports\ProductionContentReport.cs">
       <DependentUpon>ProductionContentReport.rpt</DependentUpon>
-      <SubType>Component</SubType>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\ProductionOrderReport.cs">
       <SubType>Component</SubType>
@@ -1485,10 +1495,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\rptDamageProduct.cs">
-      <SubType>Component</SubType>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>rptDamageProduct.rpt</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\rpt_Sales.cs">
       <SubType>Component</SubType>
@@ -1553,7 +1563,8 @@
     <Compile Include="signalr\hubs\ChatHub.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="appCode\ViewAsPdf2.cs" />
-    <Compile Include="Utils\GeneralFunctionsDRY.cs" />
+    <Compile Include="Utils\ExportToFiles.cs" />
+    <Compile Include="Utils\GlobalVariables.cs" />
     <Compile Include="Utils\ItemType.cs" />
     <Compile Include="Utils\SystemMessageCode.cs" />
     <Compile Include="Views\Shared\appResource\appResource.de.Designer.cs">

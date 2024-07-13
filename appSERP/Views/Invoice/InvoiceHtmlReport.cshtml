@@ -4,7 +4,7 @@
 
 @{
 
-    // Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
+     //Layout = "~/Views/Shared/appLayout/_LayoutReport.cshtml";
     Layout = null;
     DataTable Data = ViewBag.vDT;
     string InvId = "";
@@ -457,3 +457,8 @@
     </div> <!-- End of Footer Content -->
 
 </div> <!-- End of Footer -->
+<script>
+    $('.btnRptPrint').on('click', function () {
+        window.print();
+    })
+</script>

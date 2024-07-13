@@ -709,7 +709,7 @@
 
         // Get Vocher Type
         var DeliverDate = $('.txtDeliverDate').val();
-        var DateNow = '@DateTime.Now';
+        //var DateNow = '@DateTime.Now';
 
         var DeliverTime = $('.txtDeliverTime').val();
         var DeliverDateTime = DeliverDate+'T'+DeliverTime
@@ -736,27 +736,36 @@
         var vat = TotalReq * 0.15
 
         var valid = false;
-
-        $(".tblOrderRow").each(function () {
-            valid = true;
+        valid = true;
+        $(".tblOrderRow").each(function () {           
             // Row Data
             var vRowData = $(this);
-           vRowData.find('.txtTag').removeClass('errorClass');
+           //vRowData.find('.txtTag').removeClass('errorClass');
             var tagId = vRowData.find('.txtTagId').val();
             var MealId = vRowData.find('.txtMealId').val();
             var Qty = vRowData.find('.txtQty').val();
+            var mealName = vRowData.find('.txtMealName').val();
             var Grpid = vRowData.find('.txtMealCode').attr('data-type');
+            if (MealId == '' || MealId == '0' || MealId == 'null') {
+                valid = false
+                vRowData.find('.txtMealCode').addClass('errorClass');
+                vRowData.find('.txtMealName').addClass('errorClass');
+                funNotification('إختار تفاصيل للطلب', 2)
+            }
+            else {
+                vRowData.find('.txtMealCode').removeClass('errorClass');
+                vRowData.find('.txtMealName').removeClass('errorClass');
+            }
             if (Grpid == '@SheepCat' || Grpid == '@SheepOutRes') {
                 if (tagId == '' || tagId == '0' || tagId == 'null') {
                     valid = false
                     vRowData.find('.txtTag').addClass('errorClass');
+                    funNotification('حدد الوسم لـ ' + mealName, 2)
                 }
+                else
+                    vRowData.find('.txtTag').removeClass('errorClass');
             }
-            if (MealId == '' || MealId == '0' || MealId == 'null') {
-                    valid = false
-                vRowData.find('.txtMealCode').addClass('errorClass');
-                vRowData.find('.txtMealName').addClass('errorClass');
-            }
+            
             if (Qty == '' || Qty == '0' || Qty == 'null') {
                     valid = false
                 vRowData.find('.txtQty').addClass('errorClass');
@@ -772,7 +781,8 @@ if (parseFloat($(".txtTotalDiscount").val()) > parseFloat($(".txtTotalOrder").va
 
         if (CUST_SEQ && valid == true && $(".txtDeliverDate").val() >= $(".txtDate").val()) {
             // Save Head
-
+            //funNotification('تم الحفظ ok', 1);
+            //return;
             $.get('/api/APIResOrder/ResOrderGET',
                 {
                     // Head Parameters
@@ -825,14 +835,15 @@ if (parseFloat($(".txtTotalDiscount").val()) > parseFloat($(".txtTotalOrder").va
             // Error Class Validation
             if (CUST_SEQ == '' || CUST_SEQ == '0' || CUST_SEQ == 'null') {
                 $('.txtCustomer').addClass('errorClass')
+                funNotification('إختار العميل', 2)
             }
 
-    var DeliverDateTime = DeliverDate+'T'+DeliverTime
-    var DeliverDateTimeNow ='@DateTime.Now'
-    var d1 = "2011-03-02T15:30:18-08:00";
-var d2 = "2011-03-02T15:36:05-08:00";
+    //var DeliverDateTime = DeliverDate+'T'+DeliverTime
+    //var DeliverDateTimeNow ='@DateTime.Now'
+    //var d1 = "2011-03-02T15:30:18-08:00";
+//var d2 = "2011-03-02T15:36:05-08:00";
     console.log(new Date())
-    console.log(new Date(d1))
+    //console.log(new Date(d1))
 
    // var d1=new date(DeliverDateTime)
    // var d2=new date(DeliverDateTimeNow)
@@ -845,6 +856,8 @@ var d2 = "2011-03-02T15:36:05-08:00";
                 $('.txtDeliverDate').addClass('errorClass')
                 funNotification('تاريخ التسليم اقل من التاريخ الحالي', 3)
             }
+            else
+                $('.txtDeliverDate').removeClass('errorClass');
         }
     }
 
@@ -1761,7 +1774,7 @@ var d2 = "2011-03-02T15:36:05-08:00";
         $('.txtVat').each(function () {
             sumVat += $(this).val() * 1;
         });
-                    $('#totalVat').val(sumVat.toFixed(2));
+        $('#totalVat').val(sumVat.toFixed(2));
 
 
         $('.txtTotalReq').val(($('.txtTotalOrder').val() * 1 + $('.txtTotalIns').val() * 1 - $('.txtTotalDiscount').val() * 1).toFixed(2));
@@ -1893,8 +1906,6 @@ var d2 = "2011-03-02T15:36:05-08:00";
         })
     })
 
-
-
         $('.txtDeliverTime').change(function () {
             var Value = $(this).val();
              $('.txtTagId').val('');
@@ -1907,14 +1918,6 @@ var d2 = "2011-03-02T15:36:05-08:00";
    // funLoadSelectList();
         // Load Select List
     function funLoadSelectList() {
-
-
-        //$.each(vLookupData, function (i, PeriodType) {
-        //    if (PeriodType.LookupId === 112) {
-        //        $('#PeriodType').append('<option  val1="' + PeriodType.Value1 + '" val2="' + PeriodType.Value2 + '"  data-id="' + PeriodType.LookupDtlId + '" value="' + PeriodType.LookupDtlId + '" sort-id="' + i + '">' + PeriodType.LookupDtlDesc + '</option>')
-        //    }
-        //    })
-
 
         var SHEEP = $('.SHEEP_REMAINDER');
         SHEEP.html('');

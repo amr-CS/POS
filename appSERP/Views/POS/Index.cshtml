@@ -783,6 +783,10 @@ else if (Period != false)
             var SecondCount = 0;
 
             $('.btnSave').on('click', function () {
+
+                var valid = VerifyInvoiceData();
+               
+                if (valid==true) {              
                 var InvId = $('.InvId').val()
                 // Search Account
                 var vURL = '/POS/Payment';
@@ -831,6 +835,7 @@ else if (Period != false)
                     })
 
                 })
+            }
             })
             // });
 
@@ -854,9 +859,10 @@ else if (Period != false)
                     var price = $(".tblItemRow:first").find('.txtPrice').text()
 
                     if (price) {
-                        Save(false,2)
-                        var InvId = $('.InvCode').attr('data-id')
-                        //funPrintCashierReport(localStorage.getItem('InvId'))
+                        
+                            Save(false, 2)
+                            var InvId = $('.InvCode').attr('data-id')
+                            //funPrintCashierReport(localStorage.getItem('InvId'))                       
                     }
 
                     $('#AccountDataModal').modal('hide');
@@ -1873,6 +1879,45 @@ else if (Period != false)
                 yourFrame.contentWindow.print()
             });
         }
+
+        function VerifyInvoiceData() {
+            var valid = true;
+            // التحقق من وجود أصناف في الفاتورة وليست اضافات او تأمين فقط
+            var VerifyFoundOfItemsInInvoice = false; 
+            $('.tblItemRow').each(function () {
+                var ItemType = $(this).attr('item-type')
+                if (ItemType === '1')
+                    VerifyFoundOfItemsInInvoice = true;
+            })
+            if (VerifyFoundOfItemsInInvoice == false) {
+                funNotification('يجب إضافة أصناف للفاتورة ', 2)                
+                valid = false;
+                return valid;
+            }
+            var PhoneNumber = $('.PhoneNumber').val()
+            var IsDelivery = $('.btnDeliv').val();
+            // Check Table Has Insurance
+            var HasInsurance = false
+            $('.tblItemRow').each(function () {
+                var ItemType = $(this).attr('item-type')
+                if (ItemType === '3')
+                    HasInsurance = true;
+            })
+            var IsCustomer = true;
+
+            if (!PhoneNumber || PhoneNumber.length != 10) {
+                IsCustomer = false;
+            }
+
+            if ((HasInsurance && !IsCustomer) || (IsDelivery === 'true' && !IsCustomer)) {
+                funNotification('يجب ادخال رقم جوال وبيانات  العميل ', 2)
+                if (PhoneNumber.length != 10) {
+                    funNotification(' رقم الجوال يجب ان يتكون من 10 ارقام ', 3)
+                }
+                valid = false;
+            }
+            return valid;
+        }
         function Save(pIsWait, invstatue) {
                 // Save Head
                 var InvId = $('.InvId').val()
@@ -1920,26 +1965,9 @@ else if (Period != false)
                 funNotification('الكمية لا تكفي', 2)
                 return;
             }
-            // Check Table Has Insurance
-            var HasInsurance = false
-            $('.tblItemRow').each(function () {
-                var ItemType = $(this).attr('item-type')
-                if (ItemType==='3')
-                HasInsurance = true;
-            })
-                var IsCustomer = true;
+            var valid = VerifyInvoiceData();
 
-                if (!PhoneNumber || PhoneNumber.length!=10) {
-                    IsCustomer = false;
-            }
-
-                if ((HasInsurance && !IsCustomer) || (IsDelivery === 'true' && !IsCustomer)) {
-                    funNotification('يجب ادخال رقم جوال وبيانات  العميل ', 2)
-     if (PhoneNumber.length != 10) {
-        funNotification(' رقم الجوال يجب ان يتكون من 10 ارقام ', 3)
-     }
-                }
-                else {
+            if (valid==true)  {
                 if (VatTotal != '0' && price != '') {
                     if (pOrderType == '31' || pOrderType == '30' || pOrderType == '32')
                     {

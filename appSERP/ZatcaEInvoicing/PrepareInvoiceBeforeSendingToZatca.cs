@@ -7,7 +7,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace appSERP.ZatcaEInvoicing
@@ -29,18 +31,20 @@ namespace appSERP.ZatcaEInvoicing
         }
 
         // دالة إعادة ارسال الفاتورة الى الهيئة للموافقة عليها
-        public string ResendInvoice(int pInvId, int? pOrderId)
+        public Tuple<bool, string> ResendInvoice(int pInvId, int? pOrderId)
         {
+            bool SuccessStatus = false;
             // نتحقق من الفاتورة انه تم مصادقتها
             var json = _dbINVInvoice.funInvoiceOrderOrPOS(pInvId: pInvId, pQueryTypeId: 401).ToString();
-            if(string.IsNullOrWhiteSpace(json) || json.Trim().Length<1)
-                return SystemMessageCode.ToJSON(SystemMessageCode.GetError("لا يوجد فاتورة بهذا الرقم"));
-            var dtpInv = JsonConvert.DeserializeObject<DataTable>(json);           
-            DateTime invDate = Convert.ToDateTime(dtpInv.Rows[0].Field<DateTime>("InvDate").ToString());       
-            if(invDate > DateTime.Now.AddMinutes(-2))
-             return SystemMessageCode.ToJSON(SystemMessageCode.GetError("انتظر دقيقتين ثم أعد إرسالها لإنها فاتورة جديدة"));
+            if (string.IsNullOrWhiteSpace(json) || json.Trim().Length < 1)
+                //return SystemMessageCode.ToJSON(SystemMessageCode.GetError("لا يوجد فاتورة بهذا الرقم"));
+                return Tuple.Create(SuccessStatus, "لا يوجد فاتورة بهذا الرقم");
+            var dtInv = JsonConvert.DeserializeObject<DataTable>(json);
+            DateTime invDate = Convert.ToDateTime(dtInv.Rows[0].Field<DateTime>("InvDate").ToString());
+            if (invDate > DateTime.Now.AddMinutes(-2))
+                return Tuple.Create(SuccessStatus, "انتظر دقيقتين ثم أعد إرسالها لإنها فاتورة جديدة");
 
-            bool isPassed = Convert.ToBoolean(dtpInv.Rows[0].Field<bool>("IsPassed").ToString());
+            bool isPassed = Convert.ToBoolean(dtInv.Rows[0].Field<bool>("IsPassed").ToString());
             if (isPassed == false)
             {
                 InvoiceResponseDto dto = new InvoiceResponseDto();
@@ -52,40 +56,16 @@ namespace appSERP.ZatcaEInvoicing
                     dto = _SendToZatcaPOS(pInvId, dt);
                 }
                 if (dto.isSuccess)
-                    return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت الإعادة بنجاح"));
+                    return Tuple.Create(true, "تمت الإعادة بنجاح");
                 else
-                    return SystemMessageCode.ToJSON(SystemMessageCode.GetError("فشلت العملية"));
+                    return Tuple.Create(SuccessStatus, "فشلت العملية");
             }
             else
-                return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تم إجتياز الفاتورة مسبقا"));
+                return Tuple.Create(true, "تم إجتياز الفاتورة مسبقا");
 
         }
-        // test
-        public string ResendInvoiceTest(int pInvId, int? pOrderId)
-        {
-            string str = SendDelayTest();
-            return str;
-        }
-        //public string ResendInvoiceTest(int pInvId, int? pOrderId)
-        //{
-        //    string str= SendDelayTest().Result;
-        //    return str;
-        //}
-        //private async Task<string> SendDelayTest()
-        //{
-        //    await Task.Delay(5000);// 60000 , 120000
-        //    return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت الإعادة بنجاح يا بدش"));
-        //}
-        private string SendDelayTest()
-        {
-            //BackgroundJob.Enqueue(() => DelayedMethod());
-            return SystemMessageCode.ToJSON(SystemMessageCode.GetSuccess("تمت الإعادة بنجاح يا بدش"));
-        }
-        public async Task DelayedMethod()
-        {
-            await Task.Delay(TimeSpan.FromMinutes(5));
-            // العملية المؤجلة التي تحتاج للتنفيذ بعد فترة زمنية
-        }
+
+
         #region Send Invoice POS To Zatca
         private DataTable GetInvoicePOSData(int InvId)
         {
@@ -112,6 +92,7 @@ namespace appSERP.ZatcaEInvoicing
                 //responseJson = JsonConvert.SerializeObject(dto, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                 PassedInvoicePOS(InvId, responseJson);
             }
+            SendInvoiceToZatcaLog(obj.invoice_pk, dto);
             return dto;
         }
         void PassedInvoicePOS(int InvId, string responseJson, bool isPassed = true)
@@ -174,7 +155,7 @@ namespace appSERP.ZatcaEInvoicing
             //var TokenDb = dataTable.Rows[0].Field<string>("LinkProApi").ToString();
             var InvCode = dataTable.Rows[0].Field<string>("InvCode").ToString();
             var account_id = dataTable.Rows[0].Field<string>("account_id").ToString();
-            var Discount = dataTable.Rows[0].Field<double>("Discount").ToString();
+            var Discount = dataTable.Rows[0].Field<double>("DiscountBeforeVAT").ToString();
 
             if (!String.IsNullOrEmpty(tax_number) && !String.IsNullOrEmpty(organization))
             {
@@ -242,6 +223,7 @@ namespace appSERP.ZatcaEInvoicing
                 //responseJson = JsonConvert.SerializeObject(dto, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                 PassedInvoiceOrder(OrderId, responseJson);
             }
+            SendInvoiceToZatcaLog(obj.invoice_pk, dto);
             return dto;
         }
         InvoiceCreateRequest SetZatcaInvoiceOrderValues(DataTable dataTable)
@@ -266,7 +248,7 @@ namespace appSERP.ZatcaEInvoicing
             foreach (DataRow item in dataTable.Rows)
             {
                 // فاتورة طلب فقط إرسال الاصناف للضريبة بدون التأمين
-                if (item["CategoryId"].ToString() != item["PlateCode"].ToString())  
+                if (item["CategoryId"].ToString() != item["PlateCode"].ToString())
                 {
                     itemlst.Add(
                      new InvoiceItem()
@@ -283,7 +265,7 @@ namespace appSERP.ZatcaEInvoicing
             //var TokenDb = dataTable.Rows[0].Field<string>("LinkProApi").ToString();
             var InvCode = dataTable.Rows[0].Field<string>("InvCode").ToString();
             var account_id = dataTable.Rows[0].Field<string>("account_id").ToString();
-            var Discount = dataTable.Rows[0].Field<double>("Discount").ToString();
+            var Discount = dataTable.Rows[0].Field<double>("DiscountBeforeVAT").ToString();
             if (!String.IsNullOrEmpty(tax_number) && !String.IsNullOrEmpty(organization))
             {
                 obj = new InvoiceCreateRequest()
@@ -334,26 +316,66 @@ namespace appSERP.ZatcaEInvoicing
                     //IZatcaEInvoice _api = new ZatcaEInvoiceAPI();
                     var result = Task.Run(() => _api.SendInvoice(TokenDb, obj));
                     InvoiceResponseDto invoiceResponseDto = result.Result;
-                    invoiceResponseDto.status = invoiceResponseDto.status.ToLower();
+                    if (string.IsNullOrWhiteSpace(invoiceResponseDto.status) == false)
+                        invoiceResponseDto.status = invoiceResponseDto.status.ToLower();
                     invoiceResponseDto.isSuccess = false;
                     if (invoiceResponseDto != null && (invoiceResponseDto.statusCode == "200" || invoiceResponseDto.statusCode == "201" || invoiceResponseDto.statusCode == "202")
                         && invoiceResponseDto.qrcode != null && string.IsNullOrWhiteSpace(invoiceResponseDto.qrcode) == false
-                        && invoiceResponseDto.status != "rejected"  && invoiceResponseDto.status != "error" && invoiceResponseDto.status != "failed")
+                        && string.IsNullOrWhiteSpace(invoiceResponseDto.status) != true && invoiceResponseDto.status != "rejected" && invoiceResponseDto.status != "error" && invoiceResponseDto.status != "failed")
                         invoiceResponseDto.isSuccess = true; // (passed - passed with warnings - rejected) - failed
-                               
+
                     return invoiceResponseDto;
                 }
                 else
                 {
-                    return new InvoiceResponseDto() { isSuccess = false };
+                    var invoiceResponseDto = new InvoiceResponseDto() { isSuccess = false, note = " items.Count = 0", statusCode = "error user" };
+                    return invoiceResponseDto;
                 }
 
             }
             catch (Exception ex)
             {
+                var invoiceResponseDto = new InvoiceResponseDto() { isSuccess = false, note = ex.Message, statusCode = "Exception" };
+                SendInvoiceToZatcaLog(obj.invoice_pk, invoiceResponseDto);
                 throw new AggregateException(ex);
             }
         }
+
+        #region Send the invoice to the Zatca Log
+        void SendInvoiceToZatcaLog(string invoice_pk, InvoiceResponseDto dto)
+        {
+            try
+            {
+                string responseJson = JsonConvert.SerializeObject(dto);
+                string pathDirectory = string.Format(@"{0}\{1}\{2}\{3}", AppDomain.CurrentDomain.BaseDirectory, "WhiteCloud", "Log User File", "SendInvoiceToZatca");
+                string fileName = string.Format("{0}_{1}.txt", "SendToZatca", DateTime.Now.ToString("dd-MM-yyyy"));
+                string filePath = string.Format(@"{0}\{1}", pathDirectory, fileName);
+
+                if (Directory.Exists(pathDirectory) == false)
+                    Directory.CreateDirectory(pathDirectory);
+                if (File.Exists(filePath) == false)
+                    File.CreateText(filePath).Dispose();
+
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("== Send Invoice To Zatca : " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt"));
+                sb.AppendLine("invoice_pk = " + invoice_pk + " , status = " + dto.status + " , isSuccess = " + dto.isSuccess + " , statusCode = " + dto.statusCode + " .");
+                sb.AppendLine("Response : " + responseJson + " .");
+                sb.AppendLine("======================================================================================");
+
+                using (StreamWriter write = new StreamWriter(filePath, true)) //using (StreamWriter w = File.AppendText(filePath))
+                {
+                    write.Write(sb.ToString());
+                    write.Flush();
+                }
+
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
 
         /*
          void SendInvoice(string TokenDb, InvoiceCreateRequest obj)

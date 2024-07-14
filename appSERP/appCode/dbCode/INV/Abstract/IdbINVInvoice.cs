@@ -508,6 +508,9 @@ namespace appSERP.appCode.dbCode.INV.Abstract
 
         // BH
         object funInvoiceOrderOrPOS(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
-            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pBranchId = null, string pInvCode = null);
+            , string pZatcaResponse = null, bool? pIsPassed = null, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null);
+        DataTable funInvoiceOrderOrPOSDT(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 402
+            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null);
+
     }
 }

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using appSERP.Logger;
 using appSERP.Models;
 using appSERP.Models.RES;
 using appSERP.Reports.POS;

@@ -319,7 +319,7 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="d-flex txtProdLine">
-                            <input class="timeFrom" type="time" name="appt-time" value="04:00">
+                            <input class="timeFrom" type="time" name="appt-time" step="1" value="04:00">
 
                             <input type="date" class="form-control dtpDateFrom" value="@dateTimeFrom.ToString("yyyy-MM-dd")" />
 
@@ -332,7 +332,7 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="d-flex ">
-                            <input class="timeTo" type="time" value="04:00" />
+                            <input class="timeTo" type="time" step="1" value="04:00" />
 
                             <input type="date" class="form-control dtpDateTo" value="@dateTimeTo.ToString("yyyy-MM-dd")" />
 
@@ -366,7 +366,7 @@
                     <div class="d-flex">
                         @*@Html.DropDownList("Branches", null, "الفروع", new { @class = "form-control" })*@
 
-                        <select class="form-control d-none" id="Branches" >
+                        <select class="form-control d-none" id="Branches">
                             <option value="5">السلطان</option>
                             <option value="3">السلام</option>
                         </select>
@@ -381,26 +381,26 @@
     <div class="bg-white border rounded p-3 ">
 
         <div class=" row">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <!-- Default unchecked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkExp" name="defaultExampleRadios">
-            <label class="custom-control-label" for="chkExp">المصروفات</label>*@
+                <label class="custom-control-label" for="chkExp">المصروفات</label>*@
                     <input type="radio" class="custom-control-input" value="1" id="chkTotal" name="defaultExampleRadios" checked>
                     <label class="custom-control-label" for="chkTotal">اجمالي المبيعات</label>
                 </div>
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkExp" name="defaultExampleRadios">
-            <label class="custom-control-label" for="chkExp">المصروفات</label>*@
+                <label class="custom-control-label" for="chkExp">المصروفات</label>*@
                     <input type="radio" class="custom-control-input" value="3" id="chkReturnTotal" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkReturnTotal"> صافي المبيعات</label>
                 </div>
                 <!-- Default checked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkSellDtl" name="defaultExampleRadios" checked>
-            <label class="custom-control-label" for="chkSellDtl">المبيعات التفصيلي</label>*@
+                <label class="custom-control-label" for="chkSellDtl">المبيعات التفصيلي</label>*@
                     <input type="radio" class="custom-control-input" value="5" id="chkComm" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkComm">مبيعات تجميعي</label>
 
@@ -413,7 +413,7 @@
                 <!-- Default checked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkCashSell" name="defaultExampleRadios" checked>
-            <label class="custom-control-label" for="chkCashSell">مبيعات تفصيلي كاشيرات</label>*@
+                <label class="custom-control-label" for="chkCashSell">مبيعات تفصيلي كاشيرات</label>*@
                     <input type="radio" value="23" class="custom-control-input" id="chkCashComm" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkCashComm">مبيعات تجميعي كاشيرات</label>
 
@@ -421,7 +421,7 @@
                 <!-- Default unchecked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkReceipt" name="defaultExampleRadios">
-            <label class="custom-control-label" for="chkReceipt">سندات قبض</label>*@
+                <label class="custom-control-label" for="chkReceipt">سندات قبض</label>*@
                     <input type="radio" value="10" class="custom-control-input" id="chkCash" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkCash">المبالغ المتبقية للفترة</label>
 
@@ -429,7 +429,7 @@
                 <!-- Default checked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkRent" name="defaultExampleRadios" checked>
-            <label class="custom-control-label" for="chkRent">التأجير</label>*@
+                <label class="custom-control-label" for="chkRent">التأجير</label>*@
                     <input type="radio" value="12" class="custom-control-input" id="chkIns" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkIns">التأمين</label>
 
@@ -437,13 +437,13 @@
                 <!-- Default checked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkdis" name="defaultExampleRadios" checked>
-            <label class="custom-control-label" for="chkdis">تفاصيل الخصومات</label>*@
+                <label class="custom-control-label" for="chkdis">تفاصيل الخصومات</label>*@
                     <input type="radio" value="14" class="custom-control-input" id="chkInsRent" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkInsRent"> مردودات التأمين</label>
                 </div>
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkVouch" name="defaultExampleRadios" checked>
-            <label class="custom-control-label" for="chkVouch">الفواتير التي تم تعديلها</label>*@
+                <label class="custom-control-label" for="chkVouch">الفواتير التي تم تعديلها</label>*@
                     <input type="radio" value="16" class="custom-control-input" id="chkDailyRpt" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkDailyRpt">التقرير اليومي</label>
 
@@ -451,7 +451,7 @@
                 <!-- Default checked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkCancel" name="defaultExampleRadios" checked>
-            <label class="custom-control-label" for="chkCancel">الفواتير الملغية</label>*@
+                <label class="custom-control-label" for="chkCancel">الفواتير الملغية</label>*@
                     <input type="radio" value="18" class="custom-control-input" id="chkCarcassRpt" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkCarcassRpt">تقرير الذبائح</label>
 
@@ -461,52 +461,52 @@
                     <label class="custom-control-label" for="chkMeal">اجمالي مبيعات الوجبات </label>
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-3">
                 <!-- Default unchecked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkTotal" name="defaultExampleRadios">
-                        <label class="custom-control-label" for="chkTotal">اجمالي المبيعات</label>*@
+                <label class="custom-control-label" for="chkTotal">اجمالي المبيعات</label>*@
                     <input type="radio" value="2" class="custom-control-input" id="chkExp" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkExp">المصروفات</label>
                 </div>
                 <!-- Default checked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkComm" name="defaultExampleRadios" checked>
-                        <label class="custom-control-label" for="chkComm">مبيعات تجميعي</label>*@
+                <label class="custom-control-label" for="chkComm">مبيعات تجميعي</label>*@
                     <input type="radio" value="4" class="custom-control-input" id="chkSellDtl" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkSellDtl">المبيعات التفصيلي</label>
                 </div>
                 <!-- Default checked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkCashComm" name="defaultExampleRadios" checked>
-                        <label class="custom-control-label" for="chkCashComm">مبيعات تجميعي كاشيرات</label>*@
+                <label class="custom-control-label" for="chkCashComm">مبيعات تجميعي كاشيرات</label>*@
                     <input type="radio" value="6" class="custom-control-input" id="chkCashSell" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkCashSell">مبيعات تفصيلي كاشيرات</label>
                 </div>
                 <!-- Default unchecked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkCash" name="defaultExampleRadios">
-                        <label class="custom-control-label" for="chkCash">المبالغ المتبقية للفترة</label>*@
+                <label class="custom-control-label" for="chkCash">المبالغ المتبقية للفترة</label>*@
                     <input type="radio" value="8" class="custom-control-input" id="chkReceipt" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkReceipt">سندات قبض</label>
                 </div>
                 <!-- Default checked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkIns" name="defaultExampleRadios" checked>
-                        <label class="custom-control-label" for="chkIns">التأمين</label>*@
+                <label class="custom-control-label" for="chkIns">التأمين</label>*@
                     <input type="radio" value="9" class="custom-control-input" id="chkRent" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkRent">التأجير</label>
                 </div>
                 <!-- Default checked -->
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkInsRent" name="defaultExampleRadios" checked>
-                        <label class="custom-control-label" for="chkInsRent">تأمين التأجير</label>*@
+                <label class="custom-control-label" for="chkInsRent">تأمين التأجير</label>*@
                     <input type="radio" value="11" class="custom-control-input" id="chkdis" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkdis">تفاصيل الخصومات</label>
                 </div>
                 <div class="custom-control custom-radio m-3">
                     @*<input type="radio" class="custom-control-input" id="chkDailyRpt" name="defaultExampleRadios" checked>
-                        <label class="custom-control-label" for="chkDailyRpt">التقرير اليومي</label>*@
+                <label class="custom-control-label" for="chkDailyRpt">التقرير اليومي</label>*@
                     <input type="radio" value="13" class="custom-control-input" id="chkVouch" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkVouch">الفواتير التي تم تعديلها</label>
                 </div>
@@ -521,17 +521,17 @@
                     <label class="custom-control-label" for="chkallCashier">فواتير الكاشير</label>
                 </div>
                 <div class="custom-control custom-radio m-3">
-                    <input type="radio"  value="19" class="custom-control-input" id="chkReturn" name="defaultExampleRadios">
+                    <input type="radio" value="19" class="custom-control-input" id="chkReturn" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkReturn">فواتير المرتجعات</label>
                 </div>
                 <div class="custom-control custom-radio m-3">
                     <input type="radio" value="21" class="custom-control-input" id="chkMealGroup" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkMealGroup">اجمالي مبيعات الوجبات تجميعي</label>
-                </div>  
+                </div>
                 @*<div class="custom-control custom-radio m-3">
-                    <input type="radio" value="21" class="custom-control-input" id="chkItemCostMinMaxReport" name="defaultExampleRadios">
-                    <label class="custom-control-label" for="chkItemCostMinMaxReport">تقرير  حساب متوسط تكلفة اصناف مواد خام </label>
-                </div>*@
+                <input type="radio" value="21" class="custom-control-input" id="chkItemCostMinMaxReport" name="defaultExampleRadios">
+                <label class="custom-control-label" for="chkItemCostMinMaxReport">تقرير  حساب متوسط تكلفة اصناف مواد خام </label>
+            </div>*@
                 <div class="custom-control custom-radio m-3">
                     <input type="radio" value="22" class="custom-control-input" id="chkallCustomer" name="defaultExampleRadios">
                     <label class="custom-control-label" for="chkallCustomer">فواتير العملاء</label>
@@ -539,8 +539,18 @@
 
 
             </div>
+
+            <div class="col-sm-3">
+                <div class="custom-control custom-radio m-3">
+                    <input type="radio" value="23" class="custom-control-input" id="chkInvoicesSent" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkInvoicesSent">فواتير المرسلة للهيئة</label>
+                </div>
+                <div class="custom-control custom-radio m-3">
+                    <input type="radio" value="24" class="custom-control-input" id="chkReturnSent" name="defaultExampleRadios">
+                    <label class="custom-control-label" for="chkReturnSent">فواتير المرتجعات للهيئة</label>
+                </div>
+            </div>
         </div>
-    </div>
     <div id="CashierDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="CashierDataModalContent"></div>
@@ -563,22 +573,22 @@
             <div class="modal-content" id="CustomerDataModalContent"></div>
         </div>
     </div>
-  
 
 
 
-  
 
-  
-    
-    
+
+
+
+
+
     <script>
         var NumberReports;
          $(document).ready(function () {
         // Get Data From Gl Voucher After Select
         $.get('/api/APIBranchSetting/BranchSettingGet',
             {
-              
+
                 pQueryTypeId: '406'
             },
             function (data, status) {
@@ -597,7 +607,8 @@
             url: '/api/APIInvItem/InvItemGET',
             dataType: "json",
             method: 'GET', contentType: 'application/json',
-            data: { phNumbers: '2,3', pQueryTypeId: '409', },
+            //data: { phNumbers: '2,3', pQueryTypeId: '409', },
+            data: { phNumbers: '2,3', pQueryTypeId: '408', },
             async: false
         }).responseText);
         var ReportPeriod = 0;
@@ -962,6 +973,22 @@
                         var url = '/POS/SimplePOSReceiptVoucherReport?pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo
                         var popupWindow = window.open(url);
                     }
+
+                    // BH
+                    else if ($('#chkInvoicesSent').prop('checked')) {
+
+                        var url = '/POS/InvoicesSentHtmlReport?type_is_invoice=' + true + '&&pDateFrom=' + DateFrom+ '&&pDateTo=' + DateTo + '&&branchId=' + branch
+                        window.open(url);
+                    }
+                    //else if ($('#chkInvoicesSent').prop('checked')) {
+
+                    //    var url = '/POS/ExportToExcel?type_is_invoice=' + true + '&&pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&branchId=' + branch
+                    //    window.open(url);
+                    //}
+                    else if ($('#chkReturnSent').prop('checked')) {
+                        var url = '/POS/InvoicesSentHtmlReport?type_is_invoice=' + false + '&&pDateFrom=' + DateFrom + '&&pDateTo=' + DateTo + '&&branchId=' + branch
+                        var popupWindow = window.open(url);
+                    }
                 }
                 else if ($('#defaultUnchecked').prop('checked')) {
                     if ($('#chkSellDtl').prop('checked')) {
@@ -1000,6 +1027,8 @@
                         var url = '/POS/SimplePOSReceiptVoucherReport?pTodayDate=' + DateFrom
                         var popupWindow = window.open(url);
                     }
+
+                    
                 }
                 var item = $('.txtItemId').val()
                 if ($('#chkMeal').prop('checked')) {
@@ -1012,6 +1041,9 @@
                     var url = '/POS/ItemCostMinMaxReport?DateFrom=' + DateFrom + '&&DateTo=' + DateTo  + '&&ItemId=' + item;
                     window.open(url);
                 }
+
+                
+
                 //else if ($('#defaultChecked').prop('checked')) {
                 //    // Date From
                 //    var vDateFrom = $('.selectPeriod option:selected', $('.selectPeriod')).attr("data-fromdate")

@@ -469,9 +469,10 @@ namespace appSERP.Controllers.DataController.INV.Docs
             , DateTime? DeliveryDate = null)
         {
             //DELIVERY_DATE,CUST_SEQ,NOTES
+            Notes = Notes.Trim();
             var dtOrder = _dbResOrder.GetOrderById((int)OrderId);
             if (DeliveryDate != Convert.ToDateTime(dtOrder.Rows[0]["DELIVERY_DATE"].ToString())
-                || CustomerId != Convert.ToInt32(dtOrder.Rows[0]["CUST_SEQ"].ToString())  || Notes != dtOrder.Rows[0]["NOTES"].ToString())
+                || CustomerId != Convert.ToInt32(dtOrder.Rows[0]["CUST_SEQ"].ToString())  || Notes != dtOrder.Rows[0]["NOTES"].ToString().Trim())
                 return Json(SystemMessageCode.ToJSON(SystemMessageCode.GetError("بيانات الطلب مختلفة عن السابقة احفظ التعديلات اولا")));
 
             // فحص تفاصيل الطلب قبل الاصدار والتوصيل واذا في اختلاف يوقف الاصدار للفاتورة                     
@@ -479,20 +480,21 @@ namespace appSERP.Controllers.DataController.INV.Docs
             if(InvoiceDtls.Count != dtDetails.Rows.Count)
                 return Json(SystemMessageCode.ToJSON(SystemMessageCode.GetError("تفاصيل الإصدار غير مساوية مع تفاصيل الطلب احفظ التعديلات اولا")));
             string message = "";
-            /* int index = 0;
-             foreach (var mdl in InvoiceDtls)
-             {
-                 if(mdl.ItemId == null || mdl.UnitId == null || mdl.ItemQty == null || mdl.ItemQty <= 0)
-                     message += mdl.ItemId + " للآسف بيانات تفاصيل الطلب فارغة \n";
+            
+            int index = 0;
+            foreach (var mdl in InvoiceDtls)
+            {
+                if (mdl.ItemId == null || mdl.UnitId == null || mdl.ItemQty == null || mdl.ItemQty <= 0)
+                    message += mdl.ItemId + " للآسف بيانات تفاصيل الطلب فارغة \n";
 
-                 if (mdl.ItemId != dtDetails.Rows[index]["ITEM_UNIT_SEQ"].ToString() 
-                     || mdl.UnitId != Convert.ToInt32(dtDetails.Rows[index]["UnitId"].ToString())
-                     || mdl.ItemQty != Convert.ToInt32(dtDetails.Rows[index]["QTY"].ToString()))
-                 {
-                     message += mdl.ItemId + " للآسف بيانات تفاصيل سجل الطلب الحالي مختلف عن السابق احفظ التعديلات اولا \n";
-                 }
-                 index += 1;
-             }*/
+                if (mdl.ItemId != dtDetails.Rows[index]["ITEM_UNIT_SEQ"].ToString()
+                    || mdl.UnitId != Convert.ToInt32(dtDetails.Rows[index]["UnitId"].ToString())
+                    || mdl.ItemQty != Convert.ToInt32(dtDetails.Rows[index]["QTY"].ToString()))
+                {
+                    message += mdl.ItemId + " للآسف بيانات تفاصيل سجل الطلب الحالي مختلف عن السابق احفظ التعديلات اولا \n";
+                }
+                index += 1;
+            }
 
             message = message.Trim();
             if (string.IsNullOrWhiteSpace(message) == false || message.Length > 0)

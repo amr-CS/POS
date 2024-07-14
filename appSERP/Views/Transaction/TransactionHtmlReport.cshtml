@@ -10,6 +10,7 @@
     {
         // DataRow DRow = Data.Rows[0];
     }
+    int index = 1;
     double Total = 0;
     double TotalSales = 0;
     double TotalVatTotal = 0;
@@ -21,219 +22,224 @@
                     الصنف المحدد قد لا يكون له حركات بين التاريخين او الكمية مساويا للصفر
                 </td>
             </tr>
-            </table>
-            return;
+        </table>
+        return;
     }
-            var GroupData = Data.AsEnumerable().Select(x => new { col1 = x["InvItemId"], col2 = x["InvItemNameL1"], StoreId = x["StoreId"], StoreName = x["StoreName"], DefaultUnitName = x["DefaultUnitName"] }).ToList().Distinct();
-            //var GroupData = Data.AsEnumerable().Select(x => new { col1 = x["InvItemId"], col2 = x["InvItemNameL1"], StoreId = x["StoreId"], StoreName = x["StoreName"], QtyOpenBlanace = x["QtyOpenBlanace"], PriceOpenBlanace = x["PriceOpenBlanace"], DefaultUnitName = x["DefaultUnitName"] }).ToList().Distinct();
-            }
+    var GroupData = Data.AsEnumerable().Select(x => new { col1 = x["InvItemId"], col2 = x["InvItemNameL1"], StoreId = x["StoreId"], StoreName = x["StoreName"], DefaultUnitName = x["DefaultUnitName"] }).ToList().Distinct();
+    //var GroupData = Data.AsEnumerable().Select(x => new { col1 = x["InvItemId"], col2 = x["InvItemNameL1"], StoreId = x["StoreId"], StoreName = x["StoreName"], QtyOpenBlanace = x["QtyOpenBlanace"], PriceOpenBlanace = x["PriceOpenBlanace"], DefaultUnitName = x["DefaultUnitName"] }).ToList().Distinct();
+}
 
-            @foreach (var i in GroupData)
+@foreach (var i in GroupData)
+{
+    double GroupTotalAdd = 0;
+    double GroupTotalRemove = 0;
+
+    double GroupPriceAdd = 0;
+    double GroupPriceRemove = 0;
+    string DefaultUnitName = i.DefaultUnitName.ToString();
+    double QtyOpenBlanace = 0;
+    double PriceOpenBlanace = 0;
+
+    <div style="float:right">
+        الصنف  :  @i.col2.ToString()
+    </div>
+    <br />
+    <div style="float:right">
+        المخزن :  @i.StoreName.ToString()
+    </div>
+
+
+    <table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
+        <thead>
+            <tr>
+                <th rowspan="2">م</th>
+                <th colspan="2"> الرصيد الافتتاحي</th>
+                <th colspan="5">الوارد</th>
+                <th colspan="5">الصادر</th>
+                <th colspan="2">الرصيد الحالي</th>
+            </tr>
+            <tr>               
+                <th> الكمية</th>
+                <th>القيمة</th>
+                <th>التاريخ</th>
+                <th>الرقم</th>
+                <th>النوع</th>
+                <th>الكمية</th>
+                <th>التكلفة</th>
+                <th>التاريخ</th>
+                <th>الرقم</th>
+                <th>النوع</th>
+                <th>الكمية</th>
+                <th>التكلفة</th>
+                <th>الكمية</th>
+                <th>التكلفة</th>
+            </tr>
+        </thead>
+        @if (Data != null)
+        {
+            foreach (DataRow item in Data.Rows)
             {
-                double GroupTotalAdd = 0;
-                double GroupTotalRemove = 0;
 
-                double GroupPriceAdd = 0;
-                double GroupPriceRemove = 0;
-                string DefaultUnitName = i.DefaultUnitName.ToString();
-                double QtyOpenBlanace = 0;
-                double PriceOpenBlanace = 0;
+                if (i.col1.ToString() == item["InvItemId"].ToString() && i.StoreId.ToString() == item["StoreId"].ToString())
+                {
 
-                <div style="float:right">
-                    الصنف  :  @i.col2.ToString()
-                </div>
-                <br />
-                <div style="float:right">
-                    المخزن :  @i.StoreName.ToString()
-                </div>
+                    double qtyAdd = 0;
+                    double qtyRemove = 0;
+                    double PriceAdd = 0;
+                    double PriceRemove = 0;
 
-
-                <table class="tblitem" dir="rtl" style="margin-right:15px;width:100%">
-                    <thead>
-                        <tr>
-                            <th colspan="2"> الرصيد الافتتاحي</th>
-                            <th colspan="5">الوارد</th>
-                            <th colspan="5">الصادر</th>
-                            <th colspan="2">الرصيد الحالي</th>
-                        </tr>
-                        <tr>
-                            <th> الكمية</th>
-                            <th>القيمة</th>
-                            <th>التاريخ</th>
-                            <th>الرقم</th>
-                            <th>النوع</th>
-                            <th>الكمية</th>
-                            <th>التكلفة</th>
-                            <th>التاريخ</th>
-                            <th>الرقم</th>
-                            <th>النوع</th>
-                            <th>الكمية</th>
-                            <th>التكلفة</th>
-                            <th>الكمية</th>
-                            <th>التكلفة</th>
-                        </tr>
-                    </thead>
-                    @if (Data != null)
+                    if (item["Type"].ToString() == "1")
                     {
-                        foreach (DataRow item in Data.Rows)
-                        {
-
-                            if (i.col1.ToString() == item["InvItemId"].ToString() && i.StoreId.ToString() == item["StoreId"].ToString())
-                            {
-
-                                double qtyAdd = 0;
-                                double qtyRemove = 0;
-                                double PriceAdd = 0;
-                                double PriceRemove = 0;
-
-                                if (item["Type"].ToString() == "1")
-                                {
-                                    qtyAdd = (Convert.ToDouble(item["ItemQtyTrans"]));
-                                    PriceAdd = (Convert.ToDouble(item["Price"]));
-                                }
-                                if (item["Type"].ToString() == "-1")
-                                {
-                                    qtyRemove = (Convert.ToDouble(item["ItemQtyTrans"]));
-                                    PriceRemove = (Convert.ToDouble(item["Price"]));
-                                }
-                                <tr>
-                                    <td style="text-align: center; vertical-align: middle;">
-                                        <br />
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;padding-right:20px">
-                                    </td>
-                                    <td style="text-align:center; vertical-align: middle; ">
-                                        @if (item["Type"].ToString() == "1")
-                                        {
-                                            @Convert.ToDateTime(item["TransDate"].ToString()).ToString("yyyy/MM/dd")
-                                        }
-                                    </td>
-                                    <td style="text-align:center; vertical-align: middle; ">
-                                        @if (item["Type"].ToString() == "1")
-                                        {@item["TransId"]}
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;font-size: 12px">
-                                        @if (item["Type"].ToString() == "1")
-                                        {@item["InvTypeNameL1"]}
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;">
-                                        @if (item["Type"].ToString() == "1")
-                                        {
-                                            //@item["ItemQty"]<text>&nbsp;</text>@item["UnitName"]
-                                            @Convert.ToDecimal(@item["ItemQty"]).ToString("0.####") <text>&nbsp;</text>@item["UnitName"]
-                                        }
-
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;">
-                                        @if (item["Type"].ToString() == "1")
-                                        {@item["Price"]}
-                                    </td>
-                                    <td style="text-align:center; vertical-align: middle; ">
-                                        @if (item["Type"].ToString() == "-1")
-                                        {
-                                            @Convert.ToDateTime(item["TransDate"].ToString()).ToString("yyyy/MM/dd")
-                                        }
-                                    </td>
-                                    <td style="text-align:center; vertical-align: middle; ">
-                                        @if (item["Type"].ToString() == "-1")
-                                        {
-                                            @item["TransId"]
-                                        }
-
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;font-size:10px">
-                                        @if (item["Type"].ToString() == "-1")
-                                        {
-                                            @item["InvTypeNameL1"]
-                                        }
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;">
-                                        @if (item["Type"].ToString() == "-1")
-                                        {
-                                            //@item["ItemQty"]<text>&nbsp;</text>@item["UnitName"]
-                                            @Convert.ToDecimal(@item["ItemQty"]).ToString("0.####") <text>&nbsp;</text>@item["UnitName"]
-                                        }
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;">
-                                        @if (item["Type"].ToString() == "-1")
-                                        {
-                                            @item["Price"]
-                                        }
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;"></td>
-                                    <td style="text-align: center; vertical-align: middle;"></td>
-                                </tr>
-                                //TotalSales = TotalSales + sales;
-                                //TotalVatTotal = TotalVatTotal + Vat;
-
-                                //Total = Total + TotalRow;
-
-                                GroupTotalAdd = GroupTotalAdd + qtyAdd;
-                                GroupTotalRemove = GroupTotalRemove + qtyRemove;
-                                GroupPriceAdd = GroupPriceAdd + PriceAdd;
-                                GroupPriceRemove = GroupPriceRemove + PriceRemove;
-
-                            }
-                            QtyOpenBlanace = (Convert.ToDouble(item["QtyOpenBlanace"])); ;
-                            PriceOpenBlanace = (Convert.ToDouble(item["PriceOpenBlanace"])); ;
-                        }
-                        //CurrentQty = @Convert.ToDouble(i.QtyOpenBlanace.ToString()) + GroupTotalAdd - GroupTotalRemove;
-                        //CurrentPrice = @Convert.ToDouble(i.PriceOpenBlanace.ToString()) + GroupPriceAdd - GroupPriceRemove;
-                        CurrentQty = @Convert.ToDouble(QtyOpenBlanace.ToString()) + GroupTotalAdd - GroupTotalRemove;
-                        CurrentPrice = @Convert.ToDouble(PriceOpenBlanace.ToString()) + GroupPriceAdd - GroupPriceRemove;
-
+                        qtyAdd = (Convert.ToDouble(item["ItemQtyTrans"]));
+                        PriceAdd = (Convert.ToDouble(item["Price"]));
                     }
-
-                    <tr class="total">
-                        <td style="text-align: center;font:bold; vertical-align: middle;">
-                            @QtyOpenBlanace.ToString() @*@i.QtyOpenBlanace.ToString()*@
-                            @DefaultUnitName
-                        </td>
-                        <td style="text-align: center; vertical-align: middle;padding-right:20px">
-                            @PriceOpenBlanace.ToString() @*@i.PriceOpenBlanace.ToString()*@
-                        </td>
-
+                    if (item["Type"].ToString() == "-1")
+                    {
+                        qtyRemove = (Convert.ToDouble(item["ItemQtyTrans"]));
+                        PriceRemove = (Convert.ToDouble(item["Price"]));
+                    }
+                    <tr>
                         <td style="text-align: center; vertical-align: middle;">
-                        </td>
-
-                        <td style="text-align:center;vertical-align: middle;">
-                            @*@Math.Round(TotalSales, 2, MidpointRounding.ToEven)*@
-
+                            @index
                         </td>
                         <td style="text-align: center; vertical-align: middle;">
-                        </td>
-
-                        <td style="text-align: center; vertical-align: middle;">
-                            @GroupTotalAdd
-                            @DefaultUnitName @*كمية الوارد*@
-                        </td>
-                        <td style="text-align: center;font:bold; vertical-align: middle;">
-                            @GroupPriceAdd
+                            <br />
                         </td>
                         <td style="text-align: center; vertical-align: middle;padding-right:20px">
                         </td>
+                        <td style="text-align:center; vertical-align: middle; ">
+                            @if (item["Type"].ToString() == "1")
+                            {
+                                @Convert.ToDateTime(item["TransDate"].ToString()).ToString("yyyy/MM/dd")
+                            }
+                        </td>
+                        <td style="text-align:center; vertical-align: middle; ">
+                            @if (item["Type"].ToString() == "1")
+                            {@item["TransId"]}
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;font-size: 12px">
+                            @if (item["Type"].ToString() == "1")
+                            {@item["InvTypeNameL1"]}
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @if (item["Type"].ToString() == "1")
+                            {
+                                //@item["ItemQty"]<text>&nbsp;</text>@item["UnitName"]
+                                @Convert.ToDecimal(@item["ItemQty"]).ToString("0.####") <text>&nbsp;</text>@item["UnitName"]
+                            }
 
-                        <td style="text-align: center; vertical-align: middle;">
                         </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @if (item["Type"].ToString() == "1")
+                            {@item["Price"]}
+                        </td>
+                        <td style="text-align:center; vertical-align: middle; ">
+                            @if (item["Type"].ToString() == "-1")
+                            {
+                                @Convert.ToDateTime(item["TransDate"].ToString()).ToString("yyyy/MM/dd")
+                            }
+                        </td>
+                        <td style="text-align:center; vertical-align: middle; ">
+                            @if (item["Type"].ToString() == "-1")
+                            {
+                                @item["TransId"]
+                            }
 
-                        <td style="text-align:center;vertical-align: middle;">
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;font-size:10px">
+                            @if (item["Type"].ToString() == "-1")
+                            {
+                                @item["InvTypeNameL1"]
+                            }
                         </td>
                         <td style="text-align: center; vertical-align: middle;">
-                            @GroupTotalRemove
-                            @DefaultUnitName @*كمية الصادر*@
+                            @if (item["Type"].ToString() == "-1")
+                            {
+                                //@item["ItemQty"]<text>&nbsp;</text>@item["UnitName"]
+                                @Convert.ToDecimal(@item["ItemQty"]).ToString("0.####") <text>&nbsp;</text>@item["UnitName"]
+                            }
                         </td>
                         <td style="text-align: center; vertical-align: middle;">
-                            @GroupPriceRemove
+                            @if (item["Type"].ToString() == "-1")
+                            {
+                                @item["Price"]
+                            }
                         </td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            @CurrentQty
-                            @DefaultUnitName @*كمية الرصيد الحالي*@
-                        </td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            @CurrentPrice
-                        </td>
+                        <td style="text-align: center; vertical-align: middle;"></td>
+                        <td style="text-align: center; vertical-align: middle;"></td>
                     </tr>
-                </table>
+                    //TotalSales = TotalSales + sales;
+                    //TotalVatTotal = TotalVatTotal + Vat;
 
+                    //Total = Total + TotalRow;
+                    index += 1;
+                    GroupTotalAdd = GroupTotalAdd + qtyAdd;
+                    GroupTotalRemove = GroupTotalRemove + qtyRemove;
+                    GroupPriceAdd = GroupPriceAdd + PriceAdd;
+                    GroupPriceRemove = GroupPriceRemove + PriceRemove;
+
+                }
+                QtyOpenBlanace = (Convert.ToDouble(item["QtyOpenBlanace"])); ;
+                PriceOpenBlanace = (Convert.ToDouble(item["PriceOpenBlanace"])); ;
             }
+            //CurrentQty = @Convert.ToDouble(i.QtyOpenBlanace.ToString()) + GroupTotalAdd - GroupTotalRemove;
+            //CurrentPrice = @Convert.ToDouble(i.PriceOpenBlanace.ToString()) + GroupPriceAdd - GroupPriceRemove;
+            CurrentQty = @Convert.ToDouble(QtyOpenBlanace.ToString()) + GroupTotalAdd - GroupTotalRemove;
+            CurrentPrice = @Convert.ToDouble(PriceOpenBlanace.ToString()) + GroupPriceAdd - GroupPriceRemove;
+
+        }
+
+    <tr class="total">
+        <td> </td>
+        <td style="text-align: center;font:bold; vertical-align: middle;">
+            @QtyOpenBlanace.ToString() @*@i.QtyOpenBlanace.ToString()*@
+            @DefaultUnitName
+        </td>
+        <td style="text-align: center; vertical-align: middle;padding-right:20px">
+            @PriceOpenBlanace.ToString() @*@i.PriceOpenBlanace.ToString()*@
+        </td>
+
+        <td style="text-align: center; vertical-align: middle;">
+        </td>
+
+        <td style="text-align:center;vertical-align: middle;">
+            @*@Math.Round(TotalSales, 2, MidpointRounding.ToEven)*@
+
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+        </td>
+
+        <td style="text-align: center; vertical-align: middle;">
+            @GroupTotalAdd
+            @DefaultUnitName @*كمية الوارد*@
+        </td>
+        <td style="text-align: center;font:bold; vertical-align: middle;">
+            @GroupPriceAdd
+        </td>
+        <td style="text-align: center; vertical-align: middle;padding-right:20px">
+        </td>
+
+        <td style="text-align: center; vertical-align: middle;">
+        </td>
+
+        <td style="text-align:center;vertical-align: middle;">
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+            @GroupTotalRemove
+            @DefaultUnitName @*كمية الصادر*@
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+            @GroupPriceRemove
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+            @CurrentQty
+            @DefaultUnitName @*كمية الرصيد الحالي*@
+        </td>
+        <td style="text-align: center; vertical-align: middle;">
+            @CurrentPrice
+        </td>
+    </tr>
+    </table>
+
+}
 

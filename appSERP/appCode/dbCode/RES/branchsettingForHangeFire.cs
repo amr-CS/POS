@@ -4,16 +4,29 @@ using appSERP.appCode.Setting.TimeSetting;
 using appSERP.appCode.Setting.User;
 using appSERP.appCode.SQL.Abstract;
 using appSERP.appCode.SQL.ADO;
+using appSERP.ZatcaEInvoicing.LinkPro;
+using appSERP.ZatcaEInvoicing.LinkPro.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 namespace appSERP.appCode.dbCode.RES
 {
     public class branchsettingForHangeFire
     {
+
+        HttpClient client = ApiHelper.ApiClient;
+
+        #region DB
         public DataTable GetBranchSetting(
          int? pBranchSettingId = null,
          string pBranchSettingCode = null,
@@ -314,7 +327,7 @@ namespace appSERP.appCode.dbCode.RES
         }
 
 
-        public DataTable funInvoiceOrderOrPOS(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
+        public DataTable ZatacaAuto(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
            , string pZatcaResponse = null, bool? pIsPassed = true, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pBranchId = null, string pInvCode = null)
         {
             // Declaration 
@@ -339,6 +352,527 @@ namespace appSERP.appCode.dbCode.RES
 
         }
 
+        public DataTable funInvItemGET(
+                    int? pInvId = null,
+                    string phNumbers = null)
+        {
+            // Declaration 
+            DataTable vData = new DataTable();
+            // Parameters
+            List<SqlParameter> vlstParam = new List<SqlParameter>();
+            vlstParam.Add(new SqlParameter("InvId", pInvId));
+            vlstParam.Add(new SqlParameter("hNumbers", phNumbers));
+            vlstParam.Add(new SqlParameter("LanguageId", clsUser.vUserLanguageId));
+            vlstParam.Add(new SqlParameter("QueryTypeId", 400));
+            clsADO_ForHangFire clsADO_ForHangFire = new clsADO_ForHangFire();
 
+            vData = clsADO_ForHangFire.funFillDataTable("RES.InvoicePOS", vlstParam, "Data GET");
+            return vData;
+        }
+
+        private string getProcName_spInvoiceOrderOrPOS => "RES.spInvoiceOrderOrPOS";
+        public object funInvoiceOrderOrPOS(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
+           , string pZatcaResponse = null, bool? pIsPassed = null, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null)
+        {
+            // Declaration 
+            //DataTable vData;
+            // Parameters
+            List<SqlParameter> vlstParam = SetParam_spInvoiceOrderOrPOS(pInvId: pInvId, pOrderId: pOrderId, pInvCode: pInvCode,
+                pIsPassed: pIsPassed, pZatcaResponse: pZatcaResponse, pDateFrom: pDateFrom, pDateTo: pDateTo, pInvType: pInvType
+                , pBranchId: pBranchId, pQueryTypeId: pQueryTypeId);
+
+            // vData = _clsADO.funFillDataTable("RES.spInvoiceOrderOrPOS", vlstParam, "Data GET");
+            // return vData;
+            clsADO_ForHangFire clsADO_ForHangFire = new clsADO_ForHangFire();
+
+            return clsADO_ForHangFire.funExecuteScalar(getProcName_spInvoiceOrderOrPOS, vlstParam, "Data GET");
+
+        }
+
+        private List<SqlParameter> SetParam_spInvoiceOrderOrPOS(int? pInvId = null, int? pOrderId = null, int pQueryTypeId = 400
+         , string pZatcaResponse = null, bool? pIsPassed = null, DateTime? pDateFrom = null, DateTime? pDateTo = null, int? pInvType = null, int? pBranchId = null, string pInvCode = null)
+        {
+            List<SqlParameter> vlstParam = new List<SqlParameter>();
+            vlstParam.Add(new SqlParameter("InvId", pInvId));
+            vlstParam.Add(new SqlParameter("orderId", pOrderId));
+            vlstParam.Add(new SqlParameter("InvCode", pInvCode));
+            vlstParam.Add(new SqlParameter("IsPassed", pIsPassed));
+            vlstParam.Add(new SqlParameter("ZatcaResponse", pZatcaResponse));
+            vlstParam.Add(new SqlParameter("DateFrom", pDateFrom));
+            vlstParam.Add(new SqlParameter("DateTo", pDateTo));
+            vlstParam.Add(new SqlParameter("InvType", pInvType));
+            vlstParam.Add(new SqlParameter("BranchId", pBranchId));
+            vlstParam.Add(new SqlParameter("QueryTypeId", pQueryTypeId));
+
+            return vlstParam;
+        }
+
+
+
+
+
+        public DataTable funResOrderReport(int? id = null)
+        {
+            // Declaration 
+            DataTable vData;
+            // Parameters
+            List<SqlParameter> vlstParam = new List<SqlParameter>();
+
+            vlstParam.Add(new SqlParameter("orderId", id));
+            clsADO_ForHangFire clsADO_ForHangFire = new clsADO_ForHangFire();
+
+            vData = clsADO_ForHangFire.funFillDataTable("RES.spResOrderReport", vlstParam, "Data GET");
+
+
+            return vData;
+        }
+
+        #endregion db
+
+
+
+        #region Zatca_Class
+
+        // دالة إعادة ارسال الفاتورة الى الهيئة للموافقة عليها
+        public Tuple<bool, string> ResendInvoice(int pInvId, int? pOrderId)
+        {
+            bool SuccessStatus = false;
+            // نتحقق من الفاتورة انه تم مصادقتها
+            var json = funInvoiceOrderOrPOS(pInvId: pInvId, pQueryTypeId: 401).ToString();
+            if (string.IsNullOrWhiteSpace(json) || json.Trim().Length < 1)
+                //return SystemMessageCode.ToJSON(SystemMessageCode.GetError("لا يوجد فاتورة بهذا الرقم"));
+                return Tuple.Create(SuccessStatus, "لا يوجد فاتورة بهذا الرقم");
+            var dtInv = JsonConvert.DeserializeObject<DataTable>(json);
+            DateTime invDate = Convert.ToDateTime(dtInv.Rows[0].Field<DateTime>("InvDate").ToString());
+            if (invDate > DateTime.Now.AddMinutes(-2))
+                return Tuple.Create(SuccessStatus, "انتظر دقيقتين ثم أعد إرسالها لإنها فاتورة جديدة");
+
+            bool isPassed = Convert.ToBoolean(dtInv.Rows[0].Field<bool>("IsPassed").ToString());
+            if (isPassed == false)
+            {
+                InvoiceResponseDto dto = new InvoiceResponseDto();
+                if (pOrderId != null && pOrderId > 0)
+                    dto = SendToZatcaOrder((int)pOrderId);
+                else
+                {
+                    DataTable dt = GetInvoicePOSData(pInvId);
+                    dto = _SendToZatcaPOS(pInvId, dt);
+                }
+                if (dto.isSuccess)
+                    return Tuple.Create(true, "تمت الإعادة بنجاح");
+                else
+                    return Tuple.Create(SuccessStatus, "فشلت العملية");
+            }
+            else
+                return Tuple.Create(true, "تم إجتياز الفاتورة مسبقا");
+
+        }
+
+
+        #region Send Invoice POS To Zatca
+        private DataTable GetInvoicePOSData(int InvId)
+        {
+            DataTable Data = funInvItemGET(InvId, null);
+            return Data;
+        }
+
+        public void SendToZatcaPOS(DataTable dataTable)
+        {
+            //Task.Run(async()=> await Task.Delay(120000));
+            int InvId = Convert.ToInt32(dataTable.Rows[0].Field<int>("InvId").ToString());
+            _SendToZatcaPOS(InvId, dataTable);
+
+        }
+        private InvoiceResponseDto _SendToZatcaPOS(int InvId, DataTable dataTable)
+        {
+            var TokenDb = dataTable.Rows[0].Field<string>("LinkProApi").ToString();
+            InvoiceCreateRequest obj = SetZatcaInvoicePOSValues(dataTable);
+            InvoiceResponseDto dto = SendInvoice(TokenDb, obj);
+            string responseJson = string.Empty;
+            if (dto.isSuccess)
+            {
+                responseJson = JsonConvert.SerializeObject(dto);
+                //responseJson = JsonConvert.SerializeObject(dto, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                PassedInvoicePOS(InvId, responseJson);
+            }
+            SendInvoiceToZatcaLog(obj.invoice_pk, dto);
+            return dto;
+        }
+        void PassedInvoicePOS(int InvId, string responseJson, bool isPassed = true)
+        {
+            // تعديل الموافقة على الفاتورة وإجتيازها
+            // تعديل حالة موافقة الضرائب للفاتورة عندنا
+            var dt = funInvoiceOrderOrPOS(pInvId: InvId, pQueryTypeId: 200, pZatcaResponse: responseJson, pIsPassed: isPassed);
+        }
+        InvoiceCreateRequest SetZatcaInvoicePOSValues(DataTable dataTable)
+        {
+            InvoiceCreateRequest obj = new InvoiceCreateRequest();
+
+            List<InvoiceItem> itemlst = new List<InvoiceItem>() { };
+
+            string organization = dataTable.Rows[0].Field<string>("organization").ToString();
+            string tax_number = dataTable.Rows[0].Field<string>("tax_number").ToString();
+            string IsReturn = Convert.ToString(dataTable.Rows[0].Field<string>("IsReturn"));
+            string reference_pk = null;
+            string reference_date = null;
+            if (IsReturn == "true")
+            {
+                reference_pk = dataTable.Rows[0].Field<string>("invref").ToString();
+                reference_date = dataTable.Rows[0].Field<string>("IDate").ToString();
+            }
+            InvoiceCustomer customerLinkPro = new InvoiceCustomer()
+            {
+                organization = organization,
+                tax_number = tax_number,
+                street = dataTable.Rows[0].Field<string>("street").ToString(),
+                city = dataTable.Rows[0].Field<string>("city").ToString(),
+                building_number = dataTable.Rows[0].Field<string>("building_number").ToString(),
+                postal_zone = dataTable.Rows[0].Field<string>("postal_zone").ToString(),
+                district_name = dataTable.Rows[0].Field<string>("district_name").ToString()
+            };
+
+
+            foreach (DataRow item in dataTable.Rows)
+            {
+                // فاتورة كاشير فقط إرسال الاصناف للضريبة بدون التأمين والاضافات
+                if (item["ItemType"].ToString() == "1")
+                {
+                    itemlst.Add(
+                    new InvoiceItem()
+                    {
+                        name = item["InvItemNameL1"].ToString(),
+                        price = item["PricePro"].ToString(),
+                        quantity = item["Qty"].ToString()
+                    });
+                }
+            }
+
+            //itemlst.Add(
+            //        new InvoiceItem()
+            //        {
+            //            name = "جريش مجاني",
+            //            price = "0",
+            //            quantity = "1"
+            //        });
+
+            //var TokenDb = dataTable.Rows[0].Field<string>("LinkProApi").ToString();
+            var InvCode = dataTable.Rows[0].Field<string>("InvCode").ToString();
+            var account_id = dataTable.Rows[0].Field<string>("account_id").ToString();
+            var Discount = dataTable.Rows[0].Field<double>("DiscountBeforeVAT").ToString();
+
+            if (!String.IsNullOrEmpty(tax_number) && !String.IsNullOrEmpty(organization))
+            {
+                obj = new InvoiceCreateRequest()
+                {
+                    account_id = account_id,
+                    invoice_code = InvoiceCode.InvoiceCodeType(IsReturn), //invoice, credit, debit
+                    invoice_pk = InvCode,
+                    payment_method = "10",
+                    discount_amount = Discount,
+                    items = itemlst,
+                    customer = customerLinkPro,
+                    reference_pk = reference_pk,
+                    reference_date = reference_date
+                };
+            }
+            else
+            {
+                obj = new InvoiceCreateRequest()
+                {
+                    account_id = account_id,
+                    invoice_code = InvoiceCode.InvoiceCodeType(IsReturn),
+                    invoice_pk = InvCode,
+                    payment_method = "10",
+                    discount_amount = Discount,
+                    items = itemlst,
+                    reference_pk = reference_pk,
+                    reference_date = reference_date
+
+                };
+            }
+
+            return obj;
+        }
+
+        #endregion
+
+        #region Send Invoice Order To Zatca
+
+        public InvoiceResponseDto SendToZatcaOrder(int OrderId)
+        {
+            DataTable dt = GetInvoiceOrderData(OrderId);
+            return _SendToZatcaOrder(OrderId, dt);
+        }
+        //public void SendToZatcaOrder(DataTable dataTable)
+        //{
+        //    //Task.Run(async()=> await Task.Delay(120000));
+        //    int OrderId = Convert.ToInt32(dataTable.Rows[0].Field<int>("OrderId").ToString());
+        //    _SendToZatcaOrder(OrderId,dataTable);
+        //}
+        private DataTable GetInvoiceOrderData(int OrderId)
+        {
+            DataTable Data = funResOrderReport(OrderId);
+            return Data;
+        }
+        private InvoiceResponseDto _SendToZatcaOrder(int OrderId, DataTable dataTable)
+        {
+            var TokenDb = dataTable.Rows[0].Field<string>("LinkProApi").ToString();
+            InvoiceCreateRequest obj = SetZatcaInvoiceOrderValues(dataTable);
+            InvoiceResponseDto dto = SendInvoice(TokenDb, obj);
+            string responseJson = string.Empty;
+            if (dto.isSuccess)
+            {
+                responseJson = JsonConvert.SerializeObject(dto);
+                //responseJson = JsonConvert.SerializeObject(dto, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                PassedInvoiceOrder(OrderId, responseJson);
+            }
+            SendInvoiceToZatcaLog(obj.invoice_pk, dto);
+            return dto;
+        }
+        InvoiceCreateRequest SetZatcaInvoiceOrderValues(DataTable dataTable)
+        {
+            InvoiceCreateRequest obj = new InvoiceCreateRequest();
+            List<InvoiceItem> itemlst = new List<InvoiceItem>() { };
+            string organization = dataTable.Rows[0].Field<string>("organization").ToString();
+            string tax_number = dataTable.Rows[0].Field<string>("tax_number").ToString();
+            string IsReturn = "false";
+            InvoiceCustomer customerLinkPro = new InvoiceCustomer()
+            {
+                organization = organization,
+                tax_number = tax_number,
+                street = dataTable.Rows[0].Field<string>("street").ToString(),
+                city = dataTable.Rows[0].Field<string>("city").ToString(),
+                building_number = dataTable.Rows[0].Field<string>("building_number").ToString(),
+                postal_zone = dataTable.Rows[0].Field<string>("postal_zone").ToString(),
+                district_name = dataTable.Rows[0].Field<string>("district_name").ToString()
+            };
+
+
+            foreach (DataRow item in dataTable.Rows)
+            {
+                // فاتورة طلب فقط إرسال الاصناف للضريبة بدون التأمين
+                if (item["CategoryId"].ToString() != item["PlateCode"].ToString())
+                {
+                    itemlst.Add(
+                     new InvoiceItem()
+                     {
+                         name = item["InvItemNameL1"].ToString(),
+                         price = item["PRICEPro"].ToString(),
+                         quantity = item["QTY"].ToString()
+                     }
+                    );
+                }
+
+            }
+
+            //var TokenDb = dataTable.Rows[0].Field<string>("LinkProApi").ToString();
+            var InvCode = dataTable.Rows[0].Field<string>("InvCode").ToString();
+            var account_id = dataTable.Rows[0].Field<string>("account_id").ToString();
+            var Discount = dataTable.Rows[0].Field<double>("DiscountBeforeVAT").ToString();
+            if (!String.IsNullOrEmpty(tax_number) && !String.IsNullOrEmpty(organization))
+            {
+                obj = new InvoiceCreateRequest()
+                {
+                    account_id = account_id,
+                    invoice_code = InvoiceCode.InvoiceCodeType(IsReturn), //"invoice",
+                    invoice_pk = InvCode,
+                    payment_method = "10",
+                    discount_amount = Discount,
+                    items = itemlst,
+                    customer = customerLinkPro
+
+
+                };
+            }
+            else
+            {
+                obj = new InvoiceCreateRequest()
+                {
+                    account_id = account_id,
+                    invoice_code = InvoiceCode.InvoiceCodeType(IsReturn),//"invoice",
+                    invoice_pk = InvCode,
+                    payment_method = "10",
+                    discount_amount = Discount,
+                    items = itemlst,
+
+                };
+            }
+            return obj;
+        }
+        void PassedInvoiceOrder(int OrderId, string responseJson, bool isPassed = true)
+        {
+            // تعديل حالة موافقة الضرائب للفاتورة عندنا
+            var dt = funInvoiceOrderOrPOS(pOrderId: OrderId, pQueryTypeId: 201, pZatcaResponse: responseJson, pIsPassed: isPassed);
+        }
+        #endregion
+
+       
+        // async Task<InvoiceResponseDto> SendInvoice(string TokenDb, InvoiceCreateRequest obj)
+        InvoiceResponseDto SendInvoice(string TokenDb, InvoiceCreateRequest obj)
+        {
+            try
+            {
+                //await Task.Delay(120000); // تأخير دقيقتين
+                // await Task.Delay(60000); // تأخير دقيقة
+                if (obj.items.Count > 0)
+                {
+                    //IZatcaEInvoice _api = new ZatcaEInvoiceAPI();
+                    var result = Task.Run(() => SendInvoiceApi(TokenDb, obj));
+                    InvoiceResponseDto invoiceResponseDto = result.Result;
+                    if (string.IsNullOrWhiteSpace(invoiceResponseDto.status) == false)
+                        invoiceResponseDto.status = invoiceResponseDto.status.ToLower();
+                    invoiceResponseDto.isSuccess = false;
+                    if (invoiceResponseDto != null && (invoiceResponseDto.statusCode == "200" || invoiceResponseDto.statusCode == "201" || invoiceResponseDto.statusCode == "202")
+                        && invoiceResponseDto.qrcode != null && string.IsNullOrWhiteSpace(invoiceResponseDto.qrcode) == false
+                        && string.IsNullOrWhiteSpace(invoiceResponseDto.status) != true && invoiceResponseDto.status != "rejected" && invoiceResponseDto.status != "error" && invoiceResponseDto.status != "failed")
+                        invoiceResponseDto.isSuccess = true; // (passed - passed with warnings - rejected) - failed
+
+                    return invoiceResponseDto;
+                }
+                else
+                {
+                    var invoiceResponseDto = new InvoiceResponseDto() { isSuccess = false, note = " items.Count = 0", statusCode = "error user" };
+                    return invoiceResponseDto;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var invoiceResponseDto = new InvoiceResponseDto() { isSuccess = false, note = ex.Message, statusCode = "Exception" };
+                SendInvoiceToZatcaLog(obj.invoice_pk, invoiceResponseDto);
+                throw new AggregateException(ex);
+            }
+        }
+
+        #region Send the invoice to the Zatca Log
+        void SendInvoiceToZatcaLog(string invoice_pk, InvoiceResponseDto dto)
+        {
+            try
+            {
+                string responseJson = JsonConvert.SerializeObject(dto);
+                string pathDirectory = string.Format(@"{0}\{1}\{2}\{3}", AppDomain.CurrentDomain.BaseDirectory, "WhiteCloud", "Log User File", "SendInvoiceToZatca");
+                string fileName = string.Format("{0}_{1}.txt", "SendToZatca", DateTime.Now.ToString("dd-MM-yyyy"));
+                string filePath = string.Format(@"{0}\{1}", pathDirectory, fileName);
+
+                if (Directory.Exists(pathDirectory) == false)
+                    Directory.CreateDirectory(pathDirectory);
+                if (File.Exists(filePath) == false)
+                    File.CreateText(filePath).Dispose();
+
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("== Send Invoice To Zatca : " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt"));
+                sb.AppendLine("invoice_pk = " + invoice_pk + " , status = " + dto.status + " , isSuccess = " + dto.isSuccess + " , statusCode = " + dto.statusCode + " .");
+                sb.AppendLine("Response : " + responseJson + " .");
+                sb.AppendLine("======================================================================================");
+
+                using (StreamWriter write = new StreamWriter(filePath, true)) //using (StreamWriter w = File.AppendText(filePath))
+                {
+                    write.Write(sb.ToString());
+                    write.Flush();
+                }
+
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        private async Task<HttpResponseMessage> post(string TokenDb, InvoiceCreateRequest entity)
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", TokenDb);
+            HttpResponseMessage response = await client.PostAsJsonAsync("invoices/", entity);
+            string s = response.StatusCode.ToString();
+            // التحقق من نجاح الاستجابة
+            //response.EnsureSuccessStatusCode(); // التحقق من نجاح الاستجابة يشير إلى نجاح الطلب أم لا إذا كان لا ستقوم بإلقاء استثناء 
+            /*
+                وظيفة الدالة EnsureSuccessStatusCode() في فئة HttpResponseMessage هي التحقق مما إذا كان 
+                رمز حالة الاستجابة (status code) يشير إلى نجاح الطلب أم لا. إذا كان رمز حالة الاستجابة يشير إلى نجاح (2xx)، فإن الدالة لا تفعل شيئًا وتعود بدون أي استثناء.
+                ومع ذلك، إذا كان رمز حالة الاستجابة يشير إلى خطأ (3xx, 4xx, 5xx)، فإن الدالة ستقوم بإلقاء استثناء من 
+                نوع HttpRequestException وستتضمن تفاصيل حول الخطأ.
+             */
+            return response;
+        }
+        //public async Task<InvoiceResponseDto> SendInvoice(InvoiceCreateRequest entity)
+        public async Task<InvoiceResponseDto> SendInvoiceApi(string TokenDb, InvoiceCreateRequest entity)
+        {
+            InvoiceResponseDto result = new InvoiceResponseDto();
+            if (CheckInternetConnection() == false)
+            {
+                result.isSuccess = false;
+                result.statusCode = "800";
+                result.status = "Not Internet";
+                result.note = "لا يوجد اتصال بالإنترنت";
+                return result;
+            }
+            try
+            {
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", TokenDb);
+                //HttpResponseMessage response = await client.PostAsJsonAsync("invoices/", entity);
+                HttpResponseMessage response = await post(TokenDb, entity);
+                //response.EnsureSuccessStatusCode(); // التحقق من نجاح الاستجابة يشير إلى نجاح الطلب أم لا إذا كان لا ستقوم بإلقاء استثناء            
+                if (response.IsSuccessStatusCode)
+                {
+                    result = await response.Content.ReadAsAsync<InvoiceResponseDto>();
+                }
+                result.statusCode = ((int)response.StatusCode).ToString();
+                return result;
+            }
+            catch (Exception)
+            {
+                result.statusCode = "900";
+                result.status = "Exception";
+                return result;
+                //throw new ArgumentException("");
+            }
+        }
+
+        public async Task<string> SendInvoiceStr(string TokenDb, InvoiceCreateRequest entity)
+        {
+            string result = null;
+            try
+            {
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", TokenDb);
+                //HttpResponseMessage response = await client.PostAsJsonAsync("invoices/", entity);
+                HttpResponseMessage response = await post(TokenDb, entity);
+                //response.EnsureSuccessStatusCode();
+                if (response.IsSuccessStatusCode)
+                {
+                    result = response.Content.ReadAsStringAsync().Result;
+                }
+                result += ";=;" + ((int)response.StatusCode).ToString();
+                return result;
+            }
+            catch (Exception)
+            {
+                result = "900";
+                return result;
+                //throw new ArgumentException("");
+            }
+        }
+
+
+        static bool CheckInternetConnection()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    using (client.OpenRead("http://clients3.google.com/generate_204"))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #endregion
     }
+
 }

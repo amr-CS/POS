@@ -21,7 +21,7 @@ namespace appSERP
             JobStorage.Current = new SqlServerStorage("dbERPConnectionString");
             ZatcaAutoSendController zatcaAutoSendController = new ZatcaAutoSendController();
             RecurringJob.AddOrUpdate(new Guid().ToString(),() =>
-   zatcaAutoSendController.AutoSendInvoice(), Cron.Minutely);
+   zatcaAutoSendController.AutoSendInvoice(), Cron.Hourly);
             app.UseHangfireServer();
          
             app.MapSignalR();

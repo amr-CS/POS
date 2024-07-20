@@ -1,5 +1,6 @@
 using appSERP.appCode.Setting.GD;
 using appSERP.appCode.Setting.User;
+using appSERP.ScheduledBH;
 using DevExpress.Security.Resources;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,8 @@ namespace appSERP
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             UnityConfig.RegisterComponents();
+
+            //QuartzConfig.Configure().GetAwaiter().GetResult();
         }
         // Applciation Culture
         protected void Application_AcquireRequestState(object sender, EventArgs e)

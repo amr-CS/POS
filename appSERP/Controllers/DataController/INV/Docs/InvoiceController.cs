@@ -486,7 +486,6 @@ namespace appSERP.Controllers.DataController.INV.Docs
             {
                 if (mdl.ItemId == null || mdl.UnitId == null || mdl.ItemQty == null || mdl.ItemQty <= 0)
                     message += mdl.ItemId + " للآسف بيانات تفاصيل الطلب فارغة \n";
-
                 if (mdl.ItemId != dtDetails.Rows[index]["ITEM_UNIT_SEQ"].ToString()
                     || mdl.UnitId != Convert.ToInt32(dtDetails.Rows[index]["UnitId"].ToString())
                     || mdl.ItemQty != Convert.ToInt32(dtDetails.Rows[index]["QTY"].ToString()))

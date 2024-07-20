@@ -98,7 +98,13 @@ namespace appSERP.Utils
                 {
                     for (var j = 0; j < columnNames.Count; j++)
                     {
-                        worksheet.Cells[i + 2, j + 1].Value = dataTable.Rows[i][columnNames[j]];
+                        //var value = dataTable.Rows[i][columnNames[j]];
+                        //if (value != null && value.GetType() == typeof(DateTime))
+                        {
+                            worksheet.Cells[i + 2, j + 1].Value = dataTable.Rows[i][columnNames[j]].ToString();
+                        }
+                        //else
+                        //    worksheet.Cells[i + 2, j + 1].Value = dataTable.Rows[i][columnNames[j]];
                     }
                 }
 
@@ -108,7 +114,7 @@ namespace appSERP.Utils
                 // Convert the Excel package to a byte array
                 var excelBytes = package.GetAsByteArray();
 
-               
+
 
                 return excelBytes;
 

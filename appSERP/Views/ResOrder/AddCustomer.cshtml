@@ -932,31 +932,7 @@
                         else {
                             $('#TypeId').val(1);
                         }
-
-                        //if (Customer.tblCustomerDTL != undefined && Customer.tblCustomerDTL != '') {
-                        //    $('.tblCustomerDtlBody').html('');
-                        //    for (var m = 0; m <= Customer.tblCustomerDTL.length - 1; m++) {
-                        //        var vRowContent3 = '<tr class="tblRow" data-id="' + Customer.tblCustomerDTL[m].ChildCustomerId + '">' +
-                        //            '<td><button class="btn btn-sm btn-light btnCustomerAddRow text-secondary"><i class="fa fa-plus-circle"></i></button></td>' +
-                        //            '<td width="7%"><input type="text" class="form-control CustomerCode" disabled value="' + Customer.tblCustomerDTL[m].ChildCustomerCode + '" /></td>' +
-                        //            '<td><input type="text" class="form-control CustomerNameL1" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL1 + '"   /></td>' +
-                        //            '<td><input type="text" class="form-control CustomerNameL2" value="' + Customer.tblCustomerDTL[m].ChildCustomerNameL2 + '"  /></td>' +
-                        //            '<td width="7%"><input type="text" class="form-control CountryId" data-id="' + Customer.tblCustomerDTL[m].ChildCountryId + '" value="' + Customer.tblCustomerDTL[m].ChildCountryCode + '"  /></td>' +
-                        //            '<td><input type="text" class="form-control CountryNameL1" readonly value="' + Customer.tblCustomerDTL[m].ChildCountryNameL1 + '"  /></td>' +
-                        //            '<td width="7%"><input type="text" class="form-control CityId" data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityCode  + '"  /></td>' +
-                        //            '<td><input type="text" class="form-control CityNameL1" readonly data-id="' + Customer.tblCustomerDTL[m].ChildCityId + '" value="' + Customer.tblCustomerDTL[m].ChildCityNameL1 + '"  /></td>' +
-                        //            '<td><input type="text" class="form-control CustomerAddress" value="' + Customer.tblCustomerDTL[m].ChildCustomerAddress + '"   /></td>' +
-                        //            '<td><input type="text" class="form-control CustomerPhoneNumber" value="' + Customer.tblCustomerDTL[m].ChildCustomerPhoneNumber + '"   /></td>' +
-                        //            '<td><button class="btn btn-light btn-sm btnCustomerDelete" data-id="0"><i class="fa fa-trash"></i></button></td>' +
-                        //            '</tr>';
-
-                        //        $('.tblCustomerDtlBody').append(vRowContent3);
-                        //    }
-
-                        //}
-                        //else {
-                        //    fnClearTable();
-                        //}
+                        
                         if (Customer.tblCustomerSite != undefined && Customer.tblCustomerSite != '') {
 
                             $('.tblCustomerSiteBody').html('');
@@ -1031,7 +1007,10 @@
                 }, function (data, status) {
 
                     var vDataResult = JSON.parse(data);
-                    funNotification(vDataResult[0].msg, 1)
+                    if (vDataResult[0].SuccessStatus == 'undefined' || vDataResult[0].SuccessStatus == false)
+                        funNotification(vDataResult[0].SystemMessageText, 3);
+                    else
+                        funNotification(vDataResult[0].SystemMessageText, 1);
                         $('.txtCustomerCode').attr('data-id', vDataResult[0].CustomerId)
                         $('.txtCustomerCode').attr('data-phone', $('#txtCustomerPhoneNumber').val())
                         $('.txtCustomerName').val($('#txtCustomerNameL1').val())
@@ -1934,6 +1913,9 @@
                         $('#txtCustomerAddress').val(Customer[0].CustomerAddress);
                         $('#txtCustomerPhoneNumber').val(Customer[0].CustomerPhoneNumber);
                         $('#txtCustomerTaxNumber').val(Customer[0].CustomerVatCode);
+
+                        $('.txtCustomerName').val(Customer[0].CustomerNameL1)
+                        $('.txtCustomerCode').val(Customer[0].CustomerId)
 
                        // funNotification('@appResource.msgNoExistedBefore' + vDataResult[0].CustomerCode, 2);
                        // alert(vDataResult[0].CustomerPhoneNumber)

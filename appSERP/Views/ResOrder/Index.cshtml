@@ -473,6 +473,12 @@
         <div class="modal-content" id="AccountDataModalContent"></div>
     </div>
 </div>
+
+<div id="txtCustomerCodeDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="txtCustomerCodeDataModalContent"></div>
+    </div>
+</div>
 <div id="tagDataModal" class="fade modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="tagDataModalContent"></div>
@@ -578,11 +584,11 @@
             // Search Account
             var vURL = '/GLCustomer/SearchCustomerModal';
             // Load Content of Account Search
-            $('#AccountDataModalContent').load(vURL);
+            $('#txtCustomerCodeDataModalContent').load(vURL);
             // Modal Show
-            $('#AccountDataModal').modal('show');
+            $('#txtCustomerCodeDataModal').modal('show');
             // Focus
-            $('#AccountDataModal').on('shown.bs.modal', function () {
+            $('#txtCustomerCodeDataModal').on('shown.bs.modal', function () {
                 $('.txtSearch').focus();
 
                 // Select Account
@@ -610,7 +616,7 @@
                     FillSite(vCSCodeValue);
                     $('#chkDelivery').prop('checked', true);
                     // Modal Show
-                    $('#AccountDataModal').modal('hide');
+                    $('#txtCustomerCodeDataModal').modal('hide');
 
                 })
             })
@@ -1902,7 +1908,7 @@ if (parseFloat($(".txtTotalDiscount").val()) > parseFloat($(".txtTotalOrder").va
         // Focus
         $('#AccountDataModal').on('shown.bs.modal', function () {
             $('.txtSearch').focus();
-
+            
         })
     })
 

@@ -45,6 +45,12 @@ namespace appSERP.ZatcaEInvoicing
                 return Tuple.Create(SuccessStatus, "انتظر دقيقتين ثم أعد إرسالها لإنها فاتورة جديدة");
 
             bool isPassed = Convert.ToBoolean(dtInv.Rows[0].Field<bool>("IsPassed").ToString());
+
+            bool allowResend = Convert.ToBoolean(dtInv.Rows[0].Field<bool>("allowResend").ToString());
+            //DateTime lastResendDate = Convert.ToDateTime(dtInv.Rows[0].Field<DateTime>("lastResendDate").ToString());
+            if (isPassed == false && allowResend == false) // DateTime.Now > lastResendDate.AddMinutes(-2)
+                return Tuple.Create(SuccessStatus, "انتظر دقيقتين لانه تم أعادة إرسالها قبل لحظات");
+
             if (isPassed == false)
             {
                 InvoiceResponseDto dto = new InvoiceResponseDto();

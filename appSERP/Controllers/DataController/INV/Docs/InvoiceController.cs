@@ -481,20 +481,24 @@ namespace appSERP.Controllers.DataController.INV.Docs
                 return Json(SystemMessageCode.ToJSON(SystemMessageCode.GetError("تفاصيل الإصدار غير مساوية مع تفاصيل الطلب احفظ التعديلات اولا")));
             string message = "";
             
-            int index = 0;
+            //int index = 0;
             foreach (var mdl in InvoiceDtls)
             {
                 if (mdl.ItemId == null || mdl.UnitId == null || mdl.ItemQty == null || mdl.ItemQty <= 0)
                     message += mdl.ItemId + " للآسف بيانات تفاصيل الطلب فارغة \n";
-                if (mdl.ItemId != dtDetails.Rows[index]["ITEM_UNIT_SEQ"].ToString()
-                    || mdl.UnitId != Convert.ToInt32(dtDetails.Rows[index]["UnitId"].ToString())
-                    || mdl.ItemQty != Convert.ToInt32(dtDetails.Rows[index]["QTY"].ToString()))
-                {
+                var dt = dtDetails.AsEnumerable().Where(row => row.Field<int>("ITEM_UNIT_SEQ").ToString() == mdl.ItemId
+                && row.Field<int?>("UnitId") == mdl.UnitId && row.Field<double?>("QTY") == mdl.ItemQty);
+                if(dt.Any()==false)
                     message += mdl.ItemId + " للآسف بيانات تفاصيل سجل الطلب الحالي مختلف عن السابق احفظ التعديلات اولا \n";
-                }
-                index += 1;
-            }
 
+                //if (mdl.ItemId != dtDetails.Rows[index]["ITEM_UNIT_SEQ"].ToString()
+                //    || mdl.UnitId != Convert.ToInt32(dtDetails.Rows[index]["UnitId"].ToString())
+                //    || mdl.ItemQty != Convert.ToInt32(dtDetails.Rows[index]["QTY"].ToString()))
+                //{
+                //    message += mdl.ItemId + " للآسف بيانات تفاصيل سجل الطلب الحالي مختلف عن السابق احفظ التعديلات اولا \n";
+                //}
+                //index += 1;
+            }
             message = message.Trim();
             if (string.IsNullOrWhiteSpace(message) == false || message.Length > 0)
                 return Json(SystemMessageCode.ToJSON(SystemMessageCode.GetError(message)));

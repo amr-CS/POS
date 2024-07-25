@@ -29,7 +29,7 @@ namespace appSERP
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             UnityConfig.RegisterComponents();
 
-            //QuartzConfig.Configure().GetAwaiter().GetResult();
+            QuartzConfig.Configure().GetAwaiter().GetResult();
         }
         // Applciation Culture
         protected void Application_AcquireRequestState(object sender, EventArgs e)

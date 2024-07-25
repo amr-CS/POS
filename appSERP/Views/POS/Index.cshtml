@@ -1903,12 +1903,18 @@ else if (Period != false)
                 if (ItemType === '3')
                     HasInsurance = true;
             })
-            var IsCustomer = true;
 
+            var customerName = $('.CustomerName').val().trim();
+            if (HasInsurance && customerName.length < 2) {
+
+                funNotification('يجب ادخال اسم العميل', 2);
+                valid = false;
+            }
+            var IsCustomer = true;
             if (!PhoneNumber || PhoneNumber.length != 10) {
                 IsCustomer = false;
             }
-
+            
             if ((HasInsurance && !IsCustomer) || (IsDelivery === 'true' && !IsCustomer)) {
                 funNotification('يجب ادخال رقم جوال وبيانات  العميل ', 2)
                 if (PhoneNumber.length != 10) {

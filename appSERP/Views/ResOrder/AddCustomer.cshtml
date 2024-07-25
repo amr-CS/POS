@@ -18,7 +18,7 @@
             <div class="d-flex justify-content-end">
                 <div class="btn-group m-2" role="group" aria-label="First group">
                     <!-- Save -->
-                    <button class="btn btnUtility btnSave" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
+                    <button class="btn btnUtility btnSaveAddCustomer" title="@appResource.btnSave"><i class="fa fa-save"></i></button>
                     <button class="btn btnUtility btnSearch" title="@appResource.btnSearch"><i class="fa fa-search"></i></button>
 
                 </div>
@@ -981,8 +981,10 @@
         var vIsValid  = true;
 
         //if ($('#txtCustomerNameL1').val().trim() == '' || $('#txtCustomerNameL1').val() == undefined || $('#txtCustomerPhoneNumber').val().trim() == '' || $('#txtCustomerPhoneNumber').val() == undefined || $('#txtAuthorizePersonTel').val() == undefined || $('#txtAuthorizePersonTel').val().trim() == '' || $('#txtAccountId').val() == undefined || $('#txtAccountId').val().trim() == '') {
-            if ($('#txtCustomerNameL1').val().trim() == '' || $('#txtCustomerNameL1').val() == undefined || $('#txtCustomerPhoneNumber').val().trim() == '' || $('#txtCustomerPhoneNumber').val() == undefined || ($('#txtCustomerPhoneNumber').val().length != 10) ) {
+        if ($('#txtCustomerNameL1').val().trim() == '' || $('#txtCustomerNameL1').val() == undefined || $('#txtCustomerNameL1').val().trim().length < 2
+            || $('#txtCustomerPhoneNumber').val().trim() == '' || $('#txtCustomerPhoneNumber').val() == undefined || ($('#txtCustomerPhoneNumber').val().length != 10)) {
             vIsValid = false;
+            funNotification('يجب ادخال بيانات العميل', 2)
         }
         else {
             var vCustomerDailyStopType = 0
@@ -993,7 +995,7 @@
                 vCustomerDailyStopType = 2
             }
             //$.post('/GLSupplier/SaveHeader', {
-                $.post('/GLCustomer/SaveHeader', {
+            $.post('/GLCustomer/SaveHeader', {
                 pCustomerId: $('#txtCustomerCode').attr('data-id'),
                 pCustomerCode: $('#txtCustomerCode').val(),
                 pCustomerNameL1: $('#txtCustomerNameL1').val(),
@@ -1002,37 +1004,39 @@
                 pCustomerPhoneNumber: $('#txtCustomerPhoneNumber').val(),
                 pStatus: 0,
                 pIsParent: 1,
-            
-
-                }, function (data, status) {
-
-                    var vDataResult = JSON.parse(data);
-                    if (vDataResult[0].SuccessStatus == 'undefined' || vDataResult[0].SuccessStatus == false)
-                        funNotification(vDataResult[0].SystemMessageText, 3);
-                    else
-                        funNotification(vDataResult[0].SystemMessageText, 1);
-                        $('.txtCustomerCode').attr('data-id', vDataResult[0].CustomerId)
-                        $('.txtCustomerCode').attr('data-phone', $('#txtCustomerPhoneNumber').val())
-                        $('.txtCustomerName').val($('#txtCustomerNameL1').val())
-                        $('.txtCustomerCode').val(vDataResult[0].CustomerId)
-                    //if ($('#txtCustomerCode').attr('data-id') == '0') {
-                    //    if (data != undefined && data != '') {
-                    //        var vDataResult = JSON.parse(data);
-                    //        $('#txtCustomerCode').attr('data-id', vDataResult[0].CustomerId)
-                    //        $('.txtCustomerCode').attr('data-id', vDataResult[0].CustomerId)
-                    //        $('.txtCustomerCode').val(vDataResult[0].CustomerId)
-
-                    //        $('#txtCustomerCode').val(vDataResult[0].CustomerCode)
-
-                    //    }
-                    //}
 
 
+            }, function (data, status) {
 
-            })
+                var vDataResult = JSON.parse(data);
+                if (vDataResult[0].SuccessStatus == 'undefined' || vDataResult[0].SuccessStatus == false)
+                    funNotification(vDataResult[0].SystemMessageText, 3);
+                else
+                    funNotification(vDataResult[0].SystemMessageText + ' - عميل', 1);
+                $('.txtCustomerCode').attr('data-id', vDataResult[0].CustomerId)
+                $('.txtCustomerCode').attr('data-phone', $('#txtCustomerPhoneNumber').val())
+                $('.txtCustomerName').val($('#txtCustomerNameL1').val())
+                $('.txtCustomerCode').val(vDataResult[0].CustomerId)
+
+                //if ($('#txtCustomerCode').attr('data-id') == '0') {
+                //    if (data != undefined && data != '') {
+                //        var vDataResult = JSON.parse(data);
+                //        $('#txtCustomerCode').attr('data-id', vDataResult[0].CustomerId)
+                //        $('.txtCustomerCode').attr('data-id', vDataResult[0].CustomerId)
+                //        $('.txtCustomerCode').val(vDataResult[0].CustomerId)
+
+                //        $('#txtCustomerCode').val(vDataResult[0].CustomerCode)
+
+                //    }
+                //}
+
+
+
+            });
+            //fnSaveDTL();
+            fnSaveSite();
         }
-        //fnSaveDTL();
-        fnSaveSite();
+        
       
         //if ($('#txtCustomerCode').attr('data-id') == '0' && vIsValid) {
         //    setTimeout(function () {
@@ -1044,7 +1048,7 @@
 
         //}
         //if (!vIsValid && $('#txtAuthorizePersonTel').val().trim() =='' ) {
-        if (!vIsValid && $('#txtCustomerNameL1').val().trim() == '') {
+        if (!vIsValid && ($('#txtCustomerNameL1').val().trim() == '' || $('#txtCustomerNameL1').val().trim().length < 2)) {
 
             funNotification('@appResource.msgRequiredCustomer', 2);
             //$('#txtAuthorizePersonTel').focus();
@@ -1174,7 +1178,7 @@
         fnGetNext();
     })
     //$('.btnUtilityCreate').on('click', function () {
-    $('.btnSave').on('click', function () {
+    $('.btnSaveAddCustomer').on('click', function () {
         fnSaveHeader();
     })
     $('body').on('click', '.btnCustomerAddRow', function ()
@@ -1915,7 +1919,9 @@
                         $('#txtCustomerTaxNumber').val(Customer[0].CustomerVatCode);
 
                         $('.txtCustomerName').val(Customer[0].CustomerNameL1)
+                        $('.txtCustomerCode').attr('data-id', Customer[0].CustomerId)
                         $('.txtCustomerCode').val(Customer[0].CustomerId)
+                        $('.txtCustomerCode').attr('data-phone', Customer[0].CustomerPhoneNumber);
 
                        // funNotification('@appResource.msgNoExistedBefore' + vDataResult[0].CustomerCode, 2);
                        // alert(vDataResult[0].CustomerPhoneNumber)

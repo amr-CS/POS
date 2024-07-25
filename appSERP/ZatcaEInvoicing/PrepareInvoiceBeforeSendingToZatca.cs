@@ -47,8 +47,7 @@ namespace appSERP.ZatcaEInvoicing
             bool isPassed = Convert.ToBoolean(dtInv.Rows[0].Field<bool>("IsPassed").ToString());
 
             bool allowResend = Convert.ToBoolean(dtInv.Rows[0].Field<bool>("allowResend").ToString());
-            //DateTime lastResendDate = Convert.ToDateTime(dtInv.Rows[0].Field<DateTime>("lastResendDate").ToString());
-            if (isPassed == false && allowResend == false) // DateTime.Now > lastResendDate.AddMinutes(-2)
+            if (isPassed == false && allowResend == false) 
                 return Tuple.Create(SuccessStatus, "انتظر دقيقتين لانه تم أعادة إرسالها قبل لحظات");
 
             if (isPassed == false)

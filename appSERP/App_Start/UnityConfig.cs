@@ -29,6 +29,7 @@ using appSERP.appCode.SQL.Abstract;
 using appSERP.appCode.SQL.ADO;
 using appSERP.Logger;
 using appSERP.ZatcaEInvoicing.LinkPro;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
 using Unity;
@@ -38,13 +39,14 @@ namespace appSERP
 {
     public static class UnityConfig
     {
+        static IUnityContainer container = new UnityContainer();
+
         public static void RegisterComponents()
         {
-			var container = new UnityContainer();
+			//var container = new UnityContainer();
 
             // register all your components with the container here
             // it is NOT necessary to register your controllers
-
             // e.g. container.RegisterType<ITestService, TestService>();
 
 
@@ -224,5 +226,18 @@ namespace appSERP
             new Unity.WebApi.UnityDependencyResolver(container);
 
         }
+
+        
+        public static T GetInstanceUC<T>() 
+        {
+            return container.Resolve<T>();
+        }
+        public static T GetInstanceUC<T, TM>()
+        {
+            var services = container.ResolveAll<T>();
+            var serviceTM = services.First(o => o.GetType() == typeof(TM));
+            return serviceTM;
+        }
+
     }
 }

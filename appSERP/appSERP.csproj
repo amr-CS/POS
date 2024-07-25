@@ -108,12 +108,6 @@
     <Reference Include="FastMember, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FastMember.1.5.0\lib\net461\FastMember.dll</HintPath>
     </Reference>
-    <Reference Include="Hangfire.Core, Version=1.8.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hangfire.Core.1.8.14\lib\net46\Hangfire.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Hangfire.SqlServer, Version=1.8.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hangfire.SqlServer.1.8.14\lib\net451\Hangfire.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -566,7 +560,6 @@
     <Compile Include="appCode\dbCode\RES\Abstract\IdbVehStatus.cs" />
     <Compile Include="appCode\dbCode\RES\Abstract\IdbVehType.cs" />
     <Compile Include="appCode\dbCode\RES\Abstract\IdbVUnit.cs" />
-    <Compile Include="appCode\dbCode\RES\branchsettingForHangeFire.cs" />
     <Compile Include="appCode\dbCode\RES\dbBranchSetting.cs" />
     <Compile Include="appCode\dbCode\RES\dbCashier.cs" />
     <Compile Include="appCode\dbCode\RES\dbDashBoard.cs" />
@@ -688,7 +681,6 @@
     <Compile Include="appCode\Setting\User\GetUser.cs" />
     <Compile Include="appCode\SQL\Abstract\IclsADO.cs" />
     <Compile Include="appCode\SQL\ADO\clsADO.cs" />
-    <Compile Include="appCode\SQL\ADO\clsADO_ForHangFire.cs" />
     <Compile Include="appCode\SQL\QueryType\clsQueryType.cs" />
     <Compile Include="appCode\SQL\SQLConnection\SQLConnectionGET\clsConnection.cs" />
     <Compile Include="appCode\Utils\CustomXmlWriter.cs" />
@@ -964,7 +956,6 @@
     <Compile Include="Controllers\DataController\SYSSETT\UserFavoriteController.cs" />
     <Compile Include="Controllers\DataController\SYSSETT\ViewHeader\ViewHeaderController.cs" />
     <Compile Include="Controllers\DataController\ViewSetting\ViewSettingController.cs" />
-    <Compile Include="Controllers\DataController\ZatcaAutoSendController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PrintRPTController.cs" />
     <Compile Include="Controllers\WebClientPrintAPIController.cs" />
@@ -1600,7 +1591,7 @@
     <Compile Include="Reports\XtraReport1.Designer.cs">
       <DependentUpon>XtraReport1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ScheduledBH\LogBh.cs" />
+    <Compile Include="ScheduledBH\LogScheduled.cs" />
     <Compile Include="ScheduledBH\MyScheduledTask.cs" />
     <Compile Include="ScheduledBH\QuartzConfig.cs" />
     <Compile Include="signalr\hubs\ChatHub.cs" />
